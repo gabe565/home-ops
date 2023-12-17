@@ -1,0 +1,150 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: authentik
+spec:
+  chart:
+    spec:
+      chart: authentik
+      version: 2023.10.4
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: authentik
+        name: authentik
+  interval: 1h
+  values:
+    priorityClassName: system-cluster-critical
+
+    affinity:
+      podAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: authentik
+                  app.kubernetes.io/instance: authentik
+
+    authentik:
+      # This sends anonymous usage-data, stack traces on errors and
+      # performance data to sentry.beryju.org, and is fully opt-in
+      error_reporting:
+        enabled: false
+
+      secret_key: ${authentik_secret_key}
+
+      postgresql:
+        host: postgresql-rw
+        name: authentik
+        user: authentik
+
+      redis:
+        host: redis-master
+
+      email:
+        host: ${email_host}
+        port: 587
+        use_tls: true
+        username: ${email_username}
+        password: ${email_password}
+        from: ${email_from}
+
+      log_level: warning
+
+    env:
+      AUTHENTIK_DISABLE_UPDATE_CHECK: "true"
+      AUTHENTIK_DISABLE_STARTUP_ANALYTICS: "true"
+
+    envValueFrom:
+      AUTHENTIK_POSTGRESQL__PASSWORD:
+        secretKeyRef:
+          name: postgresql-app
+          key: password
+      AUTHENTIK_REDIS__PASSWORD:
+        secretKeyRef:
+          name: redis
+          key: redis-password
+
+    geoip:
+      enabled: true
+      accountId: |
+        ${geoip_account_id}
+      licenseKey: ${geoip_license_key}
+
+    ingress:
+      enabled: true
+      hosts:
+        - host: ${app_url}
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - secretName: ${certificate_name}
+          hosts:
+            - ${app_url}
+
+    volumes:
+      - name: media
+        persistentVolumeClaim:
+          claimName: authentik-media
+      - name: custom-templates
+        persistentVolumeClaim:
+          claimName: authentik-custom-templates
+      - name: custom-assets
+        configMap:
+          name: authentik-custom-assets
+    volumeMounts:
+      - name: media
+        mountPath: /media
+      - name: custom-templates
+        mountPath: /custom-templates
+      - name: custom-assets
+        mountPath: /web/dist/custom.css
+        subPath: custom.css
+      - name: custom-assets
+        mountPath: /web/authentik/sources/google.svg
+        subPath: google.svg
+      - name: custom-assets
+        mountPath: /web/authentik/sources/plex.svg
+        subPath: plex.svg
+
+    prometheus:
+      serviceMonitor:
+        create: true
+        interval: 1m
+
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: Deployment
+              name: .*
+            # language=yaml
+            patch: |
+              - op: add
+                path: /spec/strategy
+                value:
+                  type: Recreate
+              - op: add
+                path: /spec/template/metadata/labels/policy.gabe565.com~1egress-kube-dns
+                value: "true"
+              - op: add
+                path: /spec/template/metadata/labels/policy.gabe565.com~1egress-kubeapi
+                value: "true"
+              - op: add
+                path: /spec/template/metadata/labels/policy.gabe565.com~1egress-namespace
+                value: "true"
+              - op: add
+                path: /spec/template/metadata/labels/policy.gabe565.com~1egress-world
+                value: "true"
+              - op: add
+                path: /spec/template/metadata/labels/policy.gabe565.com~1ingress-prometheus
+                value: "true"
+              - op: add
+                path: /spec/template/metadata/labels/policy.gabe565.com~1ingress-ingress
+                value: "true"
+              - op: add
+                path: /spec/template/metadata/labels/policy.gabe565.com~1egress-gotify
+                value: "true"

@@ -1,0 +1,85 @@
+/* Logo */
+img.style-scope.ak-flow-executor {
+    opacity: 0;
+}
+
+/* Social buttons */
+.pf-c-login__main-footer-links-item.ak-stage-identification img.ak-stage-identification,
+/* Background overlay */
+.pf-c-background-image.ak-flow-executor::before {
+    filter: none;
+}
+
+/* Modal window */
+.pf-c-login__main.ak-flow-executor {
+    overflow: hidden;
+    border-radius: 40px;
+    background-color: #0008;
+    color: #fff;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+@media (max-width: 560px) {
+    .pf-c-login__main.ak-flow-executor {
+        border-radius: 0;
+    }
+}
+
+/* Footer */
+ul.pf-c-list.pf-m-inline.ak-flow-executor {
+    display: none;
+}
+
+/* Title */
+h1.pf-c-title.pf-m-3xl.style-scope {
+    margin-bottom: 30px;
+    color: #eee;
+}
+
+/* Text inputs */
+input.pf-c-form-control.style-scope, input.pf-c-form-control.style-scope:focus {
+    padding: 20px;
+    border: 0;
+    border-radius: 20px;
+    background-color: #0006;
+}
+
+/* Text input placeholders */
+input.pf-c-form-control.style-scope.ak-stage-identification::placeholder {
+    color: #bbb;
+}
+
+/* Text Input labels */
+label.pf-c-form__label.style-scope.ak-form-element {
+    display: none;
+}
+
+/* Buttons */
+button.pf-c-button.pf-m-primary.pf-m-block.style-scope {
+    margin: 0 auto;
+    width: 50%;
+    border-radius: 20px;
+    background-color: #3f4597;
+}
+
+/* Button parents */
+.pf-c-form__group.pf-m-action {
+    margin-top: 0 !important;
+}
+
+/* "Not you" link */
+a.style-scope {
+    color: #aaa;
+}
+
+/* Explicit consent list */
+ul.pf-c-list.style-scope.ak-stage-consent {
+    text-align: left;
+}
+
+/* Connected services settings */
+:host([theme="dark"]) .pf-c-data-list__cell :is(img[alt="Google"], img[alt="Plex"]) {
+    filter: none;
+}
