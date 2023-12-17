@@ -1,0 +1,36 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: ascii-movie
+spec:
+  chart:
+    spec:
+      chart: ascii-movie
+      version: 0.13.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: gabe565
+  interval: 1h
+  valuesFrom:
+    - kind: Secret
+      name: ascii-movie-values
+  values:
+    env:
+      TZ: America/Chicago
+      ASCII_MOVIE_CONCURRENT_STREAMS: "5"
+
+    podLabels:
+      policy.gabe565.com/ingress-prometheus: "true"
+      policy.gabe565.com/ingress-world: "true"
+
+    service:
+      main:
+        loadBalancerIP: 192.168.1.225
+        annotations:
+          external-dns.alpha.kubernetes.io/hostname: movie.gabe565.com
+
+    serviceMonitor:
+      main:
+        enabled: true
