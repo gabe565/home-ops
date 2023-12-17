@@ -1,0 +1,42 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: domain-watch
+spec:
+  chart:
+    spec:
+      chart: domain-watch
+      version: 0.5.3
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: gabe565
+  interval: 1h
+  values:
+    image:
+      repository: ghcr.io/gabe565/domain-watch
+      tag: 0.1.0
+    podLabels:
+        policy.gabe565.com/egress-gotify: "true"
+        policy.gabe565.com/egress-world: "true"
+        policy.gabe565.com/ingress-prometheus: "true"
+    env:
+      TZ: America/Chicago
+      WATCH_EVERY: 6h
+      WATCH_DOMAINS: ${watch_domains}
+      WATCH_GOTIFY_URL: http://gotify.gotify
+      WATCH_GOTIFY_TOKEN: ${gotify_token}
+      WATCH_TELEGRAM_TOKEN: ${telegram_token}
+      WATCH_TELEGRAM_CHAT:
+        secretKeyRef:
+          name: app-vars
+          key: telegram_chat
+
+    service:
+      main:
+        enabled: true
+
+    serviceMonitor:
+      main:
+        enabled: true
