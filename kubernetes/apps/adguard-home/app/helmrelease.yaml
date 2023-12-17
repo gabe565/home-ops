@@ -1,0 +1,69 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: adguard-home
+spec:
+  chart:
+    spec:
+      chart: adguard-home
+      version: 0.3.16
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: gabe565
+  interval: 1h
+  values:
+    env:
+      TZ: America/Chicago
+
+    podLabels:
+      policy.gabe565.com/egress-namespace: "true"
+      policy.gabe565.com/egress-world: "true"
+      policy.gabe565.com/ingress-ingress: "true"
+      policy.gabe565.com/ingress-namespace: "true"
+
+    priorityClassName: system-cluster-critical
+
+    persistence:
+      config:
+        enabled: true
+        storageClass: longhorn-ssd
+        accessMode: ReadWriteOnce
+        size: 128Mi
+      data:
+        enabled: true
+        storageClass: longhorn-ssd
+        accessMode: ReadWriteOnce
+        size: 2Gi
+      tls:
+        enabled: true
+        type: secret
+        name: gabe.house-tls
+
+    service:
+      dns-tcp:
+        loadBalancerIP: 192.168.1.221
+      dns-udp:
+        loadBalancerIP: 192.168.1.221
+
+    ingress:
+      main:
+        enabled: true
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
+        annotations:
+          nginx.ingress.kubernetes.io/auth-url: |-
+            http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
+          nginx.ingress.kubernetes.io/auth-signin: |-
+            /outpost.goauthentik.io/start?rd=$escaped_request_uri
+          nginx.ingress.kubernetes.io/auth-response-headers: |-
+            Set-Cookie,X-authentik-username,X-authentik-groups,X-authentik-email,X-authentik-name,X-authentik-uid
+          nginx.ingress.kubernetes.io/auth-snippet: |
+            proxy_set_header X-Forwarded-Host $http_host;

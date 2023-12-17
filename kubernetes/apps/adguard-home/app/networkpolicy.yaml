@@ -1,0 +1,80 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: egress-adguard-dns
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/egress-adguard-dns: "true"
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: adguard-home
+            app.kubernetes.io/name: adguard-home
+      toPorts:
+        - ports:
+            - port: "53"
+            - port: "853"
+            - port: "784"
+---
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: egress-adguard-api
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/egress-adguard-api: "true"
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: adguard-home
+            app.kubernetes.io/name: adguard-home
+      toPorts:
+        - ports:
+            - port: "3000"
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: adguard-home
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/instance: adguard-home
+      app.kubernetes.io/name: adguard-home
+  ingress:
+    - fromEntities:
+        - cluster
+        - host
+        - remote-node
+      toPorts:
+        - ports:
+            - port: "53"
+            - port: "853"
+            - port: "784"
+    - fromCIDRSet:
+        - cidr: 192.168.1.0/24
+      toPorts:
+        - ports:
+            - port: "53"
+            - port: "853"
+            - port: "784"
+    - fromEndpoints:
+        - matchLabels:
+            policy.gabe565.com/egress-adguard-dns: "true"
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
+    - fromEndpoints:
+        - matchLabels:
+            policy.gabe565.com/egress-adguard-api: "true"
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
+  egress:
+    - toCIDRSet:
+        - cidr: 192.168.1.1/32
+      toPorts:
+        - ports:
+            - port: "53"

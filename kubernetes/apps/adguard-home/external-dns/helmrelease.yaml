@@ -1,0 +1,33 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: adguard-home-external-dns
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: external-dns
+      version: 1.13.1
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: external-dns
+      interval: 1h
+  values:
+    image:
+      repository: registry.k8s.io/external-dns/external-dns
+      tag: v0.14.0
+
+    provider: webhook
+    interval: 1h
+    triggerLoopOnEvent: true
+    policy: sync
+    registry: noop
+
+    extraArgs:
+      - --webhook-provider-url=http://external-dns-webhook:8888
+
+    podLabels:
+      policy.gabe565.com/egress-kubeapi: "true"
+      policy.gabe565.com/egress-namespace: "true"
+      policy.gabe565.com/egress-world: "true"

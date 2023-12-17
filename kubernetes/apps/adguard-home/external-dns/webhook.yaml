@@ -1,0 +1,38 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: external-dns-webhook
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 2.4.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  values:
+    controllers:
+      main:
+        containers:
+          main:
+            image:
+              repository: ghcr.io/zekker6/external-dns-provider-adguard
+              tag: v0.0.8
+            env:
+              TZ: America/Chicago
+              ADGUARD_HOME_URL: http://adguard-home:3000
+              ADGUARD_HOME_USER: ${adguard_home_username}
+              ADGUARD_HOME_PASS: ${adguard_home_password}
+        pod:
+          labels:
+            policy.gabe565.com/egress-adguard-api: "true"
+            policy.gabe565.com/ingress-namespace: "true"
+
+    service:
+      main:
+        ports:
+          http:
+            port: 8888
