@@ -1,0 +1,25 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: castsponsorskip
+spec:
+  chart:
+    spec:
+      chart: castsponsorskip
+      version: 0.4.2
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: gabe565
+  interval: 1h
+  values:
+    env:
+      TZ: America/Chicago
+      CSS_YOUTUBE_API_KEY: ${youtube_api_key}
+      CSS_NETWORK_INTERFACE: net1
+    podLabels:
+      policy.gabe565.com/egress-world-with-lan: "true"
+    podAnnotations:
+      k8s.v1.cni.cncf.io/networks: ipvlan
+    hostNetwork: false
