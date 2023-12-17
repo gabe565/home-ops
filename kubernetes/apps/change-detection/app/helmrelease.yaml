@@ -1,0 +1,95 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: change-detection
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 2.4.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  values:
+    controllers:
+      main:
+        containers:
+          main:
+            image:
+              repository: ghcr.io/dgtlmoon/changedetection.io
+              tag: 0.45.8
+            env:
+              TZ: America/Chicago
+              BASE_URL: https://${app_url}
+              PLAYWRIGHT_DRIVER_URL: ws://change-detection-browserless:3000
+        pod:
+          labels:
+            policy.gabe565.com/egress-gotify: "true"
+            policy.gabe565.com/egress-namespace: "true"
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-ingress: "true"
+          terminationGracePeriodSeconds: "0"
+      browserless:
+        containers:
+          main:
+            image:
+              repository: browserless/chrome
+              tag: 1-chrome-stable
+            env:
+              TZ: America/Chicago
+              ENABLE_DEBUGGER: "false"
+              DEFAULT_BLOCK_ADS: "true"
+              DEFAULT_STEALTH: "true"
+        pod:
+          labels:
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-namespace: "true"
+
+    service:
+      main:
+        ports:
+          http:
+            port: 5000
+      browserless:
+        controller: browserless
+        ports:
+          http:
+            port: 3000
+
+    persistence:
+      data:
+        enabled: true
+        storageClass: longhorn-ssd
+        accessMode: ReadWriteOnce
+        size: 1Gi
+        retain: true
+        advancedMounts:
+          main:
+            main:
+              - path: /datastore
+
+    ingress:
+      main:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/auth-url: |-
+            http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
+          nginx.ingress.kubernetes.io/auth-signin: |-
+            /outpost.goauthentik.io/start?rd=$escaped_request_uri
+          nginx.ingress.kubernetes.io/auth-response-headers: |-
+            Set-Cookie,X-authentik-username,X-authentik-groups,X-authentik-email,X-authentik-name,X-authentik-uid
+          nginx.ingress.kubernetes.io/auth-snippet: |
+            proxy_set_header X-Forwarded-Host $http_host;
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+                service:
+                  name: main
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
