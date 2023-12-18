@@ -1,0 +1,96 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: headscale
+spec:
+  chart:
+    spec:
+      chart: headscale
+      version: 0.12.7
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: gabe565
+  interval: 1h
+  values:
+    env:
+      HEADSCALE_DNS_CONFIG_BASE_DOMAIN: ${base_domain}
+      HEADSCALE_IP_PREFIXES: 100.64.0.0/10 fd7a:115c:a1e0::/48
+
+      HEADSCALE_OIDC_ISSUER: ${oidc_issuer}
+      HEADSCALE_OIDC_CLIENT_ID: ${oidc_client_id}
+      HEADSCALE_OIDC_CLIENT_SECRET: ${oidc_client_secret}
+      HEADSCALE_OIDC_ONLY_START_IF_OIDC_IS_AVAILABLE: "false"
+
+      HEADSCALE_DB_TYPE: postgres
+      HEADSCALE_DB_HOST: postgresql-rw
+      HEADSCALE_DB_PORT: "5432"
+      HEADSCALE_DB_SSL: "true"
+      HEADSCALE_DB_NAME: headscale
+      HEADSCALE_DB_USER: headscale
+      HEADSCALE_DB_PASS:
+        secretKeyRef:
+          name: postgresql-app
+          key: password
+
+    podLabels:
+      policy.gabe565.com/egress-namespace: "true"
+      policy.gabe565.com/egress-world: "true"
+      policy.gabe565.com/ingress-ingress: "true"
+      policy.gabe565.com/ingress-prometheus: "true"
+
+    termination:
+      gracePeriodSeconds: 3
+
+    service:
+      main:
+        ports:
+          ui:
+            enabled: true
+            port: 80
+
+    ingress:
+      main:
+        enabled: true
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+        tls: &tls
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
+      ui:
+        enabled: true
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /web
+                service:
+                  port: 80
+        tls: *tls
+
+    persistence:
+      config:
+        enabled: true
+        storageClass: longhorn-ssd
+        accessMode: ReadWriteOnce
+        size: 256Mi
+
+    additionalContainers:
+      ui:
+        image: ghcr.io/gurucomputing/headscale-ui:latest
+        ports:
+          - name: http
+            containerPort: 80
+
+    serviceMonitor:
+      main:
+        enabled: true
+        endpoints:
+          - port: metrics
+            scheme: http
+            path: /metrics
+            interval: 1m
+            scrapeTimeout: 10s
