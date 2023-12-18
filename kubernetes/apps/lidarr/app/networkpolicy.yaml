@@ -1,0 +1,32 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: egress-lidarr
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/egress-lidarr: "true"
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: lidarr
+            app.kubernetes.io/name: lidarr
+      toPorts:
+        - ports:
+            - port: "8686"
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: lidarr
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: lidarr
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            policy.gabe565.com/egress-lidarr: "true"
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
