@@ -1,0 +1,32 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: egress-healthchecks
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/egress-healthchecks: "true"
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: healthchecks
+            app.kubernetes.io/name: healthchecks
+      toPorts:
+        - ports:
+            - port: "8000"
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: healthchecks
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: healthchecks
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            policy.gabe565.com/egress-healthchecks: "true"
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists

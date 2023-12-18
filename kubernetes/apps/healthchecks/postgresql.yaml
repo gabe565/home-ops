@@ -1,0 +1,19 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgresql
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.1-7
+  enableSuperuserAccess: true
+  bootstrap:
+    initdb:
+      database: healthchecks
+      owner: healthchecks
+  storage:
+    storageClass: longhorn-ssd
+    size: 2Gi
+  resources:
+    requests:
+      memory: 50Mi
+      cpu: 20m
