@@ -1,0 +1,65 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: matrimony
+spec:
+  chart:
+    spec:
+      chart: matrimony
+      version: 0.6.2
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: gabe565
+  interval: 1h
+  values:
+    env:
+      TZ: America/Chicago
+
+    controller:
+      strategy: Recreate
+
+    podLabels:
+      policy.gabe565.com/ingress-ingress: "true"
+
+    ingress:
+      main:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
+              - www.${app_url}
+
+    persistence:
+      data:
+        enabled: true
+        storageClass: longhorn-ssd
+        accessMode: ReadWriteOnce
+        size: 256Mi
+
+    addons:
+      codeserver:
+        enabled: true
+        ingress:
+          enabled: true
+          annotations:
+            nginx.ingress.kubernetes.io/whitelist-source-range: 192.168.1.0/24,10.42.0.0/16
+          hosts:
+            - host: ${code_url}
+              paths:
+                - path: /
+          tls:
+            - secretName: ${certificate_name}
+              hosts:
+                - ${code_url}
+        volumeMounts:
+          - name: data
+            mountPath: /data
