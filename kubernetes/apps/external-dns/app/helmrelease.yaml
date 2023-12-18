@@ -1,0 +1,39 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: external-dns
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: external-dns
+      version: 1.13.1
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: external-dns
+      interval: 1h
+  values:
+    podLabels:
+      policy.gabe565.com/egress-kubeapi: "true"
+      policy.gabe565.com/egress-world: "true"
+
+    priorityClassName: system-cluster-critical
+
+    provider: cloudflare
+    interval: 1h
+    triggerLoopOnEvent: true
+    policy: sync
+
+    txtOwnerId: gabernetes
+    env:
+      - name: EXTERNAL_DNS_DEFAULT_TARGETS
+        valueFrom:
+          configMapKeyRef:
+            name: external-dns-dynamic-ip
+            key: ip
+      - name: CF_API_TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: cloudflare
+            key: token
