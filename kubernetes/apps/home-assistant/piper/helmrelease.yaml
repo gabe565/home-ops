@@ -1,0 +1,51 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: piper
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 2.4.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  values:
+    controllers:
+      main:
+        strategy: RollingUpdate
+        containers:
+          main:
+            image:
+              repository: rhasspy/wyoming-piper
+              tag: 1.4.0
+            args:
+              - --voice=en_GB-alba-medium
+            resources:
+              requests:
+                cpu: 500m
+              limits:
+                cpu: 1000m
+        pod:
+          labels:
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-namespace: "true"
+          terminationGracePeriodSeconds: "0"
+
+    service:
+      main:
+        ports:
+          http:
+            port: 10200
+
+    persistence:
+      data:
+        enabled: true
+        type: emptyDir
+      tmp:
+        enabled: true
+        type: emptyDir
+        medium: Memory

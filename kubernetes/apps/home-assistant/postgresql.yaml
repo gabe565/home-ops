@@ -1,0 +1,20 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgresql
+  namespace: home-assistant
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.1-7
+  enableSuperuserAccess: true
+  bootstrap:
+    initdb:
+      database: home-assistant
+      owner: home-assistant
+  storage:
+    storageClass: longhorn-ssd
+    size: 6Gi
+  resources:
+    requests:
+      memory: 400Mi
+      cpu: 10m

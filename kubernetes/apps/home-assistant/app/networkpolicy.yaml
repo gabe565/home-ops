@@ -1,0 +1,53 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: egress-home-assistant
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/egress-home-assistant: "true"
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: home-assistant
+            app.kubernetes.io/name: home-assistant
+      toPorts:
+        - ports:
+            - port: "8123"
+---
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: ingress-home-assistant
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/ingress-home-assistant: "true"
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: home-assistant
+            app.kubernetes.io/name: home-assistant
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: home-assistant
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: home-assistant
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            policy.gabe565.com/ingress-home-assistant: "true"
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            policy.gabe565.com/egress-home-assistant: "true"
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
