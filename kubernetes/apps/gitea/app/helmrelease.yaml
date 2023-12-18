@@ -1,0 +1,137 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: gitea
+spec:
+  chart:
+    spec:
+      chart: gitea
+      version: 9.6.1
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: gitea
+        name: gitea
+  interval: 1h
+  values:
+    strategy:
+      type: Recreate
+
+    deployment:
+      env:
+        - name: TZ
+          value: America/Chicago
+        - name: USER_UID
+          value: "1001"
+        - name: USER_GID
+          value: "1003"
+      labels:
+        policy.gabe565.com/egress-namespace: "true"
+        policy.gabe565.com/egress-world: "true"
+        policy.gabe565.com/ingress-ingress: "true"
+
+    ingress:
+      enabled: true
+      annotations:
+        nginx.ingress.kubernetes.io/from-to-www-redirect: "false"
+      hosts:
+        - host: ${app_url}
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - secretName: ${certificate_name}
+          hosts:
+            - ${app_url}
+
+    postgresql:
+      enabled: false
+
+    postgresql-ha:
+      enabled: false
+
+    redis-cluster:
+      enabled: false
+
+    service:
+      ssh:
+        type: LoadBalancer
+        port: 22
+        loadBalancerIP: 192.168.1.226
+
+    persistence:
+      storageClass: longhorn-ssd
+
+    gitea:
+      admin:
+        password: ${gitea_admin_password}
+      config:
+        server:
+          DOMAIN: ${app_url}
+          ROOT_URL: https://${app_url}
+          SSH_DOMAIN: ${ssh_domain}
+          SSH_PORT: "2222"
+          LFS_JWT_SECRET: ${lfs_jwt_secret}
+        database:
+          DB_TYPE: postgres
+          HOST: postgresql-rw:5432
+          NAME: gitea
+          USER: gitea
+        cache:
+          ENABLED: "true"
+          ADAPTER: redis
+        mailer:
+          ENABLED: "true"
+          PROTOCOL: smtp
+          SMTP_ADDR: ${smtp_address}
+          USER: ${smtp_username}
+          PASSWD: ${smtp_password}
+          FROM: ${smtp_username}
+        oauth2_client:
+          OPENID_CONNECT_SCOPES: email profile
+          ENABLE_AUTO_REGISTRATION: "true"
+          JWT_SECRET: ${oauth2_jwt_secret}
+        ui:
+          SHOW_USER_EMAIL: "false"
+        security:
+          MIN_PASSWORD_LENGTH: "8"
+          PASSWORD_COMPLEXITY: lower,upper,digit,spec
+          PASSWORD_CHECK_PWN: "true"
+          SECRET_KEY: ${secret_key}
+          INTERNAL_TOKEN: ${internal_token}
+        session:
+          PROVIDER: redis
+          COOKIE_SECURE: "true"
+        cron:
+          ENABLED: "true"
+        service:
+          DISABLE_REGISTRATION: "true"
+        indexer:
+          REPO_INDEXER_ENABLED: "true"
+        other:
+          SHOW_FOOTER_VERSION: "false"
+          SHOW_FOOTER_TEMPLATE_LOAD_TIME: "false"
+        actions:
+          ENABLED: "true"
+        queue:
+          TYPE: redis
+
+      additionalConfigFromEnvs:
+        - name: GITEA__DATABASE__PASSWD
+          valueFrom:
+            secretKeyRef:
+              name: postgresql-app
+              key: password
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: redis
+              key: redis-password
+        - name: REDIS_CONN_STR
+          value: redis://:$(REDIS_PASSWORD)@redis-master:6379/0?pool_size=100&idle_timeout=180s
+        - name: GITEA__CACHE__HOST
+          value: $(REDIS_CONN_STR)
+        - name: GITEA__QUEUE__CONN_STR
+          value: $(REDIS_CONN_STR)
+        - name: GITEA__SESSION__PROVIDER_CONFIG
+          value: $(REDIS_CONN_STR)
