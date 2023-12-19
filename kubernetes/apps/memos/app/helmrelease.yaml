@@ -1,0 +1,48 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: memos
+spec:
+  chart:
+    spec:
+      chart: memos
+      version: 0.10.1
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: gabe565
+  interval: 1h
+  values:
+    env:
+      MEMOS_DRIVER: postgres
+      MEMOS_DSN:
+        secretKeyRef:
+          name: postgresql-app
+          key: uri
+
+    podLabels:
+      policy.gabe565.com/egress-namespace: "true"
+      policy.gabe565.com/egress-world: "true"
+      policy.gabe565.com/ingress-ingress: "true"
+
+    persistence:
+      data:
+        enabled: true
+        storageClass: longhorn-ssd
+        accessMode: ReadWriteOnce
+        size: 512M
+
+    ingress:
+      main:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/proxy-body-size: 64m
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
