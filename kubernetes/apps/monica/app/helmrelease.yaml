@@ -1,0 +1,97 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: monica
+spec:
+  chart:
+    spec:
+      chart: monica
+      version: 0.7.3
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: gabe565
+  interval: 1h
+  values:
+    controller:
+      strategy: Recreate
+
+    env:
+      TZ: America/Chicago
+      CHECK_VERSION: "false"
+      SESSION_LIFETIME: "240"
+      APP_KEY: ${app_key}
+      MAIL_PASSWORD: ${mail_password}
+      LOCATION_IQ_API_KEY: ${location_iq_api_key}
+      DARKSKY_API_KEY: ${darksky_api_key}
+
+      MAIL_MAILER: smtp
+      MAIL_HOST: ${smtp_host}
+      MAIL_PORT: 587
+      MAIL_USERNAME: ${smtp_username}
+      MAIL_ENCRYPTION: tls
+      MAIL_FROM_ADDRESS: ${smtp_username}
+      MAIL_FROM_NAME: Cook Contacts
+
+      ENABLE_GEOLOCATION: "true"
+      ENABLE_WEATHER: "true"
+
+    podLabels:
+      policy.gabe565.com/egress-namespace: "true"
+      policy.gabe565.com/egress-world: "true"
+      policy.gabe565.com/ingress-authentik: "true"
+      policy.gabe565.com/ingress-ingress: "true"
+
+    ingress:
+      main:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/auth-url: |-
+            http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
+          nginx.ingress.kubernetes.io/auth-signin: |-
+            /outpost.goauthentik.io/start?rd=$escaped_request_uri
+          nginx.ingress.kubernetes.io/auth-response-headers: |-
+            Set-Cookie,Cookie
+          nginx.ingress.kubernetes.io/auth-snippet: |
+            proxy_set_header X-Forwarded-Host $http_host;
+          nginx.ingress.kubernetes.io/proxy-body-size: 16M
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+        tls: &tls
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
+      logout:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/temporal-redirect: https://${app_url}/outpost.goauthentik.io/sign_out
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /logout
+                service:
+                  name: main
+        tls: *tls
+
+    persistence:
+      storage:
+        enabled: true
+        accessMode: ReadWriteOnce
+        storageClass: longhorn-ssd
+        size: 256Mi
+
+    mariadb:
+      enabled: true
+      auth:
+        password: ${mariadb_password}
+        rootPassword: ${mariadb_root_password}
+      primary:
+        persistence:
+          enabled: true
+          storageClass: longhorn-ssd
+          size: 1Gi
+        podLabels:
+          policy.gabe565.com/ingress-namespace: "true"
