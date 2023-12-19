@@ -1,0 +1,19 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: metrics-server
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: metrics-server
+      version: 3.11.0
+      sourceRef:
+        kind: HelmRepository
+        namespace: kube-system
+        name: metrics-server
+      interval: 1h
+  values:
+    podLabels:
+      policy.gabe565.com/egress-nodes: "true"
+      policy.gabe565.com/ingress-nodes: "true"
