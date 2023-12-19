@@ -1,0 +1,32 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: egress-miniflux
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/egress-miniflux: "true"
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: miniflux
+            app.kubernetes.io/name: miniflux
+      toPorts:
+        - ports:
+            - port: "8080"
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: miniflux
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: miniflux
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            policy.gabe565.com/egress-miniflux: "true"
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists

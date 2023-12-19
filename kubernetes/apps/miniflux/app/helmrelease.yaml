@@ -1,0 +1,80 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: miniflux
+spec:
+  chart:
+    spec:
+      chart: miniflux
+      version: 0.6.11
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: gabe565
+  interval: 1h
+  values:
+    env:
+      TZ: America/Chicago
+
+      DATABASE_URL:
+        secretKeyRef:
+          name: postgresql-app
+          key: uri
+
+      OAUTH2_PROVIDER: oidc
+      OAUTH2_CLIENT_ID: ${oauth2_client_id}
+      OAUTH2_CLIENT_SECRET: ${oauth2_client_secret}
+      OAUTH2_REDIRECT_URL: https://${app_url}/oauth2/oidc/callback
+      OAUTH2_OIDC_DISCOVERY_ENDPOINT: https://${auth_host}/application/o/miniflux/
+      OAUTH2_USER_CREATION: "1"
+
+      CREATE_ADMIN: "0"
+
+    podLabels:
+      policy.gabe565.com/egress-ingress: "true"
+      policy.gabe565.com/egress-namespace: "true"
+      policy.gabe565.com/egress-world: "true"
+      policy.gabe565.com/ingress-ingress: "true"
+      policy.gabe565.com/ingress-prometheus: "true"
+
+    ingress:
+      main:
+        enabled: true
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+        tls: &tls
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
+      metrics:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/configuration-snippet: |
+            return 404;
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /metrics
+                pathType: Exact
+        tls: *tls
+      redirect:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/temporal-redirect: https://${app_url}/oauth2/oidc/redirect
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+                pathType: Exact
+        tls: *tls
+
+    postgresql:
+      enabled: false
+
+    serviceMonitor:
+      main:
+        enabled: true
+        allowedNetworks: 0.0.0.0/0
