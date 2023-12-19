@@ -1,0 +1,138 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: mosquitto
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 2.4.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  valuesFrom:
+    - kind: Secret
+      name: mosquitto-values
+  values:
+    controllers:
+      main:
+        initContainers:
+          split-ca-crt:
+            image:
+              repository: alpine
+              tag: 3.19
+            command:
+              - sh
+              - -c
+              - |
+                set -eux
+                apk add --no-cache coreutils
+                csplit -f /tls/ca/tls- -b "%1d.crt" -s -z /tls/tls.crt '/-----BEGIN CERTIFICATE-----/' '{1}'
+            volumeMounts:
+              - name: tls
+                mountPath: /tls
+              - name: ca
+                mountPath: /tls/ca
+        containers:
+          main:
+            image:
+              repository: eclipse-mosquitto
+              tag: 2.0.18
+            command: [mosquitto, -c, /mosquitto/config/mosquitto.conf]
+            env:
+              TZ: America/Chicago
+        pod:
+          labels:
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-ingress: "true"
+            policy.gabe565.com/ingress-world: "true"
+
+    service:
+      main:
+        type: LoadBalancer
+        loadBalancerIP: 192.168.1.222
+        annotations:
+          external-dns.alpha.kubernetes.io/hostname: ${app_url}
+        ports:
+          http:
+            enabled: false
+          mqtt:
+            port: 1883
+          mqtts:
+            port: 8883
+
+    persistence:
+      data:
+        enabled: true
+        storageClass: longhorn-ssd
+        accessMode: ReadWriteOnce
+        size: 64Mi
+        advancedMounts:
+          main:
+            main:
+              - path: /mosquitto/data
+      config:
+        enabled: true
+        type: configMap
+        name: mosquitto-config
+        advancedMounts:
+          main:
+            main:
+              - path: /mosquitto/config/mosquitto.conf
+                subPath: mosquitto.conf
+      auth:
+        enabled: true
+        type: secret
+        name: mosquitto-auth
+        advancedMounts:
+          main:
+            main:
+              - path: /mosquitto/config/passwd
+                subPath: passwd
+              - path: /mosquitto/config/acl
+                subPath: acl
+      tls:
+        enabled: true
+        type: secret
+        name: ${certificate_name}
+        globalMounts:
+          - path: /tls
+      ca:
+        enabled: true
+        type: emptyDir
+        globalMounts:
+          - path: /tls/ca
+
+    secrets:
+      auth:
+        enabled: true
+
+    configMaps:
+      config:
+        enabled: true
+        data:
+          mosquitto.conf: |
+            per_listener_settings false
+
+            listener 1883
+            listener 8883
+
+            allow_anonymous false
+
+            persistence true
+            persistence_location /mosquitto/data
+            autosave_interval 1800
+
+            cafile /tls/ca/tls-1.crt
+            certfile /tls/ca/tls-0.crt
+            keyfile /tls/tls.key
+
+            log_dest stderr
+            log_type error
+            log_type warning
+
+            password_file /mosquitto/config/passwd
+            acl_file /mosquitto/config/acl

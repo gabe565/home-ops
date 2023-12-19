@@ -1,0 +1,29 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: egress-mosquitto
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/egress-mosquitto: "true"
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: mosquitto
+            app.kubernetes.io/name: mosquitto
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: mosquitto
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: mosquitto
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            policy.gabe565.com/egress-mosquitto: "true"
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
