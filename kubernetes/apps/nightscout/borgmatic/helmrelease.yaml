@@ -1,0 +1,90 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: borgbase-ssh
+  annotations:
+    reflector.v1.k8s.emberstack.com/reflects: default/borgbase-ssh
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: borgmatic
+spec:
+  chart:
+    spec:
+      chart: borgmatic
+      version: 0.9.4
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: gabe565
+  interval: 1h
+  values:
+    image:
+      repository: ghcr.io/gabe565/borgmatic
+      tag: 1.8.5
+    controller:
+      type: cronjob
+      cronjob:
+        schedule: 35 0 * * *
+        ttlSecondsAfterFinished: 3600
+    affinity:
+      podAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: nightscout
+    podLabels:
+      policy.gabe565.com/egress-healthchecks: "true"
+      policy.gabe565.com/egress-namespace: "true"
+      policy.gabe565.com/egress-world: "true"
+    env:
+      TZ: America/Chicago
+      BORG_PASSPHRASE: ${borg_passphrase}
+      MONGODB_PASSWORD:
+        secretKeyRef:
+          name: nightscout-mongodb
+          key: mongodb-passwords
+      PING_KEY:
+        secretKeyRef:
+          name: healthchecks-ping-key
+          key: key
+    persistence:
+      data:
+        enabled: true
+        size: 100Mi
+        storageClass: nfs-client
+        accessMode: ReadWriteMany
+      ssh:
+        enabled: true
+        type: secret
+        name: borgbase-ssh
+    configMaps:
+      config:
+        data:
+          # language=yaml
+          config.yaml: |
+            repositories:
+              - path: ${borg_repo}
+                label: borgbase
+            source_directories: []
+            archive_name_format: "nightscout-{now:%Y-%m-%d-%H%M%S}"
+            ssh_command: ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=ERROR
+            retries: 2
+            retry_wait: 10
+            keep_daily: 90
+            keep_weekly: 24
+            keep_monthly: 24
+            keep_yearly: 20
+            check_last: 3
+            healthchecks:
+              ping_url: http://healthchecks.healthchecks:8000/ping/${healthchecks_uuid}
+            mongodb_databases:
+              - name: nightscout
+                hostname: nightscout-mongodb
+                username: nightscout
+                password: $${MONGODB_PASSWORD}

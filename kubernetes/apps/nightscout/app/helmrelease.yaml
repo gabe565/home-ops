@@ -1,0 +1,112 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: nightscout
+spec:
+  chart:
+    spec:
+      chart: nightscout
+      version: 0.9.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: gabe565
+  interval: 1h
+  values:
+    image:
+      repository: ghcr.io/gabe565/nightscout
+      tag: 15.0.0
+
+    env:
+      TZ: "America/Chicago"
+      API_SECRET: ${api_secret}
+      AUTH_DEFAULT_ROLES: "denied"
+      ALARM_TIMEAGO_URGENT: "off"
+      ALARM_TIMEAGO_WARN: "off"
+      ALARM_TYPES: " "
+      DAY_START: "9.0"
+      DAY_END: "23.0"
+      DEVICESTATUS_ADVANCED: "true"
+      DISABLE: "ar2 simplealarms upbat dbsize"
+      EDIT_MODE: "on"
+      ENABLE: "careportal simplealarms"
+      SCALE_Y: "linear"
+      SHOW_FORECAST: " "
+      SHOW_RAWBG: "noise"
+      THEME: "colors"
+      TIME_FORMAT: "24"
+      INSECURE_USE_HTTP: "true"
+
+    podLabels:
+      policy.gabe565.com/egress-namespace: "true"
+      policy.gabe565.com/egress-world: "true"
+      policy.gabe565.com/ingress-home-assistant: "true"
+      policy.gabe565.com/ingress-ingress: "true"
+
+    ingress:
+      main:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/auth-url: |-
+            http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
+          nginx.ingress.kubernetes.io/auth-signin: /outpost.goauthentik.io/start?rd=%2F
+          nginx.ingress.kubernetes.io/auth-response-headers: Set-Cookie,X-Nightscout-Api-Key
+          nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Host $http_host;
+          nginx.ingress.kubernetes.io/configuration-snippet: |
+            access_by_lua_block {
+              local apiKey = ngx.var.authHeader1
+              if apiKey ~= nil then
+                local args = ngx.req.get_uri_args()
+                args.token = apiKey
+                ngx.req.set_uri_args(args)
+              end
+            }
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+        tls: &bg-tls
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
+      api:
+        enabled: true
+        hosts:
+          - host: ${api_url}
+            paths:
+              - path: /
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${api_url}
+      remove-sw:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/configuration-snippet: |
+            add_header Content-Type application/javascript;
+            return 200 "self.addEventListener('install', event => { event.waitUntil(self.skipWaiting()) })";
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /sw.js
+        tls: *bg-tls
+
+    mongodb:
+      enabled: true
+      auth:
+        passwords:
+          - ${mongodb_password}
+        rootPassword: ${mongodb_root_password}
+      persistence:
+        enabled: true
+        storageClass: longhorn-ssd
+        size: 2Gi
+      livenessProbe:
+        periodSeconds: 30
+      readinessProbe:
+        periodSeconds: 30
+      nodeSelector:
+        feature.node.kubernetes.io/cpu-cpuid.AVX: "true"
+      podLabels:
+        policy.gabe565.com/ingress-namespace: "true"

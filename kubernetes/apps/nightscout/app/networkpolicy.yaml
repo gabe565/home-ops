@@ -1,0 +1,32 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: egress-nightscout
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/egress-nightscout: "true"
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: nightscout
+            app.kubernetes.io/name: nightscout
+      toPorts:
+        - ports:
+            - port: "1337"
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: nightscout
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: nightscout
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            policy.gabe565.com/egress-nightscout: "true"
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
