@@ -1,0 +1,32 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: egress-paperless-ngx
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/egress-paperless-ngx: "true"
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: paperless-ngx
+            app.kubernetes.io/name: paperless-ngx
+      toPorts:
+        - ports:
+            - port: "8000"
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: paperless-ngx
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: paperless-ngx
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            policy.gabe565.com/egress-paperless-ngx: "true"
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists

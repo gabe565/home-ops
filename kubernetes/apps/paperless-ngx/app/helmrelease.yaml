@@ -1,0 +1,87 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: paperless-ngx
+spec:
+  chart:
+    spec:
+      chart: paperless-ngx
+      version: 0.9.2
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: gabe565
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    env:
+      TZ: America/Chicago
+      PAPERLESS_SECRET_KEY: ${secret_key}
+      PAPERLESS_ENABLE_HTTP_REMOTE_USER: "true"
+      PAPERLESS_HTTP_REMOTE_USER_HEADER_NAME: HTTP_X_AUTHENTIK_USERNAME
+      PAPERLESS_LOGOUT_REDIRECT_URL: /outpost.goauthentik.io/sign_out
+      PAPERLESS_ALLOWED_HOSTS: "*"
+
+      PAPERLESS_DBENGINE: postgresql
+      PAPERLESS_DBHOST: postgresql-rw
+      PAPERLESS_DBNAME: paperless-ngx
+      PAPERLESS_DBUSER: paperless-ngx
+      PAPERLESS_DBPASS:
+        secretKeyRef:
+          name: postgresql-app
+          key: password
+
+    podLabels:
+      policy.gabe565.com/egress-namespace: "true"
+      policy.gabe565.com/egress-world: "true"
+      policy.gabe565.com/ingress-ingress: "true"
+
+    persistence:
+      data:
+        enabled: true
+        storageClass: longhorn-ssd
+        accessMode: ReadWriteOnce
+        size: 1Gi
+      media:
+        enabled: true
+        type: nfs
+        server: 100.64.0.4
+        path: /volume1/documents/paperless/media
+      export:
+        enabled: true
+        type: nfs
+        server: 100.64.0.4
+        path: /volume1/documents/paperless/export
+      consume:
+        enabled: true
+        type: nfs
+        server: 100.64.0.4
+        path: /volume1/documents/paperless/consume
+
+    ingress:
+      main:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/auth-url: |-
+            http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
+          nginx.ingress.kubernetes.io/auth-signin: |-
+            /outpost.goauthentik.io/start?rd=$escaped_request_uri
+          nginx.ingress.kubernetes.io/auth-response-headers: |-
+            Set-Cookie,X-authentik-username,X-authentik-groups,X-authentik-email,X-authentik-name,X-authentik-uid
+          nginx.ingress.kubernetes.io/auth-snippet: |
+            proxy_set_header X-Forwarded-Host $http_host;
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
+
+    redis:
+      master:
+        podLabels:
+          policy.gabe565.com/ingress-namespace: "true"
