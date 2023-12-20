@@ -1,0 +1,67 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: obico
+spec:
+  chart:
+    spec:
+      chart: obico
+      version: 0.2.7
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: gabe565
+  interval: 1h
+  values:
+    server:
+      env:
+        DJANGO_SECRET_KEY: ${django_secret_key}
+        EMAIL_HOST: ${smtp_hostname}
+        EMAIL_HOST_USER: ${smtp_username}
+        EMAIL_HOST_PASSWORD: ${email_host_password}
+        DEFAULT_FROM_EMAIL: ${smtp_username}
+        EMAIL_PORT: '587'
+        EMAIL_USE_TLS: 'True'
+        TELEGRAM_BOT_TOKEN: ${telegram_bot_token}
+
+      podLabels:
+        policy.gabe565.com/egress-namespace: "true"
+        policy.gabe565.com/egress-world: "true"
+        policy.gabe565.com/ingress-ingress: "true"
+
+      persistence:
+        data:
+          enabled: true
+          storageClass: longhorn-ssd
+          accessMode: ReadWriteOnce
+          size: 512M
+        media:
+          enabled: true
+          storageClass: nfs-client
+          accessMode: ReadWriteMany
+          size: 8Gi
+
+      ingress:
+        main:
+          enabled: true
+          annotations:
+            nginx.ingress.kubernetes.io/proxy-body-size: 64m
+          hosts:
+            - host: ${app_url}
+              paths:
+                - path: /
+          tls:
+            - secretName: ${certificate_name}
+              hosts:
+                - ${app_url}
+
+    ml-api:
+      podLabels:
+        policy.gabe565.com/egress-world: "true"
+        policy.gabe565.com/ingress-namespage: "true"
+
+    redis:
+      master:
+        podLabels:
+          policy.gabe565.com/ingress-namespace: "true"
