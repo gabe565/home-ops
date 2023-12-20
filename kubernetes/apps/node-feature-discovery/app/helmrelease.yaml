@@ -13,6 +13,8 @@ spec:
         name: node-feature-discovery
         namespace: node-feature-discovery
   interval: 1h
+  driftDetection:
+    mode: enabled
   postRenderers:
     - kustomize:
         patches:

@@ -17,6 +17,8 @@ spec:
   upgrade:
     crds: CreateReplace
   interval: 1h
+  driftDetection:
+    mode: enabled
   values:
     controller:
       labels:

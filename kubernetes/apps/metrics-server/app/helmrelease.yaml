@@ -4,6 +4,8 @@ metadata:
   name: metrics-server
 spec:
   interval: 1h
+  driftDetection:
+    mode: enabled
   chart:
     spec:
       chart: metrics-server

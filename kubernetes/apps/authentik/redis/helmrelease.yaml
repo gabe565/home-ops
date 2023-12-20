@@ -13,6 +13,8 @@ spec:
         namespace: flux-system
         name: bitnami
   interval: 1h
+  driftDetection:
+    mode: enabled
   values:
     auth:
       enabled: true

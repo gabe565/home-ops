@@ -13,6 +13,8 @@ spec:
         namespace: flux-system
         name: gabe565
   interval: 1h
+  driftDetection:
+    mode: enabled
   values:
     image:
       repository: ghcr.io/gabe565/nightscout

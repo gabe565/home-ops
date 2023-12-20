@@ -4,6 +4,8 @@ metadata:
   name: nfs-subdir-external-provisioner
 spec:
   interval: 1h
+  driftDetection:
+    mode: enabled
   chart:
     spec:
       chart: nfs-subdir-external-provisioner

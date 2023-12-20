@@ -4,6 +4,8 @@ metadata:
   name: adguard-home-external-dns
 spec:
   interval: 1h
+  driftDetection:
+    mode: enabled
   chart:
     spec:
       chart: external-dns

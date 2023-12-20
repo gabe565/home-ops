@@ -13,6 +13,8 @@ spec:
         namespace: authentik
         name: authentik
   interval: 1h
+  driftDetection:
+    mode: enabled
   values:
     priorityClassName: system-cluster-critical
 

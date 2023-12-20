@@ -13,6 +13,8 @@ spec:
         namespace: gitea
         name: gitea
   interval: 1h
+  driftDetection:
+    mode: enabled
   values:
     strategy:
       type: Recreate

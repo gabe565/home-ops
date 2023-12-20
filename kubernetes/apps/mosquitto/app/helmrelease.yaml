@@ -13,6 +13,8 @@ spec:
         namespace: flux-system
         name: bjw-s
   interval: 1h
+  driftDetection:
+    mode: enabled
   valuesFrom:
     - kind: Secret
       name: mosquitto-values
