@@ -1,0 +1,53 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: ingress-overseerr
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/ingress-overseerr: "true"
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: overseerr
+            app.kubernetes.io/name: overseerr
+---
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: egress-overseerr
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/egress-overseerr: "true"
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: overseerr
+            app.kubernetes.io/name: overseerr
+      toPorts:
+        - ports:
+            - port: "5055"
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: overseerr
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: overseerr
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            policy.gabe565.com/ingress-overseerr: "true"
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            policy.gabe565.com/egress-overseerr: "true"
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists

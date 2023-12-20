@@ -1,0 +1,75 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: overseerr
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 2.4.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      main:
+        containers:
+          main:
+            image:
+              repository: ghcr.io/sct/overseerr
+              tag: 1.33.2
+            env:
+              TZ: America/Chicago
+              LOG_LEVEL: warn
+        pod:
+          labels:
+            policy.gabe565.com/egress-gotify: "true"
+            policy.gabe565.com/egress-plex: "true"
+            policy.gabe565.com/egress-tautulli: "true"
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-authentik: "true"
+            policy.gabe565.com/ingress-ingress: "true"
+
+    service:
+      main:
+        ports:
+          http:
+            port: 5055
+
+    persistence:
+      config:
+        enabled: true
+        size: 100Mi
+        globalMounts:
+          - path: /app/config
+      cache:
+        enabled: true
+        type: emptyDir
+        size: 1Gi
+        globalMounts:
+          - path: /app/config/cache
+
+    ingress:
+      main:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/auth-url:
+            http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
+          nginx.ingress.kubernetes.io/auth-signin: /outpost.goauthentik.io/start?rd=$escaped_request_uri
+          nginx.ingress.kubernetes.io/auth-response-headers: Set-Cookie,Cookie
+          nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Host $http_host;
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+                service:
+                  name: main
+        tls: &tls
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
