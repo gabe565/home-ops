@@ -29,6 +29,7 @@ spec:
         policy.gabe565.com/egress-namespace: "true"
         policy.gabe565.com/egress-world: "true"
         policy.gabe565.com/ingress-ingress: "true"
+        policy.gabe565.com/ingress-prometheus: "true"
 
     ingress:
       enabled: true
@@ -65,6 +66,10 @@ spec:
     gitea:
       admin:
         password: ${gitea_admin_password}
+      metrics:
+        enabled: true
+        serviceMonitor:
+          enabled: true
       config:
         server:
           DOMAIN: ${app_url}
