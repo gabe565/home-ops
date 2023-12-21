@@ -1,0 +1,89 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: searxng
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 2.4.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  valuesFrom:
+    - kind: Secret
+      name: searxng-values
+  values:
+    controllers:
+      main:
+        strategy: RollingUpdate
+        containers:
+          main:
+            image:
+              repository: searxng/searxng
+              tag: latest
+            env:
+              TZ: America/Chicago
+              SEARXNG_SECRET: ${searxng_secret}
+              SEARXNG_URL: https://${app_url}
+              UWSGI_WORKERS: "1"
+              REDIS_PASSWORD:
+                secretKeyRef:
+                  name: redis
+                  key: redis-password
+              SEARXNG_REDIS_URL: redis://:$(REDIS_PASSWORD)@redis-master:6379/0
+        pod:
+          labels:
+            policy.gabe565.com/egress-namespace: "true"
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-ingress: "true"
+          terminationGracePeriodSeconds: "0"
+
+    service:
+      main:
+        ports:
+          http:
+            port: 8080
+
+    persistence:
+      config:
+        enabled: true
+        type: secret
+        name: searxng-config
+        globalMounts:
+          - path: /etc/searxng/settings.yml
+            subPath: settings.yml
+
+    ingress:
+      main:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/auth-url: |-
+            http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
+          nginx.ingress.kubernetes.io/auth-signin: |-
+            /outpost.goauthentik.io/start
+          nginx.ingress.kubernetes.io/auth-response-headers: |-
+            Set-Cookie,X-authentik-username,X-authentik-groups,X-authentik-email,X-authentik-name,X-authentik-uid
+          nginx.ingress.kubernetes.io/auth-snippet: |
+            proxy_set_header X-Forwarded-Host $http_host;
+          nginx.ingress.kubernetes.io/satisfy: any
+          nginx.ingress.kubernetes.io/whitelist-source-range: 192.168.1.0/24
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+                service:
+                  name: main
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
+
+    secrets:
+      config:
+        enabled: true
