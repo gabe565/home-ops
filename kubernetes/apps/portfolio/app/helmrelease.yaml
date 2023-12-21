@@ -1,0 +1,66 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: portfolio
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 2.4.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      main:
+        strategy: Recreate
+        containers:
+          main:
+            image:
+              repository: ghcr.io/gabe565/portfolio
+              tag: 2.1.9 #yampl {{ .tag }}
+            env:
+              TZ: America/Chicago
+        pod:
+          labels:
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-ingress: "true"
+          securityContext:
+            fsGroup: 1000
+            fsGroupChangePolicy: OnRootMismatch
+    service:
+      main:
+        ports:
+          http:
+            port: 80
+    persistence:
+      data:
+        enabled: true
+        retain: true
+        storageClass: longhorn-ssd
+        accessMode: ReadWriteOnce
+        size: 256Mi
+    ingress:
+      main:
+        enabled: true
+        annotations:
+          external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
+          nginx.ingress.kubernetes.io/configuration-snippet: |
+            real_ip_header      CF-Connecting-IP;
+            real_ip_recursive   on;
+            set_real_ip_from    0.0.0.0/0;
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+                service:
+                  name: main
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
