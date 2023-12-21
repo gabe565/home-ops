@@ -1,0 +1,32 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: egress-radarr
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/egress-radarr: "true"
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: radarr
+            app.kubernetes.io/name: radarr
+      toPorts:
+        - ports:
+            - port: "7878"
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: radarr
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: radarr
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            policy.gabe565.com/egress-radarr: "true"
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
