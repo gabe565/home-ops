@@ -1,0 +1,178 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: shlink
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 2.4.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      main:
+        enabled: false
+      api:
+        strategy: RollingUpdate
+        containers:
+          main:
+            image:
+              repository: ghcr.io/shlinkio/shlink
+              tag: 3.7.1-roadrunner
+
+            env:
+              TZ: America/Chicago
+              DEFAULT_DOMAIN: ${app_url}
+              SHORT_DOMAIN_HOST: ${app_url}
+              SHORT_DOMAIN_SCHEMA: https
+              VALIDATE_URLS: "true"
+              ANONYMIZE_REMOTE_ADDR: "false"
+              ENABLE_PERIODIC_VISIT_LOCATE: "true"
+              # AUTO_RESOLVE_TITLES: "true"
+
+              DB_DRIVER: postgres
+              DB_HOST: postgresql-rw
+              DB_NAME: shlink
+              DB_USER: shlink
+              DB_PASSWORD:
+                secretKeyRef:
+                  name: postgresql-app
+                  key: password
+
+              WEB_WORKER_NUM: "4"
+              TASK_WORKER_NUM: "4"
+
+              SKIP_INITIAL_GEOLITE_DOWNLOAD: "true"
+            envFrom:
+              - secretRef:
+                  name: shlink-geolite
+        pod:
+          labels:
+            policy.gabe565.com/egress-namespace: "true"
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-ingress: "true"
+          terminationGracePeriodSeconds: "0"
+      frontend:
+        strategy: RollingUpdate
+        containers:
+          main:
+            image:
+              repository: ghcr.io/shlinkio/shlink-web-client
+              tag: 3.10.2
+        pod:
+          labels:
+            policy.gabe565.com/ingress-ingress: "true"
+
+    service:
+      main:
+        enabled: false
+      api:
+        controller: api
+        ports:
+          http:
+            port: 8080
+      frontend:
+        controller: frontend
+        ports:
+          http:
+            port: 80
+
+    ingress:
+      main:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+                service:
+                  name: api
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
+              - www.${app_url}
+      frontend:
+        enabled: true
+        hosts:
+          - host: ${admin_url}
+            paths:
+              - path: /
+                service:
+                  name: frontend
+        tls: &admin-tls
+          - secretName: ${certificate_name}
+            hosts:
+              - ${admin_url}
+      frontend-root:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/auth-url:
+            http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
+          nginx.ingress.kubernetes.io/auth-signin: /outpost.goauthentik.io/start?rd=$escaped_request_uri
+          nginx.ingress.kubernetes.io/auth-response-headers: Set-Cookie
+          nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Host $http_host;
+        hosts:
+          - host: ${admin_url}
+            paths:
+              - path: /
+                pathType: Exact
+                service:
+                  name: frontend
+        tls: *admin-tls
+      frontend-servers-json:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/auth-url:
+            http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
+          nginx.ingress.kubernetes.io/auth-signin: /outpost.goauthentik.io/start?rd=$escaped_request_uri
+          nginx.ingress.kubernetes.io/auth-response-headers: Set-Cookie,X-Shlink-Api-Key
+          nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Host $http_host;
+          nginx.ingress.kubernetes.io/configuration-snippet: |
+            access_by_lua_block {
+              local apiKey = ngx.var.authHeader1
+              if apiKey == nil then
+                return ngx.exit(404)
+              else
+                local cjson = require "cjson"
+                ngx.say(cjson.encode(
+                  {{name="${app_url}", url="https://${app_url}", apiKey=apiKey}}
+                ))
+                return ngx.exit(200)
+              end
+            }
+        hosts:
+          - host: ${admin_url}
+            paths:
+              - path: /servers.json
+                pathType: Exact
+                service:
+                  name: frontend
+        tls: *admin-tls
+      remove-sw:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/configuration-snippet: |
+            add_header Content-Type application/javascript;
+            return 200 "self.addEventListener('install', event => { event.waitUntil(self.skipWaiting()) })";
+        hosts:
+          - host: ${admin_url}
+            paths:
+              - path: /service-worker.js
+                pathType: Exact
+                service:
+                  name: frontend
+        tls: *admin-tls
+
+    secrets:
+      geolite:
+        stringData:
+          GEOLITE_LICENSE_KEY: ${geolite_license_key}

@@ -1,0 +1,20 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgresql
+  namespace: shlink
+spec:
+  instances: 2
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.1-7
+  enableSuperuserAccess: true
+  bootstrap:
+    initdb:
+      database: shlink
+      owner: shlink
+  storage:
+    storageClass: longhorn-ssd-database
+    size: 2Gi
+  resources:
+    requests:
+      memory: 10Mi
+      cpu: 10m
