@@ -1,0 +1,193 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: qbittorrent
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 2.4.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  valuesFrom:
+    - kind: Secret
+      name: qbittorrent-values
+  values:
+    controllers:
+      main:
+        containers:
+          main:
+            image:
+              repository: ghcr.io/linuxserver/qbittorrent
+              tag: 4.6.2-libtorrentv1
+            env:
+              TZ: America/Chicago
+              PUID: "1000"
+              PGID: "1000"
+          vpn:
+            image:
+              repository: qmcgaw/gluetun
+              tag: v3.36.0
+            env:
+              HEALTH_VPN_DURATION_INITIAL: 120s
+              HEALTH_SUCCESS_WAIT_DURATION: 120s
+              VPN_SERVICE_PROVIDER: custom
+              VPN_TYPE: wireguard
+              FIREWALL_INPUT_PORTS: "8080"
+              DOT: "off"
+              DNS_ADDRESS: 10.8.0.1
+              WIREGUARD_MTU: "1390"
+              VERSION_INFORMATION: "off"
+            envFrom:
+              - secretRef:
+                  name: qbittorrent-gluetun
+            securityContext:
+              capabilities:
+                add:
+                  - NET_ADMIN
+                  - SYS_MODULE
+        pod:
+          labels:
+            policy.gabe565.com/ingress-authentik: "true"
+            policy.gabe565.com/ingress-ingress: "true"
+      vuetorrent:
+        strategy: RollingUpdate
+        containers:
+          main:
+            image:
+              repository: ghcr.io/gabe565/vuetorrent
+              tag: 2.4.0
+        pod:
+          labels:
+            policy.gabe565.com/ingress-ingress: "true"
+
+    persistence:
+      config:
+        enabled: true
+        retain: true
+        accessMode: ReadWriteOnce
+        size: 1Gi
+        advancedMounts:
+          main:
+            main:
+              - path: /config
+      media:
+        enabled: true
+        type: nfs
+        server: 100.64.0.4
+        path: /volume1/media
+        advancedMounts:
+          main:
+            main:
+              - path: /mnt/media
+      downloads:
+        enabled: true
+        type: nfs
+        server: 100.64.0.4
+        path: /volume1/downloads/qbittorrent
+        advancedMounts:
+          main:
+            main:
+              - path: /downloads
+      init-qbittorrent-config:
+        enabled: true
+        type: configMap
+        name: qbittorrent-init-qbittorrent-config
+        defaultMode: 0777
+        advancedMounts:
+          main:
+            main:
+              - path: /etc/s6-overlay/s6-rc.d/init-qbittorrent-config/run
+                subPath: run
+
+    service:
+      main:
+        ports:
+          http:
+            port: 8080
+      vuetorrent:
+        controller: vuetorrent
+        ports:
+          http:
+            port: 80
+
+    ingress:
+      main:
+        enabled: true
+        annotations: &annotations
+          nginx.ingress.kubernetes.io/auth-url:
+            http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
+          nginx.ingress.kubernetes.io/auth-signin: /outpost.goauthentik.io/start
+          nginx.ingress.kubernetes.io/auth-response-headers: Set-Cookie,Cookie
+          nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Host $http_host;
+          nginx.ingress.kubernetes.io/configuration-snippet: proxy_set_header Referer '';
+          nginx.ingress.kubernetes.io/proxy-body-size: 16M
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+                service:
+                  name: main
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
+      vuetorrent:
+        enabled: true
+        annotations:
+          <<: *annotations
+          nginx.ingress.kubernetes.io/configuration-snippet: |
+            proxy_set_header Referer '';
+            expires -1;
+        hosts:
+          - host: ${vuetorrent_url}
+            paths:
+              - path: /
+                service:
+                  name: vuetorrent
+              - path: /api
+                service:
+                  name: main
+        tls: &vuetorrent-tls
+          - secretName: ${certificate_name}
+            hosts:
+              - ${vuetorrent_url}
+      vuetorrent-sw:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/configuration-snippet: |
+            add_header Content-Type application/javascript;
+            return 200 "self.addEventListener('install', event => { event.waitUntil(self.skipWaiting()) })";
+        hosts:
+          - host: ${vuetorrent_url}
+            paths:
+              - path: /sw.js
+                type: Exact
+                service:
+                  name: vuetorrent
+        tls: *vuetorrent-tls
+
+    configMaps:
+      init-qbittorrent-config:
+        enabled: true
+        data:
+          run: |
+            #!/usr/bin/with-contenv bash
+
+            # make our folder
+            mkdir -p /config/qBittorrent
+
+            # copy default config
+            if [[ ! -f /config/qBittorrent/qBittorrent.conf ]]; then
+                cp /defaults/qBittorrent.conf /config/qBittorrent/qBittorrent.conf
+            fi
+
+            # permissions
+            lsiown -R abc:abc \
+                /config
