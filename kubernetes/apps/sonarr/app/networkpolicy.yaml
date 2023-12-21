@@ -1,0 +1,32 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: egress-sonarr
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/egress-sonarr: "true"
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: sonarr
+            app.kubernetes.io/name: sonarr
+      toPorts:
+        - ports:
+            - port: "8989"
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: sonarr
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: sonarr
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            policy.gabe565.com/egress-sonarr: "true"
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
