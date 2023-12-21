@@ -1,0 +1,64 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: transsmute
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 2.4.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      main:
+        strategy: RollingUpdate
+        containers:
+          main:
+            image:
+              repository: ghcr.io/gabe565/transsmute
+              tag: 1.2.1
+            env:
+              TZ: America/Chicago
+            envFrom:
+              - secretRef:
+                  name: transsmute-env
+        pod:
+          labels:
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-ingress: "true"
+
+    service:
+      main:
+        ports:
+          http:
+            port: 80
+
+    ingress:
+      main:
+        enabled: true
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+                service:
+                  name: main
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
+
+    secrets:
+      env:
+        stringData:
+          TRANSSMUTE_DOCKERHUB_USERNAME: ${dockerhub_username}
+          TRANSSMUTE_DOCKERHUB_PASSWORD: ${dockerhub_password}
+          TRANSSMUTE_GHCR_USERNAME: ${ghcr_username}
+          TRANSSMUTE_GHCR_PASSWORD: ${ghcr_password}
+          TRANSSMUTE_YOUTUBE_KEY: ${youtube_key}
