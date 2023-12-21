@@ -1,0 +1,53 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: pictshare
+spec:
+  chart:
+    spec:
+      chart: pictshare
+      version: 0.6.3
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: gabe565
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controller:
+      strategy: Recreate
+
+    env:
+      TZ: America/Chicago
+      MAX_RESIZED_IMAGES: "2"
+      UPLOAD_FORM_LOCATION: /
+      LOG_UPLOADER: "true"
+
+    podLabels:
+      policy.gabe565.com/ingress-ingress: "true"
+
+    ingress:
+      main:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+                service:
+                  port: 80
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
+              - www.${app_url}
+
+    persistence:
+      data:
+        enabled: true
+        storageClass: longhorn-ssd
+        size: 2Gi
+        accessMode: ReadWriteOnce
