@@ -1,0 +1,53 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: egress-prowlarr
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/egress-prowlarr: "true"
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: prowlarr
+            app.kubernetes.io/name: prowlarr
+      toPorts:
+        - ports:
+            - port: "9696"
+---
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: ingress-prowlarr
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/ingress-prowlarr: "true"
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: prowlarr
+            app.kubernetes.io/name: prowlarr
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: prowlarr
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: prowlarr
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            policy.gabe565.com/egress-prowlarr: "true"
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            policy.gabe565.com/egress-prowlarr: "true"
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists

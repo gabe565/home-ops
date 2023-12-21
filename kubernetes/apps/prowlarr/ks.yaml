@@ -1,0 +1,35 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: app
+spec:
+  interval: 1h
+  targetNamespace: prowlarr
+  path: ./kubernetes/apps/prowlarr/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    namespace: flux-system
+    name: home-ops
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: app-vars
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: borgmatic
+spec:
+  interval: 1h
+  targetNamespace: prowlarr
+  path: ./kubernetes/apps/prowlarr/borgmatic
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    namespace: flux-system
+    name: home-ops
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: borgmatic-vars
