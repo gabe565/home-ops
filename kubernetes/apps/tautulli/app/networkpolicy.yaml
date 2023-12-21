@@ -1,0 +1,32 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: egress-tautulli
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/egress-tautulli: "true"
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: tautulli
+            app.kubernetes.io/name: tautulli
+      toPorts:
+        - ports:
+            - port: "8181"
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: tautulli
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: tautulli
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            policy.gabe565.com/egress-tautulli: "true"
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
