@@ -1,0 +1,95 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: plex
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 2.4.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      main:
+        containers:
+          main:
+            image:
+              repository: ghcr.io/linuxserver/plex
+              tag: version-1.32.8.7639-fb6452ebf
+            env:
+              TZ: America/Chicago
+              PUID: "1000"
+              PGID: "1000"
+            resources:
+              requests:
+                gpu.intel.com/i915: 1
+              limits:
+                gpu.intel.com/i915: 1
+                memory: 4096Mi
+        pod:
+          labels:
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-home-assistant: "true"
+            policy.gabe565.com/ingress-ingress: "true"
+            policy.gabe565.com/ingress-world: "true"
+
+    persistence:
+      config:
+        enabled: true
+        retain: true
+        storageClass: longhorn-ssd
+        accessMode: ReadWriteOnce
+        size: 8Gi
+      data:
+        enabled: true
+        type: nfs
+        server: 100.64.0.4
+        path: /volume1/media
+      transcode:
+        enabled: true
+        type: emptyDir
+        sizeLimit: 32Gi
+
+    service:
+      main:
+        type: LoadBalancer
+        loadBalancerIP: 192.168.1.223
+        ports:
+          http:
+            port: 32400
+
+    ingress:
+      main:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+                service:
+                  name: main
+        tls: &tls
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
+              - www.${app_url}
+      root:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/temporal-redirect: "https://${app_url}/web$request_uri"
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+                pathType: Exact
+                service:
+                  name: main
+        tls: *tls
