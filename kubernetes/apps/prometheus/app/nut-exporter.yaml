@@ -1,0 +1,75 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: nut-exporter
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 2.4.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      main:
+        strategy: RollingUpdate
+        containers:
+          main:
+            image:
+              repository: ghcr.io/druggeri/nut_exporter
+              tag: 3.1.1
+            env:
+              NUT_EXPORTER_VARIABLES: >-
+                battery.charge,battery.voltage,battery.voltage.nominal,battery.runtime,input.voltage,input.voltage.nominal,ups.load,ups.realpower.nominal,ups.status
+        pod:
+          labels:
+            policy.gabe565.com/ingress-namespace: "true"
+            policy.gabe565.com/egress-nodes: "true"
+            policy.gabe565.com/egress-world-with-lan: "true"
+
+    service:
+      main:
+        ports:
+          http:
+            port: 9199
+
+    serviceMonitor:
+      main:
+        enabled: true
+        endpoints:
+          - port: http
+            scheme: http
+            path: /metrics
+            interval: 1m
+          - port: http
+            scheme: http
+            path: /ups_metrics
+            interval: 1m
+            params:
+              server: [192.168.1.240]
+              username:
+                - ${ups_study_username}
+              password:
+                - ${ups_study_password}
+            relabelings:
+              - targetLabel: ups
+                replacement: Study
+          - port: http
+            scheme: http
+            path: /ups_metrics
+            params:
+              server: [192.168.1.253]
+              username:
+                - ${ups_living_username}
+              password:
+                - ${ups_living_password}
+            interval: 1m
+            relabelings:
+              - targetLabel: ups
+                replacement: Living Room
