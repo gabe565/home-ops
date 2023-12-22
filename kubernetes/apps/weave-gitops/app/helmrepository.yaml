@@ -1,0 +1,9 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: weave-gitops
+  namespace: weave-gitops
+spec:
+  interval: 1h
+  type: oci
+  url: oci://ghcr.io/weaveworks/charts
