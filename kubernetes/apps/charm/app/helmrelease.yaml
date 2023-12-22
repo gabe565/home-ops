@@ -1,0 +1,99 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: charm
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 2.4.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      main:
+        containers:
+          main:
+            image:
+              repository: ghcr.io/charmbracelet/charm
+              tag: v0.12.6
+            env:
+              TZ: America/Chicago
+              CHARM_SERVER_HOST: ${app_url}
+              CHARM_SERVER_PUBLIC_URL: https://${app_url}:35354
+              CHARM_SERVER_USE_TLS: "true"
+              CHARM_SERVER_TLS_CERT_FILE: /tls/tls.crt
+              CHARM_SERVER_TLS_KEY_FILE: /tls/tls.key
+              CHARM_SERVER_ENABLE_METRICS: "true"
+            probes:
+              liveness:
+                port: 35356
+                type: AUTO
+              readiness:
+                port: 35356
+                type: AUTO
+              startup:
+                port: 35356
+                type: AUTO
+        pod:
+          labels:
+            policy.gabe565.com/ingress-ingress: "true"
+            policy.gabe565.com/ingress-world: "true"
+            policy.gabe565.com/ingress-prometheus: "true"
+
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            fsGroupChangePolicy: OnRootMismatch
+
+    service:
+      main:
+        type: LoadBalancer
+        loadBalancerIP: 192.168.1.224
+        annotations:
+          external-dns.alpha.kubernetes.io/hostname: ${app_url}
+        ports:
+          http:
+            port: 35354
+            protocol: HTTPS
+          ssh:
+            port: 35353
+      private:
+        controller: main
+        ports:
+          metrics:
+            port: 35355
+          health:
+            port: 35356
+            protocol: HTTPS
+
+    persistence:
+      data:
+        enabled: true
+        storageClass: longhorn-ssd
+        accessMode: ReadWriteOnce
+        size: 10Gi
+      tls:
+        enabled: true
+        type: secret
+        name: ${certificate_name}
+        globalMounts:
+          - path: /tls
+
+    serviceMonitor:
+      main:
+        enabled: true
+        serviceName: charm-private
+        endpoints:
+          - port: metrics
+            scheme: http
+            path: /metrics
+            interval: 1m
+            scrapeTimeout: 10s
