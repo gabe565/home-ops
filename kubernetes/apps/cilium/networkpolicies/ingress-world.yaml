@@ -1,0 +1,11 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: ingress-world
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/ingress-world: "true"
+  ingress:
+    - fromEntities:
+      - world

@@ -1,0 +1,21 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: coredns
+  namespace: kube-system
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s-app: kube-dns
+  egress:
+    - toEntities:
+        - world
+      toPorts:
+        - ports:
+            - port: "53"
+    - toEntities:
+        - host
+        - remote-node
+      toPorts:
+        - ports:
+            - port: "6443"

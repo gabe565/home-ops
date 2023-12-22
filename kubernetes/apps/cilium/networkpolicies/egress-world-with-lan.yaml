@@ -1,0 +1,11 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: egress-world-with-lan
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/egress-world-with-lan: "true"
+  egress:
+    - toCIDRSet:
+        - cidr: 0.0.0.0/0

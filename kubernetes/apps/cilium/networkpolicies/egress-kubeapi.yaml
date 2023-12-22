@@ -1,0 +1,21 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: egress-kubeapi
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/egress-kubeapi: "true"
+  egress:
+    - toEntities:
+        - host
+        - remote-node
+      toPorts:
+        - ports:
+            - port: "6443"
+    - toEntities:
+        - kube-apiserver
+      toPorts:
+        - ports:
+            - port: "443"
+            - port: "6443"

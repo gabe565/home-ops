@@ -1,0 +1,95 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: cilium
+spec:
+  chart:
+    spec:
+      chart: cilium
+      version: 1.14.5
+      sourceRef:
+        kind: HelmRepository
+        namespace: kube-system
+        name: cilium
+  install:
+    crds: Create
+  upgrade:
+    crds: CreateReplace
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    kubeProxyReplacement: true
+    k8sServiceHost: 192.168.1.230
+    k8sServicePort: 6443
+
+    global:
+      encryption:
+        enabled: true
+        nodeEncryption: true
+
+    policyEnforcementMode: default
+
+    prometheus:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+        interval: 30s
+
+    hubble:
+      metrics:
+        serviceMonitor:
+          enabled: true
+          interval: 30s
+        enabled:
+        - dns:query;ignoreAAAA
+        - drop
+        - tcp
+        - flow
+        - icmp
+        - http
+
+      ui:
+        enabled: true
+        replicas: 1
+        ingress:
+          enabled: true
+          annotations:
+            nginx.ingress.kubernetes.io/auth-url:
+              http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
+            nginx.ingress.kubernetes.io/auth-signin: /outpost.goauthentik.io/start
+            nginx.ingress.kubernetes.io/auth-response-headers: Set-Cookie
+            nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Host $http_host;
+            nginx.ingress.kubernetes.io/configuration-snippet: expires -1;
+          hosts:
+            - ${app_url}
+          tls:
+            - secretName: ${certificate_name}
+              hosts:
+                - ${app_url}
+        podLabels:
+          policy.gabe565.com/egress-nodes: "true"
+          policy.gabe565.com/egress-namespace: "true"
+          policy.gabe565.com/ingress-ingress: "true"
+
+      relay:
+        enabled: true
+        podLabels:
+          policy.gabe565.com/egress-nodes: "true"
+          policy.gabe565.com/egress-namespace: "true"
+          policy.gabe565.com/ingress-namespace: "true"
+
+    operator:
+      replicas: 1
+
+    ipam:
+      mode: cluster-pool
+      operator:
+        clusterPoolIPv4PodCIDRList: [10.42.0.0/16]
+        clusterPoolIPv4MaskSize: 24
+
+    dnsProxy:
+      dnsRejectResponseCode: nameError
+
+    cni:
+      exclusive: false

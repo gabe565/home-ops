@@ -1,0 +1,11 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: egress-namespace
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/egress-namespace: "true"
+  egress:
+    - toEndpoints:
+        - {}

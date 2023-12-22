@@ -1,0 +1,16 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: local-path-provisioner
+  namespace: kube-system
+spec:
+  endpointSelector:
+    matchLabels:
+      app: local-path-provisioner
+  egress:
+    - toEntities:
+        - host
+        - remote-node
+      toPorts:
+        - ports:
+            - port: "6443"

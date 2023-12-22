@@ -1,0 +1,15 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: egress-world
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/egress-world: "true"
+  egress:
+    - toCIDRSet:
+        - cidr: 0.0.0.0/0
+          except:
+            - 192.168.1.0/24
+            - 192.168.2.0/24
+            - 100.64.0.0/10
