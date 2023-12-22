@@ -1,0 +1,32 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: egress-uptime-kuma
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/egress-uptime-kuma: "true"
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: uptime-kuma
+            app.kubernetes.io/name: uptime-kuma
+      toPorts:
+        - ports:
+            - port: "3001"
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: uptime-kuma
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: uptime-kuma
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            policy.gabe565.com/egress-uptime-kuma: "true"
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
