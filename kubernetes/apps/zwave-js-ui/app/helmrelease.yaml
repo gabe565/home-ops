@@ -1,0 +1,91 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: zwave-js-ui
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 2.4.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      main:
+        containers:
+          main:
+            image:
+              repository: ghcr.io/zwave-js/zwave-js-ui
+              tag: 9.6.0
+            env:
+              TZ: America/Chicago
+              FORCE_DISABLE_SSL: "true"
+            resources:
+              requests:
+                squat.ai/zwave: 1
+              limits:
+                squat.ai/zwave: 1
+        pod:
+          labels:
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-home-assistant: "true"
+            policy.gabe565.com/ingress-ingress: "true"
+
+    persistence:
+      config:
+        enabled: true
+        accessMode: ReadWriteOnce
+        size: 128Mi
+        globalMounts:
+          - path: /usr/src/app/store
+
+    service:
+      main:
+        ports:
+          http:
+            port: 8091
+          websocket:
+            port: 3000
+
+    ingress:
+      main:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/auth-url: |-
+            http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
+          nginx.ingress.kubernetes.io/auth-signin: |-
+            /outpost.goauthentik.io/start?rd=$escaped_request_uri
+          nginx.ingress.kubernetes.io/auth-response-headers: |-
+            Set-Cookie,X-authentik-username,X-authentik-groups,X-authentik-email,X-authentik-name,X-authentik-uid
+          nginx.ingress.kubernetes.io/auth-snippet: |
+            proxy_set_header X-Forwarded-Host $http_host;
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+                service:
+                  name: main
+        tls: &tls
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
+      remove-sw:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/configuration-snippet: |
+            add_header Content-Type application/javascript;
+            return 200 "self.addEventListener('install', event => { event.waitUntil(self.skipWaiting()) })";
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /sw.js
+                pathType: Exact
+                service:
+                  name: main
+        tls: *tls
