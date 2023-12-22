@@ -1,0 +1,16 @@
+apiVersion: upgrade.cattle.io/v1
+kind: Plan
+metadata:
+  name: server-plan
+spec:
+  concurrency: 1
+  cordon: true
+  nodeSelector: {}
+  tolerations:
+    - key: gabe565.com/gpu
+      operator: Exists
+      effect: NoSchedule
+  serviceAccountName: system-upgrade
+  upgrade:
+    image: rancher/k3s-upgrade
+  version: v1.28.4+k3s2
