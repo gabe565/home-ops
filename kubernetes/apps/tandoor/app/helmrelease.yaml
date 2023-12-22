@@ -1,0 +1,86 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: tandoor
+spec:
+  chart:
+    spec:
+      chart: tandoor
+      version: 0.8.11
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: gabe565
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    env:
+      TZ: America/Chicago
+      SECRET_KEY: ${secret_key}
+      GUNICORN_WORKERS: "1"
+      FRACTION_PREF_DEFAULT: "1"
+      OAUTH_ID: authentik
+      OAUTH_NAME: Authentik
+      OAUTH_SERVER_URL: https://${oauth_host}/application/o/tandoor-recipes/.well-known/openid-configuration
+      OAUTH_CLIENT_ID: ${oauth_client_id}
+      OAUTH_CLIENT_SECRET: ${oauth_client_secret}
+      # language=json
+      SOCIALACCOUNT_PROVIDERS: |-
+        {"openid_connect":{"SERVERS":[{"id": "$(OAUTH_ID)","name": "$(OAUTH_NAME)","server_url": "$(OAUTH_SERVER_URL)","token_auth_method": "client_secret_basic","APP": {"client_id": "$(OAUTH_CLIENT_ID)","secret": "$(OAUTH_CLIENT_SECRET)"}}]}}
+      SOCIAL_PROVIDERS: allauth.socialaccount.providers.openid_connect
+
+      DB_ENGINE: django.db.backends.postgresql
+      POSTGRES_HOST: postgresql-rw
+      POSTGRES_DB: tandoor
+      POSTGRES_USER: tandoor
+      POSTGRES_PASSWORD:
+        secretKeyRef:
+          name: postgresql-app
+          key: password
+
+    podLabels:
+      policy.gabe565.com/egress-namespace: "true"
+      policy.gabe565.com/egress-world: "true"
+      policy.gabe565.com/ingress-ingress: "true"
+
+    ingress:
+      main:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+              - path: /static
+                service:
+                  port: 80
+              - path: /media
+                service:
+                  port: 80
+        tls: &tls
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
+              - www.${app_url}
+      redirect-login:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/temporal-redirect: https://${app_url}/accounts/authentik/login
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /accounts/login
+        tls: *tls
+
+    persistence:
+      media:
+        enabled: true
+        accessMode: ReadWriteOnce
+        storageClass: longhorn-ssd
+        size: 256Mi
+      static:
+        enabled: true
+        size: 512Mi

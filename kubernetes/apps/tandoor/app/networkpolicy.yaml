@@ -1,0 +1,32 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: egress-tandoor
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/egress-tandoor: "true"
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: tandoor
+            app.kubernetes.io/name: tandoor
+      toPorts:
+        - ports:
+            - port: "8080"
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: tandoor
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: tandoor
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            policy.gabe565.com/egress-tandoor: "true"
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists

@@ -1,0 +1,20 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgresql
+  namespace: tandoor
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.1-7
+  enableSuperuserAccess: true
+  bootstrap:
+    initdb:
+      database: tandoor
+      owner: tandoor
+  storage:
+    storageClass: longhorn-ssd
+    size: 2Gi
+  resources:
+    requests:
+      memory: 20Mi
+      cpu: 10m
