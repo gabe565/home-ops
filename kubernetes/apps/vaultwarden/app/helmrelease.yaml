@@ -1,0 +1,70 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: vaultwarden
+spec:
+  chart:
+    spec:
+      chart: vaultwarden
+      version: 0.11.2
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: gabe565
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controller:
+      strategy: Recreate
+
+    env:
+      TZ: America/Chicago
+      ADMIN_TOKEN: ${admin_token}
+      DATABASE_URL:
+        secretKeyRef:
+          name: postgresql-app
+          key: uri
+
+    podLabels:
+      policy.gabe565.com/egress-namespace: "true"
+      policy.gabe565.com/egress-world: "true"
+      policy.gabe565.com/ingress-ingress: "true"
+
+    priorityClassName: system-cluster-critical
+
+    ingress:
+      main:
+        enabled: true
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+        tls: &tls
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
+      admin:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/auth-url: |-
+            http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
+          nginx.ingress.kubernetes.io/auth-signin: |-
+            /outpost.goauthentik.io/start?rd=%2Fadmin
+          nginx.ingress.kubernetes.io/auth-response-headers: |-
+            Set-Cookie,X-authentik-username,X-authentik-groups,X-authentik-email,X-authentik-name,X-authentik-uid
+          nginx.ingress.kubernetes.io/auth-snippet: |
+            proxy_set_header X-Forwarded-Host $http_host;
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /admin
+        tls: *tls
+
+    persistence:
+      data:
+        enabled: true
+        accessMode: ReadWriteOnce
+        storageClass: longhorn-ssd
+        size: 256Mi
