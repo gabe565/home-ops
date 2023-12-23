@@ -1,0 +1,86 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: chatgpt
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 2.4.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      main:
+        containers:
+          main:
+            image:
+              repository: ghcr.io/cogentapps/chat-with-gpt
+              tag: release
+              env:
+                TZ: America/Chicago
+        pod:
+          labels:
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-ingress: "true"
+
+    service:
+      main:
+        ports:
+          http:
+            port: 3000
+
+    persistence:
+      data:
+        enabled: true
+        storageClass: longhorn-ssd
+        accessMode: ReadWriteOnce
+        size: 1Gi
+        globalMounts:
+          - path: /app/data
+      config:
+        enabled: true
+        type: secret
+        name: chatgpt-config
+        globalMounts:
+          - path: /app/data/config.yaml
+            subPath: config.yaml
+
+    ingress:
+      main:
+        enabled: true
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+                service:
+                  name: main
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
+        annotations:
+          nginx.ingress.kubernetes.io/auth-url: |-
+            http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
+          nginx.ingress.kubernetes.io/auth-signin: |-
+            /outpost.goauthentik.io/start?rd=$escaped_request_uri
+          nginx.ingress.kubernetes.io/auth-response-headers: |-
+            Set-Cookie,X-authentik-username,X-authentik-groups,X-authentik-email,X-authentik-name,X-authentik-uid
+          nginx.ingress.kubernetes.io/auth-snippet: |
+            proxy_set_header X-Forwarded-Host $http_host;
+
+    secrets:
+      config:
+        enabled: true
+        stringData:
+          # language=yaml
+          config.yaml: |
+            services:
+              openai:
+                apiKey: ${api_key}
