@@ -1,0 +1,28 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: nvidia-device-plugin
+spec:
+  chart:
+    spec:
+      chart: nvidia-device-plugin
+      version: 0.14.3
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        name: nvidia-device-plugin
+        namespace: nvidia-device-plugin
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    runtimeClassName: nvidia
+    tolerations:
+      - key: nvidia.com/gpu
+        operator: Exists
+        effect: NoSchedule
+      - key: gabe565.com/gpu
+        operator: Exists
+        effect: NoSchedule
+    nodeSelector:
+      gabe565.com/gpu: nvidia
