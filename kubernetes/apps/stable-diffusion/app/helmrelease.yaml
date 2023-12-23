@@ -1,0 +1,105 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: stable-diffusion-webui
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 2.4.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  timeout: 15m
+  values:
+    controllers:
+      main:
+        containers:
+          main:
+            image:
+              repository: ghcr.io/gabe565/stable-diffusion/webui
+              tag: 1.6.0
+              pullPolicy: Always
+            args:
+              - --medvram-sdxl
+              - --xformers
+            env:
+              TZ: America/Chicago
+              IIB_ACCESS_CONTROL_ALLOWED_PATHS: /app/outputs
+            resources:
+              limits:
+                nvidia.com/gpu: "1"
+                memory: "14Gi"
+            probes:
+              startup:
+                spec:
+                  failureThreshold: 90
+        pod:
+          runtimeClassName: nvidia
+          tolerations:
+            - key: gabe565.com/gpu
+              operator: Equal
+              value: nvidia
+              effect: NoSchedule
+          nodeSelector:
+            gabe565.com/gpu: nvidia
+          labels:
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-ingress: "true"
+          terminationGracePeriodSeconds: "0"
+          securityContext:
+            fsGroup: 1000
+
+    service:
+      main:
+        ports:
+          http:
+            port: 7860
+
+    persistence:
+      data:
+        enabled: true
+        storageClass: local-path
+        accessMode: ReadWriteOnce
+        size: 32Gi
+        retain: true
+        globalMounts:
+          - path: /data
+          - path: /app/repositories
+            subPath: repositories
+      outputs:
+        enabled: true
+        storageClass: nfs-client
+        accessMode: ReadWriteMany
+        size: 8Gi
+        retain: true
+        globalMounts:
+          - path: /app/outputs
+
+    ingress:
+      main:
+        enabled: true
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+                service:
+                  name: main
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
+        annotations:
+          nginx.ingress.kubernetes.io/auth-url: |-
+            http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
+          nginx.ingress.kubernetes.io/auth-signin: |-
+            /outpost.goauthentik.io/start?rd=$escaped_request_uri
+          nginx.ingress.kubernetes.io/auth-response-headers: |-
+            Set-Cookie,X-authentik-username,X-authentik-groups,X-authentik-email,X-authentik-name,X-authentik-uid
+          nginx.ingress.kubernetes.io/auth-snippet: |
+            proxy_set_header X-Forwarded-Host $http_host;
