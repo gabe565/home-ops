@@ -19,7 +19,7 @@ metadata:
 spec:
   interval: 10m0s
   path: ./kubernetes/apps
-  prune: true
+  prune: false
   sourceRef:
     kind: GitRepository
     name: home-ops-private
