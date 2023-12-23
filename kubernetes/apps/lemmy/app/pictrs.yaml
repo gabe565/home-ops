@@ -1,0 +1,60 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: pictrs
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 2.4.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      main:
+        containers:
+          main:
+            image:
+              repository: asonix/pictrs
+              tag: 0.4.7
+            env:
+              TZ: America/Chicago
+            envFrom:
+              - secretRef:
+                  name: pictrs
+        pod:
+          labels:
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-namespace: "true"
+          securityContext:
+            runAsUser: 65534
+            runAsGroup: 65534
+            fsGroup: 65534
+            fsGroupChangePolicy: OnRootMismatch
+
+    persistence:
+      data:
+        enabled: true
+        storageClass: nfs-client
+        accessMode: ReadWriteMany
+        size: 8Gi
+        globalMounts:
+          - path: /mnt
+
+    service:
+      main:
+        ports:
+          http:
+            port: 8080
+
+    secrets:
+      main:
+        enabled: true
+        stringData:
+          PICTRS__API_KEY: ${pictrs_api_key}

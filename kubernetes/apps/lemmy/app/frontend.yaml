@@ -1,0 +1,97 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: frontend
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 2.4.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      main:
+        strategy: RollingUpdate
+        containers:
+          main:
+            image:
+              repository: dessalines/lemmy-ui
+              tag: 0.19.0
+            env:
+              LEMMY_UI_LEMMY_INTERNAL_HOST: backend:8536
+              LEMMY_UI_LEMMY_EXTERNAL_HOST: ${app_url}
+              LEMMY_HTTPS: "true"
+        pod:
+          labels:
+            policy.gabe565.com/egress-namespace: "true"
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-ingress: "true"
+            policy.gabe565.com/ingress-namespace: "true"
+          securityContext:
+            runAsUser: 65534
+            runAsGroup: 65534
+            fsGroup: 65534
+            fsGroupChangePolicy: OnRootMismatch
+
+    service:
+      main:
+        ports:
+          http:
+            port: 1234
+
+    ingress:
+      main:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/configuration-snippet: &api_snippet |
+            if ($http_accept ~ "^application/.*$") {
+              set $proxy_upstream_name "lemmy-backend-8536";
+            }
+            if ($request_method = POST) {
+              set $proxy_upstream_name "lemmy-backend-8536";
+            }
+          nginx.ingress.kubernetes.io/proxy-body-size: 20M
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+                service:
+                  name: main
+        tls: &tls
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
+      inbox:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/configuration-snippet: *api_snippet
+          nginx.ingress.kubernetes.io/enable-access-log: "false"
+          nginx.ingress.kubernetes.io/proxy-body-size: 20M
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /inbox
+                service:
+                  name: main
+        tls: *tls
+      robots:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/configuration-snippet: |
+            add_header Content-Type text/plain;
+            return 200 "User-Agent: *\nDisallow: /\n";
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /robots.txt
+                pathType: Exact
+                service:
+                  name: main
+        tls: *tls

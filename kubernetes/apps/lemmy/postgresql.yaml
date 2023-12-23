@@ -1,0 +1,81 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgresql
+  namespace: lemmy
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.1-7
+  enableSuperuserAccess: true
+  bootstrap:
+    initdb:
+      database: lemmy
+      owner: lemmy
+      postInitApplicationSQL:
+        - CREATE EXTENSION IF NOT EXISTS pgcrypto;
+        - CREATE EXTENSION IF NOT EXISTS pg_trgm;
+        - CREATE EXTENSION IF NOT EXISTS ltree;
+  storage:
+    storageClass: longhorn-ssd
+    size: 8Gi
+  resources:
+    requests:
+      memory: 1000Mi
+      cpu: 10m
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: postgresql-cleanup
+  namespace: lemmy
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 2.4.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      main:
+        type: cronjob
+        cronjob:
+          schedule: 0 * * * *
+          backoffLimit: 0
+        containers:
+          main:
+            image:
+              repository: postgres
+              tag: alpine
+            env:
+              PGPASSWORD:
+                secretKeyRef:
+                  name: postgresql-app
+                  key: password
+            command:
+              - sh
+              - -c
+              - |
+                for i in $(seq 1 6); do
+                  psql \
+                    --host=postgresql-rw \
+                    --dbname=lemmy \
+                    --username=lemmy \
+                    --command="DELETE FROM received_activity WHERE published < NOW() - INTERVAL '14 days';" \
+                  && exit \
+                  || sleep 5
+                done
+                exit 1
+        pod:
+          labels:
+            policy.gabe565.com/egress-namespace: "true"
+          terminationGracePeriodSeconds: "0"
+    service:
+      main:
+        enabled: false

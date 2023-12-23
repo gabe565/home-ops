@@ -1,0 +1,121 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: backend
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 2.4.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      main:
+        strategy: RollingUpdate
+        containers:
+          main:
+            image:
+              repository: dessalines/lemmy
+              tag: 0.19.0
+            env:
+              RUST_LOG: warn
+              LEMMY_DATABASE_URL:
+                secretKeyRef:
+                  name: postgresql-app
+                  key: uri
+        pod:
+          labels:
+            policy.gabe565.com/egress-namespace: "true"
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-ingress: "true"
+            policy.gabe565.com/ingress-namespace: "true"
+          securityContext:
+            runAsUser: 65534
+            runAsGroup: 65534
+            fsGroup: 65534
+            fsGroupChangePolicy: OnRootMismatch
+
+    persistence:
+      config:
+        enabled: true
+        type: secret
+        name: backend-config
+
+    service:
+      main:
+        ports:
+          http:
+            port: 8536
+
+    ingress:
+      main:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/proxy-body-size: 20M
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /api
+                service: &service
+                  name: main
+              - path: /pictrs
+                service: *service
+              - path: /feeds
+                service: *service
+              - path: /nodeinfo
+                service: *service
+              - path: /.well-known
+                service: *service
+        tls: &tls
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
+      site-inbox:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/proxy-body-size: 20M
+          nginx.ingress.kubernetes.io/enable-access-log: "false"
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /site_inbox
+                service: *service
+        tls: *tls
+
+    secrets:
+      config:
+        enabled: true
+        stringData:
+          config.hjson: |
+            {
+              hostname: "${app_url}"
+              bind: "0.0.0.0"
+              port: 8536
+              tls_enabled: true
+
+              setup: {
+                admin_username: "${admin_username}"
+                admin_password: "${admin_password}"
+                site_name: "${site_name}"
+              }
+
+              email: {
+                smtp_server: "${smtp_hostname}"
+                smtp_login: "${smtp_username}"
+                smtp_password: "${smtp_password}"
+                smtp_from_address: "${smtp_username}"
+                tls_type: "tls"
+              }
+
+              pictrs: {
+                url: "http://pictrs:8080/"
+                api_key: "${pictrs_api_key}"
+              }
+            }
