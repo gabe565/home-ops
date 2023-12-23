@@ -10,7 +10,7 @@ spec:
   sourceRef:
     kind: GitRepository
     namespace: flux-system
-    name: home-ops
+    name: flux-system
   postBuild:
     substituteFrom:
       - kind: Secret
@@ -28,6 +28,6 @@ spec:
   sourceRef:
     kind: GitRepository
     namespace: flux-system
-    name: home-ops
+    name: flux-system
   dependsOn:
     - name: app

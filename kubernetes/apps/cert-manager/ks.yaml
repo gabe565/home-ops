@@ -10,7 +10,7 @@ spec:
   sourceRef:
     kind: GitRepository
     namespace: flux-system
-    name: home-ops
+    name: flux-system
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -24,7 +24,7 @@ spec:
   sourceRef:
     kind: GitRepository
     namespace: flux-system
-    name: home-ops
+    name: flux-system
   dependsOn:
     - name: app
   postBuild:
