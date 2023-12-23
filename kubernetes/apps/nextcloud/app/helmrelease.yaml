@@ -1,0 +1,74 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: nextcloud
+spec:
+  chart:
+    spec:
+      chart: nextcloud
+      version: 4.5.3
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: nextcloud
+        name: nextcloud
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    image:
+      flavor: fpm-alpine
+
+    nextcloud:
+      host: ${app_url}
+
+    podLabels:
+      policy.gabe565.com/egress-namespace: "true"
+      policy.gabe565.com/egress-world: "true"
+      policy.gabe565.com/ingress-ingress: "true"
+
+    ingress:
+      enabled: true
+      annotations:
+        nginx.ingress.kubernetes.io/proxy-body-size: 4G
+      tls:
+        - secretName: ${certificate_name}
+          hosts:
+            - ${app_url}
+
+    nginx:
+      enabled: true
+      image:
+        tag: stable-alpine
+
+    redis:
+      enabled: true
+      auth:
+        password: ${redis_password}
+      master:
+        persistence:
+          enabled: false
+        podLabels:
+          policy.gabe565.com/ingress-namespace: "true"
+      replica:
+        replicaCount: 0
+
+    internalDatabase:
+      enabled: false
+    externalDatabase:
+      enabled: true
+      type: postgresql
+      existingSecret:
+        enabled: true
+        secretName: postgresql-app
+        hostKey: host
+        databaseKey: dbname
+        usernameKey: username
+        passwordKey: password
+
+    cronjob:
+      enabled: true
+
+    persistence:
+      enabled: true
+      storageClass: longhorn-ssd
