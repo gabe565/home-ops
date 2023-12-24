@@ -22,8 +22,7 @@ spec:
 
     master:
       persistence:
-        storageClass: longhorn-ssd
-        size: 1Gi
+        enabled: false
       podLabels:
         policy.gabe565.com/ingress-namespace: "true"
 
