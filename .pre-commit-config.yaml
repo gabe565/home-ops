@@ -16,8 +16,8 @@ repos:
       - id: remove-tabs
 
   - repo: https://github.com/gabe565/pre-commit-fluxcd
-    rev: v0.1.0
+    rev: v0.3.0
     hooks:
-      - id: check-unpinned-chart-version
-      - id: check-decrypted-secret
-      - id: check-renovate
+      - id: check-charts-pinned
+      - id: check-charts-support-renovate
+      - id: check-secrets-encrypted
