@@ -22,7 +22,7 @@ spec:
           main:
             image:
               repository: ghcr.io/linuxserver/prowlarr
-              tag: version-1.9.4.4039
+              tag: version-1.10.5.4116
             env:
               TZ: America/Chicago
               PUID: "1000"
