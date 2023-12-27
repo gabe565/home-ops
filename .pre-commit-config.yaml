@@ -20,4 +20,5 @@ repos:
     hooks:
       - id: check-charts-pinned
       - id: check-charts-support-renovate
+      - id: check-drift-detection-enabled
       - id: check-secrets-encrypted
