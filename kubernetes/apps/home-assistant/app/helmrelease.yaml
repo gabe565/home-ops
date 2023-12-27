@@ -22,7 +22,7 @@ spec:
           main:
             image:
               repository: ghcr.io/home-assistant/home-assistant
-              tag: 2023.12.3
+              tag: 2023.12.4
             env:
               TZ: America/Chicago
               DATABASE_URL:
