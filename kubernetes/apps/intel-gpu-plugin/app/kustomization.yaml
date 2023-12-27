@@ -7,3 +7,12 @@ labels:
   - includeTemplates: true
     pairs:
       policy.gabe565.com/egress-kubeapi: "true"
+patches:
+  - target:
+      kind: DaemonSet
+      name: intel-gpu-plugin
+    patch: |
+      - op: add
+        path: /spec/template/spec/containers/0/args
+        value:
+          - -shared-dev-num=5
