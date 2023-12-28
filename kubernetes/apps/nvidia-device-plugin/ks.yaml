@@ -11,19 +11,3 @@ spec:
     kind: GitRepository
     namespace: flux-system
     name: flux-system
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: runtimeclasses
-spec:
-  interval: 1h
-  targetNamespace: nvidia-device-plugin
-  path: ./kubernetes/apps/nvidia-device-plugin/runtimeclasses
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    namespace: flux-system
-    name: flux-system
-  dependsOn:
-    - name: app
