@@ -5,7 +5,7 @@ metadata:
   namespace: immich
 spec:
   instances: 1
-  imageName: ghcr.io/gabe565/cloudnativepg-vecto-rs:16.1-7-vectors0.1.11
+  imageName: ghcr.io/gabe565/cloudnativepg-vecto-rs:16.1-7-vectors0.1.13
   enableSuperuserAccess: true
   bootstrap:
     initdb:
