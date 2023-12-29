@@ -17,3 +17,5 @@ spec:
     requests:
       memory: 50Mi
       cpu: 20m
+  smartShutdownTimeout: 60
+  stopDelay: 300
