@@ -74,8 +74,6 @@ spec:
           - host: ${app_url}
             paths:
               - path: /logout
-                service:
-                  name: main
         tls: *tls
 
     persistence:
