@@ -27,8 +27,6 @@ spec:
       TZ: America/Chicago
       WATCH_EVERY: 6h
       WATCH_DOMAINS: ${watch_domains}
-      WATCH_GOTIFY_URL: http://gotify.gotify
-      WATCH_GOTIFY_TOKEN: ${gotify_token}
       WATCH_TELEGRAM_TOKEN: ${telegram_token}
       WATCH_TELEGRAM_CHAT:
         secretKeyRef:
