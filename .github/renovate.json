@@ -99,6 +99,11 @@
     {
       "matchPackagePrefixes": ["ghcr.io/immich-app/"],
       "groupName": "Immich"
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/gabe565/cloudnativepg-vecto-rs"],
+      "versioning": "loose"
     }
   ],
   "hostRules": [
