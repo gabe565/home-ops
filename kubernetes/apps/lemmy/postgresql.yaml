@@ -22,7 +22,7 @@ spec:
     requests:
       memory: 1000Mi
       cpu: 10m
-  smartShutdownTimeout: 60
+  smartShutdownTimeout: 30
   stopDelay: 300
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
