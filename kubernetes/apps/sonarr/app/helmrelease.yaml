@@ -22,7 +22,7 @@ spec:
           main:
             image:
               repository: ghcr.io/linuxserver/sonarr
-              tag: develop-version-4.0.0.740
+              tag: develop-version-4.0.0.742
             env:
               TZ: America/Chicago
               PUID: "1000"
