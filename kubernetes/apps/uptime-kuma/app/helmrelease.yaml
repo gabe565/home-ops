@@ -25,7 +25,7 @@ spec:
           main:
             image:
               repository: louislam/uptime-kuma
-              tag: 1.23.10-alpine
+              tag: 1.23.11-alpine
             command: [node, server/server.js]
         pod:
           labels:
