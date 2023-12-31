@@ -6,7 +6,7 @@ spec:
   chart:
     spec:
       chart: paperless-ngx
-      version: 0.9.2
+      version: 0.10.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
