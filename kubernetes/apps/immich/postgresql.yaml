@@ -4,7 +4,7 @@ metadata:
   name: postgresql
   namespace: immich
 spec:
-  instances: 1
+  instances: 2
   imageName: ghcr.io/gabe565/cloudnativepg-vecto-rs:16.1-7-vectors0.1.13
   enableSuperuserAccess: true
   bootstrap:
@@ -20,7 +20,7 @@ spec:
     shared_preload_libraries:
       - vectors.so
   storage:
-    storageClass: longhorn-ssd
+    storageClass: longhorn-ssd-database
     size: 2Gi
   resources:
     requests:

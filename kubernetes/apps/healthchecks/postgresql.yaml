@@ -3,7 +3,7 @@ kind: Cluster
 metadata:
   name: postgresql
 spec:
-  instances: 1
+  instances: 2
   imageName: ghcr.io/cloudnative-pg/postgresql:16.1-7
   enableSuperuserAccess: true
   bootstrap:
@@ -11,7 +11,7 @@ spec:
       database: healthchecks
       owner: healthchecks
   storage:
-    storageClass: longhorn-ssd
+    storageClass: longhorn-ssd-database
     size: 2Gi
   resources:
     requests:
