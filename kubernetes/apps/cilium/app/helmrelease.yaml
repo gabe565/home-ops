@@ -30,17 +30,8 @@ spec:
 
     policyEnforcementMode: default
 
-    prometheus:
-      enabled: true
-      serviceMonitor:
-        enabled: true
-        interval: 30s
-
     hubble:
       metrics:
-        serviceMonitor:
-          enabled: true
-          interval: 30s
         enabled:
         - dns:query;ignoreAAAA
         - drop
