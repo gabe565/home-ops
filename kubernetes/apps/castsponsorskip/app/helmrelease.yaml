@@ -6,7 +6,7 @@ spec:
   chart:
     spec:
       chart: castsponsorskip
-      version: 0.4.2
+      version: 0.5.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
