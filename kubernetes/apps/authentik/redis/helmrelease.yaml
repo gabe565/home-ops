@@ -20,9 +20,17 @@ spec:
       enabled: true
       password: ${redis_password}
 
-    master:
-      podLabels:
-        policy.gabe565.com/ingress-namespace: "true"
+    sentinel:
+      enabled: true
 
     replica:
-      replicaCount: 0
+      persistence:
+        enabled: true
+        storageClass: longhorn-ssd-database
+        size: 2Gi
+
+    networkPolicy:
+      enabled: true
+      allowExternal: false
+      ingressNSMatchLabels:
+        kubernetes.io/metadata.name: authentik

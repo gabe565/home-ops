@@ -1,0 +1,53 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: redis-tunnel
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 2.4.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      main:
+        strategy: RollingUpdate
+        replicas: 2
+        containers:
+          main:
+            image:
+              repository: ghcr.io/usa-reddragon/sentinel_tunnel
+              tag: beta@sha256:e37d935910e98243f7204ea5e5da459a023d55bf166de50db66ba756f1d05e95
+              pullPolicy: Always
+            env:
+              ST_SENTINELS: redis:26379
+              ST_DATABASES: mymaster:6379
+              ST_PASSWORD:
+                secretKeyRef:
+                  name: redis
+                  key: redis-password
+            probes:
+              liveness: &probe
+                type: HTTP
+                path: /health
+              readiness: *probe
+              startup: *probe
+        pod:
+          labels:
+            policy.gabe565.com/egress-namespace: "true"
+            policy.gabe565.com/ingress-namespace: "true"
+
+    service:
+      main:
+        ports:
+          http:
+            port: 6060
+          redis:
+            port: 6379

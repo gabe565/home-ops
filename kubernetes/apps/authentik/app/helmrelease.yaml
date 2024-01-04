@@ -43,7 +43,7 @@ spec:
         user: authentik
 
       redis:
-        host: redis-master
+        host: redis-tunnel
 
       email:
         host: ${email_host}
