@@ -3,8 +3,6 @@
     display: none;
 }
 
-/* Social buttons */
-.pf-c-login__main-footer-links-item.ak-stage-identification img.ak-stage-identification,
 /* Background overlay */
 .pf-c-background-image.ak-flow-executor::before {
     filter: none;
@@ -74,7 +72,8 @@ ul.pf-c-list.style-scope.ak-stage-consent {
     text-align: left;
 }
 
-/* Connected services settings */
-:host([theme="dark"]) .pf-c-data-list__cell :is(img[alt="Google"], img[alt="Plex"]) {
+/* Social icons */
+:host([theme="dark"]) .pf-c-data-list__cell img:is([alt="Google"], [alt="Plex"]),
+ak-flow-executor[theme="dark"] .pf-c-login__main-footer-links img:is([alt="Google"], [alt="Plex"]) {
     filter: none;
 }
