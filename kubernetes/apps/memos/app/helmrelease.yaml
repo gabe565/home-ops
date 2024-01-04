@@ -6,7 +6,7 @@ spec:
   chart:
     spec:
       chart: memos
-      version: 0.10.1
+      version: 0.10.2
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
