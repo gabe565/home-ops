@@ -1,6 +1,6 @@
-/* Logo */
-img.style-scope.ak-flow-executor {
-    opacity: 0;
+/* Header and footer */
+.pf-c-login__header, .pf-c-login__footer {
+    display: none;
 }
 
 /* Social buttons */
@@ -12,7 +12,7 @@ img.style-scope.ak-flow-executor {
 
 /* Modal window */
 .pf-c-login__main.ak-flow-executor {
-    overflow: hidden;
+    overflow: auto;
     border-radius: 40px;
     background-color: #0008;
     color: #fff;
@@ -25,11 +25,6 @@ img.style-scope.ak-flow-executor {
     .pf-c-login__main.ak-flow-executor {
         border-radius: 0;
     }
-}
-
-/* Footer */
-ul.pf-c-list.pf-m-inline.ak-flow-executor {
-    display: none;
 }
 
 /* Title */
