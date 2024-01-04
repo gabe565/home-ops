@@ -31,15 +31,6 @@ spec:
       cronjob:
         schedule: 5 0 * * *
         ttlSecondsAfterFinished: 3600
-    affinity:
-      podAffinity:
-        preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              topologyKey: kubernetes.io/hostname
-              labelSelector:
-                matchLabels:
-                  app.kubernetes.io/name: authentik
     podLabels:
       policy.gabe565.com/egress-healthchecks: "true"
       policy.gabe565.com/egress-namespace: "true"
@@ -65,12 +56,6 @@ spec:
         enabled: true
         type: secret
         name: borgbase-ssh
-      media:
-        enabled: true
-        existingClaim: authentik-media
-      custom-templates:
-        enabled: true
-        existingClaim: authentik-custom-templates
     configMaps:
       config:
         data:
@@ -79,9 +64,7 @@ spec:
             repositories:
               - path: ${borg_repo}
                 label: borgbase
-            source_directories:
-              - /media
-              - /custom-templates
+            source_directories: []
             archive_name_format: "authentik-{now:%Y-%m-%d-%H%M%S}"
             ssh_command: ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=ERROR
             retries: 2
