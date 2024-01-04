@@ -3,8 +3,9 @@ kind: Kustomization
 namespace: authentik
 resources:
   - certificate.yaml
-  - helmrelease.yaml
   - helmrepository.yaml
+  - helmrelease.yaml
+  - static.yaml
   - pvc.yaml
 configMapGenerator:
   - name: authentik-custom-assets
