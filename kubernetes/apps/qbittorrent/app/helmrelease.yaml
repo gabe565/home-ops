@@ -33,7 +33,7 @@ spec:
           vpn:
             image:
               repository: qmcgaw/gluetun
-              tag: v3.36.0
+              tag: v3.37.0
             env:
               HEALTH_VPN_DURATION_INITIAL: 120s
               HEALTH_SUCCESS_WAIT_DURATION: 120s
