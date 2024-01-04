@@ -2,7 +2,6 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: redis
-  namespace: gitea
 spec:
   chart:
     spec:
@@ -21,9 +20,17 @@ spec:
       enabled: true
       password: ${redis_password}
 
-    replica:
-      replicaCount: 0
+    sentinel:
+      enabled: true
 
-    master:
-      podLabels:
-        policy.gabe565.com/ingress-namespace: "true"
+    replica:
+      persistence:
+        enabled: true
+        storageClass: longhorn-ssd-database
+        size: 2Gi
+
+    networkPolicy:
+      enabled: true
+      allowExternal: false
+      ingressNSMatchLabels:
+        kubernetes.io/metadata.name: gitea
