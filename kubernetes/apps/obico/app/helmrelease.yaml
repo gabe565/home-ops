@@ -6,7 +6,7 @@ spec:
   chart:
     spec:
       chart: obico
-      version: 0.2.7
+      version: 0.2.8
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
