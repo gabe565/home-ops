@@ -21,8 +21,6 @@ spec:
       password: ${redis_password}
 
     master:
-      persistence:
-        enabled: false
       podLabels:
         policy.gabe565.com/ingress-namespace: "true"
 
