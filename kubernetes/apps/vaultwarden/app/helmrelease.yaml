@@ -26,6 +26,9 @@ spec:
         secretKeyRef:
           name: postgresql-app
           key: uri
+      PUSH_ENABLED: "true"
+      PUSH_INSTALLATION_ID: ${push_installation_id}
+      PUSH_INSTALLATION_KEY: ${push_installation_key}
 
     podLabels:
       policy.gabe565.com/egress-namespace: "true"
