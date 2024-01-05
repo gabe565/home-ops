@@ -53,7 +53,12 @@ spec:
             image:
               repository: ghcr.io/coder/code-server
               tag: 4.20.0
-            args: [--auth=none, --user-data-dir=/config/.vscode, /config]
+            args:
+              - --disable-telemetry
+              - --disable-update-check
+              - --auth=none
+              - --user-data-dir=/config/.vscode
+              - /config
             resources:
               limits:
                 cpu: 500m
