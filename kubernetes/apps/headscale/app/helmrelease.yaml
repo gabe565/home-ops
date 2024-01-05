@@ -75,9 +75,18 @@ spec:
     persistence:
       config:
         enabled: true
-        storageClass: longhorn-ssd
-        accessMode: ReadWriteOnce
-        size: 256Mi
+        type: emptyDir
+      keys:
+        enabled: true
+        type: secret
+        name: headscale-keys
+        subPath:
+          - path: config.yaml
+            mountPath: /etc/headscale/config.yaml
+          - path: private.key
+            mountPath: /etc/headscale/private.key
+          - path: noise_private.key
+            mountPath: /etc/headscale/noise_private.key
 
     additionalContainers:
       ui:
@@ -85,6 +94,14 @@ spec:
         ports:
           - name: http
             containerPort: 80
+
+    secrets:
+      config:
+        enabled: true
+        stringData:
+          config.yaml: ""
+          private.key: ${private_key}
+          noise_private.key: ${noise_private_key}
 
     serviceMonitor:
       main:
