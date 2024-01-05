@@ -5,51 +5,106 @@ metadata:
 spec:
   chart:
     spec:
-      chart: headscale
-      version: 0.12.7
+      chart: app-template
+      version: 2.4.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
         namespace: flux-system
-        name: gabe565
+        name: bjw-s
   interval: 1h
   driftDetection:
     mode: enabled
   values:
-    env:
-      HEADSCALE_DNS_CONFIG_BASE_DOMAIN: ${base_domain}
-      HEADSCALE_IP_PREFIXES: 100.64.0.0/10 fd7a:115c:a1e0::/48
+    controllers:
+      main:
+        containers:
+          main:
+            image:
+              repository: ghcr.io/juanfont/headscale
+              tag: 0.22.3
+            command: [headscale, serve]
+            env:
+              HEADSCALE_SERVER_URL: https://${app_url}
+              HEADSCALE_LISTEN_ADDR: 0.0.0.0:8080
+              HEADSCALE_METRICS_LISTEN_ADDR: 0.0.0.0:9090
 
-      HEADSCALE_OIDC_ISSUER: ${oidc_issuer}
-      HEADSCALE_OIDC_CLIENT_ID: ${oidc_client_id}
-      HEADSCALE_OIDC_CLIENT_SECRET: ${oidc_client_secret}
+              HEADSCALE_PRIVATE_KEY_PATH: /etc/headscale/private.key
+              HEADSCALE_NOISE: "{}"
+              HEADSCALE_NOISE_PRIVATE_KEY_PATH: /etc/headscale/noise_private.key
 
-      HEADSCALE_DB_TYPE: postgres
-      HEADSCALE_DB_HOST: postgresql-rw
-      HEADSCALE_DB_PORT: "5432"
-      HEADSCALE_DB_SSL: "true"
-      HEADSCALE_DB_NAME: headscale
-      HEADSCALE_DB_USER: headscale
-      HEADSCALE_DB_PASS:
-        secretKeyRef:
-          name: postgresql-app
-          key: password
+              HEADSCALE_IP_PREFIXES: 100.64.0.0/10 fd7a:115c:a1e0::/48
 
-    podLabels:
-      policy.gabe565.com/egress-namespace: "true"
-      policy.gabe565.com/egress-world: "true"
-      policy.gabe565.com/ingress-ingress: "true"
-      policy.gabe565.com/ingress-prometheus: "true"
+              HEADSCALE_DERP_URLS: https://controlplane.tailscale.com/derpmap/default
+              HEADSCALE_DERP_AUTO_UPDATE_ENABLED: "true"
+              HEADSCALE_DERP_UPDATE_FREQUENCY: "24h"
 
-    termination:
-      gracePeriodSeconds: 3
+              HEADSCALE_EPHEMERAL_NODE_INACTIVITY_TIMEOUT: "30m"
+
+              HEADSCALE_DNS_CONFIG_NAMESERVERS: "1.1.1.1 1.0.0.1"
+              HEADSCALE_DNS_CONFIG_MAGIC_DNS: "true"
+              HEADSCALE_DNS_CONFIG_BASE_DOMAIN: ${base_domain}
+
+              HEADSCALE_OIDC_ISSUER: ${oidc_issuer}
+              HEADSCALE_OIDC_CLIENT_ID: ${oidc_client_id}
+              HEADSCALE_OIDC_CLIENT_SECRET: ${oidc_client_secret}
+
+              HEADSCALE_DB_TYPE: postgres
+              HEADSCALE_DB_HOST: postgresql-rw
+              HEADSCALE_DB_PORT: "5432"
+              HEADSCALE_DB_SSL: "true"
+              HEADSCALE_DB_NAME: headscale
+              HEADSCALE_DB_USER: headscale
+              HEADSCALE_DB_PASS:
+                secretKeyRef:
+                  name: postgresql-app
+                  key: password
+        pod:
+          terminationGracePeriodSeconds: "3"
+          labels:
+            policy.gabe565.com/egress-namespace: "true"
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-ingress: "true"
+            policy.gabe565.com/ingress-prometheus: "true"
+      ui:
+        strategy: RollingUpdate
+        containers:
+          main:
+            image:
+              repository: ghcr.io/gurucomputing/headscale-ui
+              tag: latest
+        pod:
+          terminationGracePeriodSeconds: "3"
+          labels:
+            policy.gabe565.com/ingress-ingress: "true"
 
     service:
       main:
         ports:
-          ui:
-            enabled: true
+          http:
+            port: 8080
+          metrics:
+            port: 9090
+      ui:
+        controller: ui
+        ports:
+          http:
             port: 80
+
+    persistence:
+      config:
+        enabled: true
+        type: secret
+        name: headscale-config
+        advancedMounts:
+          main:
+            main:
+              - path: /etc/headscale/config.yaml
+                subPath: config.yaml
+              - path: /etc/headscale/private.key
+                subPath: private.key
+              - path: /etc/headscale/noise_private.key
+                subPath: noise_private.key
 
     ingress:
       main:
@@ -58,6 +113,8 @@ spec:
           - host: ${app_url}
             paths:
               - path: /
+                service:
+                  name: main
         tls: &tls
           - secretName: ${certificate_name}
             hosts:
@@ -69,37 +126,14 @@ spec:
             paths:
               - path: /web
                 service:
-                  port: 80
+                  name: ui
         tls: *tls
-
-    persistence:
-      config:
-        enabled: true
-        type: emptyDir
-      keys:
-        enabled: true
-        type: secret
-        name: headscale-keys
-        subPath:
-          - path: config.yaml
-            mountPath: /etc/headscale/config.yaml
-          - path: private.key
-            mountPath: /etc/headscale/private.key
-          - path: noise_private.key
-            mountPath: /etc/headscale/noise_private.key
-
-    additionalContainers:
-      ui:
-        image: ghcr.io/gurucomputing/headscale-ui:latest
-        ports:
-          - name: http
-            containerPort: 80
 
     secrets:
       config:
         enabled: true
         stringData:
-          config.yaml: ""
+          config.yaml: "{}"
           private.key: ${private_key}
           noise_private.key: ${noise_private_key}
 
