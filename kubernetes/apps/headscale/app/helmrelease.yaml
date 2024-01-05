@@ -23,7 +23,6 @@ spec:
       HEADSCALE_OIDC_ISSUER: ${oidc_issuer}
       HEADSCALE_OIDC_CLIENT_ID: ${oidc_client_id}
       HEADSCALE_OIDC_CLIENT_SECRET: ${oidc_client_secret}
-      HEADSCALE_OIDC_ONLY_START_IF_OIDC_IS_AVAILABLE: "false"
 
       HEADSCALE_DB_TYPE: postgres
       HEADSCALE_DB_HOST: postgresql-rw
