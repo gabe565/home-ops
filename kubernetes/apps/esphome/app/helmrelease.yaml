@@ -5,20 +5,83 @@ metadata:
 spec:
   chart:
     spec:
-      chart: esphome
-      version: 0.12.0
+      chart: app-template
+      version: 2.4.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
         namespace: flux-system
-        name: gabe565
+        name: bjw-s
   interval: 1h
   driftDetection:
     mode: enabled
   values:
-    env:
-      TZ: America/Chicago
-      ESPHOME_DASHBOARD_USE_PING: true
+    defaultPodOptions:
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/name: esphome
+      securityContext:
+        fsGroup: 1000
+
+    controllers:
+      main:
+        containers:
+          main:
+            image:
+              repository: ghcr.io/esphome/esphome
+              tag: 2023.12.5
+            env:
+              TZ: America/Chicago
+              ESPHOME_DASHBOARD_USE_PING: true
+        pod:
+          terminationGracePeriodSeconds: "0"
+          dnsConfig:
+            nameservers:
+              - 192.168.1.221
+          dnsPolicy: None
+          labels:
+            policy.gabe565.com/egress-adguard-dns: "true"
+            policy.gabe565.com/egress-world-with-lan: "true"
+            policy.gabe565.com/ingress-ingress: "true"
+      code:
+        containers:
+          main:
+            image:
+              repository: ghcr.io/coder/code-server
+              tag: 4.20.0
+            args:
+              - --disable-telemetry
+              - --disable-update-check
+              - --auth=none
+              - --user-data-dir=/config/.vscode
+              - /config
+            resources:
+              limits:
+                cpu: 500m
+                memory: 500Mi
+            securityContext:
+              runAsUser: 0
+        pod:
+          labels:
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-ingress: "true"
+
+    service:
+      main:
+        ports:
+          http:
+            port: 6052
+      code:
+        controller: code
+        ports:
+          http:
+            port: 8080
 
     persistence:
       config:
@@ -26,23 +89,11 @@ spec:
         storageClass: nfs-client
         accessMode: ReadWriteMany
         size: 8Gi
-
-    podLabels:
-      policy.gabe565.com/egress-adguard-dns: "true"
-      policy.gabe565.com/egress-world-with-lan: "true"
-      policy.gabe565.com/ingress-ingress: "true"
+        retain: true
 
     ingress:
       main:
         enabled: true
-        hosts:
-          - host: ${app_url}
-            paths:
-              - path: /
-        tls:
-          - secretName: ${certificate_name}
-            hosts:
-              - ${app_url}
         annotations:
           nginx.ingress.kubernetes.io/auth-url: |-
             http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
@@ -52,24 +103,27 @@ spec:
             Set-Cookie,X-authentik-username,X-authentik-groups,X-authentik-email,X-authentik-name,X-authentik-uid
           nginx.ingress.kubernetes.io/auth-snippet: |
             proxy_set_header X-Forwarded-Host $http_host;
-
-    dnsConfig:
-      nameservers:
-        - 192.168.1.221
-    dnsPolicy: None
-
-    addons:
-      codeserver:
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+                service:
+                  name: main
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
+      code:
         enabled: true
-        ingress:
-          enabled: true
-          annotations:
-            nginx.ingress.kubernetes.io/whitelist-source-range: "192.168.1.0/24,10.42.0.0/16"
-          hosts:
-            - host: ${code_url}
-              paths:
-                - path: /
-          tls:
-            - secretName: ${certificate_name}
-              hosts:
-                - ${code_url}
+        annotations:
+          nginx.ingress.kubernetes.io/whitelist-source-range: "192.168.1.0/24,10.42.0.0/16"
+        hosts:
+          - host: ${code_url}
+            paths:
+              - path: /
+                service:
+                  name: code
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${code_url}
