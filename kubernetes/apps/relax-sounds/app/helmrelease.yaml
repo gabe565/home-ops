@@ -35,6 +35,7 @@ spec:
         enabled: true
         annotations:
           nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+          nginx.ingress.kubernetes.io/proxy-body-size: 20M
         hosts:
           - host: ${app_url}
             paths:
