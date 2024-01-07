@@ -22,7 +22,7 @@ spec:
           main:
             image:
               repository: asonix/pictrs
-              tag: 0.4.7
+              tag: 0.5.0
             env:
               TZ: America/Chicago
             envFrom:
