@@ -22,3 +22,8 @@ spec:
       CSS_YOUTUBE_API_KEY: ${youtube_api_key}
     podLabels:
       policy.gabe565.com/egress-world-with-lan: "true"
+    service:
+      test:
+        ports:
+          http:
+            port: 8080
