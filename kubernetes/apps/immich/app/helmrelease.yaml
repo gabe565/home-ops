@@ -27,7 +27,7 @@ spec:
           main:
             image:
               repository: ghcr.io/immich-app/immich-server
-              tag: v1.91.4
+              tag: v1.92.0
             command: [./start-server.sh]
             env: &env
               TZ: America/Chicago
@@ -54,7 +54,7 @@ spec:
           main:
             image:
               repository: ghcr.io/immich-app/immich-server
-              tag: v1.91.4
+              tag: v1.92.0
             command: [./start-microservices.sh]
             env: *env
             resources:
@@ -72,7 +72,7 @@ spec:
           main:
             image:
               repository: ghcr.io/immich-app/immich-machine-learning
-              tag: v1.91.4
+              tag: v1.92.0
         pod:
           labels:
             policy.gabe565.com/egress-world: "true"
