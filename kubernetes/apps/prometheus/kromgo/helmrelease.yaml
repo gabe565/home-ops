@@ -1,0 +1,69 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: kromgo
+  namespace: kromgo
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 2.4.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      main:
+        strategy: RollingUpdate
+        containers:
+          main:
+            image:
+              repository: ghcr.io/kashalls/kromgo
+              tag: 0.2.4
+            env:
+              PROMETHEUS_URL: http://kube-prometheus-stack-prometheus:9090
+            securityContext:
+              readOnlyRootFilesystem: true
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 64Mi
+        pod:
+          labels:
+            policy.gabe565.com/egress-namespace: "true"
+            policy.gabe565.com/ingress-ingress: "true"
+
+    persistence:
+      config:
+        enabled: true
+        type: configMap
+        name: kromgo-config
+        globalMounts:
+          - path: /kromgo/config.yaml
+            subPath: config.yaml
+
+    service:
+      main:
+        ports:
+          http:
+            port: 8080
+
+    ingress:
+      main:
+        enabled: true
+        hosts:
+          - host: kromgo.gabe565.com
+            paths:
+              - path: /
+                service:
+                  name: main
+        tls:
+          - secretName: gabe565.com-tls
+            hosts:
+              - kromgo.gabe565.com

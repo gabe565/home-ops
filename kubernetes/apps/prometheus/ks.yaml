@@ -20,6 +20,21 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
+  name: kromgo
+  namespace: prometheus
+spec:
+  interval: 1h
+  targetNamespace: prometheus
+  path: ./kubernetes/apps/prometheus/kromgo
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    namespace: flux-system
+    name: flux-system
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
   name: borgmatic
   namespace: prometheus
 spec:
