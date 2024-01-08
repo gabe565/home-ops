@@ -1,3 +1,7 @@
+<img src="./docs/assets/logo.svg" alt="HomeOps Logo" width="144px" height="144px" align="left"/>
+
+<div align="center">
+
 ### My Home Operations Repository :octocat:
 
 _... managed with Flux and Renovate, and GitHub Actions_ :robot:
@@ -7,6 +11,8 @@ _... managed with Flux and Renovate, and GitHub Actions_ :robot:
 [![CPU-Usage](https://img.shields.io/endpoint?url=https%3A%2F%2Fkromgo.gabe565.com%2Fquery%3Fformat%3Dendpoint%26metric%3Dcluster_cpu_usage&style=flat&label=CPU)](https://github.com/kashalls/kromgo/)&nbsp;&nbsp;
 [![Memory-Usage](https://img.shields.io/endpoint?url=https%3A%2F%2Fkromgo.gabe565.com%2Fquery%3Fformat%3Dendpoint%26metric%3Dcluster_memory_usage&style=flat&label=Memory)](https://github.com/kashalls/kromgo/)&nbsp;&nbsp;
 [![Power-Usage](https://img.shields.io/endpoint?url=https%3A%2F%2Fkromgo.gabe565.com%2Fquery%3Fformat%3Dendpoint%26metric%3Dcluster_power_usage&style=flat&label=Power)](https://github.com/kashalls/kromgo/)
+
+</div>
 
 ## 📖 Overview
 
