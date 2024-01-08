@@ -2,6 +2,12 @@
 
 _... managed with Flux and Renovate, and GitHub Actions_ :robot:
 
+[![Node-Count](https://img.shields.io/endpoint?url=https%3A%2F%2Fkromgo.gabe565.com%2Fquery%3Fformat%3Dendpoint%26metric%3Dcluster_node_count&style=flat&label=Nodes)](https://github.com/kashalls/kromgo/)&nbsp;&nbsp;
+[![Pod-Count](https://img.shields.io/endpoint?url=https%3A%2F%2Fkromgo.gabe565.com%2Fquery%3Fformat%3Dendpoint%26metric%3Dcluster_pod_count&style=flat&label=Pods)](https://github.com/kashalls/kromgo/)&nbsp;&nbsp;
+[![CPU-Usage](https://img.shields.io/endpoint?url=https%3A%2F%2Fkromgo.gabe565.com%2Fquery%3Fformat%3Dendpoint%26metric%3Dcluster_cpu_usage&style=flat&label=CPU)](https://github.com/kashalls/kromgo/)&nbsp;&nbsp;
+[![Memory-Usage](https://img.shields.io/endpoint?url=https%3A%2F%2Fkromgo.gabe565.com%2Fquery%3Fformat%3Dendpoint%26metric%3Dcluster_memory_usage&style=flat&label=Memory)](https://github.com/kashalls/kromgo/)&nbsp;&nbsp;
+[![Power-Usage](https://img.shields.io/endpoint?url=https%3A%2F%2Fkromgo.gabe565.com%2Fquery%3Fformat%3Dendpoint%26metric%3Dcluster_power_usage&style=flat&label=Power)](https://github.com/kashalls/kromgo/)
+
 ## 📖 Overview
 
 This is a mono repository for my home infrastructure and Kubernetes cluster. I try to adhere to Infrastructure as Code (IaC) and GitOps practices using tools like [Terraform](https://www.terraform.io/), [Kubernetes](https://kubernetes.io/), [FluxCD](https://github.com/fluxcd/flux2), [Renovate](https://github.com/renovatebot/renovate), and [GitHub Actions](https://github.com/features/actions).
