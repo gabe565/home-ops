@@ -2,6 +2,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: app
+  namespace: metallb-system
 spec:
   interval: 1h
   targetNamespace: metallb-system
@@ -16,6 +17,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: config
+  namespace: metallb-system
 spec:
   interval: 1h
   targetNamespace: metallb-system

@@ -16,6 +16,7 @@ apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
   name: mosquitto
+  namespace: mosquitto
 spec:
   endpointSelector:
     matchLabels:

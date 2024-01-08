@@ -2,6 +2,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: app
+  namespace: tautulli
 spec:
   interval: 1h
   targetNamespace: tautulli
@@ -20,6 +21,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: borgmatic
+  namespace: tautulli
 spec:
   interval: 1h
   targetNamespace: tautulli

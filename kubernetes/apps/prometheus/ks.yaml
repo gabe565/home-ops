@@ -2,6 +2,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: app
+  namespace: prometheus
 spec:
   interval: 1h
   targetNamespace: prometheus
@@ -20,6 +21,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: borgmatic
+  namespace: prometheus
 spec:
   interval: 1h
   targetNamespace: prometheus

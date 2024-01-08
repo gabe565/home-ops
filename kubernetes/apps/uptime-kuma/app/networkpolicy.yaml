@@ -19,6 +19,7 @@ apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
   name: uptime-kuma
+  namespace: uptime-kuma
 spec:
   endpointSelector:
     matchLabels:

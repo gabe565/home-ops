@@ -2,6 +2,7 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: ${app_url}
+  namespace: mosquitto
 spec:
   secretName: ${certificate_name}
   commonName: ${app_url}

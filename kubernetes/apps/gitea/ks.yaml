@@ -2,6 +2,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: app
+  namespace: gitea
 spec:
   interval: 1h
   targetNamespace: gitea
@@ -20,6 +21,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: redis
+  namespace: gitea
 spec:
   interval: 1h
   targetNamespace: gitea
@@ -38,6 +40,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: borgmatic
+  namespace: gitea
 spec:
   interval: 1h
   targetNamespace: gitea

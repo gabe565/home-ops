@@ -2,6 +2,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: app
+  namespace: vikunja
 spec:
   interval: 1h
   targetNamespace: vikunja
@@ -20,6 +21,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: redis
+  namespace: vikunja
 spec:
   interval: 1h
   targetNamespace: vikunja
@@ -38,6 +40,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: borgmatic
+  namespace: vikunja
 spec:
   interval: 1h
   targetNamespace: vikunja

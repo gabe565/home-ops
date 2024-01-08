@@ -19,6 +19,7 @@ apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
   name: lidarr
+  namespace: lidarr
 spec:
   endpointSelector:
     matchLabels:

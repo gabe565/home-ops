@@ -38,6 +38,7 @@ apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
   name: adguard-home
+  namespace: adguard-home
 spec:
   endpointSelector:
     matchLabels:

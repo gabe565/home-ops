@@ -2,6 +2,7 @@ apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: postgresql
+  namespace: healthchecks
 spec:
   instances: 2
   imageName: ghcr.io/cloudnative-pg/postgresql:16.1-7

@@ -33,6 +33,7 @@ apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
   name: prowlarr
+  namespace: prowlarr
 spec:
   endpointSelector:
     matchLabels:

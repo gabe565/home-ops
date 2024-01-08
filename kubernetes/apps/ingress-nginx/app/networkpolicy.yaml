@@ -17,6 +17,7 @@ apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
   name: ingress-nginx
+  namespace: ingress-nginx
 spec:
   endpointSelector:
     matchLabels:
@@ -49,6 +50,7 @@ apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
   name: egress-nginx
+  namespace: ingress-nginx
 spec:
   endpointSelector:
     matchLabels:

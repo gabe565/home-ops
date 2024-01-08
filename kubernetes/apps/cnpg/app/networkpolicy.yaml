@@ -2,6 +2,7 @@ apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
   name: cnpg-system
+  namespace: cnpg-system
 spec:
   endpointSelector:
     matchLabels:

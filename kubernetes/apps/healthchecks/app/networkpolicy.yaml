@@ -19,6 +19,7 @@ apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
   name: healthchecks
+  namespace: healthchecks
 spec:
   endpointSelector:
     matchLabels:

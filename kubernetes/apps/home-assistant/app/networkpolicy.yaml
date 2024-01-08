@@ -33,6 +33,7 @@ apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
   name: home-assistant
+  namespace: home-assistant
 spec:
   endpointSelector:
     matchLabels:

@@ -2,6 +2,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: matrimony
+  namespace: matrimony
 spec:
   chart:
     spec:

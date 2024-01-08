@@ -33,6 +33,7 @@ apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
   name: overseerr
+  namespace: overseerr
 spec:
   endpointSelector:
     matchLabels:

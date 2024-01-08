@@ -16,6 +16,7 @@ apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
   name: prometheus
+  namespace: prometheus
 spec:
   endpointSelector:
     matchLabels:

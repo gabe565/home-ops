@@ -21,6 +21,7 @@ apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
   name: qbittorrent
+  namespace: qbittorrent
 spec:
   endpointSelector:
     matchLabels:

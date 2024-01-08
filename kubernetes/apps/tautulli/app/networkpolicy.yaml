@@ -19,6 +19,7 @@ apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
   name: tautulli
+  namespace: tautulli
 spec:
   endpointSelector:
     matchLabels:
