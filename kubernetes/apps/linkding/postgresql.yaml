@@ -1,0 +1,22 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgresql
+  namespace: linkding
+spec:
+  instances: 2
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.1-7
+  enableSuperuserAccess: true
+  bootstrap:
+    initdb:
+      database: linkding
+      owner: linkding
+  storage:
+    storageClass: longhorn-ssd-database
+    size: 2Gi
+  resources:
+    requests:
+      memory: 50Mi
+      cpu: 20m
+  smartShutdownTimeout: 30
+  stopDelay: 300

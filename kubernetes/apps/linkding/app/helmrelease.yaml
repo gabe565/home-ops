@@ -1,0 +1,80 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: linkding
+  namespace: linkding
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 2.4.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      main:
+        containers:
+          main:
+            image:
+              repository: sissbruecker/linkding
+              tag: 1.23.1-alpine
+            env:
+              TZ: America/Chicago
+              LD_LOG_X_FORWARDED_FOR: "True"
+              LD_ENABLE_AUTH_PROXY: "True"
+              LD_AUTH_PROXY_USERNAME_HEADER: HTTP_X_AUTHENTIK_USERNAME
+              LD_AUTH_PROXY_LOGOUT_URL: https://${app_url}/outpost.goauthentik.io/sign_out
+              LD_DB_ENGINE: postgres
+              LD_DB_HOST: postgresql-rw
+              LD_DB_PORT: "5432"
+              LD_DB_DATABASE: linkding
+              LD_DB_USER: linkding
+              LD_DB_PASSWORD:
+                secretKeyRef:
+                  name: postgresql-app
+                  key: password
+        pod:
+          labels:
+            policy.gabe565.com/egress-namespace: "true"
+            policy.gabe565.com/ingress-ingress: "true"
+
+    service:
+      main:
+        ports:
+          http:
+            port: 9090
+
+    persistence:
+      data:
+        enabled: true
+        storageClass: longhorn-ssd
+        accessMode: ReadWriteOnce
+        size: 1Gi
+        globalMounts:
+          - path: /etc/linkding/data
+
+    ingress:
+      main:
+        enabled: true
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+                service:
+                  name: main
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
+        annotations:
+          nginx.ingress.kubernetes.io/auth-url: |-
+            http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
+          nginx.ingress.kubernetes.io/auth-signin: /outpost.goauthentik.io/start?rd=$escaped_request_uri
+          nginx.ingress.kubernetes.io/auth-response-headers: Set-Cookie,X-authentik-username
+          nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Host $http_host;
