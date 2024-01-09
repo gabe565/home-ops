@@ -7,7 +7,7 @@ spec:
   chart:
     spec:
       chart: relax-sounds
-      version: 0.6.4
+      version: 1.0.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
