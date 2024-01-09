@@ -7,7 +7,7 @@ spec:
   chart:
     spec:
       chart: domain-watch
-      version: 0.5.3
+      version: 1.0.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -17,22 +17,27 @@ spec:
   driftDetection:
     mode: enabled
   values:
-    image:
-      repository: ghcr.io/gabe565/domain-watch
-      tag: 0.1.0
-    podLabels:
-        policy.gabe565.com/egress-gotify: "true"
-        policy.gabe565.com/egress-world: "true"
-        policy.gabe565.com/ingress-prometheus: "true"
-    env:
-      TZ: America/Chicago
-      WATCH_EVERY: 6h
-      WATCH_DOMAINS: ${watch_domains}
-      WATCH_TELEGRAM_TOKEN: ${telegram_token}
-      WATCH_TELEGRAM_CHAT:
-        secretKeyRef:
-          name: app-vars
-          key: telegram_chat
+    controllers:
+      main:
+        containers:
+          main:
+            image:
+              repository: ghcr.io/gabe565/domain-watch
+              tag: 0.1.0
+            env:
+              TZ: America/Chicago
+              WATCH_EVERY: 6h
+              WATCH_DOMAINS: ${watch_domains}
+              WATCH_TELEGRAM_TOKEN: ${telegram_token}
+              WATCH_TELEGRAM_CHAT:
+                secretKeyRef:
+                  name: app-vars
+                  key: telegram_chat
+        pod:
+          labels:
+              policy.gabe565.com/egress-gotify: "true"
+              policy.gabe565.com/egress-world: "true"
+              policy.gabe565.com/ingress-prometheus: "true"
 
     service:
       main:
