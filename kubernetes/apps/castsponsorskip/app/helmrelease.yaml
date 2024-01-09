@@ -7,7 +7,7 @@ spec:
   chart:
     spec:
       chart: castsponsorskip
-      version: 0.5.0
+      version: 0.6.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -17,8 +17,13 @@ spec:
   driftDetection:
     mode: enabled
   values:
-    env:
-      TZ: America/Chicago
-      CSS_YOUTUBE_API_KEY: ${youtube_api_key}
-    podLabels:
-      policy.gabe565.com/egress-world-with-lan: "true"
+    controllers:
+      main:
+        containers:
+          main:
+            env:
+              TZ: America/Chicago
+              CSS_YOUTUBE_API_KEY: ${youtube_api_key}
+        pod:
+          labels:
+            policy.gabe565.com/egress-world-with-lan: "true"
