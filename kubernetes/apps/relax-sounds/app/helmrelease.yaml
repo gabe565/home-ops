@@ -17,19 +17,20 @@ spec:
   driftDetection:
     mode: enabled
   values:
-    image:
-      repository: ghcr.io/gabe565/relax-sounds
-      tag: 1.5.0
-
-    controller:
-      strategy: Recreate
-
-    env:
-      TZ: America/Chicago
-
-    podLabels:
-      policy.gabe565.com/ingress-ingress: "true"
-      policy.gabe565.com/ingress-prometheus: "true"
+    controllers:
+      main:
+        strategy: Recreate
+        containers:
+          main:
+            image:
+              repository: ghcr.io/gabe565/relax-sounds
+              tag: 1.5.0
+            env:
+              TZ: America/Chicago
+        pod:
+          labels:
+            policy.gabe565.com/ingress-ingress: "true"
+            policy.gabe565.com/ingress-prometheus: "true"
 
     ingress:
       main:
@@ -41,6 +42,8 @@ spec:
           - host: ${app_url}
             paths:
               - path: /
+                service:
+                  name: main
         tls:
           - secretName: ${certificate_name}
             hosts:
