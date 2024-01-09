@@ -7,7 +7,7 @@ spec:
   chart:
     spec:
       chart: domain-watch
-      version: 0.5.3
+      version: 1.0.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
