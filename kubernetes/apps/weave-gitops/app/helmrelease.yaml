@@ -25,6 +25,8 @@ spec:
     envVars:
       - name: WEAVE_GITOPS_FEATURE_OIDC_BUTTON_LABEL
         value: Login with Authentik
+      - name: WEAVE_GITOPS_FEATURE_TELEMETRY
+        value: "false"
 
     oidcSecret:
       create: true
