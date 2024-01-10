@@ -20,10 +20,22 @@ spec:
       policy.gabe565.com/egress-kubeapi: "true"
       policy.gabe565.com/ingress-ingress: "true"
 
-    adminUser:
+    additionalArgs: [--auth-methods=oidc]
+
+    envVars:
+      - name: WEAVE_GITOPS_FEATURE_OIDC_BUTTON_LABEL
+        value: Login with Authentik
+
+    oidcSecret:
       create: true
-      username: ${admin_username}
-      passwordHash: ${admin_password_hash}
+      clientID: ${oauth_client_id}
+      clientSecret: ${oauth_client_secret}
+      issuerURL: https://${oauth_host}/application/o/gabernetes/
+      redirectURL: https://${app_url}/oauth2/callback
+      additionalKeys:
+        claimUsername: email
+        claimGroups: groups
+        customScopes: openid,email,profile
 
     ingress:
       enabled: true
