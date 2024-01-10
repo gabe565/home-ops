@@ -26,6 +26,7 @@ spec:
               tag: 0.1.0
             env:
               TZ: America/Chicago
+              WATCH_METRICS_ENABLED: "true"
               WATCH_EVERY: 6h
               WATCH_DOMAINS: ${watch_domains}
               WATCH_TELEGRAM_TOKEN: ${telegram_token}
