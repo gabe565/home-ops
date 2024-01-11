@@ -32,28 +32,14 @@ spec:
       STORAGE_URL: https://${s3_url}/bookstack
 
       LOG_FAILED_LOGIN_MESSAGE: Failed login for %u
-      # Set authentication method to be saml2
       AUTH_METHOD: saml2
       AUTH_AUTO_INITIATE: "true"
-      # Set the display name to be shown on the login button.
-      # (Login with <name>)
       SAML2_NAME: Authentik
-      # Name of the attribute which provides the user's email address
       SAML2_EMAIL_ATTRIBUTE: email
-      # Name of the attribute to use as an ID for the SAML user.
       SAML2_EXTERNAL_ID_ATTRIBUTE: http://schemas.goauthentik.io/2021/02/saml/username
-      # Name of the attribute(s) to use for the user's display name
-      # Can have multiple attributes listed, separated with a '|' in which
-      # case those values will be joined with a space.
-      # Example: SAML2_DISPLAY_NAME_ATTRIBUTES=firstName|lastName
-      # Defaults to the ID value if not found.
       SAML2_DISPLAY_NAME_ATTRIBUTES: Name
-      # Identity Provider entityID URL
       SAML2_IDP_ENTITYID: https://${authentik_host}/api/v3/providers/saml/2/metadata/?download
-      # Auto-load metatadata from the IDP
-      # Setting this to true negates the need to specify the next three options
       SAML2_AUTOLOAD_METADATA: "true"
-      #SAML2_DUMP_USER_DETAILS: "true"
 
     podLabels:
       policy.gabe565.com/egress-namespace: "true"
