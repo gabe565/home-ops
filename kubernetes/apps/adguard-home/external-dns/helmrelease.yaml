@@ -10,7 +10,7 @@ spec:
   chart:
     spec:
       chart: external-dns
-      version: 1.13.1
+      version: 1.14.0
       sourceRef:
         kind: HelmRepository
         namespace: flux-system
@@ -21,16 +21,28 @@ spec:
       repository: registry.k8s.io/external-dns/external-dns
       tag: v0.14.0
 
-    provider: webhook
+    provider:
+      name: webhook
+      webhook:
+        image:
+          repository: ghcr.io/zekker6/external-dns-provider-adguard
+          tag: v0.0.8
+          env:
+            - name: ADGUARD_HOME_URL
+              value: http://adguard-home:3000
+            - name: ADGUARD_HOME_USER
+              value: ${adguard_home_username}
+            - name: ADGUARD_HOME_PASS
+              value: ${adguard_home_password}
     interval: 1h
     triggerLoopOnEvent: true
     policy: sync
     registry: noop
 
     extraArgs:
-      - --webhook-provider-url=http://external-dns-webhook:8888
+      - --webhook-provider-url=http://localhost:8888
 
     podLabels:
+      policy.gabe565.com/egress-adguard-api: "true"
       policy.gabe565.com/egress-kubeapi: "true"
-      policy.gabe565.com/egress-namespace: "true"
       policy.gabe565.com/egress-world: "true"

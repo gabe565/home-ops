@@ -10,7 +10,7 @@ spec:
   chart:
     spec:
       chart: external-dns
-      version: 1.13.1
+      version: 1.14.0
       sourceRef:
         kind: HelmRepository
         namespace: flux-system
@@ -23,7 +23,8 @@ spec:
 
     priorityClassName: system-cluster-critical
 
-    provider: cloudflare
+    provider:
+      name: cloudflare
     interval: 1h
     triggerLoopOnEvent: true
     policy: sync
