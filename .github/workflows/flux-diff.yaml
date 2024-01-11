@@ -59,7 +59,7 @@ jobs:
           cat diff.patch >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-      - if: ${{ steps.diff.outputs.diff != '' }}
+      - if: ${{ steps.diff.outputs.diff != '' || failure() }}
         name: Add comment
         uses: mshick/add-pr-comment@v2
         with:
@@ -67,8 +67,8 @@ jobs:
           message-failure: |
             ## ${{ matrix.name }} Diff
 
-            > [!Error]
-            > Failed to create diff. [Click here to see log.](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            > [!CAUTION]
+            > Failed to create diff. [View log.](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
           message: |
             ## ${{ matrix.name }} Diff
 
