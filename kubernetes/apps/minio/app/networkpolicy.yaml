@@ -1,0 +1,16 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: minio
+  namespace: minio
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: minio
+      app.kubernetes.io/component: main
+  ingress:
+    - fromEntities:
+        - cluster
+      toPorts:
+        - ports:
+            - port: "9000"

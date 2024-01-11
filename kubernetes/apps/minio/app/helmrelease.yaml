@@ -1,0 +1,97 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: minio
+  namespace: minio
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 2.4.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      main:
+        containers:
+          main:
+            image:
+              repository: quay.io/minio/minio
+              tag: RELEASE.2024-01-05T22-17-24Z
+            env:
+              MINIO_SITE_NAME: us-central-1
+              MINIO_UPDATE: "off"
+              MINIO_SERVER_URL: https://${s3_url}
+              MINIO_BROWSER_REDIRECT_URL: https://${app_url}
+              MINIO_API_CORS_ALLOW_ORIGIN: https://${app_url},https://${s3_url}
+              MINIO_API_ROOT_ACCESS: "off"
+              MINIO_IDENTITY_OPENID_DISPLAY_NAME: Login with Authentik
+              MINIO_IDENTITY_OPENID_CONFIG_URL: https://${oidc_host}/application/o/minio/.well-known/openid-configuration
+              MINIO_IDENTITY_OPENID_CLIENT_ID: ${oidc_client_id}
+              MINIO_IDENTITY_OPENID_CLIENT_SECRET: ${oidc_client_secret}
+              MINIO_IDENTITY_OPENID_SCOPES: openid,profile,email,minio
+            args:
+              - server
+              - /data
+              - --console-address=:9001
+            probes:
+              liveness: &probe
+                type: HTTP
+                path: /minio/health/live
+              readiness: *probe
+              startup: *probe
+        pod:
+          labels:
+            policy.gabe565.com/egress-authentik: "true"
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-ingress: "true"
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            fsGroupChangePolicy: OnRootMismatch
+
+    persistence:
+      data:
+        enabled: true
+        storageClass: longhorn-ssd
+        accessMode: ReadWriteOnce
+        size: 8Gi
+        retain: true
+
+    service:
+      main:
+        ports:
+          http:
+            port: 9001
+          s3:
+            port: 9000
+
+    ingress:
+      main:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/custom-http-errors: "501,502,503,504"
+          nginx.ingress.kubernetes.io/proxy-body-size: 64m
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+                service:
+                  name: main
+          - host: ${s3_url}
+            paths:
+              - path: /
+                service:
+                  name: main
+                  port: s3
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
