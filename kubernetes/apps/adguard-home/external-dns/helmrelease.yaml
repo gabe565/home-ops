@@ -27,16 +27,16 @@ spec:
         image:
           repository: ghcr.io/zekker6/external-dns-provider-adguard
           tag: v0.0.8
-          env:
-            - name: ADGUARD_HOME_URL
-              value: http://adguard-home:3000
-            - name: ADGUARD_HOME_USER
-              value: ${adguard_home_username}
-            - name: ADGUARD_HOME_PASS
-              value: ${adguard_home_password}
-          securityContext:
-            runAsUser: 65534
-            runAsGroup: 65534
+        env:
+          - name: ADGUARD_HOME_URL
+            value: http://adguard-home:3000
+          - name: ADGUARD_HOME_USER
+            value: ${adguard_home_username}
+          - name: ADGUARD_HOME_PASS
+            value: ${adguard_home_password}
+        securityContext:
+          runAsUser: 65534
+          runAsGroup: 65534
     interval: 1h
     triggerLoopOnEvent: true
     policy: sync
