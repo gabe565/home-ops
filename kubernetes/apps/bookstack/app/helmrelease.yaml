@@ -17,9 +17,20 @@ spec:
   driftDetection:
     mode: enabled
   values:
+    controller:
+      strategy: RollingUpdate
+
     env:
       TZ: America/Chicago
-      STORAGE_TYPE: local_secure
+
+      STORAGE_TYPE: s3
+      STORAGE_S3_KEY: ${s3_access_key}
+      STORAGE_S3_SECRET: ${s3_secret_key}
+      STORAGE_S3_BUCKET: bookstack
+      STORAGE_S3_REGION: us-central-1
+      STORAGE_S3_ENDPOINT: https://${s3_url}
+      STORAGE_URL: https://${s3_url}/bookstack
+
       LOG_FAILED_LOGIN_MESSAGE: Failed login for %u
       # Set authentication method to be saml2
       AUTH_METHOD: saml2
@@ -67,10 +78,19 @@ spec:
     persistence:
       config:
         enabled: true
-        storageClass: longhorn-ssd
-        mountPath: /config
-        accessMode: ReadWriteOnce
-        size: 256Mi
+        type: emptyDir
+      app-key:
+        enabled: true
+        type: secret
+        name: bookstack-app-key
+        mountPath: /config/BOOKSTACK_APP_KEY.txt
+        subPath: BOOKSTACK_APP_KEY.txt
+
+    secrets:
+      app-key:
+        enabled: true
+        stringData:
+          BOOKSTACK_APP_KEY.txt: ${app_key}
 
     mariadb:
       enabled: true
