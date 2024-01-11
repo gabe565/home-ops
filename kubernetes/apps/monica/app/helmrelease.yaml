@@ -18,7 +18,7 @@ spec:
     mode: enabled
   values:
     controller:
-      strategy: Recreate
+      strategy: RollingUpdate
 
     env:
       TZ: America/Chicago
@@ -28,6 +28,14 @@ spec:
       MAIL_PASSWORD: ${mail_password}
       LOCATION_IQ_API_KEY: ${location_iq_api_key}
       DARKSKY_API_KEY: ${darksky_api_key}
+
+      FILESYSTEM_DISK: s3
+      AWS_ACCESS_KEY_ID: ${s3_access_key}
+      AWS_SECRET_ACCESS_KEY: ${s3_secret_key}
+      AWS_DEFAULT_REGION: us-central-1
+      AWS_BUCKET: monica
+      AWS_ENDPOINT: https://${s3_url}
+      AWS_USE_PATH_STYLE_ENDPOINT: "true"
 
       MAIL_MAILER: smtp
       MAIL_HOST: ${smtp_host}
@@ -80,9 +88,7 @@ spec:
     persistence:
       storage:
         enabled: true
-        accessMode: ReadWriteOnce
-        storageClass: longhorn-ssd
-        size: 256Mi
+        type: emptyDir
 
     mariadb:
       enabled: true
