@@ -17,6 +17,9 @@ spec:
   driftDetection:
     mode: enabled
   values:
+    controller:
+      strategy: RollingUpdate
+
     env:
       MEMOS_DRIVER: postgres
       MEMOS_DSN:
@@ -28,13 +31,6 @@ spec:
       policy.gabe565.com/egress-namespace: "true"
       policy.gabe565.com/egress-world: "true"
       policy.gabe565.com/ingress-ingress: "true"
-
-    persistence:
-      data:
-        enabled: true
-        storageClass: longhorn-ssd
-        accessMode: ReadWriteOnce
-        size: 512M
 
     ingress:
       main:
