@@ -34,6 +34,9 @@ spec:
               value: ${adguard_home_username}
             - name: ADGUARD_HOME_PASS
               value: ${adguard_home_password}
+          securityContext:
+            runAsUser: 65534
+            runAsGroup: 65534
     interval: 1h
     triggerLoopOnEvent: true
     policy: sync
