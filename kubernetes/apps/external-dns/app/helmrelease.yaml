@@ -23,7 +23,8 @@ spec:
 
     priorityClassName: system-cluster-critical
 
-    provider: cloudflare
+    provider:
+      name: cloudflare
     interval: 1h
     triggerLoopOnEvent: true
     policy: sync
