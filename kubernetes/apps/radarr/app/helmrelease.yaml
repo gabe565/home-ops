@@ -22,12 +22,10 @@ spec:
         containers:
           main:
             image:
-              repository: ghcr.io/linuxserver/radarr
-              tag: version-5.2.6.8376
+              repository: ghcr.io/onedr0p/radarr
+              tag: 5.2.6.8376
             env:
               TZ: America/Chicago
-              PUID: "1000"
-              PGID: "1000"
         pod:
           labels:
             policy.gabe565.com/egress-gotify: "true"
@@ -38,9 +36,8 @@ spec:
             policy.gabe565.com/ingress-ingress: "true"
             policy.gabe565.com/ingress-overseerr: "true"
             policy.gabe565.com/ingress-prowlarr: "true"
-
           securityContext:
-            fsGroup: 1000
+            fsGroup: 568
             fsGroupChangePolicy: OnRootMismatch
 
     service:
