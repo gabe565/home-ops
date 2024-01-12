@@ -24,7 +24,7 @@ spec:
           main:
             image:
               repository: dessalines/lemmy-ui
-              tag: 0.19.1
+              tag: 0.19.2
             env:
               LEMMY_UI_LEMMY_INTERNAL_HOST: backend:8536
               LEMMY_UI_LEMMY_EXTERNAL_HOST: ${app_url}
