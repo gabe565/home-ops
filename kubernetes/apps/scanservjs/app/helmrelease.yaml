@@ -37,21 +37,6 @@ spec:
           securityContext:
             fsGroup: 1000
             fsGroupChangePolicy: OnRootMismatch
-      scantopl:
-        containers:
-          main:
-            image:
-              repository: ghcr.io/celedhrim/scantopl
-              tag: master
-            env:
-              PLURL: http://paperless-ngx.paperless-ngx:8000
-              SCANDIR: /app/data/output
-            envFrom:
-              - secretRef:
-                  name: scanservjs-scantopl
-        pod:
-          labels:
-            policy.gabe565.com/egress-paperless-ngx: "true"
 
     persistence:
       config:
@@ -60,22 +45,15 @@ spec:
         storageClass: longhorn-ssd
         accessMode: ReadWriteOnce
         size: 1Gi
-        advancedMounts:
-          main:
-            main:
-              - path: /app/config
+        globalMounts:
+          - path: /app/config
       data:
         enabled: true
         type: nfs
         server: 100.64.0.4
         path: /volume1/documents/Scans
-        advancedMounts:
-          main:
-            main:
-              - path: /app/data/output
-          scantopl:
-            main:
-              - path: /output
+        globalMounts:
+          - path: /app/data/output
 
     service:
       main:
