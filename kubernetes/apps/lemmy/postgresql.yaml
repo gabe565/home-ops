@@ -54,7 +54,7 @@ spec:
           main:
             image:
               repository: postgres
-              tag: alpine
+              tag: 16-alpine
             env:
               PGPASSWORD:
                 secretKeyRef:
