@@ -73,7 +73,7 @@ spec:
           main:
             image:
               repository: ghcr.io/gurucomputing/headscale-ui
-              tag: latest
+              tag: 2023.01.30-beta-1
         pod:
           terminationGracePeriodSeconds: "3"
           labels:
