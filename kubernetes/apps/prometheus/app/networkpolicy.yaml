@@ -13,6 +13,20 @@ spec:
             app.kubernetes.io/name: prometheus
 ---
 apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: egress-prometheus
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/egress-prometheus: "true"
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: prometheus
+            app.kubernetes.io/name: prometheus
+---
+apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
   name: prometheus
@@ -26,6 +40,13 @@ spec:
     - toEndpoints:
         - matchLabels:
             policy.gabe565.com/ingress-prometheus: "true"
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            policy.gabe565.com/egress-prometheus: "true"
           matchExpressions:
             - key: io.kubernetes.pod.namespace
               operator: Exists

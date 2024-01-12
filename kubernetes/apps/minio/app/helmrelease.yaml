@@ -36,6 +36,9 @@ spec:
               MINIO_IDENTITY_OPENID_CLIENT_ID: ${oidc_client_id}
               MINIO_IDENTITY_OPENID_CLIENT_SECRET: ${oidc_client_secret}
               MINIO_IDENTITY_OPENID_SCOPES: openid,profile,email,minio
+              MINIO_PROMETHEUS_JOB_ID: minio
+              MINIO_PROMETHEUS_URL: http://kube-prometheus-stack-prometheus.prometheus:9090
+              MINIO_PROMETHEUS_AUTH_TYPE: public
             args:
               - server
               - /data
@@ -49,8 +52,10 @@ spec:
         pod:
           labels:
             policy.gabe565.com/egress-authentik: "true"
+            policy.gabe565.com/egress-prometheus: "true"
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-ingress: "true"
+            policy.gabe565.com/ingress-prometheus: "true"
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
@@ -79,6 +84,11 @@ spec:
         annotations:
           nginx.ingress.kubernetes.io/custom-http-errors: "501,502,503,504"
           nginx.ingress.kubernetes.io/proxy-body-size: 64m
+          # language=nginx configuration
+          nginx.ingress.kubernetes.io/server-snippet: |
+            location /minio/v2/metrics/cluster {
+                return 403;
+            }
         hosts:
           - host: ${app_url}
             paths:
@@ -95,3 +105,13 @@ spec:
           - secretName: ${certificate_name}
             hosts:
               - ${app_url}
+              - ${s3_url}
+
+    serviceMonitor:
+      main:
+        enabled: true
+        endpoints:
+          - port: s3
+            scheme: http
+            path: /minio/v2/metrics/cluster
+            interval: 1m
