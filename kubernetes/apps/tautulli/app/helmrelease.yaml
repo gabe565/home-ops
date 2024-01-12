@@ -22,8 +22,8 @@ spec:
         containers:
           main:
             image:
-              repository: ghcr.io/linuxserver/tautulli
-              tag: version-v2.13.4
+              repository: ghcr.io/onedr0p/tautulli
+              tag: 2.13.4
             env:
               TZ: America/Chicago
         pod:
@@ -34,6 +34,9 @@ spec:
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-authentik: "true"
             policy.gabe565.com/ingress-ingress: "true"
+          securityContext:
+            fsGroup: 568
+            fsGroupChangePolicy: OnRootMismatch
 
     service:
       main:
