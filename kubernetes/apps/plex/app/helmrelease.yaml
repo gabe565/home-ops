@@ -22,12 +22,10 @@ spec:
         containers:
           main:
             image:
-              repository: ghcr.io/linuxserver/plex
-              tag: version-1.32.8.7639-fb6452ebf
+              repository: ghcr.io/onedr0p/plex
+              tag: 1.32.8.7639-fb6452ebf
             env:
               TZ: America/Chicago
-              PUID: "1000"
-              PGID: "1000"
             resources:
               requests:
                 gpu.intel.com/i915: 1
@@ -40,6 +38,9 @@ spec:
             policy.gabe565.com/ingress-home-assistant: "true"
             policy.gabe565.com/ingress-ingress: "true"
             policy.gabe565.com/ingress-world: "true"
+          securityContext:
+            fsGroup: 568
+            fsGroupChangePolicy: OnRootMismatch
 
     persistence:
       config:
