@@ -22,20 +22,19 @@ spec:
         containers:
           main:
             image:
-              repository: ghcr.io/linuxserver/prowlarr
-              tag: version-1.11.4.4173
+              repository: ghcr.io/onedr0p/prowlarr
+              tag: 1.11.4.4173
             env:
               TZ: America/Chicago
-              PUID: "1000"
-              PGID: "1000"
         pod:
           labels:
             policy.gabe565.com/egress-gotify: "true"
             policy.gabe565.com/egress-qbittorrent: "true"
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-ingress: "true"
+
           securityContext:
-            fsGroup: 1000
+            fsGroup: 568
             fsGroupChangePolicy: OnRootMismatch
 
     service:
