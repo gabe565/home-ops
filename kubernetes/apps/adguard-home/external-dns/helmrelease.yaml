@@ -49,14 +49,3 @@ spec:
       policy.gabe565.com/egress-adguard-api: "true"
       policy.gabe565.com/egress-kubeapi: "true"
       policy.gabe565.com/egress-world: "true"
-  postRenderers:
-    - kustomize:
-        patches:
-          - target:
-              kind: Deployment
-              name: adguard-home-external-dns
-            # language=yaml
-            patch: |
-              - op: replace
-                path: /spec/template/spec/containers/1/ports/1/name
-                value: webhook-metrics
