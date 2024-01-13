@@ -31,6 +31,7 @@ spec:
               MINIO_BROWSER_REDIRECT_URL: https://${app_url}
               MINIO_API_CORS_ALLOW_ORIGIN: https://${app_url},https://${s3_url}
               MINIO_API_ROOT_ACCESS: "off"
+              MINIO_SCANNER_SPEED: slowest
               MINIO_IDENTITY_OPENID_DISPLAY_NAME: Login with Authentik
               MINIO_IDENTITY_OPENID_CONFIG_URL: https://${oidc_host}/application/o/minio/.well-known/openid-configuration
               MINIO_IDENTITY_OPENID_CLIENT_ID: ${oidc_client_id}
