@@ -29,7 +29,7 @@ spec:
           tag: v0.0.8
         env:
           - name: ADGUARD_HOME_URL
-            value: http://adguard-home:3000
+            value: http://adguard-home-origin:3000
           - name: ADGUARD_HOME_USER
             value: ${adguard_home_username}
           - name: ADGUARD_HOME_PASS

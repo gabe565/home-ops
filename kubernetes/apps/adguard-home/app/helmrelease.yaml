@@ -19,6 +19,8 @@ spec:
   values:
     controllers:
       main:
+        type: statefulset
+        replicas: 2
         containers:
           main:
             image:
@@ -33,49 +35,82 @@ spec:
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-ingress: "true"
             policy.gabe565.com/ingress-namespace: "true"
-
-    persistence:
-      config:
-        enabled: true
-        storageClass: longhorn-ssd
-        accessMode: ReadWriteOnce
-        size: 128Mi
-        retain: true
-        globalMounts:
-          - path: /opt/adguardhome/conf
-      data:
-        enabled: true
-        storageClass: longhorn-ssd
-        accessMode: ReadWriteOnce
-        size: 2Gi
-        retain: true
-        globalMounts:
-          - path: /opt/adguardhome/work
+          affinity:
+            podAntiAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 1
+                  podAffinityTerm:
+                    topologyKey: kubernetes.io/hostname
+                    labelSelector:
+                      matchLabels:
+                        app.kubernetes.io/name: adguard-home
+                        app.kubernetes.io/component: main
+        statefulset:
+          volumeClaimTemplates:
+            - name: data
+              storageClass: longhorn-ssd
+              accessMode: ReadWriteOnce
+              size: 2Gi
+              globalMounts:
+                - path: /opt/adguardhome/conf
+                  subPath: conf
+                - path: /opt/adguardhome/work
+                  subPath: work
 
     service:
       main:
         ports:
           http:
             port: 3000
-      dns-tcp: &dns-svc
+      origin: &origin-http
         controller: main
+        extraSelectorLabels:
+          apps.kubernetes.io/pod-index: "0"
+        ports:
+          http:
+            port: 3000
+      origin-tcp: &origin-tcp
+        controller: main
+        extraSelectorLabels:
+          apps.kubernetes.io/pod-index: "0"
         type: LoadBalancer
         externalTrafficPolicy: Local
         loadBalancerIP: 192.168.1.221
         annotations:
-          metallb.universe.tf/allow-shared-ip: adguard-home
+          metallb.universe.tf/allow-shared-ip: adguard-home-origin
         ports:
           dns:
             port: 53
-      dns-udp:
-        <<: *dns-svc
+      origin-udp: &origin-udp
+        <<: *origin-tcp
+        extraSelectorLabels:
+          apps.kubernetes.io/pod-index: "0"
         ports:
           dns:
             port: 53
             protocol: UDP
 
+      replica:
+        <<: *origin-http
+        extraSelectorLabels:
+          apps.kubernetes.io/pod-index: "1"
+      replica-tcp:
+        <<: *origin-tcp
+        extraSelectorLabels:
+          apps.kubernetes.io/pod-index: "1"
+        loadBalancerIP: 192.168.1.222
+        annotations:
+          metallb.universe.tf/allow-shared-ip: adguard-home-replica
+      replica-udp:
+        <<: *origin-udp
+        extraSelectorLabels:
+          apps.kubernetes.io/pod-index: "1"
+        loadBalancerIP: 192.168.1.222
+        annotations:
+          metallb.universe.tf/allow-shared-ip: adguard-home-replica
+
     ingress:
-      main:
+      origin: &ingress
         enabled: true
         annotations:
           nginx.ingress.kubernetes.io/auth-url: |-
@@ -91,8 +126,17 @@ spec:
             paths:
               - path: /
                 service:
-                  name: main
+                  name: origin
         tls:
           - secretName: ${certificate_name}
             hosts:
               - ${app_url}
+              - replica.${app_url}
+      replica:
+        <<: *ingress
+        hosts:
+          - host: replica.${app_url}
+            paths:
+              - path: /
+                service:
+                  name: replica
