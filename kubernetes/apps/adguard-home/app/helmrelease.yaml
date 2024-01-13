@@ -56,12 +56,38 @@ spec:
                   subPath: conf
                 - path: /opt/adguardhome/work
                   subPath: work
+      sync:
+        containers:
+          main:
+            image:
+              repository: ghcr.io/bakito/adguardhome-sync
+              tag: alpine-v0.6.0
+            args: [run]
+            env:
+              ORIGIN_URL: http://adguard-home-origin:3000
+              ORIGIN_WEB_URL: https://${app_url}
+              ORIGIN_USERNAME: ${sync_username}
+              ORIGIN_PASSWORD: ${sync_password}
+              REPLICA_URL: http://adguard-home-replica:3000
+              REPLICA_WEB_URL: https://replica.${app_url}
+              REPLICA_USERNAME: ${sync_username}
+              REPLICA_PASSWORD: ${sync_password}
+              REPLICA_AUTO_SETUP: "true"
+              CRON: "*/10 * * * *"
+        pod:
+          labels:
+            policy.gabe565.com/egress-namespace: "true"
 
     service:
       main:
         ports:
           http:
             port: 3000
+      sync:
+        controller: sync
+        ports:
+          http:
+            port: 8080
       origin: &origin-http
         controller: main
         extraSelectorLabels:

@@ -104,6 +104,11 @@
       "matchDatasources": ["docker"],
       "matchPackagePatterns": ["minio"],
       "versioning": "regex:^RELEASE\\.(?<major>\\d+)-(?<minor>\\d+)-(?<patch>\\d+)T.*Z$"
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/bakito/adguardhome-sync"],
+      "versioning": "regex:^(?<compatibility>.+-)?v?(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
     }
   ],
   "hostRules": [
