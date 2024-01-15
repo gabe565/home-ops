@@ -1,0 +1,77 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: renovate
+  namespace: renovate
+spec:
+  chart:
+    spec:
+      chart: mend-renovate-ce
+      version: 6.7.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: renovate
+        name: renovate
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    nameOverride: renovate
+
+    renovate:
+      extraEnvVars:
+        - name: RENOVATE_PAGINATE_ALL
+          value: "true"
+        - name: DOCKER_DOCKER_IO_USERNAME
+          value: ${dockerhub_username}
+        - name: DOCKER_DOCKER_IO_PASSWORD
+          value: ${dockerhub_password}
+
+      mendRnvAcceptTos: 'y'
+      mendRnvPlatform: github
+      existingSecret: renovate
+      mendRnvCronJobScheduler: "0 * * * *"
+      mendRnvCronAppSync: "0 0,4,8,12,16,20 * * *"
+      mendRnvAutoDiscoverFilter: "gabe565/*"
+      # language=javascript
+      config: |
+        module.exports = {
+          // Enter self-hosted configuration options here.
+          // https://docs.renovatebot.com/self-hosted-configuration/
+          autodiscover: true,
+          cacheHardTtlMinutes: 240,
+          onboardingConfigFileName: ".github/renovate.json",
+          onboardingConfig: {
+              "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+              "extends": [
+                  "local>gabe565/renovate-config"
+              ]
+          },
+          detectHostRulesFromEnv: true,
+          onboardingRebaseCheckbox: true
+        };
+
+    labels:
+      pods:
+        policy.gabe565.com/egress-world: "true"
+        policy.gabe565.com/ingress-ingress: "true"
+
+    podSecurityContext:
+      fsGroup: 1000
+      fsGroupChangePolicy: OnRootMismatch
+
+    cachePersistence:
+      enabled: true
+      storageClass: longhorn-ssd
+      accessModes: [ReadWriteOnce]
+      size: 30Gi
+
+    ingress:
+      enabled: true
+      hosts:
+        - ${app_url}
+      tls:
+        - secretName: ${certificate_name}
+          hosts:
+            - ${app_url}
