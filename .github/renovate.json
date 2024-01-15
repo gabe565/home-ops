@@ -110,14 +110,5 @@
       "matchPackageNames": ["ghcr.io/bakito/adguardhome-sync"],
       "versioning": "regex:^(?<compatibility>.+-)?v?(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
     }
-  ],
-  "hostRules": [
-    {
-      "matchHost": "docker.io",
-      "encrypted": {
-        "username": "wcFMA/xDdHCJBTolARAAkoxMyVg6cJN4/H+L8GH+sP68LHmwE+Vd006n4SnT3SUPGKM1olnS5zONzqyywzWvrGP6lj8fyVsfz8bawctkvwGl8jYg/NqwIH1m8najaFIGl3oVsZJ014SwZCC5gCc0YaOAPisOxcHwfS4X82YSRVfdYxLMIEqh5MTcA60MfElRhmpgPLwp+SyoScoCCafRGT6zRL6xNbCYXt0Te0ULOTM+PuPyCYrysUso3e97jq8y3gnGXJTVhNMO4dBkiP7YNchUKNJPCn9QEPIbgvaXa55sk5Z8v1DCahFk7UjaE1rj9qHJ0Ebqnu3dgMNQheShE+oz65ChaZnBDVhdRYoKQ02VZDXFbYv4SJ3RobM13YF1jCUfiOO1vxdLdwTMQAve9vXyksoMjfNDAb9+gTzJueBt/6sYyBxTwzMglLOuz0GoMM0AHfphMx4sQgJSSEVdcj88zz5x2FU8rLaWGs3D0BG/ZRhJtWHN9tltDfuyzP7zReV6cH8nXhQOPuEp0FnCKFhiKDXGvkz9lYFuqjN1yFdIeyavKuld8GhXXjcNllXWvOIltfNzoKFo/G5+vKRWJnUTdHlkNSJoKwVhZxhdf45ttC2iIXdORPtjkAEqmBQps2zpP8TUnt9V1oOSWI11DBLQZfEUf2wiUM1tzd7pv/fJbYOo+3bhUGKwcfrK4DTSZQGjofQByS3uvxrpGYhv48pFowa7PfUbWgqLO6f23MZMUkBgzBBy2GayQ5ZcH7P2fRg4btzXbWiXWFPuTlt9DpPaUALsXpDvCLIYFdlqWc+lkq073th5XCq+GqakNMYhUYqNOrjl",
-        "password": "wcFMA/xDdHCJBTolAQ//ebUsvv+b9hP6CwECEWZhw3FJl9qey/ANAEMoFT3FQ2ioqAj1bMch/G1Fz/eQN74IY/XoA1Rvv9wjXvmKpJggOQnwUGOhH3TD84AMMaAGQDxilHJp7iPfIaUjciXVVa9hnFEYKvesg4HXRWy3241v9DvgCNPkP7Aqp2nS9zykpO/0bCBdu7FTtNj17/IdOh9Ye67qQO70vz2o6zMQaXu0ogg08XXj8rOsAYvfFDcZ8jrBNGRJMd2VIAS93riydIi3vrhYkQeQ2/CxjiKcfJJm/UU7pXXHwWGpisVYuzypOhBD3INixDvHJ2Hhe8vOjPHfMkZi4q+GUYbcaw3FGQH7NmQhRVv1JPlSS+LSixAqOV4/4+4/XAZJvd2tTg6gHgG7hV0cj9YnhUoN7EYvJS3p9fY+Y0XMMK8pfKzVqBVmE62oPTMe6UxBczMYS1hgaUJ4xj5iFsoelcZ8etg3m7Z63PfUBasJFXyapXrZ4cS7EIWldSkmmamEjlhm5A4QJbISYBByBF69LQh5hG/Pod6QnXCroSkR4bNpzm3zoRVJY2Fz/UGRghKRqqBZIKAi2qhCEh+na5tep2j29tDxU+XamF9FyedJTuChG++WE5GGDtW/l6G9uUwJT3rt6Ch6BkzpYZ5BXZU6W3jJ6hxTyQyAyYMmsiIujAu80A/1NiYPQ/7SlgGJjkc3G8LJtLK/VJ+1aprpeJAUrjA8L9bWqJcsIBGTiQWtWBs+LNwDy1tQ9ySVuZ3XPtZFf+D85PJAmW4fUQvhRr0EiTEREcs/3fQdwOLlWfX7bAezopip/bcy+DFE8Svc/aDawdieV/e+W08rymghvcPmFdSejrvOUK377msPeEJRpDcy0oM6SiHduBt5qaeitzu4Uw"
-      }
-    }
   ]
 }
