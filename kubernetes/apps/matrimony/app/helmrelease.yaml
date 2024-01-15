@@ -17,6 +17,10 @@ spec:
   driftDetection:
     mode: enabled
   values:
+    image:
+      repository: ghcr.io/gabe565/matrimony
+      tag: 1.1.0
+
     env:
       TZ: America/Chicago
 
