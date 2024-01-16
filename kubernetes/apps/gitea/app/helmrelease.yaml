@@ -61,7 +61,7 @@ spec:
     service:
       ssh:
         type: LoadBalancer
-        port: 22
+        port: 2222
         loadBalancerIP: 192.168.1.227
         externalTrafficPolicy: Local
 
