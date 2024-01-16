@@ -33,6 +33,7 @@ spec:
         policy.gabe565.com/egress-world: "true"
         policy.gabe565.com/ingress-ingress: "true"
         policy.gabe565.com/ingress-prometheus: "true"
+        policy.gabe565.com/ingress-world: "true"
 
     ingress:
       enabled: true
