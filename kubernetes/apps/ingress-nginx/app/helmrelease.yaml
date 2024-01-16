@@ -80,6 +80,9 @@ spec:
           labels:
             policy.gabe565.com/egress-kubeapi: "true"
 
+    tcp:
+      "2222": gitea/gitea-ssh:2222
+
     defaultBackend:
       enabled: true
       image:
