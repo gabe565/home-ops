@@ -61,7 +61,7 @@ spec:
       ssh:
         type: LoadBalancer
         port: 22
-        loadBalancerIP: 192.168.1.226
+        loadBalancerIP: 192.168.1.227
 
     persistence:
       storageClass: longhorn-ssd
