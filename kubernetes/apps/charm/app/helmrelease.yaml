@@ -58,6 +58,7 @@ spec:
       main:
         type: LoadBalancer
         loadBalancerIP: 192.168.1.224
+        externalTrafficPolicy: Local
         annotations:
           external-dns.alpha.kubernetes.io/hostname: ${app_url}
         ports:
