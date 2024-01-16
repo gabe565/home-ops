@@ -93,3 +93,4 @@ spec:
                 username: immich
                 hostname: postgresql-r
                 options: --no-owner
+                format: plain

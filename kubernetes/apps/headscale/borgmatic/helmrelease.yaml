@@ -83,3 +83,4 @@ spec:
                 username: headscale
                 hostname: postgresql-r
                 options: --no-owner
+                format: plain

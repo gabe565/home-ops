@@ -83,3 +83,4 @@ spec:
                 username: lemmy
                 hostname: postgresql-r
                 options: --no-owner
+                format: plain

@@ -92,3 +92,4 @@ spec:
                 hostname: postgresql-r
                 username: miniflux
                 options: --no-owner
+                format: plain

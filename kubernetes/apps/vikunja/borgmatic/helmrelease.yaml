@@ -97,3 +97,4 @@ spec:
                 username: vikunja
                 hostname: postgresql-r
                 options: --no-owner
+                format: plain

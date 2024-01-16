@@ -96,3 +96,4 @@ spec:
                 username: vaultwarden
                 hostname: postgresql-r
                 options: --no-owner
+                format: plain

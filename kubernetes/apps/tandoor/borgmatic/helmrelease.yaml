@@ -83,3 +83,4 @@ spec:
                 hostname: postgresql-r
                 username: tandoor
                 options: --no-owner
+                format: plain

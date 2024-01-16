@@ -100,3 +100,4 @@ spec:
                 username: paperless-ngx
                 hostname: postgresql-r
                 options: --no-owner
+                format: plain

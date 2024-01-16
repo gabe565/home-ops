@@ -98,3 +98,4 @@ spec:
                 username: nextcloud
                 hostname: postgresql-r
                 options: --no-owner
+                format: plain

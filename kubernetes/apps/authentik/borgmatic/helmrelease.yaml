@@ -83,3 +83,4 @@ spec:
                 username: authentik
                 hostname: postgresql-r
                 options: --no-owner
+                format: plain
