@@ -24,9 +24,6 @@ spec:
   interval: 1h
   driftDetection:
     mode: enabled
-  valuesFrom:
-    - kind: Secret
-      name: borgmatic-values
   values:
     image:
       repository: ghcr.io/gabe565/borgmatic
