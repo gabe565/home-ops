@@ -1,25 +1,25 @@
 <table>
-    <tr>
-        <th>Namespace</th>
-        <th>Name</th>
-        <th>Supporting Services</th>
-    </tr>
-    {{- range $i, $namespace := . }}
-    {{- range $j, $match := .Services }}
-    <tr>
-        {{- $rowspan := len $namespace.Services }}
-        {{- if eq $j 0 }}
-        <td {{- if gt $rowspan 1 }} rowspan="{{ $rowspan }}"{{ end }}>{{ $namespace.Name }}</td>
-        {{- end }}
-        <td><a href="../../{{ .Path }}">{{ .Name }}</a></td>
-        {{- if eq $j 0 }}
-        <td {{- if gt $rowspan 1 }} rowspan="{{ $rowspan }}"{{ end }}>
-            {{- range $k, $supporting := $namespace.Supporting -}}
-                {{- if ne $k 0 }}, {{ end }}<a href="../../{{ .Path }}">{{ .Name }}</a>
-            {{- end -}}
-        </td>
-        {{- end }}
-    </tr>
+  <tr>
+    <th>Namespace</th>
+    <th>Name</th>
+    <th>Supporting Services</th>
+  </tr>
+  {{- range $i, $namespace := . }}
+  {{- range $j, $match := .Services }}
+  <tr>
+    {{- $rowspan := len $namespace.Services }}
+    {{- if eq $j 0 }}
+    <td {{- if gt $rowspan 1 }} rowspan="{{ $rowspan }}"{{ end }}>{{ $namespace.Name }}</td>
     {{- end }}
+    <td><a href="../../{{ .Path }}">{{ .Name }}</a></td>
+    {{- if eq $j 0 }}
+    <td {{- if gt $rowspan 1 }} rowspan="{{ $rowspan }}"{{ end }}>
+      {{- range $k, $supporting := $namespace.Supporting -}}
+        {{- if ne $k 0 }}, {{ end }}<a href="../../{{ .Path }}">{{ .Name }}</a>
+      {{- end -}}
+    </td>
     {{- end }}
+  </tr>
+  {{- end }}
+  {{- end }}
 </table>
