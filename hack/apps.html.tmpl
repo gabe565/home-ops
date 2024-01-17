@@ -1,0 +1,27 @@
+<table>
+  <tr>
+    <th>Namespace</th>
+    <th>Name</th>
+    <th>Supporting Services</th>
+  </tr>
+  {{- range . }}
+  {{- $namespace := . }}
+  {{- range $i, $match := .Services }}
+  <tr>
+    {{- $isFirstRow := eq $i 0 }}
+    {{- $rowspan := len $namespace.Services }}
+    {{- if $isFirstRow }}
+    <td rowspan="{{ $rowspan }}">{{ $namespace.Name }}</td>
+    {{- end }}
+    <td><a href="../../{{ .Path }}">{{ .Name }}</a></td>
+    {{- if $isFirstRow }}
+    <td rowspan="{{ $rowspan }}">
+      {{- range $k, $supporting := $namespace.Supporting -}}
+        {{- if ne $k 0 }}, {{ end }}<a href="../../{{ .Path }}">{{ .Name }}</a>
+      {{- end -}}
+    </td>
+    {{- end }}
+  </tr>
+  {{- end }}
+  {{- end }}
+</table>
