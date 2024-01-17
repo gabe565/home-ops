@@ -47,7 +47,7 @@ func init() {
 	flag.StringVar(&root, "root", "kubernetes/apps", "Root directory to search")
 	flag.StringVar(&startTag, "start-tag", "<!-- Begin apps table -->", "Tag to start replacement")
 	flag.StringVar(&endTag, "end-tag", "<!-- End apps table -->", "Tag to end replacment")
-	excludeNamesStr := flag.String("exclude-names", "borgmatic", "Comma-separated list of manifest names to exclude")
+	excludeNamesStr := flag.String("exclude-names", "borgmatic,postgresql,redis", "Comma-separated list of manifest names to exclude")
 	flag.Parse()
 	excludeNames = strings.Split(*excludeNamesStr, ",")
 }
@@ -135,22 +135,6 @@ func extract(data map[string]any) (*Match, error) {
 			Namespace:    namespace,
 			ChartName:    chartName,
 			ChartVersion: chartVersion,
-		}, nil
-	case apiVersion == "postgresql.cnpg.io/v1" && kind == "Cluster":
-		spec, _ := data["spec"].(map[string]any)
-		var tag string
-		if imageName, ok := spec["imageName"].(string); ok {
-			_, tag, _ = strings.Cut(imageName, ":")
-		}
-		if tag == "" {
-			tag = "latest"
-		}
-
-		return &Match{
-			Name:         name,
-			Namespace:    namespace,
-			ChartName:    "cloudnativepg",
-			ChartVersion: tag,
 		}, nil
 	default:
 		return nil, nil

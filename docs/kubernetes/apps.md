@@ -22,17 +22,9 @@
         <td><img src="https://img.shields.io/badge/ascii--movie-0.13.1-blue?style=flat-square" alt="ascii-movie 0.13.1"></td>
     </tr>
     <tr>
-        <td rowspan="3">authentik</td>
+        <td>authentik</td>
         <td><a href="../../kubernetes/apps/authentik/app/helmrelease.yaml">authentik</a></td>
         <td><img src="https://img.shields.io/badge/authentik-2023.10.6-blue?style=flat-square" alt="authentik 2023.10.6"></td>
-    </tr>
-    <tr>
-        <td><a href="../../kubernetes/apps/authentik/postgresql.yaml">postgresql</a></td>
-        <td><img src="https://img.shields.io/badge/cloudnativepg-16.1--7-blue?style=flat-square" alt="cloudnativepg 16.1-7"></td>
-    </tr>
-    <tr>
-        <td><a href="../../kubernetes/apps/authentik/redis/helmrelease.yaml">redis</a></td>
-        <td><img src="https://img.shields.io/badge/redis-18.6.4-blue?style=flat-square" alt="redis 18.6.4"></td>
     </tr>
     <tr>
         <td>bookstack</td>
@@ -94,17 +86,9 @@
         <td><img src="https://img.shields.io/badge/generic--device--plugin-0.1.3-blue?style=flat-square" alt="generic-device-plugin 0.1.3"></td>
     </tr>
     <tr>
-        <td rowspan="3">gitea</td>
+        <td>gitea</td>
         <td><a href="../../kubernetes/apps/gitea/app/helmrelease.yaml">gitea</a></td>
         <td><img src="https://img.shields.io/badge/gitea-10.0.2-blue?style=flat-square" alt="gitea 10.0.2"></td>
-    </tr>
-    <tr>
-        <td><a href="../../kubernetes/apps/gitea/postgresql.yaml">postgresql</a></td>
-        <td><img src="https://img.shields.io/badge/cloudnativepg-16.1--7-blue?style=flat-square" alt="cloudnativepg 16.1-7"></td>
-    </tr>
-    <tr>
-        <td><a href="../../kubernetes/apps/gitea/redis/helmrelease.yaml">redis</a></td>
-        <td><img src="https://img.shields.io/badge/redis-18.6.4-blue?style=flat-square" alt="redis 18.6.4"></td>
     </tr>
     <tr>
         <td>hammond</td>
@@ -112,25 +96,17 @@
         <td><img src="https://img.shields.io/badge/hammond-0.6.4-blue?style=flat-square" alt="hammond 0.6.4"></td>
     </tr>
     <tr>
-        <td rowspan="2">headscale</td>
+        <td>headscale</td>
         <td><a href="../../kubernetes/apps/headscale/app/helmrelease.yaml">headscale</a></td>
         <td><img src="https://img.shields.io/badge/app--template-2.5.0-blue?style=flat-square" alt="app-template 2.5.0"></td>
     </tr>
     <tr>
-        <td><a href="../../kubernetes/apps/headscale/postgresql.yaml">postgresql</a></td>
-        <td><img src="https://img.shields.io/badge/cloudnativepg-16.1--7-blue?style=flat-square" alt="cloudnativepg 16.1-7"></td>
-    </tr>
-    <tr>
-        <td rowspan="2">healthchecks</td>
+        <td>healthchecks</td>
         <td><a href="../../kubernetes/apps/healthchecks/app/helmrelease.yaml">healthchecks</a></td>
         <td><img src="https://img.shields.io/badge/healthchecks-0.8.0-blue?style=flat-square" alt="healthchecks 0.8.0"></td>
     </tr>
     <tr>
-        <td><a href="../../kubernetes/apps/healthchecks/postgresql.yaml">postgresql</a></td>
-        <td><img src="https://img.shields.io/badge/cloudnativepg-16.1--7-blue?style=flat-square" alt="cloudnativepg 16.1-7"></td>
-    </tr>
-    <tr>
-        <td rowspan="3">home-assistant</td>
+        <td rowspan="2">home-assistant</td>
         <td><a href="../../kubernetes/apps/home-assistant/app/helmrelease.yaml">home-assistant</a></td>
         <td><img src="https://img.shields.io/badge/app--template-2.5.0-blue?style=flat-square" alt="app-template 2.5.0"></td>
     </tr>
@@ -139,26 +115,14 @@
         <td><img src="https://img.shields.io/badge/app--template-2.5.0-blue?style=flat-square" alt="app-template 2.5.0"></td>
     </tr>
     <tr>
-        <td><a href="../../kubernetes/apps/home-assistant/postgresql.yaml">postgresql</a></td>
-        <td><img src="https://img.shields.io/badge/cloudnativepg-16.1--7-blue?style=flat-square" alt="cloudnativepg 16.1-7"></td>
-    </tr>
-    <tr>
         <td>homepage</td>
         <td><a href="../../kubernetes/apps/homepage/app/helmrelease.yaml">homepage</a></td>
         <td><img src="https://img.shields.io/badge/app--template-2.5.0-blue?style=flat-square" alt="app-template 2.5.0"></td>
     </tr>
     <tr>
-        <td rowspan="3">immich</td>
+        <td>immich</td>
         <td><a href="../../kubernetes/apps/immich/app/helmrelease.yaml">immich</a></td>
         <td><img src="https://img.shields.io/badge/app--template-2.5.0-blue?style=flat-square" alt="app-template 2.5.0"></td>
-    </tr>
-    <tr>
-        <td><a href="../../kubernetes/apps/immich/postgresql.yaml">postgresql</a></td>
-        <td><img src="https://img.shields.io/badge/cloudnativepg-16.1--7--vectors0.1.11-blue?style=flat-square" alt="cloudnativepg 16.1-7-vectors0.1.11"></td>
-    </tr>
-    <tr>
-        <td><a href="../../kubernetes/apps/immich/redis/helmrelease.yaml">redis</a></td>
-        <td><img src="https://img.shields.io/badge/redis-18.6.4-blue?style=flat-square" alt="redis 18.6.4"></td>
     </tr>
     <tr>
         <td>ingress-nginx</td>
@@ -184,7 +148,7 @@
         <td><img src="https://img.shields.io/badge/metrics--server-3.11.0-blue?style=flat-square" alt="metrics-server 3.11.0"></td>
     </tr>
     <tr>
-        <td rowspan="5">lemmy</td>
+        <td rowspan="4">lemmy</td>
         <td><a href="../../kubernetes/apps/lemmy/app/backend.yaml">backend</a></td>
         <td><img src="https://img.shields.io/badge/app--template-2.5.0-blue?style=flat-square" alt="app-template 2.5.0"></td>
     </tr>
@@ -197,10 +161,6 @@
         <td><img src="https://img.shields.io/badge/app--template-2.5.0-blue?style=flat-square" alt="app-template 2.5.0"></td>
     </tr>
     <tr>
-        <td><a href="../../kubernetes/apps/lemmy/postgresql.yaml">postgresql</a></td>
-        <td><img src="https://img.shields.io/badge/cloudnativepg-16.1--7-blue?style=flat-square" alt="cloudnativepg 16.1-7"></td>
-    </tr>
-    <tr>
         <td><a href="../../kubernetes/apps/lemmy/postgresql.yaml">postgresql-cleanup</a></td>
         <td><img src="https://img.shields.io/badge/app--template-2.5.0-blue?style=flat-square" alt="app-template 2.5.0"></td>
     </tr>
@@ -210,13 +170,9 @@
         <td><img src="https://img.shields.io/badge/app--template-2.5.0-blue?style=flat-square" alt="app-template 2.5.0"></td>
     </tr>
     <tr>
-        <td rowspan="2">linkding</td>
+        <td>linkding</td>
         <td><a href="../../kubernetes/apps/linkding/app/helmrelease.yaml">linkding</a></td>
         <td><img src="https://img.shields.io/badge/app--template-2.5.0-blue?style=flat-square" alt="app-template 2.5.0"></td>
-    </tr>
-    <tr>
-        <td><a href="../../kubernetes/apps/linkding/postgresql.yaml">postgresql</a></td>
-        <td><img src="https://img.shields.io/badge/cloudnativepg-16.1--7-blue?style=flat-square" alt="cloudnativepg 16.1-7"></td>
     </tr>
     <tr>
         <td>longhorn-system</td>
@@ -229,13 +185,9 @@
         <td><img src="https://img.shields.io/badge/matrimony-0.6.2-blue?style=flat-square" alt="matrimony 0.6.2"></td>
     </tr>
     <tr>
-        <td rowspan="2">memos</td>
+        <td>memos</td>
         <td><a href="../../kubernetes/apps/memos/app/helmrelease.yaml">memos</a></td>
         <td><img src="https://img.shields.io/badge/memos-0.10.2-blue?style=flat-square" alt="memos 0.10.2"></td>
-    </tr>
-    <tr>
-        <td><a href="../../kubernetes/apps/memos/postgresql.yaml">postgresql</a></td>
-        <td><img src="https://img.shields.io/badge/cloudnativepg-16.1--7-blue?style=flat-square" alt="cloudnativepg 16.1-7"></td>
     </tr>
     <tr>
         <td>metallb-system</td>
@@ -243,13 +195,9 @@
         <td><img src="https://img.shields.io/badge/metallb-0.13.12-blue?style=flat-square" alt="metallb 0.13.12"></td>
     </tr>
     <tr>
-        <td rowspan="2">miniflux</td>
+        <td>miniflux</td>
         <td><a href="../../kubernetes/apps/miniflux/app/helmrelease.yaml">miniflux</a></td>
         <td><img src="https://img.shields.io/badge/miniflux-0.6.11-blue?style=flat-square" alt="miniflux 0.6.11"></td>
-    </tr>
-    <tr>
-        <td><a href="../../kubernetes/apps/miniflux/postgresql.yaml">postgresql</a></td>
-        <td><img src="https://img.shields.io/badge/cloudnativepg-16.1--7-blue?style=flat-square" alt="cloudnativepg 16.1-7"></td>
     </tr>
     <tr>
         <td>minio</td>
@@ -267,13 +215,9 @@
         <td><img src="https://img.shields.io/badge/app--template-2.5.0-blue?style=flat-square" alt="app-template 2.5.0"></td>
     </tr>
     <tr>
-        <td rowspan="2">nextcloud</td>
+        <td>nextcloud</td>
         <td><a href="../../kubernetes/apps/nextcloud/app/helmrelease.yaml">nextcloud</a></td>
         <td><img src="https://img.shields.io/badge/nextcloud-4.5.10-blue?style=flat-square" alt="nextcloud 4.5.10"></td>
-    </tr>
-    <tr>
-        <td><a href="../../kubernetes/apps/nextcloud/postgresql.yaml">postgresql</a></td>
-        <td><img src="https://img.shields.io/badge/cloudnativepg-16.1--7-blue?style=flat-square" alt="cloudnativepg 16.1-7"></td>
     </tr>
     <tr>
         <td>nfs-provisioner</td>
@@ -306,13 +250,9 @@
         <td><img src="https://img.shields.io/badge/app--template-2.5.0-blue?style=flat-square" alt="app-template 2.5.0"></td>
     </tr>
     <tr>
-        <td rowspan="2">paperless-ngx</td>
+        <td>paperless-ngx</td>
         <td><a href="../../kubernetes/apps/paperless-ngx/app/helmrelease.yaml">paperless-ngx</a></td>
         <td><img src="https://img.shields.io/badge/paperless--ngx-0.12.0-blue?style=flat-square" alt="paperless-ngx 0.12.0"></td>
-    </tr>
-    <tr>
-        <td><a href="../../kubernetes/apps/paperless-ngx/postgresql.yaml">postgresql</a></td>
-        <td><img src="https://img.shields.io/badge/cloudnativepg-16.1--7-blue?style=flat-square" alt="cloudnativepg 16.1-7"></td>
     </tr>
     <tr>
         <td>pictshare</td>
@@ -374,20 +314,12 @@
         <td><img src="https://img.shields.io/badge/app--template-2.5.0-blue?style=flat-square" alt="app-template 2.5.0"></td>
     </tr>
     <tr>
-        <td rowspan="2">searxng</td>
-        <td><a href="../../kubernetes/apps/searxng/redis/helmrelease.yaml">redis</a></td>
-        <td><img src="https://img.shields.io/badge/redis-18.6.4-blue?style=flat-square" alt="redis 18.6.4"></td>
-    </tr>
-    <tr>
+        <td>searxng</td>
         <td><a href="../../kubernetes/apps/searxng/app/helmrelease.yaml">searxng</a></td>
         <td><img src="https://img.shields.io/badge/app--template-2.5.0-blue?style=flat-square" alt="app-template 2.5.0"></td>
     </tr>
     <tr>
-        <td rowspan="2">shlink</td>
-        <td><a href="../../kubernetes/apps/shlink/postgresql.yaml">postgresql</a></td>
-        <td><img src="https://img.shields.io/badge/cloudnativepg-16.1--7-blue?style=flat-square" alt="cloudnativepg 16.1-7"></td>
-    </tr>
-    <tr>
+        <td>shlink</td>
         <td><a href="../../kubernetes/apps/shlink/app/helmrelease.yaml">shlink</a></td>
         <td><img src="https://img.shields.io/badge/app--template-2.5.0-blue?style=flat-square" alt="app-template 2.5.0"></td>
     </tr>
@@ -402,11 +334,7 @@
         <td><img src="https://img.shields.io/badge/app--template-2.5.0-blue?style=flat-square" alt="app-template 2.5.0"></td>
     </tr>
     <tr>
-        <td rowspan="2">tandoor</td>
-        <td><a href="../../kubernetes/apps/tandoor/postgresql.yaml">postgresql</a></td>
-        <td><img src="https://img.shields.io/badge/cloudnativepg-16.1--7-blue?style=flat-square" alt="cloudnativepg 16.1-7"></td>
-    </tr>
-    <tr>
+        <td>tandoor</td>
         <td><a href="../../kubernetes/apps/tandoor/app/helmrelease.yaml">tandoor</a></td>
         <td><img src="https://img.shields.io/badge/tandoor-0.8.11-blue?style=flat-square" alt="tandoor 0.8.11"></td>
     </tr>
@@ -426,24 +354,12 @@
         <td><img src="https://img.shields.io/badge/app--template-2.5.0-blue?style=flat-square" alt="app-template 2.5.0"></td>
     </tr>
     <tr>
-        <td rowspan="2">vaultwarden</td>
-        <td><a href="../../kubernetes/apps/vaultwarden/postgresql.yaml">postgresql</a></td>
-        <td><img src="https://img.shields.io/badge/cloudnativepg-16.1--7-blue?style=flat-square" alt="cloudnativepg 16.1-7"></td>
-    </tr>
-    <tr>
+        <td>vaultwarden</td>
         <td><a href="../../kubernetes/apps/vaultwarden/app/helmrelease.yaml">vaultwarden</a></td>
         <td><img src="https://img.shields.io/badge/vaultwarden-0.11.2-blue?style=flat-square" alt="vaultwarden 0.11.2"></td>
     </tr>
     <tr>
-        <td rowspan="3">vikunja</td>
-        <td><a href="../../kubernetes/apps/vikunja/postgresql.yaml">postgresql</a></td>
-        <td><img src="https://img.shields.io/badge/cloudnativepg-16.1--7-blue?style=flat-square" alt="cloudnativepg 16.1-7"></td>
-    </tr>
-    <tr>
-        <td><a href="../../kubernetes/apps/vikunja/redis/helmrelease.yaml">redis</a></td>
-        <td><img src="https://img.shields.io/badge/redis-18.6.4-blue?style=flat-square" alt="redis 18.6.4"></td>
-    </tr>
-    <tr>
+        <td>vikunja</td>
         <td><a href="../../kubernetes/apps/vikunja/app/helmrelease.yaml">vikunja</a></td>
         <td><img src="https://img.shields.io/badge/app--template-2.5.0-blue?style=flat-square" alt="app-template 2.5.0"></td>
     </tr>
