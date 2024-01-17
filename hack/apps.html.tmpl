@@ -1,0 +1,19 @@
+<table>
+    <tr>
+        <th>Namespace</th>
+        <th>Name</th>
+        <th>Chart</th>
+    </tr>
+    {{- range $i, $namespace := . }}
+    {{- range $j, $match := .Matches }}
+    <tr>
+        {{- if eq $j 0 }}
+        {{- $rowspan := len $namespace.Matches }}
+        <td {{- if gt $rowspan 1 }} rowspan="{{ $rowspan }}"{{ end }}>{{ $namespace.Name }}</td>
+        {{- end }}
+        <td><a href="../../{{ .Path }}">{{ .Name }}</a></td>
+        <td><img src="https://img.shields.io/badge/{{ shieldsParam .ChartName }}-{{ shieldsParam .ChartVersion }}-blue?style=flat-square" alt="{{ .ChartName }} {{ .ChartVersion }}"></td>
+    </tr>
+    {{- end }}
+    {{- end }}
+</table>

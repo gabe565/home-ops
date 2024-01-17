@@ -53,3 +53,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
 ├── 📁 flux           # core flux configuration
 └── 📁 templates      # re-useable components
 ```
+
+### App Listing
+
+See [Kubernetes apps](docs/kubernetes/apps.md).

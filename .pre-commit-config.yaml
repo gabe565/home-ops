@@ -14,7 +14,7 @@ repos:
     hooks:
       - id: remove-crlf
       - id: remove-tabs
-
+        types: [yaml]
   - repo: https://github.com/gabe565/pre-commit-fluxcd
     rev: v0.4.0
     hooks:
@@ -22,3 +22,10 @@ repos:
       - id: check-charts-support-renovate
       - id: check-drift-detection-enabled
       - id: check-secrets-encrypted
+  - repo: local
+    hooks:
+      - id: gen-kubernetes-apps
+        name: Generate Kubernetes Apps Markdown
+        entry: go run ./hack/gen-kubernetes-apps.go
+        language: system
+        pass_filenames: false
