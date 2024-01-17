@@ -22,8 +22,9 @@ import (
 var appsTemplate string
 
 type Namespace struct {
-	Name    string
-	Matches []Match
+	Name       string
+	Services   []Match
+	Supporting []Match
 }
 
 type Match struct {
@@ -35,11 +36,11 @@ type Match struct {
 }
 
 var (
-	file         string
-	root         string
-	startTag     string
-	endTag       string
-	excludeNames []string
+	file               string
+	root               string
+	startTag           string
+	endTag             string
+	supportingServices []string
 )
 
 func init() {
@@ -47,9 +48,9 @@ func init() {
 	flag.StringVar(&root, "root", "kubernetes/apps", "Root directory to search")
 	flag.StringVar(&startTag, "start-tag", "<!-- Begin apps table -->", "Tag to start replacement")
 	flag.StringVar(&endTag, "end-tag", "<!-- End apps table -->", "Tag to end replacment")
-	excludeNamesStr := flag.String("exclude-names", "borgmatic,postgresql,redis", "Comma-separated list of manifest names to exclude")
+	supportingServicesStr := flag.String("exclude-names", "borgmatic,postgresql,redis", "Comma-separated list of manifest names to exclude")
 	flag.Parse()
-	excludeNames = strings.Split(*excludeNamesStr, ",")
+	supportingServices = strings.Split(*supportingServicesStr, ",")
 }
 
 func main() {
@@ -110,10 +111,9 @@ func extract(data map[string]any) (*Match, error) {
 	namespace, _ := metadata["namespace"].(string)
 	name, _ := metadata["name"].(string)
 
-	for _, exclusion := range excludeNames {
-		if name == exclusion {
-			return nil, nil
-		}
+	match := Match{
+		Name:      name,
+		Namespace: namespace,
 	}
 
 	switch {
@@ -121,24 +121,28 @@ func extract(data map[string]any) (*Match, error) {
 		spec, _ := data["spec"].(map[string]any)
 		chart, _ := spec["chart"].(map[string]any)
 		chartSpec, _ := chart["spec"].(map[string]any)
-		chartName, ok := chartSpec["chart"].(string)
+		var ok bool
+		match.ChartName, ok = chartSpec["chart"].(string)
 		if !ok {
 			return nil, nil
 		}
-		chartVersion, ok := chartSpec["version"].(string)
+		match.ChartVersion, ok = chartSpec["version"].(string)
 		if !ok {
-			chartVersion = "latest"
+			match.ChartVersion = "latest"
 		}
-
-		return &Match{
-			Name:         name,
-			Namespace:    namespace,
-			ChartName:    chartName,
-			ChartVersion: chartVersion,
-		}, nil
+	case apiVersion == "postgresql.cnpg.io/v1" && kind == "Cluster":
+		match.ChartName = "cloudnativepg"
+		spec, _ := data["spec"].(map[string]any)
+		if imageName, ok := spec["imageName"].(string); ok {
+			_, match.ChartVersion, _ = strings.Cut(imageName, ":")
+		}
+		if match.ChartVersion == "" {
+			match.ChartVersion = "latest"
+		}
 	default:
 		return nil, nil
 	}
+	return &match, nil
 }
 
 func prepareMatches(matches map[string][]Match) []Namespace {
@@ -148,9 +152,26 @@ func prepareMatches(matches map[string][]Match) []Namespace {
 		slices.SortStableFunc(match, func(a, b Match) int {
 			return strings.Compare(a.Name, b.Name)
 		})
+		services := make([]Match, 0, len(match))
+		supporting := make([]Match, 0, len(match))
+		for _, service := range match {
+			var supportingService bool
+			for _, supportingName := range supportingServices {
+				if service.Name == supportingName {
+					supportingService = true
+					break
+				}
+			}
+			if supportingService {
+				supporting = append(supporting, service)
+			} else {
+				services = append(services, service)
+			}
+		}
 		namespaces = append(namespaces, Namespace{
-			Name:    namespace,
-			Matches: match,
+			Name:       namespace,
+			Services:   services,
+			Supporting: supporting,
 		})
 	}
 	slices.SortStableFunc(namespaces, func(a, b Namespace) int {
