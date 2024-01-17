@@ -28,11 +28,9 @@ type Namespace struct {
 }
 
 type Match struct {
-	Path         string
-	Name         string
-	Namespace    string
-	ChartName    string
-	ChartVersion string
+	Path      string
+	Name      string
+	Namespace string
 }
 
 var (
@@ -118,27 +116,7 @@ func extract(data map[string]any) (*Match, error) {
 
 	switch {
 	case strings.HasPrefix(apiVersion, "helm.toolkit.fluxcd.io") && kind == "HelmRelease":
-		spec, _ := data["spec"].(map[string]any)
-		chart, _ := spec["chart"].(map[string]any)
-		chartSpec, _ := chart["spec"].(map[string]any)
-		var ok bool
-		match.ChartName, ok = chartSpec["chart"].(string)
-		if !ok {
-			return nil, nil
-		}
-		match.ChartVersion, ok = chartSpec["version"].(string)
-		if !ok {
-			match.ChartVersion = "latest"
-		}
 	case apiVersion == "postgresql.cnpg.io/v1" && kind == "Cluster":
-		match.ChartName = "cloudnativepg"
-		spec, _ := data["spec"].(map[string]any)
-		if imageName, ok := spec["imageName"].(string); ok {
-			_, match.ChartVersion, _ = strings.Cut(imageName, ":")
-		}
-		if match.ChartVersion == "" {
-			match.ChartVersion = "latest"
-		}
 	default:
 		return nil, nil
 	}
