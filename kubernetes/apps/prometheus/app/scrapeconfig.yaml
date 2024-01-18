@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: asus-node-exporter
+  namespace: prometheus
+spec:
+  staticConfigs:
+    - labels:
+        job: node-exporter
+      targets:
+        - 192.168.1.1:9100
+  basicAuth:
+    username:
+      name: asus-node-exporter
+      key: username
+    password:
+      name: asus-node-exporter
+      key: password
