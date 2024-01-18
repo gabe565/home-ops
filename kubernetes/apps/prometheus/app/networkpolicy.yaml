@@ -45,6 +45,7 @@ spec:
               operator: Exists
     - toCIDRSet:
         - cidr: 192.168.1.1/32
+        - cidr: 192.168.1.240/32
       toPorts:
         - ports:
             - port: "9100"
