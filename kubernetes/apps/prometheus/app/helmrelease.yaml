@@ -107,6 +107,7 @@ spec:
             policy.gabe565.com/ingress-namespace: "true"
         podMonitorSelectorNilUsesHelmValues: false
         serviceMonitorSelectorNilUsesHelmValues: false
+        scrapeConfigSelectorNilUsesHelmValues: false
         scrapeInterval: 1m
         evaluationInterval: 1m
         resources:
