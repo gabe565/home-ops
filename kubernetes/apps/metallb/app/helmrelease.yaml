@@ -28,13 +28,3 @@ spec:
         policy.gabe565.com/ingress-ingress: "true"
         policy.gabe565.com/ingress-namespace: "true"
         policy.gabe565.com/ingress-nodes: "true"
-  postRenderers:
-    - kustomize:
-        patches:
-          - target:
-              kind: CustomResourceDefinition
-              name: (addresspools.metallb.io|bgppeers.metallb.io)
-            patch: |
-              - op: add
-                path: /metadata/annotations/helm.toolkit.fluxcd.io~1driftDetection
-                value: disabled

@@ -20,6 +20,12 @@ spec:
   interval: 1h
   driftDetection:
     mode: enabled
+    ignore:
+      # Ignore "validated" annotation which is not inserted during install
+      - target:
+          kind: PrometheusRule
+        paths:
+          - /metadata/annotations/prometheus-operator-validated
   values:
     grafana:
       adminPassword: ${grafana_admin_password}
@@ -143,21 +149,3 @@ spec:
     kube-state-metrics:
       customLabels:
         policy.gabe565.com/egress-kubeapi: "true"
-  postRenderers:
-    - kustomize:
-        patches:
-          - target:
-              # Ignore these objects from Flux diff as they are mutated from chart hooks
-              kind: (ValidatingWebhookConfiguration|MutatingWebhookConfiguration)
-              name: kube-prometheus-stack-admission
-            patch: |
-              - op: add
-                path: /metadata/annotations/helm.toolkit.fluxcd.io~1driftDetection
-                value: disabled
-          - target:
-              # Ignore these objects from Flux diff as they are mutated at apply time but not at dry-run time
-              kind: (Prometheus|PrometheusRule)
-            patch: |
-              - op: add
-                path: /metadata/annotations/helm.toolkit.fluxcd.io~1driftDetection
-                value: disabled
