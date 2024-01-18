@@ -13,12 +13,6 @@
   "flux": {
     "fileMatch": ["\\.yaml$"]
   },
-  "major": {
-    "minimumReleaseAge": "1 day"
-  },
-  "minor": {
-    "minimumReleaseAge": "1 day"
-  },
   "regexManagers": [
     {
       "fileMatch": ["(^|/)kustomization\\.yaml$"],
