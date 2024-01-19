@@ -64,9 +64,9 @@ spec:
         enabled: true
         type: secret
         name: borgbase-ssh
-      minio-data:
+      data-minio-0:
         enabled: true
-        existingClaim: minio-data
+        existingClaim: data-minio-0
     configMaps:
       config:
         data:
@@ -76,7 +76,7 @@ spec:
               - path: ${borg_repo}
                 label: borgbase
             source_directories:
-              - /minio-data
+              - /data-minio-0
             archive_name_format: "minio-{now:%Y-%m-%d-%H%M%S}"
             ssh_command: ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=ERROR
             retries: 2
