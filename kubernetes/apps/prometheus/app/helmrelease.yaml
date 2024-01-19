@@ -74,6 +74,23 @@ spec:
         KubeControllerManagerDown: true
         KubeProxyDown: true
         KubeSchedulerDown: true
+        NodeRAIDDegraded: true
+    additionalPrometheusRulesMap:
+      node-exporter-custom:
+        groups:
+          - name: node-exporter-custom
+            rules:
+              - alert: NodeRAIDDegraded
+                annotations:
+                  description: RAID array '{{ $labels.device }}' at {{ $labels.instance }} is
+                    in degraded state due to one or more disks failures. Number of spare drives
+                    is insufficient to fix issue automatically.
+                  runbook_url: https://runbooks.prometheus-operator.dev/runbooks/node/noderaiddegraded
+                  summary: RAID Array is degraded.
+                expr: 4 - node_md_disks{state="active",job="node-exporter",device=~"(/dev/)?(mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|md.+|dasd.+)"} > 0
+                for: 15m
+                labels:
+                  severity: critical
     alertmanager:
       alertmanagerSpec:
         podMetadata:
