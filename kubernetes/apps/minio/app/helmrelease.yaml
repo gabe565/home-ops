@@ -19,6 +19,7 @@ spec:
   values:
     controllers:
       main:
+        type: statefulset
         containers:
           main:
             image:
@@ -62,14 +63,12 @@ spec:
             runAsGroup: 1000
             fsGroup: 1000
             fsGroupChangePolicy: OnRootMismatch
-
-    persistence:
-      data:
-        enabled: true
-        storageClass: longhorn-ssd
-        accessMode: ReadWriteOnce
-        size: 8Gi
-        retain: true
+        statefulset:
+          volumeClaimTemplates:
+            - name: data
+              storageClass: longhorn-ssd
+              accessMode: ReadWriteOnce
+              size: 8Gi
 
     service:
       main:
