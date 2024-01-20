@@ -143,20 +143,6 @@
     <td><a href="../../kubernetes/apps/metrics-server/app/helmrelease.yaml">metrics-server</a></td>
   </tr>
   <tr>
-    <td rowspan="4">lemmy</td>
-    <td><a href="../../kubernetes/apps/lemmy/app/backend.yaml">backend</a></td>
-    <td rowspan="4"><a href="../../kubernetes/apps/lemmy/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="../../kubernetes/apps/lemmy/postgresql.yaml">postgresql</a></td>
-  </tr>
-  <tr>
-    <td><a href="../../kubernetes/apps/lemmy/app/frontend.yaml">frontend</a></td>
-  </tr>
-  <tr>
-    <td><a href="../../kubernetes/apps/lemmy/app/pictrs.yaml">pictrs</a></td>
-  </tr>
-  <tr>
-    <td><a href="../../kubernetes/apps/lemmy/postgresql.yaml">postgresql-cleanup</a></td>
-  </tr>
-  <tr>
     <td rowspan="1">lidarr</td>
     <td><a href="../../kubernetes/apps/lidarr/app/helmrelease.yaml">lidarr</a></td>
     <td rowspan="1"></td>
