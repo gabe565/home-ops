@@ -15,6 +15,9 @@
   "flux": {
     "fileMatch": ["\\.yaml$"]
   },
+  "ignorePaths": [
+    ".archive/**"
+  ],
   "regexManagers": [
     {
       "fileMatch": ["(^|/)kustomization\\.yaml$"],
