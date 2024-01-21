@@ -36,7 +36,6 @@ spec:
                   key: telegram_chat
         pod:
           labels:
-              policy.gabe565.com/egress-gotify: "true"
               policy.gabe565.com/egress-world: "true"
               policy.gabe565.com/ingress-prometheus: "true"
 

@@ -29,7 +29,6 @@ spec:
               LOG_LEVEL: warn
         pod:
           labels:
-            policy.gabe565.com/egress-gotify: "true"
             policy.gabe565.com/egress-plex: "true"
             policy.gabe565.com/egress-tautulli: "true"
             policy.gabe565.com/egress-world: "true"

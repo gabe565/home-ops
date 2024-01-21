@@ -39,7 +39,6 @@ spec:
           labels:
             policy.gabe565.com/egress-adguard-api: "true"
             policy.gabe565.com/egress-authentik: "true"
-            policy.gabe565.com/egress-gotify: "true"
             policy.gabe565.com/egress-healthchecks: "true"
             policy.gabe565.com/egress-home-assistant: "true"
             policy.gabe565.com/egress-immich: "true"

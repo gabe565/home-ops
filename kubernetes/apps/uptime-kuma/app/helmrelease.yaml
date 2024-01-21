@@ -30,7 +30,6 @@ spec:
             command: [node, server/server.js]
         pod:
           labels:
-            policy.gabe565.com/egress-gotify: "true"
             policy.gabe565.com/egress-ingress: "true"
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-ingress: "true"
