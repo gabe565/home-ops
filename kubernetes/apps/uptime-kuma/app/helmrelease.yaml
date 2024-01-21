@@ -33,6 +33,7 @@ spec:
             policy.gabe565.com/egress-ingress: "true"
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-ingress: "true"
+            policy.gabe565.com/ingress-prometheus: "true"
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
@@ -82,4 +83,8 @@ spec:
             hosts:
               - ${app_url}
       status:
+        enabled: true
+
+    serviceMonitor:
+      main:
         enabled: true
