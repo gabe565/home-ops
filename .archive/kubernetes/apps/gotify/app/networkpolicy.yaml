@@ -1,0 +1,32 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: egress-gotify
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/egress-gotify: "true"
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: gotify
+            app.kubernetes.io/name: gotify
+      toPorts:
+        - ports:
+            - port: "80"
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: gotify
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: gotify
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            policy.gabe565.com/egress-gotify: "true"
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
