@@ -4,7 +4,7 @@ metadata:
   name: postgresql
   namespace: immich
 spec:
-  instances: 2
+  instances: 3
   imageName: ghcr.io/gabe565/cloudnativepg-vecto-rs:16.1-7-vectors0.1.11
   enableSuperuserAccess: true
   bootstrap:
