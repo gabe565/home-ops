@@ -28,6 +28,12 @@ spec:
               tag: v0.107.43
             env:
               TZ: America/Chicago
+            probes:
+              liveness: &probe
+                type: HTTP
+                path: /login.html
+              readiness: *probe
+              startup: *probe
         pod:
           priorityClassName: system-cluster-critical
           labels:
