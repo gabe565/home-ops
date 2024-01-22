@@ -16,6 +16,9 @@ spec:
   driftDetection:
     mode: enabled
   values:
+    annotations:
+      secret.reloader.stakater.com/reload: oidc-auth
+
     podLabels:
       policy.gabe565.com/egress-kubeapi: "true"
       policy.gabe565.com/ingress-ingress: "true"
@@ -27,17 +30,6 @@ spec:
         value: Login with Authentik
       - name: WEAVE_GITOPS_FEATURE_TELEMETRY
         value: "false"
-
-    oidcSecret:
-      create: true
-      clientID: ${oauth_client_id}
-      clientSecret: ${oauth_client_secret}
-      issuerURL: https://${oauth_host}/application/o/gabernetes/
-      redirectURL: https://${app_url}/oauth2/callback
-      additionalKeys:
-        claimUsername: email
-        claimGroups: groups
-        customScopes: openid,email,profile
 
     ingress:
       enabled: true
