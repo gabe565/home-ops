@@ -16,14 +16,12 @@ spec:
   interval: 1h
   driftDetection:
     mode: enabled
-  valuesFrom:
-    - kind: ConfigMap
-      name: homepage-config-values
-    - kind: Secret
-      name: homepage-secrets
   values:
     controllers:
       main:
+        annotations:
+          configmap.reloader.stakater.com/reload: homepage-config
+          secret.reloader.stakater.com/reload: homepage-env
         strategy: RollingUpdate
         containers:
           main:
@@ -34,7 +32,7 @@ spec:
               TZ: America/Chicago
             envFrom:
               - secretRef:
-                  name: homepage
+                  name: homepage-env
         pod:
           labels:
             policy.gabe565.com/egress-adguard-api: "true"
@@ -77,10 +75,6 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /app/config/logs
-
-    secrets:
-      main:
-        enabled: true
 
     ingress:
       main:
