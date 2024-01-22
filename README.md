@@ -337,6 +337,11 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td rowspan="1"><a href="kubernetes/apps/relax-sounds/borgmatic/helmrelease.yaml">borgmatic</a></td>
   </tr>
   <tr>
+    <td rowspan="1">reloader</td>
+    <td><a href="kubernetes/apps/reloader/app/helmrelease.yaml">reloader</a></td>
+    <td rowspan="1"></td>
+  </tr>
+  <tr>
     <td rowspan="1">renovate</td>
     <td><a href="kubernetes/apps/renovate/app/helmrelease.yaml">renovate</a></td>
     <td rowspan="1"></td>

@@ -1,0 +1,26 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: reloader
+  namespace: reloader
+spec:
+  chart:
+    spec:
+      chart: reloader
+      version: 1.0.63
+      sourceRef:
+        kind: HelmRepository
+        namespace: reloader
+        name: stakater
+      interval: 1h
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    fullnameOverride: reloader
+    reloader:
+      readOnlyRootFileSystem: true
+      reloadStrategy: annotations
+      deployment:
+        labels:
+          policy.gabe565.com/egress-kubeapi: "true"
