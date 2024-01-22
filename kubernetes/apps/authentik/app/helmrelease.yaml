@@ -20,7 +20,7 @@ spec:
     priorityClassName: system-cluster-critical
 
     annotations:
-      reloader.stakater.com/reload: authentik-custom-assets
+      configmap.reloader.stakater.com/reload: authentik-custom-assets
 
     authentik:
       # This sends anonymous usage-data, stack traces on errors and

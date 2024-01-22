@@ -20,7 +20,7 @@ spec:
     controllers:
       main:
         annotations:
-          reloader.stakater.com/reload: kromgo-config
+          configmap.reloader.stakater.com/reload: kromgo-config
         strategy: RollingUpdate
         containers:
           main:
