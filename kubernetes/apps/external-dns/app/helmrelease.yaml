@@ -17,6 +17,9 @@ spec:
         name: external-dns
       interval: 1h
   values:
+    deploymentAnnotations:
+      secret.reloader.stakater.com/reload: cloudflare
+
     podLabels:
       policy.gabe565.com/egress-kubeapi: "true"
       policy.gabe565.com/egress-world: "true"
