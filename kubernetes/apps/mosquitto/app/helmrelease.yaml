@@ -16,12 +16,11 @@ spec:
   interval: 1h
   driftDetection:
     mode: enabled
-  valuesFrom:
-    - kind: Secret
-      name: mosquitto-values
   values:
     controllers:
       main:
+        annotations:
+          secret.reloader.stakater.com/reload: mosquitto-auth
         initContainers:
           split-ca-crt:
             image:
@@ -109,10 +108,6 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /tls/ca
-
-    secrets:
-      auth:
-        enabled: true
 
     configMaps:
       config:
