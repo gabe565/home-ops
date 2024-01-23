@@ -18,6 +18,8 @@ spec:
     mode: enabled
   values:
     nameOverride: renovate
+    annotations:
+      secret.reloader.stakater.com/reload: renovate
 
     renovate:
       extraEnvVars:
