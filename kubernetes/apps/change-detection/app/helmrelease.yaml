@@ -39,7 +39,7 @@ spec:
           main:
             image:
               repository: browserless/chrome
-              tag: 1.60.2-chrome-stable
+              tag: 1.61.1-chrome-stable
             env:
               TZ: America/Chicago
               ENABLE_DEBUGGER: "false"
