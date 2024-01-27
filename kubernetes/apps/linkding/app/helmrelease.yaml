@@ -23,7 +23,7 @@ spec:
           main:
             image:
               repository: sissbruecker/linkding
-              tag: 1.23.1-alpine
+              tag: 1.24.0-alpine
             env:
               TZ: America/Chicago
               LD_LOG_X_FORWARDED_FOR: "True"
