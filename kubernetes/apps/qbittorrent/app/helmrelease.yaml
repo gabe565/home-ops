@@ -78,20 +78,11 @@ spec:
           main:
             main:
               - path: /config
-      media:
-        enabled: true
-        type: nfs
-        server: 100.64.0.4
-        path: /volume1/media
-        advancedMounts:
-          main:
-            main:
-              - path: /mnt/media
       downloads:
         enabled: true
         type: nfs
         server: 100.64.0.4
-        path: /volume1/downloads/qbittorrent
+        path: /volume1/media/Downloads
         advancedMounts:
           main:
             main:

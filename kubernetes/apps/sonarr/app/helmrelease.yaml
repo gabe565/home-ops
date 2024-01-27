@@ -50,18 +50,13 @@ spec:
         enabled: true
         accessMode: ReadWriteOnce
         size: 1Gi
-      tv:
+      media:
         enabled: true
         type: nfs
         server: 100.64.0.4
-        path: /volume1/media/TV
+        path: /volume1/media
         globalMounts:
-          - path: /mnt/media/TV
-      downloads:
-        enabled: true
-        type: nfs
-        server: 100.64.0.4
-        path: /volume1/downloads/qbittorrent
+          - path: /mnt/media
 
     ingress:
       main:

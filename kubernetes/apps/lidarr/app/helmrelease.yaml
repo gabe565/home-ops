@@ -50,20 +50,13 @@ spec:
         enabled: true
         accessMode: ReadWriteOnce
         size: 1Gi
-      music:
+      media:
         enabled: true
         type: nfs
         server: 100.64.0.4
-        path: /volume1/media/Music
+        path: /volume1/media
         globalMounts:
-          - path: /mnt/media/Music
-      downloads:
-        enabled: true
-        type: nfs
-        server: 100.64.0.4
-        path: /volume1/downloads/qbittorrent
-        globalMounts:
-          - path: /downloads
+          - path: /mnt/media
 
     ingress:
       main:
