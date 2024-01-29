@@ -7,7 +7,7 @@ spec:
   chart:
     spec:
       chart: nvidia-device-plugin
-      version: 0.14.3
+      version: 0.14.4
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
