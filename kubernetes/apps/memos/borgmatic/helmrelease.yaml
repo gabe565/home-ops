@@ -27,7 +27,7 @@ spec:
   values:
     image:
       repository: ghcr.io/gabe565/borgmatic
-      tag: 1.8.7
+      tag: 1.8.8
     controller:
       type: cronjob
       cronjob:
