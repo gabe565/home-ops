@@ -1,0 +1,17 @@
+name: Clear README cache
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  manifests:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Clear README cache
+        run: |
+          curl -fSsL https://github.com/${GITHUB_REPO}/blob/main/README.md | grep -Eo '<img src=\\"[^"]+"' | grep camo | grep -Eo 'https[^"]+' | sed 's/\\//' | xargs -I {} curl -fSsL -w "\n" -s -X PURGE {}
+        env:
+          GITHUB_REPO: ${{ github.repository }}
