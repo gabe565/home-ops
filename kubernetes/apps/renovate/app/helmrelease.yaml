@@ -7,7 +7,7 @@ spec:
   chart:
     spec:
       chart: mend-renovate-ce
-      version: 6.9.0
+      version: 6.10.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
