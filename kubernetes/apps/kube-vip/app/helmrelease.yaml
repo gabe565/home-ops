@@ -24,7 +24,7 @@ spec:
           main:
             image:
               repository: ghcr.io/kube-vip/kube-vip
-              tag: v0.6.4
+              tag: v0.7.0
             args:
               - manager
             env:
