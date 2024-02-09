@@ -19,12 +19,14 @@ spec:
   values:
     controllers:
       main:
+        annotations:
+          secret.reloader.stakater.com/reload: transsmute-env
         strategy: RollingUpdate
         containers:
           main:
             image:
               repository: ghcr.io/gabe565/transsmute
-              tag: 1.2.2
+              tag: 1.3.0
             env:
               TZ: America/Chicago
             envFrom:
@@ -54,12 +56,3 @@ spec:
           - secretName: ${certificate_name}
             hosts:
               - ${app_url}
-
-    secrets:
-      env:
-        stringData:
-          TRANSSMUTE_DOCKERHUB_USERNAME: ${dockerhub_username}
-          TRANSSMUTE_DOCKERHUB_PASSWORD: ${dockerhub_password}
-          TRANSSMUTE_GHCR_USERNAME: ${ghcr_username}
-          TRANSSMUTE_GHCR_PASSWORD: ${ghcr_password}
-          TRANSSMUTE_YOUTUBE_KEY: ${youtube_key}
