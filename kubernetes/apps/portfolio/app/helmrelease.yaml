@@ -24,7 +24,7 @@ spec:
           main:
             image:
               repository: ghcr.io/gabe565/portfolio
-              tag: 2.1.9 #yampl {{ .tag }}
+              tag: 2.1.10 #yampl {{ .tag }}
             env:
               TZ: America/Chicago
         pod:
