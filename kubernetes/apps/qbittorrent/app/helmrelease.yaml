@@ -63,7 +63,7 @@ spec:
           main:
             image:
               repository: ghcr.io/gabe565/vuetorrent
-              tag: 2.6.0
+              tag: 2.7.0
         pod:
           labels:
             policy.gabe565.com/ingress-ingress: "true"
