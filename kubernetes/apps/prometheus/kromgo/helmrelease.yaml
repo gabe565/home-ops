@@ -26,7 +26,7 @@ spec:
           main:
             image:
               repository: ghcr.io/kashalls/kromgo
-              tag: 0.2.4
+              tag: 0.3.0
             env:
               PROMETHEUS_URL: http://kube-prometheus-stack-prometheus:9090
             securityContext:
