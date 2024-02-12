@@ -6,77 +6,109 @@ metadata:
 spec:
   chart:
     spec:
-      chart: mend-renovate-ce
-      version: 6.10.0
+      chart: app-template
+      version: 2.5.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
-        namespace: renovate
-        name: renovate
+        namespace: flux-system
+        name: bjw-s
   interval: 1h
   driftDetection:
     mode: enabled
   values:
-    nameOverride: renovate
-    annotations:
-      secret.reloader.stakater.com/reload: renovate
+    controllers:
+      main:
+        annotations:
+          secret.reloader.stakater.com/reload: renovate-env
+        containers:
+          main:
+            image:
+              repository: ghcr.io/mend/renovate-ce
+              tag: 6.10.0-full
+            env:
+              MEND_RNV_ACCEPT_TOS: "y"
+              LOG_LEVEL: info
+              MEND_RNV_SQLITE_FILE_PATH: /tmp/renovate/renovate-ce.sqlite
+              MEND_RNV_PLATFORM: github
+              MEND_RNV_CRON_JOB_SCHEDULER: "0 * * * *"
+              MEND_RNV_CRON_APP_SYNC: "0 0,4,8,12,16,20 * * *"
+              MEND_RNV_AUTODISCOVER_FILTER: "gabe565/*"
+              MEND_RNV_ENQUEUE_JOBS_ON_STARTUP: disabled
+              RENOVATE_PAGINATE_ALL: "true"
+            envFrom:
+              - secretRef:
+                  name: renovate-env
+            resources:
+              requests:
+                cpu: 250m
+                memory: 500Mi
+              limits:
+                cpu: '2'
+                memory: 4Gi
+            probes:
+              liveness: &probe
+                type: HTTP
+                path: /health
+              readiness: *probe
+              startup: *probe
+        pod:
+          labels:
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-ingress: "true"
 
-    renovate:
-      extraEnvVars:
-        - name: RENOVATE_PAGINATE_ALL
-          value: "true"
-        - name: DOCKER_DOCKER_IO_USERNAME
-          value: ${dockerhub_username}
-        - name: DOCKER_DOCKER_IO_PASSWORD
-          value: ${dockerhub_password}
+    service:
+      main:
+        ports:
+          http:
+            port: 8080
 
-      mendRnvAcceptTos: 'y'
-      mendRnvPlatform: github
-      existingSecret: renovate
-      mendRnvCronJobScheduler: "0 * * * *"
-      mendRnvCronAppSync: "0 0,4,8,12,16,20 * * *"
-      mendRnvAutoDiscoverFilter: "gabe565/*"
-      mendRnvEnqueueJobsOnStartup: disabled
-      # language=javascript
-      config: |
-        module.exports = {
-          // Enter self-hosted configuration options here.
-          // https://docs.renovatebot.com/self-hosted-configuration/
-          autodiscover: true,
-          cacheHardTtlMinutes: 240,
-          onboardingConfigFileName: ".github/renovate.json",
-          onboardingConfig: {
-              "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-              "extends": [
-                  "local>gabe565/renovate-config"
-              ]
-          },
-          detectHostRulesFromEnv: true,
-          onboardingRebaseCheckbox: true
-        };
-
-    resources:
-      requests:
-        cpu: 250m
-        memory: 500Mi
-      limits:
-        cpu: '2'
-        memory: 4Gi
-
-    labels:
-      pods:
-        policy.gabe565.com/egress-world: "true"
-        policy.gabe565.com/ingress-ingress: "true"
-
-    podSecurityContext:
-      fsGroup: 1000
-      fsGroupChangePolicy: OnRootMismatch
+    persistence:
+      config:
+        enabled: true
+        type: configMap
+        name: renovate-config
+        globalMounts:
+          - path: /usr/src/app/config.js
+            subPath: config.js
+      cache:
+        enabled: true
+        type: emptyDir
+        globalMounts:
+          - path: /tmp/renovate
 
     ingress:
-      enabled: true
-      hosts:
-        - ${app_url}
-      tls:
-        - secretName: ${certificate_name}
-          hosts:
-            - ${app_url}
+      main:
+        enabled: true
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+                service:
+                  name: main
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
+
+    configMaps:
+      config:
+        enabled: true
+        data:
+          # language=javascript
+          config.js: |
+            module.exports = {
+              // Enter self-hosted configuration options here.
+              // https://docs.renovatebot.com/self-hosted-configuration/
+              autodiscover: true,
+              cacheHardTtlMinutes: 240,
+              onboardingConfigFileName: ".github/renovate.json",
+              onboardingConfig: {
+                "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+                "extends": [
+                  "local>gabe565/renovate-config"
+                ]
+              },
+              detectHostRulesFromEnv: true,
+              onboardingRebaseCheckbox: true
+            };
