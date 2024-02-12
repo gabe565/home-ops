@@ -36,6 +36,7 @@ spec:
       mendRnvCronJobScheduler: "0 * * * *"
       mendRnvCronAppSync: "0 0,4,8,12,16,20 * * *"
       mendRnvAutoDiscoverFilter: "gabe565/*"
+      mendRnvEnqueueJobsOnStartup: disabled
       # language=javascript
       config: |
         module.exports = {
@@ -70,12 +71,6 @@ spec:
     podSecurityContext:
       fsGroup: 1000
       fsGroupChangePolicy: OnRootMismatch
-
-    cachePersistence:
-      enabled: true
-      storageClass: longhorn-ssd
-      accessModes: [ReadWriteOnce]
-      size: 30Gi
 
     ingress:
       enabled: true
