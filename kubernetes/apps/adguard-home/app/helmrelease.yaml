@@ -67,7 +67,7 @@ spec:
           main:
             image:
               repository: ghcr.io/bakito/adguardhome-sync
-              tag: alpine-v0.6.4
+              tag: alpine-v0.6.5
             args: [run]
             env:
               ORIGIN_URL: http://adguard-home-origin:3000
