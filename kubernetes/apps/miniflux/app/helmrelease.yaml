@@ -6,40 +6,57 @@ metadata:
 spec:
   chart:
     spec:
-      chart: miniflux
-      version: 0.7.0
+      chart: app-template
+      version: 2.6.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
         namespace: flux-system
-        name: gabe565
+        name: bjw-s
   interval: 1h
   driftDetection:
     mode: enabled
   values:
-    env:
-      TZ: America/Chicago
+    controllers:
+      main:
+        strategy: RollingUpdate
+        containers:
+          main:
+            image:
+              repository: ghcr.io/miniflux/miniflux
+              tag: 2.0.51
+              pullPolicy: IfNotPresent
+            env:
+              TZ: America/Chicago
 
-      DATABASE_URL:
-        secretKeyRef:
-          name: postgresql-app
-          key: uri
+              DATABASE_URL:
+                secretKeyRef:
+                  name: postgresql-app
+                  key: uri
 
-      OAUTH2_PROVIDER: oidc
-      OAUTH2_CLIENT_ID: ${oauth2_client_id}
-      OAUTH2_CLIENT_SECRET: ${oauth2_client_secret}
-      OAUTH2_REDIRECT_URL: https://${app_url}/oauth2/oidc/callback
-      OAUTH2_OIDC_DISCOVERY_ENDPOINT: https://${auth_host}/application/o/miniflux/
-      OAUTH2_USER_CREATION: "1"
+              CREATE_ADMIN: "0"
+              OAUTH2_PROVIDER: oidc
+              OAUTH2_CLIENT_ID: ${oauth2_client_id}
+              OAUTH2_CLIENT_SECRET: ${oauth2_client_secret}
+              OAUTH2_REDIRECT_URL: https://${app_url}/oauth2/oidc/callback
+              OAUTH2_OIDC_DISCOVERY_ENDPOINT: https://${auth_host}/application/o/miniflux/
+              OAUTH2_USER_CREATION: "1"
 
-      CREATE_ADMIN: "0"
+              METRICS_COLLECTOR: "1"
+              METRICS_ALLOWED_NETWORKS: 0.0.0.0/0
+        pod:
+          labels:
+            policy.gabe565.com/egress-ingress: "true"
+            policy.gabe565.com/egress-namespace: "true"
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-ingress: "true"
+            policy.gabe565.com/ingress-prometheus: "true"
 
-    podLabels:
-      policy.gabe565.com/egress-ingress: "true"
-      policy.gabe565.com/egress-namespace: "true"
-      policy.gabe565.com/egress-world: "true"
-      policy.gabe565.com/ingress-ingress: "true"
-      policy.gabe565.com/ingress-prometheus: "true"
+    service:
+      main:
+        ports:
+          http:
+            port: 8080
 
     ingress:
       main:
@@ -48,6 +65,8 @@ spec:
           - host: ${app_url}
             paths:
               - path: /
+                service:
+                  name: main
         tls: &tls
           - secretName: ${certificate_name}
             hosts:
@@ -62,6 +81,8 @@ spec:
             paths:
               - path: /metrics
                 pathType: Exact
+                service:
+                  name: main
         tls: *tls
       redirect:
         enabled: true
@@ -72,12 +93,10 @@ spec:
             paths:
               - path: /
                 pathType: Exact
+                service:
+                  name: main
         tls: *tls
-
-    postgresql:
-      enabled: false
 
     serviceMonitor:
       main:
         enabled: true
-        allowedNetworks: 0.0.0.0/0
