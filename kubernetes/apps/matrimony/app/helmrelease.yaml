@@ -6,29 +6,45 @@ metadata:
 spec:
   chart:
     spec:
-      chart: matrimony
-      version: 0.6.2
+      chart: app-template
+      version: 2.6.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
         namespace: flux-system
-        name: gabe565
+        name: bjw-s
   interval: 1h
   driftDetection:
     mode: enabled
   values:
-    image:
-      repository: ghcr.io/gabe565/matrimony
-      tag: 1.1.1
+    controllers:
+      main:
+        containers:
+          main:
+            image:
+              repository: ghcr.io/gabe565/matrimony
+              tag: 1.1.1
+            env:
+              TZ: America/Chicago
+        pod:
+          labels:
+            policy.gabe565.com/ingress-ingress: "true"
+          securityContext:
+            fsGroup: 1000
 
-    env:
-      TZ: America/Chicago
+    service:
+      main:
+        ports:
+          http:
+            port: 80
 
-    controller:
-      strategy: Recreate
-
-    podLabels:
-      policy.gabe565.com/ingress-ingress: "true"
+    persistence:
+      data:
+        enabled: true
+        storageClass: longhorn-ssd
+        accessMode: ReadWriteOnce
+        size: 256Mi
+        retain: true
 
     ingress:
       main:
@@ -39,34 +55,10 @@ spec:
           - host: ${app_url}
             paths:
               - path: /
+                service:
+                  name: main
         tls:
           - secretName: ${certificate_name}
             hosts:
               - ${app_url}
               - www.${app_url}
-
-    persistence:
-      data:
-        enabled: true
-        storageClass: longhorn-ssd
-        accessMode: ReadWriteOnce
-        size: 256Mi
-
-    addons:
-      codeserver:
-        enabled: true
-        ingress:
-          enabled: true
-          annotations:
-            nginx.ingress.kubernetes.io/whitelist-source-range: 192.168.1.0/24,10.42.0.0/16
-          hosts:
-            - host: ${code_url}
-              paths:
-                - path: /
-          tls:
-            - secretName: ${certificate_name}
-              hosts:
-                - ${code_url}
-        volumeMounts:
-          - name: data
-            mountPath: /data
