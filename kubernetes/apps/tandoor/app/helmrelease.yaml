@@ -77,7 +77,7 @@ spec:
       redirect-login:
         enabled: true
         annotations:
-          nginx.ingress.kubernetes.io/temporal-redirect: https://${app_url}/accounts/authentik/login
+          nginx.ingress.kubernetes.io/temporal-redirect: https://${app_url}/accounts/oidc/authentik/login
         hosts:
           - host: ${app_url}
             paths:
