@@ -23,7 +23,7 @@ spec:
           main:
             image:
               repository: ghcr.io/juanfont/headscale
-              tag: 0.23.0
+              tag: 0.22.3
             command: [headscale, serve]
             env:
               HEADSCALE_SERVER_URL: https://${app_url}
