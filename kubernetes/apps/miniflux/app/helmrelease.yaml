@@ -33,6 +33,7 @@ spec:
                 secretKeyRef:
                   name: postgresql-app
                   key: uri
+              RUN_MIGRATIONS: "1"
 
               CREATE_ADMIN: "0"
               OAUTH2_PROVIDER: oidc
