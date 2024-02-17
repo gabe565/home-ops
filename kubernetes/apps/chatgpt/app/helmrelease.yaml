@@ -23,7 +23,8 @@ spec:
           main:
             image:
               repository: ghcr.io/cogentapps/chat-with-gpt
-              tag: release
+              tag: release@sha256:c9161420b83cbf2c448cb5a0376ba6fd29337efa254eafe3f29fefe52618c833
+              pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
         pod:

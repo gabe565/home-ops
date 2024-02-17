@@ -25,7 +25,8 @@ spec:
           main:
             image:
               repository: adguard/adguardhome
-              tag: v0.107.44
+              tag: v0.107.44@sha256:049ef6c019a629b33db2ef957665b257fbd5761970a1517a309807fb128befb1
+              pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
             probes:
@@ -67,7 +68,8 @@ spec:
           main:
             image:
               repository: ghcr.io/bakito/adguardhome-sync
-              tag: alpine-v0.6.5
+              tag: alpine-v0.6.5@sha256:69d5be341361c40d8c67ccaa4ddbd474a26186362b914f4d7800046f41b79a0b
+              pullPolicy: IfNotPresent
             args: [run]
             env:
               ORIGIN_URL: http://adguard-home-origin:3000

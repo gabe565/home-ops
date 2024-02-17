@@ -25,13 +25,15 @@ spec:
           main:
             image:
               repository: ghcr.io/onedr0p/qbittorrent
-              tag: 4.6.3
+              tag: 4.6.3@sha256:a4ad890e8c4a287c17d12ca22eb1d84a046aba2efbd882bf7d6eb12459f6a70c
+              pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
           vpn:
             image:
               repository: qmcgaw/gluetun
-              tag: v3.37.0
+              tag: v3.37.0@sha256:ba9688ff9abaf73bbc0b257be547b51a097ca74324fedddeeb709732c2692eef
+              pullPolicy: IfNotPresent
             env:
               HEALTH_VPN_DURATION_INITIAL: 120s
               HEALTH_SUCCESS_WAIT_DURATION: 120s
@@ -63,7 +65,8 @@ spec:
           main:
             image:
               repository: ghcr.io/gabe565/vuetorrent
-              tag: 2.7.0
+              tag: 2.7.0@sha256:99c1f830caa198ac5c09b258d61e913ae9cd5ed8d65a28b756fcf79ccad6d176
+              pullPolicy: IfNotPresent
         pod:
           labels:
             policy.gabe565.com/ingress-ingress: "true"

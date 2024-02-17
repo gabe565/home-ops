@@ -24,8 +24,8 @@ spec:
           main:
             image:
               repository: ghcr.io/gabe565/stable-diffusion/webui
-              tag: 1.7.0
-              pullPolicy: Always
+              tag: 1.7.0@sha256:5ce5e405b1525dada6a0bb766ac5e1198001f0a9f252c576dd41e27c54438fbe
+              pullPolicy: IfNotPresent
             args:
               - --medvram-sdxl
               - --xformers

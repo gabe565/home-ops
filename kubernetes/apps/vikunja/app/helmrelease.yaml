@@ -25,7 +25,8 @@ spec:
           main:
             image:
               repository: vikunja/api
-              tag: 0.22.1
+              tag: 0.22.1@sha256:c9415431e6235229302bb8f9ee6660b74c24859d1e8adbc4a3e25bd418604b57
+              pullPolicy: IfNotPresent
             env:
               VIKUNJA_SERVICE_FRONTENDURL: https://${app_url}/
               VIKUNJA_DEFAULTSETTINGS_TIMEZONE: America/Chicago
@@ -64,7 +65,8 @@ spec:
           main:
             image:
               repository: vikunja/frontend
-              tag: 0.22.1
+              tag: 0.22.1@sha256:f0223d441997fe29c377d0b476dc4bb2fc091b44b9c24d76b1b88c213df520c5
+              pullPolicy: IfNotPresent
         pod:
           labels:
             policy.gabe565.com/ingress-ingress: "true"

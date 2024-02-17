@@ -27,7 +27,8 @@ spec:
           main:
             image:
               repository: ghcr.io/gabe565/external-dns-dynamic-ip
-              tag: 1.29.2
+              tag: 1.29.2@sha256:8b63aadb8a08aede06dd2a16d9cebb699cd320fa8dcbbd4555bb1e5a92bb2fae
+              pullPolicy: IfNotPresent
         pod:
           labels:
             policy.gabe565.com/egress-kubeapi: "true"

@@ -24,7 +24,8 @@ spec:
           main:
             image:
               repository: ghcr.io/druggeri/nut_exporter
-              tag: 3.1.1
+              tag: 3.1.1@sha256:0d9a0a00554081876178369ab9d46717e002fcf550b18dcd85f98c315438b524
+              pullPolicy: IfNotPresent
             env:
               NUT_EXPORTER_VARIABLES: >-
                 battery.charge,battery.voltage,battery.voltage.nominal,battery.runtime,input.voltage,input.voltage.nominal,ups.load,ups.realpower.nominal,ups.status

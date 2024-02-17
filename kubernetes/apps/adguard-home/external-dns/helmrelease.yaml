@@ -22,7 +22,8 @@ spec:
       webhook:
         image:
           repository: ghcr.io/zekker6/external-dns-provider-adguard
-          tag: v0.0.8
+          tag: v0.0.8@sha256:47c63a1e4ddc92eb336473571d43eb868721aa3a0a3daf292455f45ed29bb7f2
+          pullPolicy: IfNotPresent
         env:
           - name: ADGUARD_HOME_URL
             value: http://adguard-home-origin:3000

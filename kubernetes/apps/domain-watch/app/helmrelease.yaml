@@ -23,7 +23,8 @@ spec:
           main:
             image:
               repository: ghcr.io/gabe565/domain-watch
-              tag: 0.1.1
+              tag: 0.1.1@sha256:b546886e7bb8d35fbf284e89ef28dba87222b9746cd4549c3c6801dab6cc7a36
+              pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
               WATCH_METRICS_ENABLED: "true"

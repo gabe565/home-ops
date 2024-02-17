@@ -23,7 +23,8 @@ spec:
           main:
             image:
               repository: sbs20/scanservjs
-              tag: release-v3.0.3
+              tag: release-v3.0.3@sha256:dad1fd6e9a98957d324499e822a3019cc43d6557e314635c82665baf576b960e
+              pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
             resources:

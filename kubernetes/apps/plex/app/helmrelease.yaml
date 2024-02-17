@@ -23,7 +23,8 @@ spec:
           main:
             image:
               repository: ghcr.io/onedr0p/plex
-              tag: 1.32.8.7639-fb6452ebf
+              tag: 1.32.8.7639-fb6452ebf@sha256:97bf4a8eac34de4b0df78e4fc3e2b501187161a3a264fa2b220bd51b0f89ba77
+              pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
             resources:

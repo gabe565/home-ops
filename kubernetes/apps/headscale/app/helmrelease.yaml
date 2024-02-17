@@ -23,7 +23,8 @@ spec:
           main:
             image:
               repository: ghcr.io/juanfont/headscale
-              tag: 0.22.3
+              tag: 0.22.3@sha256:aadf29a875bb2ffdf6579869e5759935f7a64b9fd19fcea9d5385c5d7220dc7b
+              pullPolicy: IfNotPresent
             command: [headscale, serve]
             env:
               HEADSCALE_SERVER_URL: https://${app_url}
@@ -73,7 +74,8 @@ spec:
           main:
             image:
               repository: ghcr.io/gurucomputing/headscale-ui
-              tag: 2023.01.30-beta-1
+              tag: 2023.01.30-beta-1@sha256:aebd8481153aefc288322c13830b2faa06e90765ca09a377f2ba891ea8205eb2
+              pullPolicy: IfNotPresent
         pod:
           terminationGracePeriodSeconds: "3"
           labels:

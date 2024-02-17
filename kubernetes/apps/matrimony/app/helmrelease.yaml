@@ -23,7 +23,8 @@ spec:
           main:
             image:
               repository: ghcr.io/gabe565/matrimony
-              tag: 1.1.1
+              tag: 1.1.1@sha256:d39a9d7c3e1bc24cb7e3742b94f210126e50603a8a5b74fcd5d1aae53ce2124b
+              pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
         pod:

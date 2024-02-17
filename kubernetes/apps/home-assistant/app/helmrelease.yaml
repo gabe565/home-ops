@@ -23,7 +23,8 @@ spec:
           main:
             image:
               repository: ghcr.io/home-assistant/home-assistant
-              tag: 2024.2.2
+              tag: 2024.2.2@sha256:05b068ca39334a7e86500416839f11a541f0fa16f8722133f5dc123971da996e
+              pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
               DATABASE_URL:
@@ -53,7 +54,8 @@ spec:
           main:
             image:
               repository: ghcr.io/coder/code-server
-              tag: 4.21.1
+              tag: 4.21.1@sha256:c9f78fb7e8ac5fdd3bea856142dd5c5dda0f5183131254516af74135dc97c773
+              pullPolicy: IfNotPresent
             args:
               - --disable-telemetry
               - --disable-update-check

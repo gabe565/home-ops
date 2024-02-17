@@ -23,7 +23,8 @@ spec:
           main:
             image:
               repository: ghcr.io/dgtlmoon/changedetection.io
-              tag: 0.45.14
+              tag: 0.45.14@sha256:f563f6448e586e5259cd672aee017d874a5e9ed0305b1e9e273fd070a43a27da
+              pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
               BASE_URL: https://${app_url}
@@ -39,7 +40,8 @@ spec:
           main:
             image:
               repository: browserless/chrome
-              tag: 1.61.1-chrome-stable
+              tag: 1.61.1-chrome-stable@sha256:efac47cfff3830d9a50b27d29f8bbb61949058ae336c823fbe9bd3c0d1debcc8
+              pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
               ENABLE_DEBUGGER: "false"

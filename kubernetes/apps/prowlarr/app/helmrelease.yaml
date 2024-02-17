@@ -23,7 +23,8 @@ spec:
           main:
             image:
               repository: ghcr.io/onedr0p/prowlarr
-              tag: 1.13.3.4273
+              tag: 1.13.3.4273@sha256:7645fa4904027d22b70ce73bfe86b4a03f604867d717aee4e92da4a950af830e
+              pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
         pod:

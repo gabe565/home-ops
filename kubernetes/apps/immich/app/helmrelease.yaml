@@ -27,7 +27,8 @@ spec:
           main:
             image:
               repository: ghcr.io/immich-app/immich-server
-              tag: v1.94.1
+              tag: v1.94.1@sha256:c7b80752d48464dea1c4495ff810365a0809d89c2ac219547d3c1aed81c6411f
+              pullPolicy: IfNotPresent
             command: [./start-server.sh]
             env: &env
               TZ: America/Chicago
@@ -54,7 +55,8 @@ spec:
           main:
             image:
               repository: ghcr.io/immich-app/immich-server
-              tag: v1.94.1
+              tag: v1.94.1@sha256:c7b80752d48464dea1c4495ff810365a0809d89c2ac219547d3c1aed81c6411f
+              pullPolicy: IfNotPresent
             command: [./start-microservices.sh]
             env: *env
             resources:
@@ -72,7 +74,8 @@ spec:
           main:
             image:
               repository: ghcr.io/immich-app/immich-machine-learning
-              tag: v1.94.1
+              tag: v1.94.1@sha256:a3c612c548d5f547a31d001d97f661d7acd4a0ae354de76a70e45162d2b81014
+              pullPolicy: IfNotPresent
         pod:
           labels:
             policy.gabe565.com/egress-world: "true"
