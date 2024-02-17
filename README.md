@@ -352,11 +352,6 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td rowspan="1"></td>
   </tr>
   <tr>
-    <td rowspan="1">searxng</td>
-    <td><a href="kubernetes/apps/searxng/app/helmrelease.yaml">searxng</a></td>
-    <td rowspan="1"><a href="kubernetes/apps/searxng/redis/helmrelease.yaml">redis</a></td>
-  </tr>
-  <tr>
     <td rowspan="1">shlink</td>
     <td><a href="kubernetes/apps/shlink/app/helmrelease.yaml">shlink</a></td>
     <td rowspan="1"><a href="kubernetes/apps/shlink/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/apps/shlink/postgresql.yaml">postgresql</a></td>
