@@ -24,8 +24,8 @@ spec:
             image:
               repository: ghcr.io/cogentapps/chat-with-gpt
               tag: release
-              env:
-                TZ: America/Chicago
+            env:
+              TZ: America/Chicago
         pod:
           labels:
             policy.gabe565.com/egress-world: "true"
