@@ -17,7 +17,7 @@ repos:
         types: [yaml]
 
   - repo: https://github.com/gabe565/pre-commit-fluxcd
-    rev: v0.5.0
+    rev: v0.5.1
     hooks:
       - id: check-charts-pinned
       - id: check-charts-support-renovate
