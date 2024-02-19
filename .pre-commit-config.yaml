@@ -28,3 +28,6 @@ repos:
     rev: v0.1.0
     hooks:
       - id: template
+        args:
+          - --dirs=kubernetes
+          - --supporting-services=borgmatic,postgresql,redis,mariadb
