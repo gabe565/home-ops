@@ -17,10 +17,23 @@ spec:
   driftDetection:
     mode: enabled
   values:
-    priorityClassName: system-cluster-critical
-
-    annotations:
-      configmap.reloader.stakater.com/reload: authentik-custom-assets
+    global:
+      priorityClassName: system-cluster-critical
+      env:
+        - name: AUTHENTIK_DISABLE_UPDATE_CHECK
+          value: "true"
+        - name: AUTHENTIK_DISABLE_STARTUP_ANALYTICS
+          value: "true"
+        - name: AUTHENTIK_POSTGRESQL__PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgresql-app
+              key: password
+        - name: AUTHENTIK_REDIS__PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: redis
+              key: redis-password
 
     authentik:
       # This sends anonymous usage-data, stack traces on errors and
@@ -48,57 +61,45 @@ spec:
 
       log_level: warning
 
-    env:
-      AUTHENTIK_DISABLE_UPDATE_CHECK: "true"
-      AUTHENTIK_DISABLE_STARTUP_ANALYTICS: "true"
-
-    envValueFrom:
-      AUTHENTIK_POSTGRESQL__PASSWORD:
-        secretKeyRef:
-          name: postgresql-app
-          key: password
-      AUTHENTIK_REDIS__PASSWORD:
-        secretKeyRef:
-          name: redis
-          key: redis-password
-
     geoip:
       enabled: true
       accountId: |
         ${geoip_account_id}
       licenseKey: ${geoip_license_key}
 
-    ingress:
-      enabled: true
-      hosts:
-        - host: ${app_url}
-          paths:
-            - path: /
-              pathType: Prefix
-      tls:
-        - secretName: ${certificate_name}
-          hosts:
-            - ${app_url}
+    server:
+      podAnnotations:
+        configmap.reloader.stakater.com/reload: authentik-custom-assets
 
-    volumes:
-      - name: custom-assets
-        configMap:
-          name: authentik-custom-assets
-    volumeMounts:
-      - name: custom-assets
-        mountPath: /web/dist/custom.css
-        subPath: custom.css
-      - name: custom-assets
-        mountPath: /web/authentik/sources/google.svg
-        subPath: google.svg
-      - name: custom-assets
-        mountPath: /web/authentik/sources/plex.svg
-        subPath: plex.svg
+      ingress:
+        enabled: true
+        hosts:
+          - ${app_url}
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
 
-    prometheus:
-      serviceMonitor:
-        create: true
-        interval: 1m
+      volumes:
+        - name: custom-assets
+          configMap:
+            name: authentik-custom-assets
+      volumeMounts:
+        - name: custom-assets
+          mountPath: /web/dist/custom.css
+          subPath: custom.css
+        - name: custom-assets
+          mountPath: /web/authentik/sources/google.svg
+          subPath: google.svg
+        - name: custom-assets
+          mountPath: /web/authentik/sources/plex.svg
+          subPath: plex.svg
+
+      metrics:
+        enabled: true
+        serviceMonitor:
+          enabled: true
+          interval: 1m
 
   postRenderers:
     - kustomize:
