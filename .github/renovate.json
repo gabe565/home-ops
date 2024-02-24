@@ -113,6 +113,11 @@
       "matchDatasources": ["helm"],
       "matchPackagePatterns": ["authentik"],
       "extends": ["github>gabe565/renovate-config:fullVersion"]
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/gurucomputing/headscale-ui"],
+      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)(?:-beta-?(?<build>\\d+)?)?$"
     }
   ]
 }
