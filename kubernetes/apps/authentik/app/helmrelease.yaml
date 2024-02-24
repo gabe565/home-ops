@@ -19,6 +19,16 @@ spec:
   values:
     global:
       priorityClassName: system-cluster-critical
+
+      podLabels:
+        policy.gabe565.com/egress-kube-dns: "true"
+        policy.gabe565.com/egress-kubeapi: "true"
+        policy.gabe565.com/egress-namespace: "true"
+        policy.gabe565.com/egress-world: "true"
+        policy.gabe565.com/ingress-prometheus: "true"
+        policy.gabe565.com/ingress-ingress: "true"
+        policy.gabe565.com/egress-gotify: "true"
+
       env:
         - name: AUTHENTIK_DISABLE_UPDATE_CHECK
           value: "true"
@@ -100,33 +110,3 @@ spec:
         serviceMonitor:
           enabled: true
           interval: 1m
-
-  postRenderers:
-    - kustomize:
-        patches:
-          - target:
-              kind: Deployment
-              name: .*
-            # language=yaml
-            patch: |
-              - op: add
-                path: /spec/template/metadata/labels/policy.gabe565.com~1egress-kube-dns
-                value: "true"
-              - op: add
-                path: /spec/template/metadata/labels/policy.gabe565.com~1egress-kubeapi
-                value: "true"
-              - op: add
-                path: /spec/template/metadata/labels/policy.gabe565.com~1egress-namespace
-                value: "true"
-              - op: add
-                path: /spec/template/metadata/labels/policy.gabe565.com~1egress-world
-                value: "true"
-              - op: add
-                path: /spec/template/metadata/labels/policy.gabe565.com~1ingress-prometheus
-                value: "true"
-              - op: add
-                path: /spec/template/metadata/labels/policy.gabe565.com~1ingress-ingress
-                value: "true"
-              - op: add
-                path: /spec/template/metadata/labels/policy.gabe565.com~1egress-gotify
-                value: "true"
