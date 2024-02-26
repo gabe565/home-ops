@@ -65,7 +65,7 @@ spec:
           main:
             image:
               repository: ghcr.io/gabe565/vuetorrent
-              tag: 2.7.0@sha256:99c1f830caa198ac5c09b258d61e913ae9cd5ed8d65a28b756fcf79ccad6d176
+              tag: 2.7.1@sha256:b60a75479e9e4711f1e53ae335f2709c74b182bc61ce754c7e4d5e3102384d11
               pullPolicy: IfNotPresent
         pod:
           labels:
