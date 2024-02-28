@@ -21,19 +21,18 @@ spec:
       name: webhook
       webhook:
         image:
-          repository: ghcr.io/zekker6/external-dns-provider-adguard
-          tag: v0.0.8@sha256:47c63a1e4ddc92eb336473571d43eb868721aa3a0a3daf292455f45ed29bb7f2
+          repository: ghcr.io/muhlba91/external-dns-provider-adguard
+          tag: v3.1.0@sha256:b87fbfdf9bb5900e2a462e00873b33f18462b39fd58d0ba346fc541f57e1fcf5
           pullPolicy: IfNotPresent
         env:
-          - name: ADGUARD_HOME_URL
+          - name: ADGUARD_URL
             value: http://adguard-home-origin:3000
-          - name: ADGUARD_HOME_USER
+          - name: ADGUARD_USER
             value: ${adguard_home_username}
-          - name: ADGUARD_HOME_PASS
+          - name: ADGUARD_PASSWORD
             value: ${adguard_home_password}
-        securityContext:
-          runAsUser: 65534
-          runAsGroup: 65534
+          - name: SERVER_HOST
+            value: 0.0.0.0
     interval: 1h
     triggerLoopOnEvent: true
     policy: sync
