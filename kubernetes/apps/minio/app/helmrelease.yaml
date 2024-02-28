@@ -29,6 +29,7 @@ spec:
             env:
               MINIO_SITE_NAME: us-central-1
               MINIO_UPDATE: "off"
+              MINIO_DOMAIN: ${s3_url}
               MINIO_SERVER_URL: https://${s3_url}
               MINIO_BROWSER_REDIRECT_URL: https://${app_url}
               MINIO_API_CORS_ALLOW_ORIGIN: https://${app_url},https://${s3_url}
@@ -102,11 +103,20 @@ spec:
                 service:
                   name: main
                   port: s3
+          - host: "*.${s3_url}"
+            paths:
+              - path: /
+                service:
+                  name: main
+                  port: s3
         tls:
-          - secretName: ${certificate_name}
+          - secretName: ${app_certificate_name}
             hosts:
               - ${app_url}
+          - secretName: ${s3_certificate_name}
+            hosts:
               - ${s3_url}
+              - "*.${s3_url}"
 
     serviceMonitor:
       main:
