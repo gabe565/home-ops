@@ -7,7 +7,7 @@ spec:
   chart:
     spec:
       chart: authentik
-      version: 2023.10.7
+      version: 2024.2.1
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -17,10 +17,33 @@ spec:
   driftDetection:
     mode: enabled
   values:
-    priorityClassName: system-cluster-critical
+    global:
+      priorityClassName: system-cluster-critical
 
-    annotations:
-      configmap.reloader.stakater.com/reload: authentik-custom-assets
+      podLabels:
+        policy.gabe565.com/egress-kube-dns: "true"
+        policy.gabe565.com/egress-kubeapi: "true"
+        policy.gabe565.com/egress-namespace: "true"
+        policy.gabe565.com/egress-world: "true"
+        policy.gabe565.com/ingress-prometheus: "true"
+        policy.gabe565.com/ingress-ingress: "true"
+        policy.gabe565.com/egress-gotify: "true"
+
+      env:
+        - name: AUTHENTIK_DISABLE_UPDATE_CHECK
+          value: "true"
+        - name: AUTHENTIK_DISABLE_STARTUP_ANALYTICS
+          value: "true"
+        - name: AUTHENTIK_POSTGRESQL__PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgresql-app
+              key: password
+        - name: AUTHENTIK_REDIS__PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: redis
+              key: redis-password
 
     authentik:
       # This sends anonymous usage-data, stack traces on errors and
@@ -48,84 +71,36 @@ spec:
 
       log_level: warning
 
-    env:
-      AUTHENTIK_DISABLE_UPDATE_CHECK: "true"
-      AUTHENTIK_DISABLE_STARTUP_ANALYTICS: "true"
+    server:
+      podAnnotations:
+        configmap.reloader.stakater.com/reload: authentik-custom-assets
 
-    envValueFrom:
-      AUTHENTIK_POSTGRESQL__PASSWORD:
-        secretKeyRef:
-          name: postgresql-app
-          key: password
-      AUTHENTIK_REDIS__PASSWORD:
-        secretKeyRef:
-          name: redis
-          key: redis-password
+      ingress:
+        enabled: true
+        hosts:
+          - ${app_url}
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
 
-    geoip:
-      enabled: true
-      accountId: |
-        ${geoip_account_id}
-      licenseKey: ${geoip_license_key}
+      volumes:
+        - name: custom-assets
+          configMap:
+            name: authentik-custom-assets
+      volumeMounts:
+        - name: custom-assets
+          mountPath: /web/dist/custom.css
+          subPath: custom.css
+        - name: custom-assets
+          mountPath: /web/authentik/sources/google.svg
+          subPath: google.svg
+        - name: custom-assets
+          mountPath: /web/authentik/sources/plex.svg
+          subPath: plex.svg
 
-    ingress:
-      enabled: true
-      hosts:
-        - host: ${app_url}
-          paths:
-            - path: /
-              pathType: Prefix
-      tls:
-        - secretName: ${certificate_name}
-          hosts:
-            - ${app_url}
-
-    volumes:
-      - name: custom-assets
-        configMap:
-          name: authentik-custom-assets
-    volumeMounts:
-      - name: custom-assets
-        mountPath: /web/dist/custom.css
-        subPath: custom.css
-      - name: custom-assets
-        mountPath: /web/authentik/sources/google.svg
-        subPath: google.svg
-      - name: custom-assets
-        mountPath: /web/authentik/sources/plex.svg
-        subPath: plex.svg
-
-    prometheus:
-      serviceMonitor:
-        create: true
-        interval: 1m
-
-  postRenderers:
-    - kustomize:
-        patches:
-          - target:
-              kind: Deployment
-              name: .*
-            # language=yaml
-            patch: |
-              - op: add
-                path: /spec/template/metadata/labels/policy.gabe565.com~1egress-kube-dns
-                value: "true"
-              - op: add
-                path: /spec/template/metadata/labels/policy.gabe565.com~1egress-kubeapi
-                value: "true"
-              - op: add
-                path: /spec/template/metadata/labels/policy.gabe565.com~1egress-namespace
-                value: "true"
-              - op: add
-                path: /spec/template/metadata/labels/policy.gabe565.com~1egress-world
-                value: "true"
-              - op: add
-                path: /spec/template/metadata/labels/policy.gabe565.com~1ingress-prometheus
-                value: "true"
-              - op: add
-                path: /spec/template/metadata/labels/policy.gabe565.com~1ingress-ingress
-                value: "true"
-              - op: add
-                path: /spec/template/metadata/labels/policy.gabe565.com~1egress-gotify
-                value: "true"
+      metrics:
+        enabled: true
+        serviceMonitor:
+          enabled: true
+          interval: 1m
