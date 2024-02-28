@@ -20,6 +20,8 @@ spec:
     global:
       priorityClassName: system-cluster-critical
 
+      podAnnotations:
+        secret.reloader.stakater.com/reload: authentik-s3-envs
       podLabels:
         policy.gabe565.com/egress-kube-dns: "true"
         policy.gabe565.com/egress-kubeapi: "true"
@@ -44,6 +46,9 @@ spec:
             secretKeyRef:
               name: redis
               key: redis-password
+      envFrom:
+        - secretRef:
+            name: authentik-s3-envs
 
     authentik:
       # This sends anonymous usage-data, stack traces on errors and
