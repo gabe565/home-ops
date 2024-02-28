@@ -1,5 +1,14 @@
-/* Header and footer */
-.pf-c-login__header, .pf-c-login__footer {
+/* Header */
+.pf-c-login__main-header.ak-flow-executor {
+    padding-top: 3rem;
+}
+
+.pf-c-login__main-header.ak-stage-identification {
+    padding-top: 1rem;
+}
+
+/* Footer */
+.pf-c-login__footer {
     display: none;
 }
 
@@ -27,7 +36,7 @@
 
 /* Title */
 h1.pf-c-title.pf-m-3xl.style-scope {
-    margin-bottom: 30px;
+    margin-bottom: 1rem;
     color: #eee;
 }
 
