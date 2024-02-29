@@ -5,7 +5,7 @@ metadata:
   namespace: linkding
 spec:
   instances: 3
-  imageName: ghcr.io/cloudnative-pg/postgresql:16.1-7
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.2-7
   enableSuperuserAccess: true
   bootstrap:
     initdb:
