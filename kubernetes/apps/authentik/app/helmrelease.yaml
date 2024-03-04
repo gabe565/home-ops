@@ -76,6 +76,12 @@ spec:
 
       log_level: warning
 
+    geoip:
+      enabled: true
+      accountId: |
+        ${geoip_account_id}
+      licenseKey: ${geoip_license_key}
+
     server:
       podAnnotations:
         configmap.reloader.stakater.com/reload: authentik-custom-assets
