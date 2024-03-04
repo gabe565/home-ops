@@ -78,9 +78,8 @@ spec:
 
     geoip:
       enabled: true
-      accountId: |
-        ${geoip_account_id}
-      licenseKey: ${geoip_license_key}
+      existingSecret:
+        secretName: authentik-geoip
 
     server:
       podAnnotations:
