@@ -20,8 +20,10 @@ spec:
     global:
       priorityClassName: system-cluster-critical
 
-      podAnnotations:
-        secret.reloader.stakater.com/reload: authentik-s3-envs
+      deploymentAnnotations:
+        configmap.reloader.stakater.com/reload: authentik-custom-assets
+        secret.reloader.stakater.com/reload: authentik-s3-envs,authentik-geoip
+
       podLabels:
         policy.gabe565.com/egress-kube-dns: "true"
         policy.gabe565.com/egress-kubeapi: "true"
@@ -82,9 +84,6 @@ spec:
         secretName: authentik-geoip
 
     server:
-      podAnnotations:
-        configmap.reloader.stakater.com/reload: authentik-custom-assets
-
       ingress:
         enabled: true
         hosts:
