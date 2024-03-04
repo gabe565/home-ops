@@ -7,7 +7,7 @@ spec:
   chart:
     spec:
       chart: authentik
-      version: 2024.2.1
+      version: 2024.2.2
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -75,6 +75,12 @@ spec:
         from: ${email_from}
 
       log_level: warning
+
+    geoip:
+      enabled: true
+      accountId: |
+        ${geoip_account_id}
+      licenseKey: ${geoip_license_key}
 
     server:
       podAnnotations:
