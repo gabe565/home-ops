@@ -7,7 +7,7 @@ spec:
   chart:
     spec:
       chart: tandoor
-      version: 0.9.0
+      version: 0.9.1
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
