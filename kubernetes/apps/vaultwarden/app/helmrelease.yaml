@@ -6,37 +6,63 @@ metadata:
 spec:
   chart:
     spec:
-      chart: vaultwarden
-      version: 0.12.1
+      chart: app-template
+      version: 2.6.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
         namespace: flux-system
-        name: gabe565
+        name: bjw-s
   interval: 1h
   driftDetection:
     mode: enabled
   values:
-    controller:
-      strategy: Recreate
+    controllers:
+      main:
+        strategy: Recreate
+        containers:
+          main:
+            image:
+              repository: ghcr.io/dani-garcia/vaultwarden
+              tag: 1.30.5-alpine@sha256:6f6ec220ed300e1a11475a91d270985915083512f9fb60c1c25783faaa66eef5
 
-    env:
-      TZ: America/Chicago
-      ADMIN_TOKEN: ${admin_token}
-      DATABASE_URL:
-        secretKeyRef:
-          name: postgresql-app
-          key: uri
-      PUSH_ENABLED: "true"
-      PUSH_INSTALLATION_ID: ${push_installation_id}
-      PUSH_INSTALLATION_KEY: ${push_installation_key}
+            env:
+              TZ: America/Chicago
+              DOMAIN: https://${app_url}
+              ROCKET_PORT: "8080"
+              ADMIN_TOKEN: ${admin_token}
+              DATABASE_URL:
+                secretKeyRef:
+                  name: postgresql-app
+                  key: uri
+              PUSH_ENABLED: "true"
+              PUSH_INSTALLATION_ID: ${push_installation_id}
+              PUSH_INSTALLATION_KEY: ${push_installation_key}
 
-    podLabels:
-      policy.gabe565.com/egress-namespace: "true"
-      policy.gabe565.com/egress-world: "true"
-      policy.gabe565.com/ingress-ingress: "true"
+        pod:
+          priorityClassName: system-cluster-critical
+          labels:
+            policy.gabe565.com/egress-namespace: "true"
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-ingress: "true"
+          securityContext:
+            fsGroup: 65534
+            runAsGroup: 65534
+            runAsUser: 65534
 
-    priorityClassName: system-cluster-critical
+    service:
+      main:
+        ports:
+          http:
+            port: 8080
+
+    persistence:
+      data:
+        enabled: true
+        retain: true
+        accessMode: ReadWriteOnce
+        storageClass: longhorn-ssd
+        size: 256Mi
 
     ingress:
       main:
@@ -45,6 +71,8 @@ spec:
           - host: ${app_url}
             paths:
               - path: /
+                service: &svc
+                  name: main
         tls: &tls
           - secretName: ${certificate_name}
             hosts:
@@ -64,11 +92,5 @@ spec:
           - host: ${app_url}
             paths:
               - path: /admin
+                service: *svc
         tls: *tls
-
-    persistence:
-      data:
-        enabled: true
-        accessMode: ReadWriteOnce
-        storageClass: longhorn-ssd
-        size: 256Mi
