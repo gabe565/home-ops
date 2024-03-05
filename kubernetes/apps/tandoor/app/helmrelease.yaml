@@ -6,53 +6,85 @@ metadata:
 spec:
   chart:
     spec:
-      chart: tandoor
-      version: 0.9.1
+      chart: app-template
+      version: 2.6.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
         namespace: flux-system
-        name: gabe565
+        name: bjw-s
   interval: 1h
   driftDetection:
     mode: enabled
   values:
-    controller:
-      strategy: RollingUpdate
+    controllers:
+      main:
+        strategy: RollingUpdate
+        containers:
+          main:
+            image:
+              repository: ghcr.io/tandoorrecipes/recipes
+              tag: 1.5.14@sha256:0a8356025307642b3803cde0793d59467bb6af07ee685527e28f215868b30537
 
-    env:
-      TZ: America/Chicago
-      SECRET_KEY: ${secret_key}
-      GUNICORN_WORKERS: "1"
-      FRACTION_PREF_DEFAULT: "1"
-      S3_ENDPOINT_URL: ${s3_url}
-      S3_ACCESS_KEY: ${s3_access_key}
-      S3_SECRET_ACCESS_KEY: ${s3_secret_key}
-      S3_BUCKET_NAME: tandoor
-      S3_REGION_NAME: us-central-1
-      OAUTH_ID: authentik
-      OAUTH_NAME: Authentik
-      OAUTH_SERVER_URL: https://${oauth_host}/application/o/tandoor-recipes/.well-known/openid-configuration
-      OAUTH_CLIENT_ID: ${oauth_client_id}
-      OAUTH_CLIENT_SECRET: ${oauth_client_secret}
-      # language=json
-      SOCIALACCOUNT_PROVIDERS: |-
-        {"openid_connect":{"SERVERS":[{"id": "$(OAUTH_ID)","name": "$(OAUTH_NAME)","server_url": "$(OAUTH_SERVER_URL)","token_auth_method": "client_secret_basic","APP": {"client_id": "$(OAUTH_CLIENT_ID)","secret": "$(OAUTH_CLIENT_SECRET)"}}]}}
-      SOCIAL_PROVIDERS: allauth.socialaccount.providers.openid_connect
+            env:
+              TZ: America/Chicago
+              SECRET_KEY: ${secret_key}
+              GUNICORN_WORKERS: "1"
+              FRACTION_PREF_DEFAULT: "1"
+              DEBUG: "0"
 
-      DB_ENGINE: django.db.backends.postgresql
-      POSTGRES_HOST: postgresql-rw
-      POSTGRES_DB: tandoor
-      POSTGRES_USER: tandoor
-      POSTGRES_PASSWORD:
-        secretKeyRef:
-          name: postgresql-app
-          key: password
+              DB_ENGINE: django.db.backends.postgresql
+              POSTGRES_HOST: postgresql-rw
+              POSTGRES_DB: tandoor
+              POSTGRES_USER: tandoor
+              POSTGRES_PASSWORD:
+                secretKeyRef:
+                  name: postgresql-app
+                  key: password
 
-    podLabels:
-      policy.gabe565.com/egress-namespace: "true"
-      policy.gabe565.com/egress-world: "true"
-      policy.gabe565.com/ingress-ingress: "true"
+              S3_ENDPOINT_URL: ${s3_url}
+              S3_ACCESS_KEY: ${s3_access_key}
+              S3_SECRET_ACCESS_KEY: ${s3_secret_key}
+              S3_BUCKET_NAME: tandoor
+              S3_REGION_NAME: us-central-1
+
+              OAUTH_ID: authentik
+              OAUTH_NAME: Authentik
+              OAUTH_SERVER_URL: https://${oauth_host}/application/o/tandoor-recipes/.well-known/openid-configuration
+              OAUTH_CLIENT_ID: ${oauth_client_id}
+              OAUTH_CLIENT_SECRET: ${oauth_client_secret}
+              SOCIAL_PROVIDERS: allauth.socialaccount.providers.openid_connect
+              # language=json
+              SOCIALACCOUNT_PROVIDERS: |-
+                {"openid_connect":{"SERVERS":[{"id": "$(OAUTH_ID)","name": "$(OAUTH_NAME)","server_url": "$(OAUTH_SERVER_URL)","token_auth_method": "client_secret_basic","APP": {"client_id": "$(OAUTH_CLIENT_ID)","secret": "$(OAUTH_CLIENT_SECRET)"}}]}}
+
+        pod:
+          enableServiceLinks: false
+          labels:
+            policy.gabe565.com/egress-namespace: "true"
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-ingress: "true"
+          securityContext:
+            runAsUser: 65534
+            runAsGroup: 65534
+            fsGroup: 65534
+
+    service:
+      main:
+        ports:
+          http:
+            port: 8080
+
+    persistence:
+      static:
+        enabled: true
+        type: emptyDir
+        size: 512Mi
+        globalMounts:
+          - path: /opt/recipes/staticfiles
+            subPath: staticfiles
+          - path: /opt/recipes/cookbook/static/django_js_reverse
+            subPath: django_js_reverse
 
     ingress:
       main:
@@ -63,12 +95,8 @@ spec:
           - host: ${app_url}
             paths:
               - path: /
-              - path: /static
-                service:
-                  port: 80
-              - path: /media
-                service:
-                  port: 80
+                service: &svc
+                  name: main
         tls: &tls
           - secretName: ${certificate_name}
             hosts:
@@ -82,9 +110,5 @@ spec:
           - host: ${app_url}
             paths:
               - path: /accounts/login
+                service: *svc
         tls: *tls
-
-    persistence:
-      static:
-        enabled: true
-        size: 512Mi
