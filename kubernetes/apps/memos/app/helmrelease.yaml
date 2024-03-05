@@ -6,31 +6,47 @@ metadata:
 spec:
   chart:
     spec:
-      chart: memos
-      version: 0.13.1
+      chart: app-template
+      version: 2.6.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
         namespace: flux-system
-        name: gabe565
+        name: bjw-s
   interval: 1h
   driftDetection:
     mode: enabled
   values:
-    controller:
-      strategy: RollingUpdate
+    controllers:
+      main:
+        strategy: RollingUpdate
+        containers:
+          main:
+            image:
+              repository: ghcr.io/usememos/memos
+              tag: 0.20.1sha256:7b55d5de909813b49320d66600098e1028773860051b9fabfc6d8aa422d3d62f
 
-    env:
-      MEMOS_DRIVER: postgres
-      MEMOS_DSN:
-        secretKeyRef:
-          name: postgresql-app
-          key: uri
+            env:
+              MEMOS_DRIVER: postgres
+              MEMOS_DSN:
+                secretKeyRef:
+                  name: postgresql-app
+                  key: uri
+        pod:
+          labels:
+            policy.gabe565.com/egress-namespace: "true"
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-ingress: "true"
+          securityContext:
+            runAsUser: 65534
+            runAsGroup: 65534
+            fsGroup: 65534
 
-    podLabels:
-      policy.gabe565.com/egress-namespace: "true"
-      policy.gabe565.com/egress-world: "true"
-      policy.gabe565.com/ingress-ingress: "true"
+    service:
+      main:
+        ports:
+          http:
+            port: 5230
 
     ingress:
       main:
@@ -41,6 +57,8 @@ spec:
           - host: ${app_url}
             paths:
               - path: /
+                service:
+                  name: main
         tls:
           - secretName: ${certificate_name}
             hosts:
