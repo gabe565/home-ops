@@ -33,6 +33,7 @@ spec:
                   name: postgresql-app
                   key: uri
         pod:
+          enableServiceLinks: false
           labels:
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
