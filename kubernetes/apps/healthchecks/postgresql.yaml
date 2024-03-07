@@ -13,7 +13,7 @@ spec:
       owner: healthchecks
   storage:
     storageClass: longhorn-ssd-database
-    size: 2Gi
+    size: 8Gi
   resources:
     requests:
       memory: 50Mi

@@ -13,7 +13,7 @@ spec:
       owner: home-assistant
   storage:
     storageClass: longhorn-ssd-database
-    size: 6Gi
+    size: 8Gi
   resources:
     requests:
       memory: 400Mi
