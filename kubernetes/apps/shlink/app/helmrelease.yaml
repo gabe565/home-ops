@@ -26,7 +26,7 @@ spec:
           main:
             image:
               repository: ghcr.io/shlinkio/shlink
-              tag: 4.0.0-roadrunner@sha256:47f4cffba9b096cc24bda68a33c78b77ac6e57f7d2fdd63bc50d71f520da0546
+              tag: 4.0.1-roadrunner@sha256:4d5dcec52580f4db18a2b75a7e3871ff9710a91972a2a4fc8faff09552bed88a
               pullPolicy: IfNotPresent
 
             env:
