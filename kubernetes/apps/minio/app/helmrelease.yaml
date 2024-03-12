@@ -123,6 +123,7 @@ spec:
     serviceMonitor:
       main:
         enabled: true
+        serviceName: main
         endpoints:
           - port: s3
             scheme: http
