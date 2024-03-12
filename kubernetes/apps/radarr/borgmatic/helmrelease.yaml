@@ -27,7 +27,7 @@ spec:
   values:
     image:
       repository: ghcr.io/gabe565/borgmatic
-      tag: 1.8.8@sha256:d1688733cf761378eeef8bb9283cac4436e99bf728c19a47e4553decd6751c35
+      tag: 1.8.9@sha256:5180b9f34ed5c7d7956e5f92f0c74ab91d0b59effc258a89d1769084f68621ce
       pullPolicy: IfNotPresent
     controller:
       type: cronjob
