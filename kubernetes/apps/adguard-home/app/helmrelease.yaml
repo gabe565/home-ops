@@ -52,7 +52,7 @@ spec:
                     labelSelector:
                       matchLabels:
                         app.kubernetes.io/name: adguard-home
-                        app.kubernetes.io/component: main
+                        app.kubernetes.io/component: adguard-home
         statefulset:
           volumeClaimTemplates:
             - name: data

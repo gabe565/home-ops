@@ -43,7 +43,7 @@ spec:
               labelSelector:
                 matchLabels:
                   app.kubernetes.io/name: minio
-                  app.kubernetes.io/component: main
+                  app.kubernetes.io/component: minio
     podLabels:
       policy.gabe565.com/egress-healthchecks: "true"
       policy.gabe565.com/egress-namespace: "true"
