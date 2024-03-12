@@ -62,7 +62,7 @@ spec:
                   name: postgresql-app
                   key: password
         pod:
-          terminationGracePeriodSeconds: "3"
+          terminationGracePeriodSeconds: 3
           labels:
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
@@ -77,7 +77,7 @@ spec:
               tag: 2024.02.24-beta1@sha256:4c618a7b6e8b32f5ef6af3c7e6936c63e8568ad9ae8d190dafb2551a64ff40a2
               pullPolicy: IfNotPresent
         pod:
-          terminationGracePeriodSeconds: "3"
+          terminationGracePeriodSeconds: 3
           labels:
             policy.gabe565.com/ingress-ingress: "true"
 

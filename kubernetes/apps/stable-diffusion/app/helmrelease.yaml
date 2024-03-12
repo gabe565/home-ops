@@ -52,7 +52,7 @@ spec:
           labels:
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-ingress: "true"
-          terminationGracePeriodSeconds: "0"
+          terminationGracePeriodSeconds: 0
           securityContext:
             fsGroup: 1000
 

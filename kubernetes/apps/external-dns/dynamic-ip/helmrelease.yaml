@@ -34,7 +34,7 @@ spec:
             policy.gabe565.com/egress-kubeapi: "true"
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
-          terminationGracePeriodSeconds: "0"
+          terminationGracePeriodSeconds: 0
 
     serviceAccount:
       create: true

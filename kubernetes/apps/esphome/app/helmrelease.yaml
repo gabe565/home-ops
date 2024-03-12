@@ -42,7 +42,7 @@ spec:
               TZ: America/Chicago
               ESPHOME_DASHBOARD_USE_PING: true
         pod:
-          terminationGracePeriodSeconds: "0"
+          terminationGracePeriodSeconds: 0
           dnsConfig:
             nameservers:
               - 192.168.1.221
