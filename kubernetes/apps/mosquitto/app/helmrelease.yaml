@@ -58,8 +58,6 @@ spec:
         annotations:
           external-dns.alpha.kubernetes.io/hostname: ${app_url}
         ports:
-          http:
-            enabled: false
           mqtt:
             port: 1883
           mqtts:
