@@ -157,7 +157,7 @@ spec:
           - host: ${vuetorrent_url}
             paths:
               - path: /sw.js
-                type: Exact
+                pathType: Exact
                 service:
                   identifier: vuetorrent
                   port: http
