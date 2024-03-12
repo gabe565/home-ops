@@ -47,12 +47,13 @@ spec:
       config:
         enabled: true
         size: 100Mi
+        storageClass: longhorn-ssd
+        accessMode: ReadWriteOnce
         globalMounts:
           - path: /app/config
       cache:
         enabled: true
         type: emptyDir
-        size: 1Gi
         globalMounts:
           - path: /app/config/cache
 
