@@ -34,7 +34,7 @@ spec:
             policy.gabe565.com/ingress-ingress: "true"
 
     service:
-      main:
+      chatgpt:
         controller: main
         ports:
           http:
@@ -64,7 +64,7 @@ spec:
             paths:
               - path: /
                 service:
-                  identifier: main
+                  identifier: chatgpt
                   port: http
         tls:
           - secretName: ${certificate_name}

@@ -53,7 +53,7 @@ spec:
             subPath: config.yaml
 
     service:
-      main:
+      kromgo:
         controller: main
         ports:
           http:
@@ -67,7 +67,7 @@ spec:
             paths:
               - path: /
                 service:
-                  identifier: main
+                  identifier: kromgo
                   port: http
         tls:
           - secretName: gabe565.com-tls

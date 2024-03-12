@@ -47,7 +47,7 @@ spec:
             policy.gabe565.com/ingress-ingress: "true"
 
     service:
-      main:
+      linkding:
         controller: main
         ports:
           http:
@@ -70,7 +70,7 @@ spec:
             paths:
               - path: /
                 service:
-                  identifier: main
+                  identifier: linkding
                   port: http
         tls:
           - secretName: ${certificate_name}

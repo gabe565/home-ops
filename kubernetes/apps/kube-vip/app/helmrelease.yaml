@@ -73,7 +73,7 @@ spec:
       create: true
 
     service:
-      main:
+      kube-vip:
         controller: main
         enabled: false
       metrics:

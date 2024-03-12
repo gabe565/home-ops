@@ -108,7 +108,7 @@ spec:
               - path: /cache
 
     service:
-      main:
+      immich:
         controller: main
         enabled: false
       machine-learning:

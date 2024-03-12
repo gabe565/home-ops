@@ -93,7 +93,7 @@ spec:
               - path: /downloads
 
     service:
-      main:
+      qbittorrent:
         controller: main
         ports:
           http:
@@ -120,7 +120,7 @@ spec:
             paths:
               - path: /
                 service:
-                  identifier: main
+                  identifier: qbittorrent
                   port: http
         tls:
           - secretName: ${certificate_name}
@@ -142,7 +142,7 @@ spec:
                   port: http
               - path: /api
                 service:
-                  identifier: main
+                  identifier: qbittorrent
                   port: http
         tls: &vuetorrent-tls
           - secretName: ${certificate_name}

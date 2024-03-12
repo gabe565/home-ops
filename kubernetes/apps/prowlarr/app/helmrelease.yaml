@@ -39,7 +39,7 @@ spec:
             fsGroupChangePolicy: OnRootMismatch
 
     service:
-      main:
+      prowlarr:
         controller: main
         ports:
           http:
@@ -59,7 +59,7 @@ spec:
             paths:
               - path: /
                 service:
-                  identifier: main
+                  identifier: prowlarr
                   port: http
         tls:
           - secretName: ${certificate_name}

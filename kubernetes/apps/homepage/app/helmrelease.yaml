@@ -60,7 +60,7 @@ spec:
             policy.gabe565.com/ingress-ingress: "true"
 
     service:
-      main:
+      homepage:
         controller: main
         ports:
           http:
@@ -99,7 +99,7 @@ spec:
             paths:
               - path: /
                 service:
-                  identifier: main
+                  identifier: homepage
                   port: http
         tls:
           - secretName: ${certificate_name}

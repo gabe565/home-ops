@@ -71,7 +71,7 @@ spec:
             fsGroup: 65534
 
     service:
-      main:
+      tandoor:
         controller: main
         ports:
           http:
@@ -97,7 +97,7 @@ spec:
             paths:
               - path: /
                 service: &svc
-                  identifier: main
+                  identifier: tandoor
                   port: http
         tls: &tls
           - secretName: ${certificate_name}

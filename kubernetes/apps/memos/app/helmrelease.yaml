@@ -45,7 +45,7 @@ spec:
             fsGroup: 65534
 
     service:
-      main:
+      memos:
         controller: main
         ports:
           http:
@@ -61,7 +61,7 @@ spec:
             paths:
               - path: /
                 service:
-                  identifier: main
+                  identifier: memos
                   port: http
         tls:
           - secretName: ${certificate_name}

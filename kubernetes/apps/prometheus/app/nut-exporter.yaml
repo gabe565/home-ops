@@ -37,7 +37,7 @@ spec:
             policy.gabe565.com/egress-world-with-lan: "true"
 
     service:
-      main:
+      nut-exporter:
         controller: main
         ports:
           http:
@@ -46,7 +46,7 @@ spec:
     serviceMonitor:
       main:
         enabled: true
-        serviceName: main
+        serviceName: nut-exporter
         endpoints:
           - port: http
             scheme: http

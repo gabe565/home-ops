@@ -35,7 +35,7 @@ spec:
             fsGroup: 1000
 
     service:
-      main:
+      matrimony:
         controller: main
         ports:
           http:
@@ -59,7 +59,7 @@ spec:
             paths:
               - path: /
                 service:
-                  identifier: main
+                  identifier: matrimony
                   port: http
         tls:
           - secretName: ${certificate_name}

@@ -77,7 +77,7 @@ spec:
             policy.gabe565.com/ingress-ingress: "true"
 
     service:
-      main:
+      esphome:
         controller: main
         ports:
           http:
@@ -113,7 +113,7 @@ spec:
             paths:
               - path: /
                 service:
-                  identifier: main
+                  identifier: esphome
                   port: http
         tls:
           - secretName: ${certificate_name}

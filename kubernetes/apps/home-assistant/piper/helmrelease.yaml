@@ -41,7 +41,7 @@ spec:
           terminationGracePeriodSeconds: 0
 
     service:
-      main:
+      piper:
         controller: main
         ports:
           http:

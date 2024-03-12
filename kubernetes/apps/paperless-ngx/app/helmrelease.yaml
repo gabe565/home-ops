@@ -58,7 +58,7 @@ spec:
             policy.gabe565.com/ingress-ingress: "true"
 
     service:
-      main:
+      paperless-ngx:
         controller: main
         ports:
           http:
@@ -105,7 +105,7 @@ spec:
             paths:
               - path: /
                 service:
-                  identifier: main
+                  identifier: paperless-ngx
                   port: http
         tls:
           - secretName: ${certificate_name}

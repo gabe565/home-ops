@@ -48,7 +48,7 @@ spec:
               - 1.0.0.1
 
     service:
-      main:
+      uptime-kuma:
         controller: main
         ports:
           http:
@@ -80,7 +80,7 @@ spec:
             paths:
               - path: /
                 service:
-                  identifier: main
+                  identifier: uptime-kuma
                   port: http
         tls:
           - secretName: ${certificate_name}
@@ -90,7 +90,7 @@ spec:
     serviceMonitor:
       main:
         enabled: true
-        serviceName: main
+        serviceName: uptime-kuma
         endpoints:
          - port: http
            scheme: http

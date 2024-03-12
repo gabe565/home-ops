@@ -54,7 +54,7 @@ spec:
             policy.gabe565.com/ingress-namespace: "true"
 
     service:
-      main:
+      change-detection:
         controller: main
         ports:
           http:
@@ -94,7 +94,7 @@ spec:
             paths:
               - path: /
                 service:
-                  identifier: main
+                  identifier: change-detection
                   port: http
         tls:
           - secretName: ${certificate_name}

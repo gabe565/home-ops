@@ -52,7 +52,7 @@ spec:
             runAsUser: 65534
 
     service:
-      main:
+      vaultwarden:
         controller: main
         ports:
           http:
@@ -74,7 +74,7 @@ spec:
             paths:
               - path: /
                 service: &svc
-                  identifier: main
+                  identifier: vaultwarden
                   port: http
         tls: &tls
           - secretName: ${certificate_name}

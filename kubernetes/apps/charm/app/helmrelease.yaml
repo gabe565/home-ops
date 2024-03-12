@@ -57,7 +57,7 @@ spec:
             fsGroupChangePolicy: OnRootMismatch
 
     service:
-      main:
+      charm:
         controller: main
         type: LoadBalancer
         loadBalancerIP: 192.168.1.224

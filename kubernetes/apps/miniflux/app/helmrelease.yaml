@@ -55,7 +55,7 @@ spec:
             policy.gabe565.com/ingress-prometheus: "true"
 
     service:
-      main:
+      miniflux:
         controller: main
         ports:
           http:
@@ -69,7 +69,7 @@ spec:
             paths:
               - path: /
                 service:
-                  identifier: main
+                  identifier: miniflux
                   port: http
         tls: &tls
           - secretName: ${certificate_name}
@@ -86,7 +86,7 @@ spec:
               - path: /metrics
                 pathType: Exact
                 service:
-                  identifier: main
+                  identifier: miniflux
                   port: http
         tls: *tls
       redirect:
@@ -99,14 +99,14 @@ spec:
               - path: /
                 pathType: Exact
                 service:
-                  identifier: main
+                  identifier: miniflux
                   port: http
         tls: *tls
 
     serviceMonitor:
       main:
         enabled: true
-        serviceName: main
+        serviceName: miniflux
         endpoints:
          - port: http
            scheme: http

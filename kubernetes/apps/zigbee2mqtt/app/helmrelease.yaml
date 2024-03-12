@@ -41,7 +41,7 @@ spec:
             policy.gabe565.com/ingress-ingress: "true"
 
     service:
-      main:
+      zigbee2mqtt:
         controller: main
         ports:
           http:
@@ -61,7 +61,7 @@ spec:
             paths:
               - path: /
                 service:
-                  identifier: main
+                  identifier: zigbee2mqtt
                   port: http
         tls:
           - secretName: ${certificate_name}

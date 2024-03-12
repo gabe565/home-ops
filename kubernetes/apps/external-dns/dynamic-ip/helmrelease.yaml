@@ -41,6 +41,6 @@ spec:
       create: true
 
     service:
-      main:
+      dynamic-ip:
         controller: main
         enabled: false

@@ -42,7 +42,7 @@ spec:
             fsGroupChangePolicy: OnRootMismatch
 
     service:
-      main:
+      radarr:
         controller: main
         ports:
           http:
@@ -69,7 +69,7 @@ spec:
             paths:
               - path: /
                 service:
-                  identifier: main
+                  identifier: radarr
                   port: http
         tls:
           - secretName: ${certificate_name}

@@ -75,7 +75,7 @@ spec:
             policy.gabe565.com/ingress-ingress: "true"
 
     service:
-      main:
+      shlink:
         controller: main
         enabled: false
       api:

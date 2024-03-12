@@ -74,7 +74,7 @@ spec:
               size: 8Gi
 
     service:
-      main:
+      minio:
         controller: main
         ports:
           http:
@@ -98,19 +98,19 @@ spec:
             paths:
               - path: /
                 service:
-                  identifier: main
+                  identifier: minio
                   port: http
           - host: ${s3_url}
             paths:
               - path: /
                 service:
-                  identifier: main
+                  identifier: minio
                   port: s3
           - host: "*.${s3_url}"
             paths:
               - path: /
                 service:
-                  identifier: main
+                  identifier: minio
                   port: s3
         tls:
           - secretName: ${app_certificate_name}
@@ -124,7 +124,7 @@ spec:
     serviceMonitor:
       main:
         enabled: true
-        serviceName: main
+        serviceName: minio
         endpoints:
           - port: s3
             scheme: http

@@ -40,7 +40,7 @@ spec:
             fsGroupChangePolicy: OnRootMismatch
 
     service:
-      main:
+      tautulli:
         controller: main
         ports:
           http:
@@ -69,7 +69,7 @@ spec:
             paths:
               - path: /
                 service:
-                  identifier: main
+                  identifier: tautulli
                   port: http
         tls: &tls
           - secretName: ${certificate_name}
@@ -84,6 +84,6 @@ spec:
             paths:
               - path: /auth/logout
                 service:
-                  identifier: main
+                  identifier: tautulli
                   port: http
         tls: *tls

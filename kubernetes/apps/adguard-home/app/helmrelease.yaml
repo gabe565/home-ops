@@ -88,7 +88,7 @@ spec:
             policy.gabe565.com/egress-namespace: "true"
 
     service:
-      main:
+      adguard-home:
         controller: main
         ports:
           http:

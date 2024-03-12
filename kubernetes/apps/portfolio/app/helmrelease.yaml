@@ -36,7 +36,7 @@ spec:
             fsGroup: 1000
             fsGroupChangePolicy: OnRootMismatch
     service:
-      main:
+      portfolio:
         controller: main
         ports:
           http:
@@ -62,7 +62,7 @@ spec:
             paths:
               - path: /
                 service:
-                  identifier: main
+                  identifier: portfolio
                   port: http
         tls:
           - secretName: ${certificate_name}

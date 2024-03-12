@@ -62,7 +62,7 @@ spec:
         sizeLimit: 32Gi
 
     service:
-      main:
+      plex:
         controller: main
         type: LoadBalancer
         loadBalancerIP: 192.168.1.223
@@ -81,7 +81,7 @@ spec:
             paths:
               - path: /
                 service:
-                  identifier: main
+                  identifier: plex
                   port: http
         tls: &tls
           - secretName: ${certificate_name}
@@ -98,6 +98,6 @@ spec:
               - path: /
                 pathType: Exact
                 service:
-                  identifier: main
+                  identifier: plex
                   port: http
         tls: *tls

@@ -58,7 +58,7 @@ spec:
           - path: /app/data/output
 
     service:
-      main:
+      scanservjs:
         controller: main
         ports:
           http:
@@ -72,7 +72,7 @@ spec:
             paths:
               - path: /
                 service:
-                  identifier: main
+                  identifier: scanservjs
                   port: http
         tls:
           - secretName: ${certificate_name}
