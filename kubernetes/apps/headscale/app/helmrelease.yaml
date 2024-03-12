@@ -146,6 +146,7 @@ spec:
     serviceMonitor:
       main:
         enabled: true
+        serviceName: main
         endpoints:
           - port: metrics
             scheme: http
