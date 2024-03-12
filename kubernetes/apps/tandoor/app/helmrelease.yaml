@@ -80,7 +80,6 @@ spec:
       static:
         enabled: true
         type: emptyDir
-        size: 512Mi
         globalMounts:
           - path: /opt/recipes/staticfiles
             subPath: staticfiles
