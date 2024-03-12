@@ -78,6 +78,7 @@ spec:
         enabled: true
         retain: true
         storageClass: longhorn-ssd
+        accessMode: ReadWriteOnce
         size: 2Gi
 
     service:
