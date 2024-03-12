@@ -32,6 +32,16 @@ spec:
                 secretKeyRef:
                   name: postgresql-app
                   key: uri
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
         pod:
           annotations:
             k8s.v1.cni.cncf.io/networks: ipvlan

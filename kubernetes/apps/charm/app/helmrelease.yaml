@@ -35,15 +35,12 @@ spec:
               CHARM_SERVER_TLS_KEY_FILE: /tls/tls.key
               CHARM_SERVER_ENABLE_METRICS: "true"
             probes:
-              liveness:
+              liveness: &probe
+                enabled: true
                 port: 35356
                 type: AUTO
-              readiness:
-                port: 35356
-                type: AUTO
-              startup:
-                port: 35356
-                type: AUTO
+              readiness: *probe
+              startup: *probe
         pod:
           labels:
             policy.gabe565.com/ingress-ingress: "true"

@@ -41,6 +41,16 @@ spec:
                 secretKeyRef:
                   name: postgresql-app
                   key: password
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
         pod:
           labels:
             policy.gabe565.com/egress-namespace: "true"

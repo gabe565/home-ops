@@ -33,6 +33,16 @@ spec:
                 squat.ai/canon-mp620: 1
               limits:
                 squat.ai/canon-mp620: 1
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
         pod:
           labels:
             policy.gabe565.com/ingress-ingress: "true"

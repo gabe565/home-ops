@@ -34,6 +34,16 @@ spec:
                 cpu: 500m
               limits:
                 cpu: 1000m
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
         pod:
           labels:
             policy.gabe565.com/egress-world: "true"

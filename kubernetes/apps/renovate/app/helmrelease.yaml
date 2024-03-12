@@ -50,6 +50,7 @@ spec:
                 memory: 4Gi
             probes:
               liveness: &probe
+                enabled: true
                 type: HTTP
                 path: /health
               readiness: *probe

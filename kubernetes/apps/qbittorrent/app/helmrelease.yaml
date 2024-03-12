@@ -30,6 +30,16 @@ spec:
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
           vpn:
             image:
               repository: qmcgaw/gluetun

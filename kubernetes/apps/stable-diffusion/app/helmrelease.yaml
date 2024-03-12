@@ -39,8 +39,14 @@ spec:
                 memory: "14Gi"
             probes:
               startup:
+                enabled: true
                 spec:
                   failureThreshold: 90
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
         pod:
           runtimeClassName: nvidia
           tolerations:

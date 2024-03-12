@@ -59,6 +59,16 @@ spec:
               SOCIALACCOUNT_PROVIDERS: |-
                 {"openid_connect":{"SERVERS":[{"id": "$(OAUTH_ID)","name": "$(OAUTH_NAME)","server_url": "$(OAUTH_SERVER_URL)","token_auth_method": "client_secret_basic","APP": {"client_id": "$(OAUTH_CLIENT_ID)","secret": "$(OAUTH_CLIENT_SECRET)"}}]}}
 
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
         pod:
           enableServiceLinks: false
           labels:

@@ -50,6 +50,7 @@ spec:
               - --console-address=:9001
             probes:
               liveness: &probe
+                enabled: true
                 type: HTTP
                 path: /minio/health/live
               readiness: *probe

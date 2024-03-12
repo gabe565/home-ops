@@ -34,6 +34,16 @@ spec:
                 squat.ai/zigbee: 1
               limits:
                 squat.ai/zigbee: 1
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
         pod:
           labels:
             policy.gabe565.com/egress-mosquitto: "true"

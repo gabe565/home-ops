@@ -30,6 +30,16 @@ spec:
             env:
               NUT_EXPORTER_VARIABLES: >-
                 battery.charge,battery.voltage,battery.voltage.nominal,battery.runtime,input.voltage,input.voltage.nominal,ups.load,ups.realpower.nominal,ups.status
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
         pod:
           labels:
             policy.gabe565.com/ingress-namespace: "true"
