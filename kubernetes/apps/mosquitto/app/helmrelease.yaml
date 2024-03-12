@@ -34,11 +34,6 @@ spec:
                 set -eux
                 apk add --no-cache coreutils
                 csplit -f /tls/ca/tls- -b "%1d.crt" -s -z /tls/tls.crt '/-----BEGIN CERTIFICATE-----/' '{1}'
-            volumeMounts:
-              - name: tls
-                mountPath: /tls
-              - name: ca
-                mountPath: /tls/ca
         containers:
           main:
             image:
