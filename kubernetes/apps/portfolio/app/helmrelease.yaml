@@ -36,6 +36,7 @@ spec:
             fsGroupChangePolicy: OnRootMismatch
     service:
       main:
+        controller: main
         ports:
           http:
             port: 80

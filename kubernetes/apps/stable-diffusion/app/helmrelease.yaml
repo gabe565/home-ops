@@ -58,6 +58,7 @@ spec:
 
     service:
       main:
+        controller: main
         ports:
           http:
             port: 7860

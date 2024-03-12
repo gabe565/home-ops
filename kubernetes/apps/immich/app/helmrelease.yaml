@@ -108,6 +108,7 @@ spec:
 
     service:
       main:
+        controller: main
         enabled: false
       machine-learning:
         controller: machine-learning

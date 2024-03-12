@@ -56,6 +56,7 @@ spec:
 
     service:
       main:
+        controller: main
         type: LoadBalancer
         loadBalancerIP: 192.168.1.226
         externalTrafficPolicy: Local

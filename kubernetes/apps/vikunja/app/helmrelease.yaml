@@ -73,6 +73,7 @@ spec:
 
     service:
       main:
+        controller: main
         enabled: false
       api:
         controller: api
