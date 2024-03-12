@@ -19,9 +19,9 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      lidarr:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/onedr0p/lidarr
               tag: 2.1.7.4030@sha256:bd37ebb34dbbe2ba65942aa1f1fe2c0ce1c44718329f0d59bb5ea8f31ae5fce5

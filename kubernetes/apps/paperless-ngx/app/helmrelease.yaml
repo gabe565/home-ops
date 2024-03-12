@@ -19,9 +19,9 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      paperless-ngx:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/paperless-ngx/paperless-ngx
               tag: 2.6.2@sha256:9483e2fff0b50c1b5f90c6e6d085fc3551f9dd7d039c29efb3ace712ba9ee42e

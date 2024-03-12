@@ -19,11 +19,11 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      qbittorrent:
         annotations:
           secret.reloader.stakater.com/reload: qbittorrent-gluetun
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/onedr0p/qbittorrent
               tag: 4.6.3@sha256:79ac03232dcb3e172fe028f66784f88ed8c49bd5c05ef4a443d675681b37d6ec
@@ -63,7 +63,7 @@ spec:
       vuetorrent:
         strategy: RollingUpdate
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/gabe565/vuetorrent
               tag: 2.7.1@sha256:b60a75479e9e4711f1e53ae335f2709c74b182bc61ce754c7e4d5e3102384d11

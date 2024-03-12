@@ -19,9 +19,9 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      headscale:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/juanfont/headscale
               tag: 0.22.3@sha256:aadf29a875bb2ffdf6579869e5759935f7a64b9fd19fcea9d5385c5d7220dc7b
@@ -72,7 +72,7 @@ spec:
       ui:
         strategy: RollingUpdate
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/gurucomputing/headscale-ui
               tag: 2024.02.24-beta1@sha256:4c618a7b6e8b32f5ef6af3c7e6936c63e8568ad9ae8d190dafb2551a64ff40a2

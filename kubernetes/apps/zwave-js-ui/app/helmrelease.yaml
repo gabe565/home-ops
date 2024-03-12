@@ -19,9 +19,9 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      zwave-js-ui:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/zwave-js/zwave-js-ui
               tag: 9.9.1@sha256:ce5278bd998ad8ea2422a6f6c2ec606fcde0d065f6c8e2ae5300a196b4fcf1bb

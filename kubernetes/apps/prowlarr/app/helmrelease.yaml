@@ -19,9 +19,9 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      prowlarr:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/onedr0p/prowlarr
               tag: 1.13.3.4273@sha256:b0972f0885a4a753f04a4b7a1e5f5f030a15d01c14a8d498b85127316e0e29a7

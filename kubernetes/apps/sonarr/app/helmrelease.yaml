@@ -19,9 +19,9 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      sonarr:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/onedr0p/sonarr
               tag: 4.0.2.1183@sha256:e868fc45471cd7d72f006d8e70648c8cbea3ef7c2747177f750f5e6725f4c951

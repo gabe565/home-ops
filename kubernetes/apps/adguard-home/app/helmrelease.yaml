@@ -19,11 +19,11 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      adguard-home:
         type: statefulset
         replicas: 2
         containers:
-          main:
+          app:
             image:
               repository: adguard/adguardhome
               tag: v0.107.45@sha256:52a9c2e7b4c56e5f08e1b2f3196d500c931adadc8917712ff9ef9ea922c030fe
@@ -66,7 +66,7 @@ spec:
                   subPath: work
       sync:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/bakito/adguardhome-sync
               tag: alpine-v0.6.5@sha256:69d5be341361c40d8c67ccaa4ddbd474a26186362b914f4d7800046f41b79a0b

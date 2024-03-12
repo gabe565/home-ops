@@ -21,11 +21,11 @@ spec:
       enableServiceLinks: false
 
     controllers:
-      main:
+      immich:
         enabled: false
       server:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/immich-app/immich-server
               tag: v1.98.2@sha256:5d46c02f171b2c85c5c445ed9ae233d68568b241e14e293b0195d539b98de42a
@@ -53,7 +53,7 @@ spec:
             policy.gabe565.com/ingress-namespace: "true"
       microservices:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/immich-app/immich-server
               tag: v1.98.2@sha256:5d46c02f171b2c85c5c445ed9ae233d68568b241e14e293b0195d539b98de42a
@@ -72,7 +72,7 @@ spec:
             policy.gabe565.com/ingress-namespace: "true"
       machine-learning:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/immich-app/immich-machine-learning
               tag: v1.98.2@sha256:ac21ed6160c106eb26f704626d1fbf693dd74640131afd4d2ccad5db26aa98c5

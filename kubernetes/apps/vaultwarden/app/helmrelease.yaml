@@ -19,10 +19,10 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      vaultwarden:
         strategy: Recreate
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/dani-garcia/vaultwarden
               tag: 1.30.5-alpine@sha256:6f6ec220ed300e1a11475a91d270985915083512f9fb60c1c25783faaa66eef5

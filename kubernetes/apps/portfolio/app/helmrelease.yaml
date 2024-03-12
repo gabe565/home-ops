@@ -19,10 +19,10 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      portfolio:
         strategy: Recreate
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/gabe565/portfolio
               tag: 2.2.1 #yampl {{ .tag }}

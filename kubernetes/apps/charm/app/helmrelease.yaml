@@ -19,9 +19,9 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      charm:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/charmbracelet/charm
               tag: v0.12.6@sha256:1eaa64a79550100ad4b1e9ffe2bd5c4e797cfebcdfbf7b91f854f0a0634d5f2c

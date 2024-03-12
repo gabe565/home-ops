@@ -19,9 +19,9 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      linkding:
         containers:
-          main:
+          app:
             image:
               repository: sissbruecker/linkding
               tag: 1.24.0-alpine@sha256:24c35bb3a69e19ea0e2f6747c68c73d1b81deef96521f3ef0d0f03fb6c6871bb

@@ -19,10 +19,10 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      miniflux:
         strategy: RollingUpdate
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/miniflux/miniflux
               tag: 2.1.1@sha256:762b201c26c673fa71ab569a566536daa761a2e17bf56c7a059c1d44426618d2

@@ -20,9 +20,9 @@ spec:
   timeout: 15m
   values:
     controllers:
-      main:
+      stable-diffusion-webui:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/gabe565/stable-diffusion/webui
               tag: 1.8.0@sha256:94252039f9e728ef578823872a1c931c46432687a39d4da6de9c1fd0c5e01363

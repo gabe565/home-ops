@@ -19,9 +19,9 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      home-assistant:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/home-assistant/home-assistant
               tag: 2024.3.0@sha256:0471da64037a0d0c82b35af23fe632373324bac01decd3475921c2796f2a9968
@@ -52,7 +52,7 @@ spec:
                         app.kubernetes.io/name: home-assistant
       code:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/coder/code-server
               tag: 4.22.0@sha256:de0c76895365456d651331ea3002befab50df31b6a9996d05b7c18c8734e5e4e
