@@ -146,7 +146,8 @@ spec:
             paths:
               - path: /
                 service:
-                  name: origin
+                  identifier: origin
+                  port: http
         tls:
           - secretName: ${certificate_name}
             hosts:
@@ -159,4 +160,5 @@ spec:
             paths:
               - path: /
                 service:
-                  name: replica
+                  identifier: replica
+                  port: http

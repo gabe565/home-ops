@@ -132,7 +132,8 @@ spec:
             paths:
               - path: /
                 service:
-                  name: server
+                  identifier: server
+                  port: http
         tls:
           - secretName: ${certificate_name}
             hosts:

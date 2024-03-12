@@ -73,7 +73,8 @@ spec:
             paths:
               - path: /
                 service: &svc
-                  name: main
+                  identifier: main
+                  port: http
         tls: &tls
           - secretName: ${certificate_name}
             hosts:

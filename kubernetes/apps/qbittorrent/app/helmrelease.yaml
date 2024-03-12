@@ -119,7 +119,8 @@ spec:
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: main
+                  port: http
         tls:
           - secretName: ${certificate_name}
             hosts:
@@ -136,10 +137,12 @@ spec:
             paths:
               - path: /
                 service:
-                  name: vuetorrent
+                  identifier: vuetorrent
+                  port: http
               - path: /api
                 service:
-                  name: main
+                  identifier: main
+                  port: http
         tls: &vuetorrent-tls
           - secretName: ${certificate_name}
             hosts:
@@ -156,5 +159,6 @@ spec:
               - path: /sw.js
                 type: Exact
                 service:
-                  name: vuetorrent
+                  identifier: vuetorrent
+                  port: http
         tls: *vuetorrent-tls

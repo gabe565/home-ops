@@ -97,18 +97,19 @@ spec:
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: main
+                  port: http
           - host: ${s3_url}
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: main
                   port: s3
           - host: "*.${s3_url}"
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: main
                   port: s3
         tls:
           - secretName: ${app_certificate_name}

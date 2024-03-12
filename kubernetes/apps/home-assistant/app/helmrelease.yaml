@@ -102,7 +102,8 @@ spec:
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: main
+                  port: http
         tls:
           - secretName: ${certificate_name}
             hosts:
@@ -119,7 +120,8 @@ spec:
               - path: /
                 pathType: Exact
                 service:
-                  name: main
+                  identifier: main
+                  port: http
         tls:
           - secretName: ${old_certificate_name}
             hosts:
@@ -134,7 +136,8 @@ spec:
             paths:
               - path: /
                 service:
-                  name: code
+                  identifier: code
+                  port: http
         tls:
           - secretName: ${certificate_name}
             hosts:

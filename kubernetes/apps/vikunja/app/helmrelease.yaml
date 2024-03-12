@@ -116,7 +116,8 @@ spec:
             paths:
               - path: /api
                 service: &service
-                  name: api
+                  identifier: api
+                  port: http
               - path: /dav
                 service: *service
               - path: /.well-known
@@ -132,7 +133,8 @@ spec:
             paths:
               - path: /
                 service:
-                  name: frontend
+                  identifier: frontend
+                  port: http
         tls: *tls
 
     secrets:

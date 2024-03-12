@@ -73,7 +73,8 @@ spec:
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: main
+                  port: http
         tls: &tls
           - secretName: ${certificate_name}
             hosts:
@@ -90,5 +91,6 @@ spec:
               - path: /sw.js
                 pathType: Exact
                 service:
-                  name: main
+                  identifier: main
+                  port: http
         tls: *tls

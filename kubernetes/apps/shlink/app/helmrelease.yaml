@@ -98,7 +98,8 @@ spec:
             paths:
               - path: /
                 service:
-                  name: api
+                  identifier: api
+                  port: http
         tls:
           - secretName: ${certificate_name}
             hosts:
@@ -111,7 +112,8 @@ spec:
             paths:
               - path: /
                 service:
-                  name: frontend
+                  identifier: frontend
+                  port: http
         tls: &admin-tls
           - secretName: ${certificate_name}
             hosts:
@@ -130,7 +132,8 @@ spec:
               - path: /
                 pathType: Exact
                 service:
-                  name: frontend
+                  identifier: frontend
+                  port: http
         tls: *admin-tls
       frontend-servers-json:
         enabled: true
@@ -159,7 +162,8 @@ spec:
               - path: /servers.json
                 pathType: Exact
                 service:
-                  name: frontend
+                  identifier: frontend
+                  port: http
         tls: *admin-tls
       remove-sw:
         enabled: true
@@ -173,7 +177,8 @@ spec:
               - path: /service-worker.js
                 pathType: Exact
                 service:
-                  name: frontend
+                  identifier: frontend
+                  port: http
         tls: *admin-tls
 
     secrets:

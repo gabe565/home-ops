@@ -118,7 +118,8 @@ spec:
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: main
+                  port: http
         tls: &tls
           - secretName: ${certificate_name}
             hosts:
@@ -130,7 +131,8 @@ spec:
             paths:
               - path: /web
                 service:
-                  name: ui
+                  identifier: ui
+                  port: http
         tls: *tls
 
     secrets:
