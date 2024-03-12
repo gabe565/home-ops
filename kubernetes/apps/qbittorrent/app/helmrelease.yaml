@@ -89,8 +89,8 @@ spec:
         accessMode: ReadWriteOnce
         size: 1Gi
         advancedMounts:
-          main:
-            main:
+          qbittorrent:
+            app:
               - path: /config
       downloads:
         enabled: true
@@ -98,8 +98,8 @@ spec:
         server: 100.64.0.4
         path: /volume1/media/Downloads
         advancedMounts:
-          main:
-            main:
+          qbittorrent:
+            app:
               - path: /downloads
 
     service:

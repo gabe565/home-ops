@@ -19,8 +19,6 @@ spec:
     mode: enabled
   values:
     controllers:
-      vikunja:
-        enabled: false
       api:
         containers:
           app:
@@ -95,7 +93,7 @@ spec:
         size: 2Gi
         advancedMounts:
           api:
-            main:
+            app:
               - path: /app/vikunja/files
       api-config:
         enabled: true
@@ -103,7 +101,7 @@ spec:
         name: vikunja-api-config
         advancedMounts:
           api:
-            main:
+            app:
               - path: /etc/vikunja/config.yaml
                 subPath: config.yaml
 

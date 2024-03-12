@@ -81,16 +81,16 @@ spec:
         accessMode: ReadWriteOnce
         size: 64Mi
         advancedMounts:
-          main:
-            main:
+          mosquitto:
+            app:
               - path: /mosquitto/data
       config:
         enabled: true
         type: configMap
         name: mosquitto-config
         advancedMounts:
-          main:
-            main:
+          mosquitto:
+            app:
               - path: /mosquitto/config/mosquitto.conf
                 subPath: mosquitto.conf
       auth:
@@ -98,8 +98,8 @@ spec:
         type: secret
         name: mosquitto-auth
         advancedMounts:
-          main:
-            main:
+          mosquitto:
+            app:
               - path: /mosquitto/config/passwd
                 subPath: passwd
               - path: /mosquitto/config/acl

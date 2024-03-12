@@ -83,8 +83,8 @@ spec:
         size: 1Gi
         retain: true
         advancedMounts:
-          main:
-            main:
+          change-detection:
+            app:
               - path: /datastore
 
     ingress:

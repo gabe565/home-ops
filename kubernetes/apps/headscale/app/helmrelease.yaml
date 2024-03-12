@@ -112,8 +112,8 @@ spec:
         type: secret
         name: headscale-config
         advancedMounts:
-          main:
-            main:
+          headscale:
+            app:
               - path: /etc/headscale/config.yaml
                 subPath: config.yaml
               - path: /etc/headscale/private.key
