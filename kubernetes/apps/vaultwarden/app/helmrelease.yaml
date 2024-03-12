@@ -67,7 +67,7 @@ spec:
         size: 256Mi
 
     ingress:
-      main:
+      vaultwarden:
         enabled: true
         hosts:
           - host: ${app_url}

@@ -65,7 +65,7 @@ spec:
             port: 8080
 
     ingress:
-      main:
+      scanservjs:
         enabled: true
         hosts:
           - host: ${app_url}

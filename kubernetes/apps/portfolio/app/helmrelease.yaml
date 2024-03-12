@@ -49,7 +49,7 @@ spec:
         accessMode: ReadWriteOnce
         size: 256Mi
     ingress:
-      main:
+      portfolio:
         enabled: true
         annotations:
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"

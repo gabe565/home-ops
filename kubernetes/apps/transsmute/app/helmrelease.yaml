@@ -47,7 +47,7 @@ spec:
             port: 80
 
     ingress:
-      main:
+      transsmute:
         enabled: true
         hosts:
           - host: ${app_url}

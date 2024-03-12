@@ -112,7 +112,7 @@ spec:
                 subPath: noise_private.key
 
     ingress:
-      main:
+      headscale:
         enabled: true
         hosts:
           - host: ${app_url}

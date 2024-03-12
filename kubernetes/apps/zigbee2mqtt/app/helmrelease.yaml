@@ -54,7 +54,7 @@ spec:
         size: 128Mi
 
     ingress:
-      main:
+      zigbee2mqtt:
         enabled: true
         hosts:
           - host: ${app_url}

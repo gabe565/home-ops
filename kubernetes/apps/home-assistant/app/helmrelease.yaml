@@ -95,7 +95,7 @@ spec:
             port: 8080
 
     ingress:
-      main:
+      home-assistant:
         enabled: true
         annotations:
           nginx.ingress.kubernetes.io/from-to-www-redirect: "true"

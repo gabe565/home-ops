@@ -52,7 +52,7 @@ spec:
         size: 2Gi
 
     ingress:
-      main:
+      prowlarr:
         enabled: true
         hosts:
           - host: ${app_url}

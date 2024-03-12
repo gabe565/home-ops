@@ -90,7 +90,7 @@ spec:
             port: 8080
 
     ingress:
-      main:
+      shlink:
         enabled: true
         annotations:
           nginx.ingress.kubernetes.io/from-to-www-redirect: "true"

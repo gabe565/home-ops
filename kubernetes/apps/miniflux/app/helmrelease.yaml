@@ -62,7 +62,7 @@ spec:
             port: 8080
 
     ingress:
-      main:
+      miniflux:
         enabled: true
         hosts:
           - host: ${app_url}

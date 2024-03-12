@@ -53,7 +53,7 @@ spec:
         size: 1Gi
 
     ingress:
-      main:
+      tautulli:
         enabled: true
         annotations:
           nginx.ingress.kubernetes.io/auth-url: |-

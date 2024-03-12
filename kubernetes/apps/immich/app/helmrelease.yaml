@@ -124,7 +124,7 @@ spec:
             port: 3001
 
     ingress:
-      main:
+      immich:
         enabled: true
         annotations:
           nginx.ingress.kubernetes.io/proxy-body-size: "0"

@@ -72,7 +72,7 @@ spec:
             port: 32400
 
     ingress:
-      main:
+      plex:
         enabled: true
         annotations:
           nginx.ingress.kubernetes.io/from-to-www-redirect: "true"

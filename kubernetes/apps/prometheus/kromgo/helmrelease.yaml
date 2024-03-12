@@ -60,7 +60,7 @@ spec:
             port: 8080
 
     ingress:
-      main:
+      kromgo:
         enabled: true
         hosts:
           - host: kromgo.gabe565.com

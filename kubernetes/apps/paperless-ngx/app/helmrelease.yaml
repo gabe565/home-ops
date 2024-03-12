@@ -88,7 +88,7 @@ spec:
         path: /volume1/documents/paperless/consume
 
     ingress:
-      main:
+      paperless-ngx:
         enabled: true
         annotations:
           nginx.ingress.kubernetes.io/auth-url: |-

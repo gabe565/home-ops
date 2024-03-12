@@ -50,7 +50,7 @@ spec:
         retain: true
 
     ingress:
-      main:
+      matrimony:
         enabled: true
         annotations:
           nginx.ingress.kubernetes.io/from-to-www-redirect: "true"

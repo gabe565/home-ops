@@ -83,7 +83,7 @@ spec:
             port: 9000
 
     ingress:
-      main:
+      minio:
         enabled: true
         annotations:
           nginx.ingress.kubernetes.io/custom-http-errors: "501,502,503,504"

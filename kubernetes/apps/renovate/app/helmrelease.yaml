@@ -81,7 +81,7 @@ spec:
           - path: /tmp/renovate
 
     ingress:
-      main:
+      renovate:
         enabled: true
         hosts:
           - host: ${app_url}

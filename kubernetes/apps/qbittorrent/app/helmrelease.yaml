@@ -105,7 +105,7 @@ spec:
             port: 80
 
     ingress:
-      main:
+      qbittorrent:
         enabled: true
         annotations: &annotations
           nginx.ingress.kubernetes.io/auth-url:

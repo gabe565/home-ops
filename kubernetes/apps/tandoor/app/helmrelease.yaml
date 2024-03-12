@@ -88,7 +88,7 @@ spec:
             subPath: django_js_reverse
 
     ingress:
-      main:
+      tandoor:
         enabled: true
         annotations:
           nginx.ingress.kubernetes.io/from-to-www-redirect: "true"

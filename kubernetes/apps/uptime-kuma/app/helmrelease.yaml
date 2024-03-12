@@ -64,7 +64,7 @@ spec:
           - path: /app/data
 
     ingress:
-      main:
+      uptime-kuma:
         enabled: true
         annotations:
           nginx.ingress.kubernetes.io/auth-url: |-

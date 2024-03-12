@@ -80,7 +80,7 @@ spec:
           - path: /app/config/logs
 
     ingress:
-      main:
+      homepage:
         enabled: true
         annotations:
           nginx.ingress.kubernetes.io/auth-url: |-

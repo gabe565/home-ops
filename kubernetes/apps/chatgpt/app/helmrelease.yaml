@@ -57,7 +57,7 @@ spec:
             subPath: config.yaml
 
     ingress:
-      main:
+      chatgpt:
         enabled: true
         hosts:
           - host: ${app_url}

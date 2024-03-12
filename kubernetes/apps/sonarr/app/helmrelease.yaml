@@ -62,7 +62,7 @@ spec:
           - path: /mnt/media
 
     ingress:
-      main:
+      sonarr:
         enabled: true
         hosts:
           - host: ${app_url}

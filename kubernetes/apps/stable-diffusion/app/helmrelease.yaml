@@ -85,7 +85,7 @@ spec:
           - path: /app/outputs
 
     ingress:
-      main:
+      stable-diffusion-webui:
         enabled: true
         hosts:
           - host: ${app_url}

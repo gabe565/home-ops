@@ -59,7 +59,7 @@ spec:
           - path: /app/config/cache
 
     ingress:
-      main:
+      overseerr:
         enabled: true
         hosts:
           - host: ${app_url}

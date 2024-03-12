@@ -58,7 +58,7 @@ spec:
             port: 3000
 
     ingress:
-      main:
+      zwave-js-ui:
         enabled: true
         annotations:
           nginx.ingress.kubernetes.io/auth-url: |-

@@ -63,7 +63,7 @@ spec:
           - path: /etc/linkding/data
 
     ingress:
-      main:
+      linkding:
         enabled: true
         hosts:
           - host: ${app_url}

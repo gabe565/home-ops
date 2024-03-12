@@ -78,7 +78,7 @@ spec:
               - path: /datastore
 
     ingress:
-      main:
+      change-detection:
         enabled: true
         annotations:
           nginx.ingress.kubernetes.io/auth-url: |-
