@@ -85,9 +85,14 @@ spec:
           - secretName: ${certificate_name}
             hosts:
               - ${app_url}
-      status:
-        enabled: true
 
     serviceMonitor:
       main:
         enabled: true
+        serviceName: main
+        endpoints:
+         - port: http
+           scheme: http
+           path: /metrics
+           interval: 1m
+           scrapeTimeout: 10s
