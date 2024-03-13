@@ -42,5 +42,5 @@ spec:
 
     service:
       dynamic-ip:
-        controller: main
+        controller: dynamic-ip
         enabled: false

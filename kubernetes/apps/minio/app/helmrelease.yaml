@@ -76,7 +76,7 @@ spec:
 
     service:
       minio:
-        controller: main
+        controller: minio
         ports:
           http:
             port: 9001

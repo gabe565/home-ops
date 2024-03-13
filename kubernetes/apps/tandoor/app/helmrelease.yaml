@@ -82,7 +82,7 @@ spec:
 
     service:
       tandoor:
-        controller: main
+        controller: tandoor
         ports:
           http:
             port: 8080

@@ -53,7 +53,7 @@ spec:
 
     service:
       sonarr:
-        controller: main
+        controller: sonarr
         ports:
           http:
             port: 8989

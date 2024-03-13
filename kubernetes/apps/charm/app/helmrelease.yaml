@@ -55,7 +55,7 @@ spec:
 
     service:
       charm:
-        controller: main
+        controller: charm
         type: LoadBalancer
         loadBalancerIP: 192.168.1.224
         externalTrafficPolicy: Local
@@ -68,7 +68,7 @@ spec:
           ssh:
             port: 35353
       private:
-        controller: main
+        controller: charm
         ports:
           metrics:
             port: 35355

@@ -50,7 +50,7 @@ spec:
 
     service:
       prowlarr:
-        controller: main
+        controller: prowlarr
         ports:
           http:
             port: 9696

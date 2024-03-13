@@ -53,7 +53,7 @@ spec:
 
     service:
       radarr:
-        controller: main
+        controller: radarr
         ports:
           http:
             port: 7878

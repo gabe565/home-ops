@@ -62,7 +62,7 @@ spec:
 
     service:
       renovate:
-        controller: main
+        controller: renovate
         ports:
           http:
             port: 8080

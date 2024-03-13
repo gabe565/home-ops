@@ -72,7 +72,7 @@ spec:
 
     service:
       vikunja:
-        controller: main
+        controller: vikunja
         enabled: false
       api:
         controller: api

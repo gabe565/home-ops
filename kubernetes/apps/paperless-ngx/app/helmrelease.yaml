@@ -69,7 +69,7 @@ spec:
 
     service:
       paperless-ngx:
-        controller: main
+        controller: paperless-ngx
         ports:
           http:
             port: 8000

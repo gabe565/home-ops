@@ -52,7 +52,7 @@ spec:
 
     service:
       piper:
-        controller: main
+        controller: piper
         ports:
           http:
             port: 10200

@@ -94,7 +94,7 @@ spec:
 
     service:
       home-assistant:
-        controller: main
+        controller: home-assistant
         ports:
           http:
             port: 8123

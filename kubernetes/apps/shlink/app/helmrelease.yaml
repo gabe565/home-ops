@@ -76,7 +76,7 @@ spec:
 
     service:
       shlink:
-        controller: main
+        controller: shlink
         enabled: false
       api:
         controller: api

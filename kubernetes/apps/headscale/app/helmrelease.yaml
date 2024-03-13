@@ -94,7 +94,7 @@ spec:
 
     service:
       headscale:
-        controller: main
+        controller: headscale
         ports:
           http:
             port: 8080

@@ -63,7 +63,7 @@ spec:
 
     service:
       vaultwarden:
-        controller: main
+        controller: vaultwarden
         ports:
           http:
             port: 8080

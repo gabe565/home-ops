@@ -51,7 +51,7 @@ spec:
 
     service:
       transsmute:
-        controller: main
+        controller: transsmute
         ports:
           http:
             port: 80

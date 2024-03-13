@@ -59,7 +59,7 @@ spec:
 
     service:
       uptime-kuma:
-        controller: main
+        controller: uptime-kuma
         ports:
           http:
             port: 3001

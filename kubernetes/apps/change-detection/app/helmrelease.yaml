@@ -65,7 +65,7 @@ spec:
 
     service:
       change-detection:
-        controller: main
+        controller: change-detection
         ports:
           http:
             port: 5000

@@ -104,7 +104,7 @@ spec:
 
     service:
       qbittorrent:
-        controller: main
+        controller: qbittorrent
         ports:
           http:
             port: 8080

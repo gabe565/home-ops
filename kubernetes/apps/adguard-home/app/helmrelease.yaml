@@ -94,7 +94,7 @@ spec:
 
     service:
       adguard-home:
-        controller: main
+        controller: adguard-home
         ports:
           http:
             port: 3000
@@ -104,14 +104,14 @@ spec:
           http:
             port: 8080
       origin: &origin-http
-        controller: main
+        controller: adguard-home
         extraSelectorLabels:
           apps.kubernetes.io/pod-index: "0"
         ports:
           http:
             port: 3000
       origin-dns: &origin-dns
-        controller: main
+        controller: adguard-home
         extraSelectorLabels:
           apps.kubernetes.io/pod-index: "0"
         type: LoadBalancer

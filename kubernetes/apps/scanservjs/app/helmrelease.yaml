@@ -69,7 +69,7 @@ spec:
 
     service:
       scanservjs:
-        controller: main
+        controller: scanservjs
         ports:
           http:
             port: 8080

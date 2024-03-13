@@ -56,7 +56,7 @@ spec:
 
     service:
       memos:
-        controller: main
+        controller: memos
         ports:
           http:
             port: 5230

@@ -58,7 +58,7 @@ spec:
 
     service:
       linkding:
-        controller: main
+        controller: linkding
         ports:
           http:
             port: 9090

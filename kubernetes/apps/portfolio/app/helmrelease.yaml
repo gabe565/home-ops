@@ -47,7 +47,7 @@ spec:
             fsGroupChangePolicy: OnRootMismatch
     service:
       portfolio:
-        controller: main
+        controller: portfolio
         ports:
           http:
             port: 80

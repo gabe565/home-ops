@@ -107,7 +107,7 @@ spec:
 
     service:
       immich:
-        controller: main
+        controller: immich
         enabled: false
       machine-learning:
         controller: machine-learning

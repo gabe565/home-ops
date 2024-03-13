@@ -84,11 +84,11 @@ spec:
 
     service:
       kube-vip:
-        controller: main
+        controller: kube-vip
         enabled: false
       metrics:
         enabled: true
-        controller: main
+        controller: kube-vip
         ports:
           http:
             port: 2112

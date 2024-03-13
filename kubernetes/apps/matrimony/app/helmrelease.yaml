@@ -46,7 +46,7 @@ spec:
 
     service:
       matrimony:
-        controller: main
+        controller: matrimony
         ports:
           http:
             port: 80

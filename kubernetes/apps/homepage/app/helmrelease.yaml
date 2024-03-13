@@ -71,7 +71,7 @@ spec:
 
     service:
       homepage:
-        controller: main
+        controller: homepage
         ports:
           http:
             port: 3000

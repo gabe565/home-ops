@@ -52,7 +52,7 @@ spec:
 
     service:
       zigbee2mqtt:
-        controller: main
+        controller: zigbee2mqtt
         ports:
           http:
             port: 8080

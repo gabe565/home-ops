@@ -65,7 +65,7 @@ spec:
 
     service:
       stable-diffusion-webui:
-        controller: main
+        controller: stable-diffusion-webui
         ports:
           http:
             port: 7860

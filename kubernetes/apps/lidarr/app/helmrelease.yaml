@@ -53,7 +53,7 @@ spec:
 
     service:
       lidarr:
-        controller: main
+        controller: lidarr
         ports:
           http:
             port: 8686

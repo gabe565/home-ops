@@ -48,7 +48,7 @@ spec:
 
     service:
       nut-exporter:
-        controller: main
+        controller: nut-exporter
         ports:
           http:
             port: 9199
