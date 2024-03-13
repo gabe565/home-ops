@@ -83,10 +83,8 @@ spec:
       create: true
 
     service:
-      kube-vip:
-        controller: kube-vip
-        enabled: false
       metrics:
+        nameOverride: metrics
         enabled: true
         controller: kube-vip
         ports:

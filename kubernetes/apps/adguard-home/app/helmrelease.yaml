@@ -34,6 +34,7 @@ spec:
               liveness: &probe
                 enabled: true
                 type: HTTP
+                port: 3000
                 path: /login.html
               readiness: *probe
               startup:

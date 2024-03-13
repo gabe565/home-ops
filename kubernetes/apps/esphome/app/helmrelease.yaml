@@ -53,7 +53,7 @@ spec:
               readiness:
                 enabled: true
         pod:
-          terminationGracePeriodSeconds: 0
+          terminationGracePeriodSeconds: 1
           dnsConfig:
             nameservers:
               - 192.168.1.221

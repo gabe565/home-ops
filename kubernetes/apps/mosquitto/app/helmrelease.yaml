@@ -45,15 +45,15 @@ spec:
             env:
               TZ: America/Chicago
             probes:
-              startup:
+              liveness: &probe
                 enabled: true
+                port: 1883
+              readiness: *probe
+              startup:
+                <<: *probe
                 spec:
                   failureThreshold: 30
                   periodSeconds: 5
-              liveness:
-                enabled: true
-              readiness:
-                enabled: true
         pod:
           labels:
             policy.gabe565.com/egress-world: "true"

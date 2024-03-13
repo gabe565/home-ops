@@ -40,7 +40,12 @@ spec:
                 port: 35356
                 type: AUTO
               readiness: *probe
-              startup: *probe
+              startup:
+                <<: *probe
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+
         pod:
           labels:
             policy.gabe565.com/ingress-ingress: "true"

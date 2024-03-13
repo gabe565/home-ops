@@ -61,7 +61,7 @@ spec:
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-ingress: "true"
-          terminationGracePeriodSeconds: 0
+          terminationGracePeriodSeconds: 1
       frontend:
         strategy: RollingUpdate
         containers:
