@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -7,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.0.3
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -18,22 +19,33 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      chatgpt:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/cogentapps/chat-with-gpt
               tag: release@sha256:c9161420b83cbf2c448cb5a0376ba6fd29337efa254eafe3f29fefe52618c833
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
         pod:
           labels:
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-ingress: "true"
 
     service:
-      main:
+      chatgpt:
+        controller: chatgpt
         ports:
           http:
             port: 3000
@@ -55,14 +67,15 @@ spec:
             subPath: config.yaml
 
     ingress:
-      main:
+      chatgpt:
         enabled: true
         hosts:
           - host: ${app_url}
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: chatgpt
+                  port: http
         tls:
           - secretName: ${certificate_name}
             hosts:

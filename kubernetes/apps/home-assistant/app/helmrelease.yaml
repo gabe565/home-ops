@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -7,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.0.3
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -18,9 +19,9 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      home-assistant:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/home-assistant/home-assistant
               tag: 2024.3.0@sha256:0471da64037a0d0c82b35af23fe632373324bac01decd3475921c2796f2a9968
@@ -31,6 +32,16 @@ spec:
                 secretKeyRef:
                   name: postgresql-app
                   key: uri
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
         pod:
           annotations:
             k8s.v1.cni.cncf.io/networks: ipvlan
@@ -51,7 +62,7 @@ spec:
                         app.kubernetes.io/name: home-assistant
       code:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/coder/code-server
               tag: 4.22.0@sha256:de0c76895365456d651331ea3002befab50df31b6a9996d05b7c18c8734e5e4e
@@ -78,10 +89,12 @@ spec:
         enabled: true
         retain: true
         storageClass: longhorn-ssd
+        accessMode: ReadWriteOnce
         size: 2Gi
 
     service:
-      main:
+      home-assistant:
+        controller: home-assistant
         ports:
           http:
             port: 8123
@@ -92,7 +105,7 @@ spec:
             port: 8080
 
     ingress:
-      main:
+      home-assistant:
         enabled: true
         annotations:
           nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
@@ -101,7 +114,8 @@ spec:
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: home-assistant
+                  port: http
         tls:
           - secretName: ${certificate_name}
             hosts:
@@ -118,7 +132,8 @@ spec:
               - path: /
                 pathType: Exact
                 service:
-                  name: main
+                  identifier: home-assistant
+                  port: http
         tls:
           - secretName: ${old_certificate_name}
             hosts:
@@ -133,7 +148,8 @@ spec:
             paths:
               - path: /
                 service:
-                  name: code
+                  identifier: code
+                  port: http
         tls:
           - secretName: ${certificate_name}
             hosts:

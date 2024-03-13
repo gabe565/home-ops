@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -7,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.0.3
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -18,15 +19,25 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      tautulli:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/onedr0p/tautulli
               tag: 2.13.4@sha256:6651957d4678206e0dc9d389f23d88067ffc40dbc601893140daa45ffca8b728
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
         pod:
           labels:
             policy.gabe565.com/egress-namespace: "true"
@@ -39,7 +50,8 @@ spec:
             fsGroupChangePolicy: OnRootMismatch
 
     service:
-      main:
+      tautulli:
+        controller: tautulli
         ports:
           http:
             port: 8181
@@ -51,7 +63,7 @@ spec:
         size: 1Gi
 
     ingress:
-      main:
+      tautulli:
         enabled: true
         annotations:
           nginx.ingress.kubernetes.io/auth-url: |-
@@ -67,7 +79,8 @@ spec:
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: tautulli
+                  port: http
         tls: &tls
           - secretName: ${certificate_name}
             hosts:
@@ -81,5 +94,6 @@ spec:
             paths:
               - path: /auth/logout
                 service:
-                  name: main
+                  identifier: tautulli
+                  port: http
         tls: *tls

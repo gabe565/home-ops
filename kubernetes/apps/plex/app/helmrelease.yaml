@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -7,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.0.3
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -18,9 +19,9 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      plex:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/onedr0p/plex
               tag: 1.32.8.7639-fb6452ebf@sha256:97bf4a8eac34de4b0df78e4fc3e2b501187161a3a264fa2b220bd51b0f89ba77
@@ -33,6 +34,16 @@ spec:
               limits:
                 gpu.intel.com/i915: 1
                 memory: 4096Mi
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
         pod:
           labels:
             policy.gabe565.com/egress-world: "true"
@@ -61,7 +72,8 @@ spec:
         sizeLimit: 32Gi
 
     service:
-      main:
+      plex:
+        controller: plex
         type: LoadBalancer
         loadBalancerIP: 192.168.1.223
         externalTrafficPolicy: Local
@@ -70,7 +82,7 @@ spec:
             port: 32400
 
     ingress:
-      main:
+      plex:
         enabled: true
         annotations:
           nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
@@ -79,7 +91,8 @@ spec:
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: plex
+                  port: http
         tls: &tls
           - secretName: ${certificate_name}
             hosts:
@@ -95,5 +108,6 @@ spec:
               - path: /
                 pathType: Exact
                 service:
-                  name: main
+                  identifier: plex
+                  port: http
         tls: *tls

@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -7,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.0.3
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -19,9 +20,9 @@ spec:
   timeout: 15m
   values:
     controllers:
-      main:
+      stable-diffusion-webui:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/gabe565/stable-diffusion/webui
               tag: 1.8.0@sha256:94252039f9e728ef578823872a1c931c46432687a39d4da6de9c1fd0c5e01363
@@ -38,8 +39,14 @@ spec:
                 memory: "14Gi"
             probes:
               startup:
+                enabled: true
                 spec:
                   failureThreshold: 90
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
         pod:
           runtimeClassName: nvidia
           tolerations:
@@ -52,12 +59,13 @@ spec:
           labels:
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-ingress: "true"
-          terminationGracePeriodSeconds: "0"
+          terminationGracePeriodSeconds: 1
           securityContext:
             fsGroup: 1000
 
     service:
-      main:
+      stable-diffusion-webui:
+        controller: stable-diffusion-webui
         ports:
           http:
             port: 7860
@@ -83,14 +91,15 @@ spec:
           - path: /app/outputs
 
     ingress:
-      main:
+      stable-diffusion-webui:
         enabled: true
         hosts:
           - host: ${app_url}
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: stable-diffusion-webui
+                  port: http
         tls:
           - secretName: ${certificate_name}
             hosts:

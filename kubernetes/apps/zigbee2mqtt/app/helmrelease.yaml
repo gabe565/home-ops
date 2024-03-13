@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -7,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.0.3
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -18,9 +19,9 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      zigbee2mqtt:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/koenkk/zigbee2mqtt
               tag: 1.36.0@sha256:4de1ee53d67a9b4556045c34a2722bfd2348dabbefcb792e862643104d3e9fd0
@@ -33,6 +34,16 @@ spec:
                 squat.ai/zigbee: 1
               limits:
                 squat.ai/zigbee: 1
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
         pod:
           labels:
             policy.gabe565.com/egress-mosquitto: "true"
@@ -40,7 +51,8 @@ spec:
             policy.gabe565.com/ingress-ingress: "true"
 
     service:
-      main:
+      zigbee2mqtt:
+        controller: zigbee2mqtt
         ports:
           http:
             port: 8080
@@ -52,14 +64,15 @@ spec:
         size: 128Mi
 
     ingress:
-      main:
+      zigbee2mqtt:
         enabled: true
         hosts:
           - host: ${app_url}
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: zigbee2mqtt
+                  port: http
         tls:
           - secretName: ${certificate_name}
             hosts:

@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -7,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.0.3
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -18,15 +19,25 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      prowlarr:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/onedr0p/prowlarr
               tag: 1.13.3.4273@sha256:b0972f0885a4a753f04a4b7a1e5f5f030a15d01c14a8d498b85127316e0e29a7
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
         pod:
           labels:
             policy.gabe565.com/egress-qbittorrent: "true"
@@ -38,7 +49,8 @@ spec:
             fsGroupChangePolicy: OnRootMismatch
 
     service:
-      main:
+      prowlarr:
+        controller: prowlarr
         ports:
           http:
             port: 9696
@@ -50,14 +62,15 @@ spec:
         size: 2Gi
 
     ingress:
-      main:
+      prowlarr:
         enabled: true
         hosts:
           - host: ${app_url}
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: prowlarr
+                  port: http
         tls:
           - secretName: ${certificate_name}
             hosts:

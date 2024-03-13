@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -7,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.0.3
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -18,9 +19,9 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      paperless-ngx:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/paperless-ngx/paperless-ngx
               tag: 2.6.2@sha256:9483e2fff0b50c1b5f90c6e6d085fc3551f9dd7d039c29efb3ace712ba9ee42e
@@ -50,6 +51,16 @@ spec:
               PAPERLESS_REDIS:
                 value: redis://:$(REDIS_PASSWORD)@redis-master
                 dependsOn: REDIS_PASSWORD
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
         pod:
           labels:
             policy.gabe565.com/egress-namespace: "true"
@@ -57,7 +68,8 @@ spec:
             policy.gabe565.com/ingress-ingress: "true"
 
     service:
-      main:
+      paperless-ngx:
+        controller: paperless-ngx
         ports:
           http:
             port: 8000
@@ -86,7 +98,7 @@ spec:
         path: /volume1/documents/paperless/consume
 
     ingress:
-      main:
+      paperless-ngx:
         enabled: true
         annotations:
           nginx.ingress.kubernetes.io/auth-url: |-
@@ -103,7 +115,8 @@ spec:
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: paperless-ngx
+                  port: http
         tls:
           - secretName: ${certificate_name}
             hosts:

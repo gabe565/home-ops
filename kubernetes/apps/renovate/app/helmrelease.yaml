@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -7,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.0.3
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -18,11 +19,11 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      renovate:
         annotations:
           secret.reloader.stakater.com/reload: renovate-env
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/mend/renovate-ce
               tag: 6.11.0-full@sha256:e3b17326db5e7e6cf158de146d9ffe90884db856f226ad590512a408f97b901c
@@ -49,17 +50,23 @@ spec:
                 memory: 4Gi
             probes:
               liveness: &probe
+                enabled: true
                 type: HTTP
                 path: /health
               readiness: *probe
-              startup: *probe
+              startup:
+                <<: *probe
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
         pod:
           labels:
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-ingress: "true"
 
     service:
-      main:
+      renovate:
+        controller: renovate
         ports:
           http:
             port: 8080
@@ -79,14 +86,15 @@ spec:
           - path: /tmp/renovate
 
     ingress:
-      main:
+      renovate:
         enabled: true
         hosts:
           - host: ${app_url}
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: renovate
+                  port: http
         tls:
           - secretName: ${certificate_name}
             hosts:

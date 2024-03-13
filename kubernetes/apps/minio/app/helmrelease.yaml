@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -7,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.0.3
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -18,10 +19,10 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      minio:
         type: statefulset
         containers:
-          main:
+          app:
             image:
               repository: quay.io/minio/minio
               tag: RELEASE.2024-03-10T02-53-48Z@sha256:b9e644d40add58b121f7801e9ec0e19a58f836a366a88011e8951e3166aaf16e
@@ -49,10 +50,15 @@ spec:
               - --console-address=:9001
             probes:
               liveness: &probe
+                enabled: true
                 type: HTTP
                 path: /minio/health/live
               readiness: *probe
-              startup: *probe
+              startup:
+                << : *probe
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
         pod:
           labels:
             policy.gabe565.com/egress-authentik: "true"
@@ -73,7 +79,8 @@ spec:
               size: 8Gi
 
     service:
-      main:
+      minio:
+        controller: minio
         ports:
           http:
             port: 9001
@@ -81,7 +88,7 @@ spec:
             port: 9000
 
     ingress:
-      main:
+      minio:
         enabled: true
         annotations:
           nginx.ingress.kubernetes.io/custom-http-errors: "501,502,503,504"
@@ -96,18 +103,19 @@ spec:
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: minio
+                  port: http
           - host: ${s3_url}
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: minio
                   port: s3
           - host: "*.${s3_url}"
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: minio
                   port: s3
         tls:
           - secretName: ${app_certificate_name}
@@ -121,6 +129,7 @@ spec:
     serviceMonitor:
       main:
         enabled: true
+        serviceName: minio
         endpoints:
           - port: s3
             scheme: http

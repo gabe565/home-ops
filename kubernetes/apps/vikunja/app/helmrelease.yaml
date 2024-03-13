@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -7,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.0.3
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -18,11 +19,9 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
-        enabled: false
       api:
         containers:
-          main:
+          app:
             image:
               repository: vikunja/api
               tag: 0.22.1@sha256:c9415431e6235229302bb8f9ee6660b74c24859d1e8adbc4a3e25bd418604b57
@@ -62,7 +61,7 @@ spec:
       frontend:
         strategy: RollingUpdate
         containers:
-          main:
+          app:
             image:
               repository: vikunja/frontend
               tag: 0.22.1@sha256:f0223d441997fe29c377d0b476dc4bb2fc091b44b9c24d76b1b88c213df520c5
@@ -72,7 +71,8 @@ spec:
             policy.gabe565.com/ingress-ingress: "true"
 
     service:
-      main:
+      vikunja:
+        controller: vikunja
         enabled: false
       api:
         controller: api
@@ -93,7 +93,7 @@ spec:
         size: 2Gi
         advancedMounts:
           api:
-            main:
+            app:
               - path: /app/vikunja/files
       api-config:
         enabled: true
@@ -101,7 +101,7 @@ spec:
         name: vikunja-api-config
         advancedMounts:
           api:
-            main:
+            app:
               - path: /etc/vikunja/config.yaml
                 subPath: config.yaml
 
@@ -115,7 +115,8 @@ spec:
             paths:
               - path: /api
                 service: &service
-                  name: api
+                  identifier: api
+                  port: http
               - path: /dav
                 service: *service
               - path: /.well-known
@@ -131,7 +132,8 @@ spec:
             paths:
               - path: /
                 service:
-                  name: frontend
+                  identifier: frontend
+                  port: http
         tls: *tls
 
     secrets:

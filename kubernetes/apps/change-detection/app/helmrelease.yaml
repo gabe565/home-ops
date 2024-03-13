@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -7,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.0.3
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -18,9 +19,9 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      change-detection:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/dgtlmoon/changedetection.io
               tag: 0.45.16@sha256:247558ea5d24509fbd77a04de7c3c9a6b0938b859c1c4e5d73830f0393c5b37e
@@ -29,15 +30,25 @@ spec:
               TZ: America/Chicago
               BASE_URL: https://${app_url}
               PLAYWRIGHT_DRIVER_URL: ws://change-detection-browserless:3000
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
         pod:
           labels:
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-ingress: "true"
-          terminationGracePeriodSeconds: "0"
+          terminationGracePeriodSeconds: 1
       browserless:
         containers:
-          main:
+          app:
             image:
               repository: browserless/chrome
               tag: 1.61.1-chrome-stable@sha256:efac47cfff3830d9a50b27d29f8bbb61949058ae336c823fbe9bd3c0d1debcc8
@@ -53,7 +64,8 @@ spec:
             policy.gabe565.com/ingress-namespace: "true"
 
     service:
-      main:
+      change-detection:
+        controller: change-detection
         ports:
           http:
             port: 5000
@@ -71,12 +83,12 @@ spec:
         size: 1Gi
         retain: true
         advancedMounts:
-          main:
-            main:
+          change-detection:
+            app:
               - path: /datastore
 
     ingress:
-      main:
+      change-detection:
         enabled: true
         annotations:
           nginx.ingress.kubernetes.io/auth-url: |-
@@ -92,7 +104,8 @@ spec:
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: change-detection
+                  port: http
         tls:
           - secretName: ${certificate_name}
             hosts:

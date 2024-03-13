@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -7,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.0.3
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -18,15 +19,25 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      matrimony:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/gabe565/matrimony
               tag: 1.1.1@sha256:d39a9d7c3e1bc24cb7e3742b94f210126e50603a8a5b74fcd5d1aae53ce2124b
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
         pod:
           labels:
             policy.gabe565.com/ingress-ingress: "true"
@@ -34,7 +45,8 @@ spec:
             fsGroup: 1000
 
     service:
-      main:
+      matrimony:
+        controller: matrimony
         ports:
           http:
             port: 80
@@ -48,7 +60,7 @@ spec:
         retain: true
 
     ingress:
-      main:
+      matrimony:
         enabled: true
         annotations:
           nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
@@ -57,7 +69,8 @@ spec:
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: matrimony
+                  port: http
         tls:
           - secretName: ${certificate_name}
             hosts:

@@ -7,7 +7,7 @@ spec:
   endpointSelector:
     matchLabels:
       app.kubernetes.io/name: minio
-      app.kubernetes.io/component: main
+      app.kubernetes.io/component: minio
   ingress:
     - fromEntities:
         - cluster

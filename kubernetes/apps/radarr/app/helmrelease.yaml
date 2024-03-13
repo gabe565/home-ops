@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -7,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.0.3
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -18,15 +19,25 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      radarr:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/onedr0p/radarr
               tag: 5.3.6.8612@sha256:38cb50848d1563cadfb14c0b9e20c789d44e6bde0f4a4cf06e84f05d8066de55
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
         pod:
           labels:
             policy.gabe565.com/egress-plex: "true"
@@ -41,7 +52,8 @@ spec:
             fsGroupChangePolicy: OnRootMismatch
 
     service:
-      main:
+      radarr:
+        controller: radarr
         ports:
           http:
             port: 7878
@@ -60,14 +72,15 @@ spec:
           - path: /mnt/media
 
     ingress:
-      main:
+      radarr:
         enabled: true
         hosts:
           - host: ${app_url}
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: radarr
+                  port: http
         tls:
           - secretName: ${certificate_name}
             hosts:

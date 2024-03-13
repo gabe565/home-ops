@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -7,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.0.3
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -18,10 +19,10 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      nut-exporter:
         strategy: RollingUpdate
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/druggeri/nut_exporter
               tag: 3.1.1@sha256:0d9a0a00554081876178369ab9d46717e002fcf550b18dcd85f98c315438b524
@@ -29,6 +30,16 @@ spec:
             env:
               NUT_EXPORTER_VARIABLES: >-
                 battery.charge,battery.voltage,battery.voltage.nominal,battery.runtime,input.voltage,input.voltage.nominal,ups.load,ups.realpower.nominal,ups.status
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
         pod:
           labels:
             policy.gabe565.com/ingress-namespace: "true"
@@ -36,7 +47,8 @@ spec:
             policy.gabe565.com/egress-world-with-lan: "true"
 
     service:
-      main:
+      nut-exporter:
+        controller: nut-exporter
         ports:
           http:
             port: 9199
@@ -44,6 +56,7 @@ spec:
     serviceMonitor:
       main:
         enabled: true
+        serviceName: nut-exporter
         endpoints:
           - port: http
             scheme: http

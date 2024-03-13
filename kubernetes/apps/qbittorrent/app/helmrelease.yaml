@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -7,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.0.3
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -18,17 +19,27 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      qbittorrent:
         annotations:
           secret.reloader.stakater.com/reload: qbittorrent-gluetun
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/onedr0p/qbittorrent
               tag: 4.6.3@sha256:79ac03232dcb3e172fe028f66784f88ed8c49bd5c05ef4a443d675681b37d6ec
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
           vpn:
             image:
               repository: qmcgaw/gluetun
@@ -62,7 +73,7 @@ spec:
       vuetorrent:
         strategy: RollingUpdate
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/gabe565/vuetorrent
               tag: 2.7.1@sha256:b60a75479e9e4711f1e53ae335f2709c74b182bc61ce754c7e4d5e3102384d11
@@ -78,8 +89,8 @@ spec:
         accessMode: ReadWriteOnce
         size: 1Gi
         advancedMounts:
-          main:
-            main:
+          qbittorrent:
+            app:
               - path: /config
       downloads:
         enabled: true
@@ -87,12 +98,13 @@ spec:
         server: 100.64.0.4
         path: /volume1/media/Downloads
         advancedMounts:
-          main:
-            main:
+          qbittorrent:
+            app:
               - path: /downloads
 
     service:
-      main:
+      qbittorrent:
+        controller: qbittorrent
         ports:
           http:
             port: 8080
@@ -103,7 +115,7 @@ spec:
             port: 80
 
     ingress:
-      main:
+      qbittorrent:
         enabled: true
         annotations: &annotations
           nginx.ingress.kubernetes.io/auth-url:
@@ -118,7 +130,8 @@ spec:
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: qbittorrent
+                  port: http
         tls:
           - secretName: ${certificate_name}
             hosts:
@@ -135,10 +148,12 @@ spec:
             paths:
               - path: /
                 service:
-                  name: vuetorrent
+                  identifier: vuetorrent
+                  port: http
               - path: /api
                 service:
-                  name: main
+                  identifier: qbittorrent
+                  port: http
         tls: &vuetorrent-tls
           - secretName: ${certificate_name}
             hosts:
@@ -153,7 +168,8 @@ spec:
           - host: ${vuetorrent_url}
             paths:
               - path: /sw.js
-                type: Exact
+                pathType: Exact
                 service:
-                  name: vuetorrent
+                  identifier: vuetorrent
+                  port: http
         tls: *vuetorrent-tls

@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -7,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.0.3
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -18,13 +19,13 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      dynamic-ip:
         type: cronjob
         cronjob:
           schedule: "*/5 * * * *"
           ttlSecondsAfterFinished: 3600
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/gabe565/external-dns-dynamic-ip
               tag: 1.29.2@sha256:a2a4c860e51acb9348b1b012b26a4546b6c368de0c7d3f288ffba5a8bc898d50
@@ -34,11 +35,12 @@ spec:
             policy.gabe565.com/egress-kubeapi: "true"
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
-          terminationGracePeriodSeconds: "0"
+          terminationGracePeriodSeconds: 1
 
     serviceAccount:
       create: true
 
     service:
-      main:
+      dynamic-ip:
+        controller: dynamic-ip
         enabled: false

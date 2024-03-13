@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -7,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.0.3
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -18,12 +19,12 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      transsmute:
         annotations:
           secret.reloader.stakater.com/reload: transsmute-env
         strategy: RollingUpdate
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/gabe565/transsmute
               tag: 1.3.0@sha256:03e9281cde665f85edd65da008a09f959c83d6ced998c7c9359cda2d2191d810
@@ -33,26 +34,38 @@ spec:
             envFrom:
               - secretRef:
                   name: transsmute-env
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
         pod:
           labels:
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-ingress: "true"
 
     service:
-      main:
+      transsmute:
+        controller: transsmute
         ports:
           http:
             port: 80
 
     ingress:
-      main:
+      transsmute:
         enabled: true
         hosts:
           - host: ${app_url}
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: transsmute
+                  port: http
         tls:
           - secretName: ${certificate_name}
             hosts:

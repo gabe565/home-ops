@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -7,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.0.3
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -18,9 +19,9 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      linkding:
         containers:
-          main:
+          app:
             image:
               repository: sissbruecker/linkding
               tag: 1.24.0-alpine@sha256:24c35bb3a69e19ea0e2f6747c68c73d1b81deef96521f3ef0d0f03fb6c6871bb
@@ -40,13 +41,24 @@ spec:
                 secretKeyRef:
                   name: postgresql-app
                   key: password
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
         pod:
           labels:
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/ingress-ingress: "true"
 
     service:
-      main:
+      linkding:
+        controller: linkding
         ports:
           http:
             port: 9090
@@ -61,14 +73,15 @@ spec:
           - path: /etc/linkding/data
 
     ingress:
-      main:
+      linkding:
         enabled: true
         hosts:
           - host: ${app_url}
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: linkding
+                  port: http
         tls:
           - secretName: ${certificate_name}
             hosts:

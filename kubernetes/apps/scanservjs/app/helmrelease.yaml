@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -7,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.0.3
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -18,9 +19,9 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      scanservjs:
         containers:
-          main:
+          app:
             image:
               repository: sbs20/scanservjs
               tag: release-v3.0.3@sha256:dad1fd6e9a98957d324499e822a3019cc43d6557e314635c82665baf576b960e
@@ -32,6 +33,16 @@ spec:
                 squat.ai/canon-mp620: 1
               limits:
                 squat.ai/canon-mp620: 1
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
         pod:
           labels:
             policy.gabe565.com/ingress-ingress: "true"
@@ -57,20 +68,22 @@ spec:
           - path: /app/data/output
 
     service:
-      main:
+      scanservjs:
+        controller: scanservjs
         ports:
           http:
             port: 8080
 
     ingress:
-      main:
+      scanservjs:
         enabled: true
         hosts:
           - host: ${app_url}
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: scanservjs
+                  port: http
         tls:
           - secretName: ${certificate_name}
             hosts:

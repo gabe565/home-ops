@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -7,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.0.3
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -18,9 +19,9 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      charm:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/charmbracelet/charm
               tag: v0.12.6@sha256:1eaa64a79550100ad4b1e9ffe2bd5c4e797cfebcdfbf7b91f854f0a0634d5f2c
@@ -34,15 +35,17 @@ spec:
               CHARM_SERVER_TLS_KEY_FILE: /tls/tls.key
               CHARM_SERVER_ENABLE_METRICS: "true"
             probes:
-              liveness:
+              liveness: &probe
+                enabled: true
                 port: 35356
                 type: AUTO
-              readiness:
-                port: 35356
-                type: AUTO
+              readiness: *probe
               startup:
-                port: 35356
-                type: AUTO
+                <<: *probe
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+
         pod:
           labels:
             policy.gabe565.com/ingress-ingress: "true"
@@ -56,7 +59,8 @@ spec:
             fsGroupChangePolicy: OnRootMismatch
 
     service:
-      main:
+      charm:
+        controller: charm
         type: LoadBalancer
         loadBalancerIP: 192.168.1.224
         externalTrafficPolicy: Local
@@ -69,7 +73,7 @@ spec:
           ssh:
             port: 35353
       private:
-        controller: main
+        controller: charm
         ports:
           metrics:
             port: 35355

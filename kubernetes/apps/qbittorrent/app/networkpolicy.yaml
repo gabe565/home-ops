@@ -11,7 +11,7 @@ spec:
         - matchLabels:
             io.kubernetes.pod.namespace: qbittorrent
             app.kubernetes.io/name: qbittorrent
-            app.kubernetes.io/component: main
+            app.kubernetes.io/component: qbittorrent
       toPorts:
         - ports:
             - port: "80"
@@ -26,7 +26,7 @@ spec:
   endpointSelector:
     matchLabels:
       app.kubernetes.io/name: qbittorrent
-      app.kubernetes.io/component: main
+      app.kubernetes.io/component: qbittorrent
   ingress:
     - fromEndpoints:
         - matchLabels:

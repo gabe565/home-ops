@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -7,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.0.3
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -18,7 +19,7 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      mosquitto:
         annotations:
           secret.reloader.stakater.com/reload: mosquitto-auth
         initContainers:
@@ -34,13 +35,8 @@ spec:
                 set -eux
                 apk add --no-cache coreutils
                 csplit -f /tls/ca/tls- -b "%1d.crt" -s -z /tls/tls.crt '/-----BEGIN CERTIFICATE-----/' '{1}'
-            volumeMounts:
-              - name: tls
-                mountPath: /tls
-              - name: ca
-                mountPath: /tls/ca
         containers:
-          main:
+          app:
             image:
               repository: eclipse-mosquitto
               tag: 2.0.18@sha256:da38d58ee0037af94f746dc3d884c57f50140ef5f592bf6fcbb80d66d131a77b
@@ -48,6 +44,16 @@ spec:
             command: [mosquitto, -c, /mosquitto/config/mosquitto.conf]
             env:
               TZ: America/Chicago
+            probes:
+              liveness: &probe
+                enabled: true
+                port: 1883
+              readiness: *probe
+              startup:
+                <<: *probe
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
         pod:
           labels:
             policy.gabe565.com/egress-world: "true"
@@ -55,15 +61,14 @@ spec:
             policy.gabe565.com/ingress-world: "true"
 
     service:
-      main:
+      mosquitto:
+        controller: mosquitto
         type: LoadBalancer
         loadBalancerIP: 192.168.1.226
         externalTrafficPolicy: Local
         annotations:
           external-dns.alpha.kubernetes.io/hostname: ${app_url}
         ports:
-          http:
-            enabled: false
           mqtt:
             port: 1883
           mqtts:
@@ -76,16 +81,16 @@ spec:
         accessMode: ReadWriteOnce
         size: 64Mi
         advancedMounts:
-          main:
-            main:
+          mosquitto:
+            app:
               - path: /mosquitto/data
       config:
         enabled: true
         type: configMap
         name: mosquitto-config
         advancedMounts:
-          main:
-            main:
+          mosquitto:
+            app:
               - path: /mosquitto/config/mosquitto.conf
                 subPath: mosquitto.conf
       auth:
@@ -93,8 +98,8 @@ spec:
         type: secret
         name: mosquitto-auth
         advancedMounts:
-          main:
-            main:
+          mosquitto:
+            app:
               - path: /mosquitto/config/passwd
                 subPath: passwd
               - path: /mosquitto/config/acl

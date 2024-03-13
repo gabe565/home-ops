@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -7,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.0.3
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -18,12 +19,12 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      shlink:
         enabled: false
       api:
         strategy: RollingUpdate
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/shlinkio/shlink
               tag: 4.0.2-roadrunner@sha256:86805af3cbd929321ccceab4a67ff0cfa05c9cbcf762b8d7d23572fefcb58a9b
@@ -60,11 +61,11 @@ spec:
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-ingress: "true"
-          terminationGracePeriodSeconds: "0"
+          terminationGracePeriodSeconds: 1
       frontend:
         strategy: RollingUpdate
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/shlinkio/shlink-web-client
               tag: 4.0.1@sha256:2583dc12d0f1aa1eb86cecac9342acbbf46792885d0eedd7a237b3926c5f8e86
@@ -74,7 +75,8 @@ spec:
             policy.gabe565.com/ingress-ingress: "true"
 
     service:
-      main:
+      shlink:
+        controller: shlink
         enabled: false
       api:
         controller: api
@@ -88,7 +90,7 @@ spec:
             port: 8080
 
     ingress:
-      main:
+      shlink:
         enabled: true
         annotations:
           nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
@@ -97,7 +99,8 @@ spec:
             paths:
               - path: /
                 service:
-                  name: api
+                  identifier: api
+                  port: http
         tls:
           - secretName: ${certificate_name}
             hosts:
@@ -110,7 +113,8 @@ spec:
             paths:
               - path: /
                 service:
-                  name: frontend
+                  identifier: frontend
+                  port: http
         tls: &admin-tls
           - secretName: ${certificate_name}
             hosts:
@@ -129,7 +133,8 @@ spec:
               - path: /
                 pathType: Exact
                 service:
-                  name: frontend
+                  identifier: frontend
+                  port: http
         tls: *admin-tls
       frontend-servers-json:
         enabled: true
@@ -158,7 +163,8 @@ spec:
               - path: /servers.json
                 pathType: Exact
                 service:
-                  name: frontend
+                  identifier: frontend
+                  port: http
         tls: *admin-tls
       remove-sw:
         enabled: true
@@ -172,7 +178,8 @@ spec:
               - path: /service-worker.js
                 pathType: Exact
                 service:
-                  name: frontend
+                  identifier: frontend
+                  port: http
         tls: *admin-tls
 
     secrets:

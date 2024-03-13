@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -7,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.0.3
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -18,9 +19,9 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      headscale:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/juanfont/headscale
               tag: 0.22.3@sha256:aadf29a875bb2ffdf6579869e5759935f7a64b9fd19fcea9d5385c5d7220dc7b
@@ -61,8 +62,18 @@ spec:
                 secretKeyRef:
                   name: postgresql-app
                   key: password
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
         pod:
-          terminationGracePeriodSeconds: "3"
+          terminationGracePeriodSeconds: 3
           labels:
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
@@ -71,18 +82,19 @@ spec:
       ui:
         strategy: RollingUpdate
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/gurucomputing/headscale-ui
               tag: 2024.02.24-beta1@sha256:4c618a7b6e8b32f5ef6af3c7e6936c63e8568ad9ae8d190dafb2551a64ff40a2
               pullPolicy: IfNotPresent
         pod:
-          terminationGracePeriodSeconds: "3"
+          terminationGracePeriodSeconds: 3
           labels:
             policy.gabe565.com/ingress-ingress: "true"
 
     service:
-      main:
+      headscale:
+        controller: headscale
         ports:
           http:
             port: 8080
@@ -100,8 +112,8 @@ spec:
         type: secret
         name: headscale-config
         advancedMounts:
-          main:
-            main:
+          headscale:
+            app:
               - path: /etc/headscale/config.yaml
                 subPath: config.yaml
               - path: /etc/headscale/private.key
@@ -110,14 +122,15 @@ spec:
                 subPath: noise_private.key
 
     ingress:
-      main:
+      headscale:
         enabled: true
         hosts:
           - host: ${app_url}
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: headscale
+                  port: http
         tls: &tls
           - secretName: ${certificate_name}
             hosts:
@@ -129,7 +142,8 @@ spec:
             paths:
               - path: /web
                 service:
-                  name: ui
+                  identifier: ui
+                  port: http
         tls: *tls
 
     secrets:
@@ -143,6 +157,7 @@ spec:
     serviceMonitor:
       main:
         enabled: true
+        serviceName: headscale
         endpoints:
           - port: metrics
             scheme: http

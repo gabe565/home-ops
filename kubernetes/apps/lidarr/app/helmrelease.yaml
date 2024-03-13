@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -7,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.0.3
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -18,15 +19,25 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      lidarr:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/onedr0p/lidarr
               tag: 2.1.7.4030@sha256:bd37ebb34dbbe2ba65942aa1f1fe2c0ce1c44718329f0d59bb5ea8f31ae5fce5
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
         pod:
           labels:
             policy.gabe565.com/egress-plex: "true"
@@ -41,7 +52,8 @@ spec:
             fsGroupChangePolicy: OnRootMismatch
 
     service:
-      main:
+      lidarr:
+        controller: lidarr
         ports:
           http:
             port: 8686
@@ -60,14 +72,15 @@ spec:
           - path: /mnt/media
 
     ingress:
-      main:
+      lidarr:
         enabled: true
         hosts:
           - host: ${app_url}
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: lidarr
+                  port: http
         tls:
           - secretName: ${certificate_name}
             hosts:

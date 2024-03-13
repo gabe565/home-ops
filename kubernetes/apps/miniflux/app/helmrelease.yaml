@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -7,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.0.3
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -18,10 +19,10 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      miniflux:
         strategy: RollingUpdate
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/miniflux/miniflux
               tag: 2.1.1@sha256:762b201c26c673fa71ab569a566536daa761a2e17bf56c7a059c1d44426618d2
@@ -45,6 +46,16 @@ spec:
 
               METRICS_COLLECTOR: "1"
               METRICS_ALLOWED_NETWORKS: 0.0.0.0/0
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
         pod:
           labels:
             policy.gabe565.com/egress-ingress: "true"
@@ -54,20 +65,22 @@ spec:
             policy.gabe565.com/ingress-prometheus: "true"
 
     service:
-      main:
+      miniflux:
+        controller: miniflux
         ports:
           http:
             port: 8080
 
     ingress:
-      main:
+      miniflux:
         enabled: true
         hosts:
           - host: ${app_url}
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: miniflux
+                  port: http
         tls: &tls
           - secretName: ${certificate_name}
             hosts:
@@ -83,7 +96,8 @@ spec:
               - path: /metrics
                 pathType: Exact
                 service:
-                  name: main
+                  identifier: miniflux
+                  port: http
         tls: *tls
       redirect:
         enabled: true
@@ -95,9 +109,17 @@ spec:
               - path: /
                 pathType: Exact
                 service:
-                  name: main
+                  identifier: miniflux
+                  port: http
         tls: *tls
 
     serviceMonitor:
       main:
         enabled: true
+        serviceName: miniflux
+        endpoints:
+         - port: http
+           scheme: http
+           path: /metrics
+           interval: 1m
+           scrapeTimeout: 10s

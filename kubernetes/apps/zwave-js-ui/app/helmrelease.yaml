@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -7,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.0.3
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -18,9 +19,9 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      zwave-js-ui:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/zwave-js/zwave-js-ui
               tag: 9.9.1@sha256:ce5278bd998ad8ea2422a6f6c2ec606fcde0d065f6c8e2ae5300a196b4fcf1bb
@@ -33,6 +34,16 @@ spec:
                 squat.ai/zwave: 1
               limits:
                 squat.ai/zwave: 1
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
         pod:
           labels:
             policy.gabe565.com/egress-world: "true"
@@ -48,7 +59,8 @@ spec:
           - path: /usr/src/app/store
 
     service:
-      main:
+      zwave-js-ui:
+        controller: zwave-js-ui
         ports:
           http:
             port: 8091
@@ -56,7 +68,7 @@ spec:
             port: 3000
 
     ingress:
-      main:
+      zwave-js-ui:
         enabled: true
         annotations:
           nginx.ingress.kubernetes.io/auth-url: |-
@@ -72,7 +84,8 @@ spec:
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: zwave-js-ui
+                  port: http
         tls: &tls
           - secretName: ${certificate_name}
             hosts:
@@ -89,5 +102,6 @@ spec:
               - path: /sw.js
                 pathType: Exact
                 service:
-                  name: main
+                  identifier: zwave-js-ui
+                  port: http
         tls: *tls

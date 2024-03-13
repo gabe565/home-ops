@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -7,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.0.3
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -18,11 +19,11 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      adguard-home:
         type: statefulset
         replicas: 2
         containers:
-          main:
+          app:
             image:
               repository: adguard/adguardhome
               tag: v0.107.45@sha256:52a9c2e7b4c56e5f08e1b2f3196d500c931adadc8917712ff9ef9ea922c030fe
@@ -31,10 +32,16 @@ spec:
               TZ: America/Chicago
             probes:
               liveness: &probe
+                enabled: true
                 type: HTTP
+                port: 3000
                 path: /login.html
               readiness: *probe
-              startup: *probe
+              startup:
+                <<: *probe
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
         pod:
           priorityClassName: system-cluster-critical
           labels:
@@ -51,7 +58,7 @@ spec:
                     labelSelector:
                       matchLabels:
                         app.kubernetes.io/name: adguard-home
-                        app.kubernetes.io/component: main
+                        app.kubernetes.io/component: adguard-home
         statefulset:
           volumeClaimTemplates:
             - name: data
@@ -65,7 +72,7 @@ spec:
                   subPath: work
       sync:
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/bakito/adguardhome-sync
               tag: alpine-v0.6.5@sha256:69d5be341361c40d8c67ccaa4ddbd474a26186362b914f4d7800046f41b79a0b
@@ -87,7 +94,8 @@ spec:
             policy.gabe565.com/egress-namespace: "true"
 
     service:
-      main:
+      adguard-home:
+        controller: adguard-home
         ports:
           http:
             port: 3000
@@ -97,14 +105,14 @@ spec:
           http:
             port: 8080
       origin: &origin-http
-        controller: main
+        controller: adguard-home
         extraSelectorLabels:
           apps.kubernetes.io/pod-index: "0"
         ports:
           http:
             port: 3000
       origin-dns: &origin-dns
-        controller: main
+        controller: adguard-home
         extraSelectorLabels:
           apps.kubernetes.io/pod-index: "0"
         type: LoadBalancer
@@ -145,7 +153,8 @@ spec:
             paths:
               - path: /
                 service:
-                  name: origin
+                  identifier: origin
+                  port: http
         tls:
           - secretName: ${certificate_name}
             hosts:
@@ -158,4 +167,5 @@ spec:
             paths:
               - path: /
                 service:
-                  name: replica
+                  identifier: replica
+                  port: http
