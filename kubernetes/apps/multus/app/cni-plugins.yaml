@@ -19,7 +19,10 @@ spec:
       - |
         set -eux
         VERSION="${VERSION:-$SYSTEM_UPGRADE_PLAN_LATEST_VERSION}"
-        cd /host/opt/cni/bin
+        mkdir plugins
+        cd plugins
         wget -q -O- \
           "https://github.com/containernetworking/plugins/releases/download/$VERSION/cni-plugins-linux-amd64-$VERSION.tgz" \
           | tar --overwrite -xzf -
+        chown -R root:root .
+        cp -a ./* /host/opt/cni/bin
