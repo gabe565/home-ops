@@ -26,7 +26,7 @@ spec:
           app:
             image:
               repository: ghcr.io/immich-app/immich-server
-              tag: v1.98.2@sha256:5d46c02f171b2c85c5c445ed9ae233d68568b241e14e293b0195d539b98de42a
+              tag: v1.99.0@sha256:ad7a9828eb25e4f42ad17631bc81408b3fe464c4eec2300742af2e37acb4e8d6
               pullPolicy: IfNotPresent
             command: [./start-server.sh]
             env: &env
@@ -54,7 +54,7 @@ spec:
           app:
             image:
               repository: ghcr.io/immich-app/immich-server
-              tag: v1.98.2@sha256:5d46c02f171b2c85c5c445ed9ae233d68568b241e14e293b0195d539b98de42a
+              tag: v1.99.0@sha256:ad7a9828eb25e4f42ad17631bc81408b3fe464c4eec2300742af2e37acb4e8d6
               pullPolicy: IfNotPresent
             command: [./start-microservices.sh]
             env: *env
@@ -73,7 +73,7 @@ spec:
           app:
             image:
               repository: ghcr.io/immich-app/immich-machine-learning
-              tag: v1.98.2@sha256:ac21ed6160c106eb26f704626d1fbf693dd74640131afd4d2ccad5db26aa98c5
+              tag: v1.99.0@sha256:9a9d289a5fc894dad1aae6e49c09f39735846cda351e9f74879fcb0601437262
               pullPolicy: IfNotPresent
         pod:
           labels:
