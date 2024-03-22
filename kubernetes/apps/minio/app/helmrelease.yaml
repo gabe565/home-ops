@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: quay.io/minio/minio
-              tag: RELEASE.2024-03-10T02-53-48Z@sha256:b9e644d40add58b121f7801e9ec0e19a58f836a366a88011e8951e3166aaf16e
+              tag: RELEASE.2024-03-21T23-13-43Z@sha256:a440ee22d5cf62285a3181c6c63e26e9a0e6e4854e533841deabf229561571d3
               pullPolicy: IfNotPresent
             env:
               MINIO_SITE_NAME: us-central-1
