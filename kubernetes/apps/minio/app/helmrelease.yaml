@@ -83,6 +83,7 @@ spec:
         controller: minio
         ports:
           http:
+            primary: true
             port: 9001
           s3:
             port: 9000

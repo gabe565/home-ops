@@ -63,6 +63,7 @@ spec:
         controller: zwave-js-ui
         ports:
           http:
+            primary: true
             port: 8091
           websocket:
             port: 3000
