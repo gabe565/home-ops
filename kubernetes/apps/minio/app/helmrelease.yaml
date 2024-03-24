@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.0.3
+      version: 3.0.4
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -83,6 +83,7 @@ spec:
         controller: minio
         ports:
           http:
+            primary: true
             port: 9001
           s3:
             port: 9000

@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.0.3
+      version: 3.0.4
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -70,6 +70,7 @@ spec:
           external-dns.alpha.kubernetes.io/hostname: ${app_url}
         ports:
           mqtt:
+            primary: true
             port: 1883
           mqtts:
             port: 8883
