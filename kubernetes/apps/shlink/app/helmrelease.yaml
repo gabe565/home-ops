@@ -68,7 +68,7 @@ spec:
           app:
             image:
               repository: ghcr.io/shlinkio/shlink-web-client
-              tag: 4.0.1@sha256:2583dc12d0f1aa1eb86cecac9342acbbf46792885d0eedd7a237b3926c5f8e86
+              tag: 4.1.0@sha256:efd725a7cb264e1a5884e4b93f47c6e38b6b58a4de47e1aaac5aec02d8f966c6
               pullPolicy: IfNotPresent
         pod:
           labels:
