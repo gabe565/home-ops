@@ -44,13 +44,8 @@ spec:
                   name: postgresql-app
                   key: password
 
-              REDIS_PASSWORD:
-                secretKeyRef:
-                  name: redis
-                  key: redis-password
               PAPERLESS_REDIS:
-                value: redis://:$(REDIS_PASSWORD)@redis-master
-                dependsOn: REDIS_PASSWORD
+                value: redis://:${keydb_password}@keydb
             probes:
               startup:
                 enabled: true

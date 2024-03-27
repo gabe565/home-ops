@@ -286,7 +286,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
   <tr>
     <td>paperless-ngx</td>
     <td><a href="kubernetes/apps/paperless-ngx/app/helmrelease.yaml">paperless-ngx</a></td>
-    <td><a href="kubernetes/apps/paperless-ngx/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/apps/paperless-ngx/postgresql.yaml">postgresql</a>, <a href="kubernetes/apps/paperless-ngx/redis/helmrelease.yaml">redis</a></td>
+    <td><a href="kubernetes/apps/paperless-ngx/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/apps/paperless-ngx/app/keydb.yaml">keydb</a>, <a href="kubernetes/apps/paperless-ngx/postgresql.yaml">postgresql</a></td>
   </tr>
   <tr>
     <td>pictshare</td>
