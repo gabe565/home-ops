@@ -38,11 +38,8 @@ spec:
                 secretKeyRef:
                   name: postgresql-app
                   key: password
-              REDIS_HOSTNAME: redis-master
-              REDIS_PASSWORD:
-                secretKeyRef:
-                  name: redis
-                  key: redis-password
+              REDIS_HOSTNAME: keydb
+              REDIS_PASSWORD: ${keydb_password}
         pod:
           labels:
             policy.gabe565.com/egress-namespace: "true"

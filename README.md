@@ -175,7 +175,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
   <tr>
     <td>immich</td>
     <td><a href="kubernetes/apps/immich/app/helmrelease.yaml">immich</a></td>
-    <td><a href="kubernetes/apps/immich/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/apps/immich/postgresql.yaml">postgresql</a>, <a href="kubernetes/apps/immich/redis/helmrelease.yaml">redis</a></td>
+    <td><a href="kubernetes/apps/immich/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/apps/immich/app/keydb.yaml">keydb</a>, <a href="kubernetes/apps/immich/postgresql.yaml">postgresql</a></td>
   </tr>
   <tr>
     <td>ingress-nginx</td>
