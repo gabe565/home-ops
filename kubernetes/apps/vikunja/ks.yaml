@@ -20,25 +20,6 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: redis
-  namespace: vikunja
-spec:
-  interval: 1h
-  targetNamespace: vikunja
-  path: ./kubernetes/apps/vikunja/redis
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    namespace: flux-system
-    name: flux-system
-  postBuild:
-    substituteFrom:
-      - kind: Secret
-        name: redis-vars
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
   name: borgmatic
   namespace: vikunja
 spec:

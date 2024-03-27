@@ -394,7 +394,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
   <tr>
     <td>vikunja</td>
     <td><a href="kubernetes/apps/vikunja/app/helmrelease.yaml">vikunja</a></td>
-    <td><a href="kubernetes/apps/vikunja/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/apps/vikunja/postgresql.yaml">postgresql</a>, <a href="kubernetes/apps/vikunja/redis/helmrelease.yaml">redis</a></td>
+    <td><a href="kubernetes/apps/vikunja/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/apps/vikunja/app/keydb.yaml">keydb</a>, <a href="kubernetes/apps/vikunja/postgresql.yaml">postgresql</a></td>
   </tr>
   <tr>
     <td>weave-gitops</td>
