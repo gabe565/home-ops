@@ -62,6 +62,13 @@
         "imageName: ['\"]?(?<depName>.+?):(?<currentValue>.+)['\"]?"
       ],
       "datasourceTemplate": "docker"
+    },
+    {
+      "fileMatch": ["\\.yaml$"],
+      "matchStrings": [
+        "# yaml-language-server: \\$schema=https:\\/\\/raw.githubusercontent.com\\/(?<depName>[^\\/]+/[^\\/]+)\\/(?<currentValue>[^\\/]+)"
+      ],
+      "datasourceTemplate": "github-tags"
     }
   ],
   "packageRules": [
@@ -118,6 +125,11 @@
       "matchDatasources": ["docker"],
       "matchPackageNames": ["ghcr.io/gurucomputing/headscale-ui"],
       "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)(?:-beta-?(?<build>\\d+)?)?$"
+    },
+    {
+      "matchDatasources": ["github-tags"],
+      "matchPackageNames": ["bjw-s/helm-charts"],
+      "versioning": "regex:^(?<compatibility>.+)-(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
     }
   ]
 }
