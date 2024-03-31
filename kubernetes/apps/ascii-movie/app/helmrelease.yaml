@@ -34,6 +34,9 @@ spec:
         annotations:
           external-dns.alpha.kubernetes.io/hostname: movie.gabe565.com
 
+    securityContext:
+      readOnlyRootFilesystem: true
+
     serviceMonitor:
       main:
         enabled: true
