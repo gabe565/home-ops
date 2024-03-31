@@ -42,6 +42,8 @@ spec:
                 spec:
                   failureThreshold: 30
                   periodSeconds: 5
+            securityContext:
+              readOnlyRootFilesystem: true
         pod:
           priorityClassName: system-cluster-critical
           labels:
