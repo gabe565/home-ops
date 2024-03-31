@@ -29,3 +29,7 @@ spec:
               KEYDB_PASSWORD: ${keydb_password}
             securityContext:
               readOnlyRootFilesystem: true
+    persistence:
+      data:
+        enabled: true
+        type: emptyDir
