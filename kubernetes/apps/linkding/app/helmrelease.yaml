@@ -24,7 +24,7 @@ spec:
           app:
             image:
               repository: sissbruecker/linkding
-              tag: 1.25.0-alpine@sha256:336299f28cabd6b58b44e7076b05e54abace629371f12bb9a8be247ec5254f29
+              tag: 1.27.0-alpine@sha256:7dfae66f23c83f4ef63d665acea885a54fd53ccd92a3203d364d37ec9a8004e9
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
