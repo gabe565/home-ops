@@ -39,15 +39,16 @@ spec:
               limits:
                 memory: 64Mi
             probes:
-              startup:
+              liveness: &probe
                 enabled: true
+                type: HTTP
+                path: /-/ready
+              readiness: *probe
+              startup:
+                <<: *probe
                 spec:
                   failureThreshold: 30
                   periodSeconds: 5
-              liveness:
-                enabled: true
-              readiness:
-                enabled: true
         pod:
           labels:
             policy.gabe565.com/egress-namespace: "true"
