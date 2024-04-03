@@ -367,6 +367,11 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td></td>
   </tr>
   <tr>
+    <td>stirling-pdf</td>
+    <td><a href="kubernetes/apps/stirling-pdf/app/helmrelease.yaml">stirling-pdf</a></td>
+    <td></td>
+  </tr>
+  <tr>
     <td>tandoor</td>
     <td><a href="kubernetes/apps/tandoor/app/helmrelease.yaml">tandoor</a></td>
     <td><a href="kubernetes/apps/tandoor/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/apps/tandoor/postgresql.yaml">postgresql</a></td>

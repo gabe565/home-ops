@@ -1,0 +1,103 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.0.4/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: stirling-pdf
+  namespace: stirling-pdf
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 3.0.4
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      stirling-pdf:
+        strategy: RollingUpdate
+        containers:
+          app:
+            image:
+              repository: ghcr.io/stirling-tools/s-pdf
+              tag: 0.22.7@sha256:f3b12ea172c2b12ce9c14f3663e528b96f7f3eec98eafe3b54ba6a68acde4d88
+              pullPolicy: IfNotPresent
+            env:
+              TZ: America/Chicago
+              DOCKER_ENABLE_SECURITY: "false"
+              INSTALL_BOOK_AND_ADVANCED_HTML_OPS: "false"
+            probes:
+              liveness: &probe
+                enabled: true
+                type: HTTP
+                path: /api/v1/info/status
+              readiness: *probe
+              startup:
+                <<: *probe
+                spec:
+                  failureThreshold: 90
+                  periodSeconds: 5
+            securityContext:
+              readOnlyRootFilesystem: true
+        pod:
+          labels:
+            policy.gabe565.com/ingress-ingress: "true"
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            fsGroupChangePolicy: OnRootMismatch
+
+    persistence:
+      configs:
+        enabled: true
+        type: emptyDir
+      logs:
+        enabled: true
+        type: emptyDir
+      tmp:
+        enabled: true
+        type: emptyDir
+      tessdata:
+        enabled: true
+        type: emptyDir
+        globalMounts:
+          - path: /usr/share/tessdata
+
+    service:
+      stirling-pdf:
+        controller: stirling-pdf
+        ports:
+          http:
+            port: 8080
+
+    ingress:
+      stirling-pdf:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/auth-url: |-
+            http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
+          nginx.ingress.kubernetes.io/auth-signin: |-
+            /outpost.goauthentik.io/start?rd=$escaped_request_uri
+          nginx.ingress.kubernetes.io/auth-response-headers: |-
+            Set-Cookie,X-authentik-username,X-authentik-groups,X-authentik-email,X-authentik-name,X-authentik-uid
+          nginx.ingress.kubernetes.io/auth-snippet: |
+            proxy_set_header X-Forwarded-Host $http_host;
+          nginx.ingress.kubernetes.io/proxy-body-size: 64m
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+                service:
+                  identifier: stirling-pdf
+                  port: http
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
