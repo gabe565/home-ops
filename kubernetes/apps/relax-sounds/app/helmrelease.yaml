@@ -24,7 +24,7 @@ spec:
           main:
             image:
               repository: ghcr.io/gabe565/relax-sounds
-              tag: 1.6.1@sha256:7107c2da02b92c62035e7a0c9757697019d55ab49e241a57d414d82c17dfcc8f
+              tag: 1.6.1@sha256:6906b72b8e296572f21b5a83778889a923cbe7684110ad051cfb1ee505b15f57
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
