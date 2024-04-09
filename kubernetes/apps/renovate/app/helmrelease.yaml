@@ -33,8 +33,8 @@ spec:
               LOG_LEVEL: info
               MEND_RNV_SQLITE_FILE_PATH: /tmp/renovate/renovate-ce.sqlite
               MEND_RNV_PLATFORM: github
-              MEND_RNV_CRON_JOB_SCHEDULER: "0 * * * *"
-              MEND_RNV_CRON_APP_SYNC: "0 0,4,8,12,16,20 * * *"
+              MEND_RNV_CRON_JOB_SCHEDULER: "0 */4 * * *"
+              MEND_RNV_CRON_APP_SYNC: "0 */4 * * *"
               MEND_RNV_AUTODISCOVER_FILTER: "gabe565/*"
               MEND_RNV_ENQUEUE_JOBS_ON_STARTUP: disabled
               RENOVATE_PAGINATE_ALL: "true"
