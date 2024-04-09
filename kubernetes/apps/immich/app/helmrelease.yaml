@@ -41,6 +41,7 @@ spec:
               REDIS_HOSTNAME: keydb
               REDIS_PASSWORD: ${keydb_password}
         pod:
+          terminationGracePeriodSeconds: 1
           labels:
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
@@ -61,6 +62,7 @@ spec:
               limits:
                 gpu.intel.com/i915: 1
         pod:
+          terminationGracePeriodSeconds: 1
           labels:
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
