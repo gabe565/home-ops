@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.1.0/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -6,50 +7,69 @@ metadata:
 spec:
   chart:
     spec:
-      chart: healthchecks
-      version: 0.11.0
+      chart: app-template
+      version: 3.1.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
         namespace: flux-system
-        name: gabe565
+        name: bjw-s
   interval: 1h
   driftDetection:
     mode: enabled
   values:
-    env:
-      TZ: America/Chicago
-      SITE_NAME: Cook Healthchecks
-      SITE_LOGO_URL: ${logo_url}
-      SECRET_KEY: ${secret_key}
-      EMAIL_HOST: ${smtp_hostname}
-      EMAIL_HOST_USER: ${smtp_username}
-      EMAIL_HOST_PASSWORD: ${smtp_password}
-      EMAIL_PORT: "587"
-      EMAIL_USE_TLS: "True"
-      DEFAULT_FROM_EMAIL: ${smtp_username}
-      TELEGRAM_TOKEN: ${telegram_token}
-      TELEGRAM_BOT_NAME: Healthchecks
-      REMOTE_USER_HEADER: HTTP_X_AUTHENTIK_EMAIL
-      INTEGRATIONS_ALLOW_PRIVATE_IPS: "True"
+    controllers:
+      healthchecks:
+        strategy: RollingUpdate
+        containers:
+          app:
+            image:
+              repository: ghcr.io/linuxserver/healthchecks
+              tag: version-v3.3@sha256:c3372a56bc12ac3d06c60002b644c0af78bfe83fb9ccc8929c3ec5ffb848b7cf
+              pullPolicy: IfNotPresent
+            env:
+              TZ: America/Chicago
+              SITE_NAME: Cook Healthchecks
+              SITE_ROOT: https://${app_url}
+              SITE_LOGO_URL: ${logo_url}
+              DEBUG: "False"
+              SECRET_KEY: ${secret_key}
+              EMAIL_HOST: ${smtp_hostname}
+              EMAIL_HOST_USER: ${smtp_username}
+              EMAIL_HOST_PASSWORD: ${smtp_password}
+              EMAIL_PORT: "587"
+              EMAIL_USE_TLS: "True"
+              DEFAULT_FROM_EMAIL: ${smtp_username}
+              TELEGRAM_TOKEN: ${telegram_token}
+              TELEGRAM_BOT_NAME: Healthchecks
+              REMOTE_USER_HEADER: HTTP_X_AUTHENTIK_EMAIL
+              INTEGRATIONS_ALLOW_PRIVATE_IPS: "True"
 
-      DB: postgres
-      DB_HOST: postgresql-rw
-      DB_NAME: healthchecks
-      DB_USER: healthchecks
-      DB_PASSWORD:
-        secretKeyRef:
-          name: postgresql-app
-          key: password
+              DB: postgres
+              DB_HOST: postgresql-rw
+              DB_NAME: healthchecks
+              DB_USER: healthchecks
+              DB_PASSWORD:
+                secretKeyRef:
+                  name: postgresql-app
+                  key: password
+        pod:
+          terminationGracePeriodSeconds: 1
+          labels:
+            policy.gabe565.com/egress-namespace: "true"
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-ingress: "true"
+            policy.gabe565.com/ingress-prometheus: "true"
 
-    podLabels:
-      policy.gabe565.com/egress-namespace: "true"
-      policy.gabe565.com/egress-world: "true"
-      policy.gabe565.com/ingress-ingress: "true"
-      policy.gabe565.com/ingress-prometheus: "true"
+    service:
+      healthchecks:
+        controller: healthchecks
+        ports:
+          http:
+            port: 8000
 
     ingress:
-      main:
+      healthchecks:
         enabled: true
         annotations:
           nginx.ingress.kubernetes.io/auth-url: |-
@@ -64,6 +84,9 @@ spec:
           - host: ${app_url}
             paths:
               - path: /
+                service:
+                  identifier: healthchecks
+                  port: http
         tls:
           - secretName: ${certificate_name}
             hosts:
@@ -79,8 +102,9 @@ spec:
           key: ${ping_key}
 
     serviceMonitor:
-      main:
+      healthchecks:
         enabled: true
+        serviceName: healthchecks
         endpoints:
           - port: http
             scheme: http
