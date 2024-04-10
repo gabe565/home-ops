@@ -19,12 +19,12 @@ spec:
     mode: enabled
   values:
     controllers:
-      api:
+      vikunja:
         containers:
           app:
             image:
-              repository: vikunja/api
-              tag: 0.22.1@sha256:c9415431e6235229302bb8f9ee6660b74c24859d1e8adbc4a3e25bd418604b57
+              repository: vikunja/vikunja
+              tag: 0.23.0@sha256:c824f99b0b09b7f03a1d77ad6691fbce38edf8d737e73e3242d8b87dd96d21e0
               pullPolicy: IfNotPresent
             env:
               VIKUNJA_SERVICE_FRONTENDURL: https://${app_url}/
@@ -47,40 +47,20 @@ spec:
               VIKUNJA_AUTH_LOCAL: "false"
             envFrom:
               - secretRef:
-                  name: vikunja-api-env
+                  name: vikunja-env
         pod:
           labels:
             policy.gabe565.com/egress-ingress: "true"
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-ingress: "true"
-          enableServiceLinks: false
-      frontend:
-        strategy: RollingUpdate
-        containers:
-          app:
-            image:
-              repository: vikunja/frontend
-              tag: 0.22.1@sha256:f0223d441997fe29c377d0b476dc4bb2fc091b44b9c24d76b1b88c213df520c5
-              pullPolicy: IfNotPresent
-        pod:
-          labels:
-            policy.gabe565.com/ingress-ingress: "true"
 
     service:
       vikunja:
         controller: vikunja
-        enabled: false
-      api:
-        controller: api
         ports:
           http:
             port: 3456
-      frontend:
-        controller: frontend
-        ports:
-          http:
-            port: 80
 
     persistence:
       files:
@@ -88,56 +68,38 @@ spec:
         storageClass: longhorn-ssd
         accessMode: ReadWriteOnce
         size: 2Gi
-        advancedMounts:
-          api:
-            app:
-              - path: /app/vikunja/files
-      api-config:
+        globalMounts:
+          - path: /app/vikunja/files
+      config:
         enabled: true
         type: secret
-        name: vikunja-api-config
-        advancedMounts:
-          api:
-            app:
-              - path: /etc/vikunja/config.yaml
-                subPath: config.yaml
+        name: vikunja-config
+        globalMounts:
+          - path: /etc/vikunja/config.yaml
+            subPath: config.yaml
 
     ingress:
-      api:
+      vikunja:
         enabled: true
         annotations:
           nginx.ingress.kubernetes.io/proxy-body-size: 20M
         hosts:
           - host: ${app_url}
             paths:
-              - path: /api
-                service: &service
-                  identifier: api
+              - path: /
+                service:
+                  identifier: vikunja
                   port: http
-              - path: /dav
-                service: *service
-              - path: /.well-known
-                service: *service
-        tls: &tls
+        tls:
           - secretName: ${certificate_name}
             hosts:
               - ${app_url}
-      frontend:
-        enabled: true
-        hosts:
-          - host: ${app_url}
-            paths:
-              - path: /
-                service:
-                  identifier: frontend
-                  port: http
-        tls: *tls
 
     secrets:
-      api-env:
+      env:
         stringData:
           VIKUNJA_SERVICE_JWTSECRET: ${jwt_secret}
-      api-config:
+      config:
         stringData:
           # language=yaml
           config.yaml: |
