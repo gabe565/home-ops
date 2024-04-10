@@ -45,6 +45,9 @@ spec:
               REMOTE_USER_HEADER: HTTP_X_AUTHENTIK_EMAIL
               INTEGRATIONS_ALLOW_PRIVATE_IPS: "True"
 
+              UWSGI_DISABLE_LOGGING: "1"
+              UWSGI_PROCESSES: "1"
+
               DB: postgres
               DB_HOST: postgresql-rw
               DB_NAME: healthchecks
