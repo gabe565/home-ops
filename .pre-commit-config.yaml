@@ -30,4 +30,4 @@ repos:
       - id: template
         args:
           - --dirs=kubernetes
-          - --supporting-services=borgmatic,postgresql,redis,mariadb,keydb
+          - --supporting-services=borgmatic,postgresql,redis,mariadb

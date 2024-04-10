@@ -7,7 +7,6 @@ resources:
   - helmrelease.yaml
   - pvc.yaml
   - oidc-rbac.yaml
-  - keydb.yaml
 configMapGenerator:
   - name: authentik-custom-assets
     options:

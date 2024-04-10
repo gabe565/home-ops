@@ -79,7 +79,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
   <tr>
     <td>authentik</td>
     <td><a href="kubernetes/apps/authentik/app/helmrelease.yaml">authentik</a></td>
-    <td><a href="kubernetes/apps/authentik/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/apps/authentik/app/keydb.yaml">keydb</a>, <a href="kubernetes/apps/authentik/postgresql.yaml">postgresql</a></td>
+    <td><a href="kubernetes/apps/authentik/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/apps/authentik/postgresql.yaml">postgresql</a>, <a href="kubernetes/apps/authentik/redis/helmrelease.yaml">redis</a></td>
   </tr>
   <tr>
     <td>bookstack</td>
@@ -142,7 +142,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
   <tr>
     <td>gitea</td>
     <td><a href="kubernetes/apps/gitea/app/helmrelease.yaml">gitea</a></td>
-    <td><a href="kubernetes/apps/gitea/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/apps/gitea/app/keydb.yaml">keydb</a>, <a href="kubernetes/apps/gitea/postgresql.yaml">postgresql</a></td>
+    <td><a href="kubernetes/apps/gitea/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/apps/gitea/postgresql.yaml">postgresql</a>, <a href="kubernetes/apps/gitea/redis/helmrelease.yaml">redis</a></td>
   </tr>
   <tr>
     <td>hammond</td>
@@ -175,7 +175,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
   <tr>
     <td>immich</td>
     <td><a href="kubernetes/apps/immich/app/helmrelease.yaml">immich</a></td>
-    <td><a href="kubernetes/apps/immich/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/apps/immich/app/keydb.yaml">keydb</a>, <a href="kubernetes/apps/immich/postgresql.yaml">postgresql</a></td>
+    <td><a href="kubernetes/apps/immich/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/apps/immich/postgresql.yaml">postgresql</a>, <a href="kubernetes/apps/immich/redis/helmrelease.yaml">redis</a></td>
   </tr>
   <tr>
     <td>ingress-nginx</td>
@@ -286,7 +286,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
   <tr>
     <td>paperless-ngx</td>
     <td><a href="kubernetes/apps/paperless-ngx/app/helmrelease.yaml">paperless-ngx</a></td>
-    <td><a href="kubernetes/apps/paperless-ngx/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/apps/paperless-ngx/app/keydb.yaml">keydb</a>, <a href="kubernetes/apps/paperless-ngx/postgresql.yaml">postgresql</a></td>
+    <td><a href="kubernetes/apps/paperless-ngx/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/apps/paperless-ngx/postgresql.yaml">postgresql</a>, <a href="kubernetes/apps/paperless-ngx/redis/helmrelease.yaml">redis</a></td>
   </tr>
   <tr>
     <td>pictshare</td>
@@ -399,7 +399,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
   <tr>
     <td>vikunja</td>
     <td><a href="kubernetes/apps/vikunja/app/helmrelease.yaml">vikunja</a></td>
-    <td><a href="kubernetes/apps/vikunja/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/apps/vikunja/app/keydb.yaml">keydb</a>, <a href="kubernetes/apps/vikunja/postgresql.yaml">postgresql</a></td>
+    <td><a href="kubernetes/apps/vikunja/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/apps/vikunja/postgresql.yaml">postgresql</a>, <a href="kubernetes/apps/vikunja/redis/helmrelease.yaml">redis</a></td>
   </tr>
   <tr>
     <td>weave-gitops</td>

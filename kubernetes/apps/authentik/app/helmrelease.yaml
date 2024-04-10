@@ -44,7 +44,10 @@ spec:
               name: postgresql-app
               key: password
         - name: AUTHENTIK_REDIS__PASSWORD
-          value: ${keydb_password}
+          valueFrom:
+            secretKeyRef:
+              name: redis
+              key: redis-password
       envFrom:
         - secretRef:
             name: authentik-s3-envs
@@ -63,7 +66,7 @@ spec:
         user: authentik
 
       redis:
-        host: keydb
+        host: redis-master
 
       email:
         host: ${email_host}
