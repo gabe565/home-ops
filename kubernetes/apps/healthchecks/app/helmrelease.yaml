@@ -24,8 +24,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/linuxserver/healthchecks
-              tag: version-v3.3@sha256:c3372a56bc12ac3d06c60002b644c0af78bfe83fb9ccc8929c3ec5ffb848b7cf
+              repository: healthchecks/healthchecks
+              tag: v3.3@sha256:831203b9cea7d9b5ed673b4c4c2898b68664e9c899c9656c540744120c08ff36
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
@@ -53,8 +53,17 @@ spec:
                 secretKeyRef:
                   name: postgresql-app
                   key: password
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
         pod:
-          terminationGracePeriodSeconds: 1
           labels:
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
