@@ -20,10 +20,6 @@ spec:
   driftDetection:
     mode: enabled
   values:
-    kubeProxyReplacement: true
-    k8sServiceHost: 192.168.1.230
-    k8sServicePort: 6443
-
     global:
       encryption:
         enabled: true
