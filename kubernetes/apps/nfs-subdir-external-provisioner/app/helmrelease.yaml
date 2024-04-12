@@ -19,7 +19,7 @@ spec:
   values:
     priorityClassName: system-cluster-critical
     nfs:
-      server: 100.64.0.4
+      server: 192.168.1.240
       path: /volume1/gabernetes
     labels:
       policy.gabe565.com/egress-kubeapi: "true"

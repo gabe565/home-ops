@@ -68,7 +68,7 @@ spec:
       media:
         enabled: true
         type: nfs
-        server: 100.64.0.4
+        server: 192.168.1.240
         path: /volume1/media
         globalMounts:
           - path: /mnt/media

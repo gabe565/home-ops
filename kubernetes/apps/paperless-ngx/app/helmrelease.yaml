@@ -88,21 +88,21 @@ spec:
       media:
         enabled: true
         type: nfs
-        server: 100.64.0.4
+        server: 192.168.1.240
         path: /volume1/documents/paperless/media
         globalMounts:
           - path: /usr/src/paperless/media
       export:
         enabled: true
         type: nfs
-        server: 100.64.0.4
+        server: 192.168.1.240
         path: /volume1/documents/paperless/export
         globalMounts:
           - path: /usr/src/paperless/export
       consume:
         enabled: true
         type: nfs
-        server: 100.64.0.4
+        server: 192.168.1.240
         path: /volume1/documents/paperless/consume
         globalMounts:
           - path: /usr/src/paperless/consume
