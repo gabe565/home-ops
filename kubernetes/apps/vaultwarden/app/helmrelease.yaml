@@ -50,6 +50,9 @@ spec:
                 enabled: true
               readiness:
                 enabled: true
+
+            securityContext:
+              readOnlyRootFilesystem: true
         pod:
           priorityClassName: system-cluster-critical
           labels:

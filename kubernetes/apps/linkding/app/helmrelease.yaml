@@ -51,6 +51,8 @@ spec:
                 enabled: true
               readiness:
                 enabled: true
+            securityContext:
+              readOnlyRootFilesystem: true
         pod:
           labels:
             policy.gabe565.com/egress-namespace: "true"
@@ -71,6 +73,9 @@ spec:
         size: 1Gi
         globalMounts:
           - path: /etc/linkding/data
+      tmp:
+        enabled: true
+        type: emptyDir
 
     ingress:
       linkding:

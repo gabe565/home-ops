@@ -48,6 +48,9 @@ spec:
       policy.gabe565.com/ingress-home-assistant: "true"
       policy.gabe565.com/ingress-ingress: "true"
 
+    securityContext:
+      readOnlyRootFilesystem: true
+
     ingress:
       main:
         enabled: true

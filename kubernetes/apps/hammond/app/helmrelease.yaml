@@ -24,6 +24,9 @@ spec:
     podLabels:
       policy.gabe565.com/ingress-ingress: "true"
 
+    securityContext:
+      readOnlyRootFilesystem: true
+
     ingress:
       main:
         enabled: true

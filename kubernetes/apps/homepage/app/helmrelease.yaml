@@ -45,6 +45,8 @@ spec:
                 enabled: true
               readiness:
                 enabled: true
+            securityContext:
+              readOnlyRootFilesystem: true
         pod:
           labels:
             policy.gabe565.com/egress-adguard-api: "true"

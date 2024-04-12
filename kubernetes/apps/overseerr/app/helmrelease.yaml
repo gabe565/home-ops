@@ -26,6 +26,7 @@ spec:
               repository: ghcr.io/sct/overseerr
               tag: 1.33.2@sha256:714ea6db2bc007a2262d112bef7eec74972eb33d9c72bddb9cbd98b8742de950
               pullPolicy: IfNotPresent
+            command: [npm, run, start]
             env:
               TZ: America/Chicago
               LOG_LEVEL: warn
@@ -39,6 +40,8 @@ spec:
                 enabled: true
               readiness:
                 enabled: true
+            securityContext:
+              readOnlyRootFilesystem: true
         pod:
           labels:
             policy.gabe565.com/egress-plex: "true"
@@ -67,6 +70,12 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /app/config/cache
+            subPath: app
+          - path: /root/.npm
+            subPath: npm
+      tmp:
+        enabled: true
+        type: emptyDir
 
     ingress:
       overseerr:

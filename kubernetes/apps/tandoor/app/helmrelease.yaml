@@ -71,6 +71,8 @@ spec:
                 enabled: true
               readiness:
                 enabled: true
+            securityContext:
+              readOnlyRootFilesystem: true
         pod:
           enableServiceLinks: false
           labels:
@@ -98,6 +100,9 @@ spec:
             subPath: staticfiles
           - path: /opt/recipes/cookbook/static/django_js_reverse
             subPath: django_js_reverse
+      tmp:
+        enabled: true
+        type: emptyDir
 
     ingress:
       tandoor:

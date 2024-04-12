@@ -61,6 +61,8 @@ spec:
                 enabled: true
               readiness:
                 enabled: true
+            securityContext:
+              readOnlyRootFilesystem: true
         pod:
           labels:
             policy.gabe565.com/egress-namespace: "true"
@@ -104,6 +106,17 @@ spec:
         path: /volume1/documents/paperless/consume
         globalMounts:
           - path: /usr/src/paperless/consume
+      tmp:
+        enabled: true
+        type: emptyDir
+      supervisord:
+        enabled: true
+        type: emptyDir
+        globalMounts:
+          - path: /var/log/supervisord
+            subPath: log
+          - path: /var/run/supervisord
+            subPath: run
 
     ingress:
       paperless-ngx:

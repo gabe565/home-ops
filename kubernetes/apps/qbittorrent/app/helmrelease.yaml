@@ -40,6 +40,8 @@ spec:
                 enabled: true
               readiness:
                 enabled: true
+            securityContext:
+              readOnlyRootFilesystem: true
           vpn:
             image:
               repository: qmcgaw/gluetun
@@ -78,6 +80,8 @@ spec:
               repository: ghcr.io/gabe565/vuetorrent
               tag: 2.7.3@sha256:e4fbc179b8ded25fae142dc9aa8a51928732c007008c647ca119011cab97ddcf
               pullPolicy: IfNotPresent
+            securityContext:
+              readOnlyRootFilesystem: true
         pod:
           labels:
             policy.gabe565.com/ingress-ingress: "true"
@@ -101,6 +105,18 @@ spec:
           qbittorrent:
             app:
               - path: /downloads
+      tmp:
+        enabled: true
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+        advancedMounts:
+          vuetorrent:
+            app:
+              - path: /var/cache/nginx
+                subPath: nginx/cache
+              - path: /var/run
+                subPath: nginx/run
 
     service:
       qbittorrent:

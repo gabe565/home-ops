@@ -44,6 +44,8 @@ spec:
                 enabled: true
               readiness:
                 enabled: true
+            securityContext:
+              readOnlyRootFilesystem: true
         pod:
           labels:
             policy.gabe565.com/egress-world: "true"
@@ -70,6 +72,9 @@ spec:
         enabled: true
         type: emptyDir
         sizeLimit: 32Gi
+      tmp:
+        enabled: true
+        type: emptyDir
 
     service:
       plex:

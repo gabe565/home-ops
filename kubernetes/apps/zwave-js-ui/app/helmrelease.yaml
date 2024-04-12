@@ -44,6 +44,8 @@ spec:
                 enabled: true
               readiness:
                 enabled: true
+            securityContext:
+              readOnlyRootFilesystem: true
         pod:
           labels:
             policy.gabe565.com/egress-world: "true"
@@ -57,6 +59,9 @@ spec:
         size: 128Mi
         globalMounts:
           - path: /usr/src/app/store
+      data:
+        enabled: true
+        type: emptyDir
 
     service:
       zwave-js-ui:

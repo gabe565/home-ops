@@ -43,6 +43,8 @@ spec:
                 enabled: true
               readiness:
                 enabled: true
+            securityContext:
+              readOnlyRootFilesystem: true
         pod:
           enableServiceLinks: false
           labels:

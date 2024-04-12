@@ -52,6 +52,15 @@ spec:
         - secretRef:
             name: authentik-s3-envs
 
+      volumes:
+        - name: public
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}
+      volumeMounts:
+        - name: public
+          mountPath: /media/public
+
     authentik:
       # This sends anonymous usage-data, stack traces on errors and
       # performance data to sentry.beryju.org, and is fully opt-in
@@ -82,6 +91,11 @@ spec:
       enabled: true
       existingSecret:
         secretName: authentik-geoip
+      containerSecurityContext:
+        readOnlyRootFilesystem: true
+      volumeMounts:
+        - name: tmp
+          mountPath: /tmp
 
     server:
       ingress:
@@ -108,8 +122,15 @@ spec:
           mountPath: /web/authentik/sources/plex.svg
           subPath: plex.svg
 
+      containerSecurityContext:
+        readOnlyRootFilesystem: true
+
       metrics:
         enabled: true
         serviceMonitor:
           enabled: true
           interval: 1m
+
+    worker:
+      containerSecurityContext:
+        readOnlyRootFilesystem: true

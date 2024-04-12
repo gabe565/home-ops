@@ -43,6 +43,9 @@ spec:
                 secretKeyRef:
                   name: redis
                   key: redis-password
+              MPLCONFIGDIR: /tmp/matplotlib
+            securityContext:
+              readOnlyRootFilesystem: true
         pod:
           terminationGracePeriodSeconds: 1
           labels:
@@ -64,6 +67,8 @@ spec:
                 gpu.intel.com/i915: 1
               limits:
                 gpu.intel.com/i915: 1
+            securityContext:
+              readOnlyRootFilesystem: true
         pod:
           terminationGracePeriodSeconds: 1
           labels:
@@ -77,6 +82,8 @@ spec:
               repository: ghcr.io/immich-app/immich-machine-learning
               tag: v1.101.0@sha256:b0a22ca87496019f495ed5ce89df08da237e0987d389376b435b2226a8c29463
               pullPolicy: IfNotPresent
+            securityContext:
+              readOnlyRootFilesystem: true
         pod:
           labels:
             policy.gabe565.com/egress-world: "true"
@@ -106,6 +113,9 @@ spec:
           machine-learning:
             app:
               - path: /cache
+      tmp:
+        enabled: true
+        type: emptyDir
 
     service:
       immich:

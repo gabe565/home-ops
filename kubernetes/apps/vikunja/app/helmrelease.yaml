@@ -26,6 +26,7 @@ spec:
               repository: vikunja/vikunja
               tag: 0.23.0@sha256:c824f99b0b09b7f03a1d77ad6691fbce38edf8d737e73e3242d8b87dd96d21e0
               pullPolicy: IfNotPresent
+            command: [./vikunja]
             env:
               VIKUNJA_SERVICE_FRONTENDURL: https://${app_url}/
               VIKUNJA_DEFAULTSETTINGS_TIMEZONE: America/Chicago
@@ -51,12 +52,20 @@ spec:
             envFrom:
               - secretRef:
                   name: vikunja-env
+            securityContext:
+              readOnlyRootFilesystem: true
         pod:
           labels:
             policy.gabe565.com/egress-ingress: "true"
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-ingress: "true"
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            fsGroupChangePolicy: OnRootMismatch
 
     service:
       vikunja:

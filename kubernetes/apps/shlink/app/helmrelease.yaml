@@ -56,6 +56,8 @@ spec:
             envFrom:
               - secretRef:
                   name: shlink-geolite
+            securityContext:
+              readOnlyRootFilesystem: true
         pod:
           labels:
             policy.gabe565.com/egress-namespace: "true"
@@ -70,6 +72,8 @@ spec:
               repository: ghcr.io/shlinkio/shlink-web-client
               tag: 4.1.0@sha256:efd725a7cb264e1a5884e4b93f47c6e38b6b58a4de47e1aaac5aec02d8f966c6
               pullPolicy: IfNotPresent
+            securityContext:
+              readOnlyRootFilesystem: true
         pod:
           labels:
             policy.gabe565.com/ingress-ingress: "true"
@@ -88,6 +92,22 @@ spec:
         ports:
           http:
             port: 8080
+
+    persistence:
+      data:
+        enabled: true
+        type: emptyDir
+        advancedMounts:
+          api:
+            app:
+              - path: /etc/shlink/data
+      tmp:
+        enabled: true
+        type: emptyDir
+        advancedMounts:
+          frontend:
+            app:
+              - path: /tmp
 
     ingress:
       shlink:

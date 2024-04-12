@@ -54,6 +54,9 @@ spec:
       policy.gabe565.com/ingress-authentik: "true"
       policy.gabe565.com/ingress-ingress: "true"
 
+    securityContext:
+      readOnlyRootFilesystem: true
+
     ingress:
       main:
         enabled: true
@@ -87,6 +90,13 @@ spec:
 
     persistence:
       storage:
+        enabled: true
+        type: emptyDir
+      cache:
+        enabled: true
+        type: emptyDir
+        mountPath: /var/www/html/bootstrap/cache
+      tmp:
         enabled: true
         type: emptyDir
 

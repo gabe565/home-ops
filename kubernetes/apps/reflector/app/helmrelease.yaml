@@ -21,3 +21,25 @@ spec:
 
     podLabels:
       policy.gabe565.com/egress-kubeapi: "true"
+
+    securityContext:
+      readOnlyRootFilesystem: true
+
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: Deployment
+              name: reflector
+            # language=yaml
+            patch: |
+              - op: add
+                path: /spec/template/spec/volumes
+                value:
+                  - name: tmp
+                    emptyDir: {}
+              - op: add
+                path: /spec/template/spec/containers/0/volumeMounts
+                value:
+                  - name: tmp
+                    mountPath: /tmp

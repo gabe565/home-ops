@@ -42,6 +42,8 @@ spec:
                 enabled: true
               readiness:
                 enabled: true
+            securityContext:
+              readOnlyRootFilesystem: true
         pod:
           annotations:
             k8s.v1.cni.cncf.io/networks: ipvlan
@@ -78,6 +80,7 @@ spec:
                 cpu: 500m
                 memory: 500Mi
             securityContext:
+              readOnlyRootFilesystem: true
               runAsUser: 0
         pod:
           labels:
@@ -91,6 +94,26 @@ spec:
         storageClass: longhorn-ssd
         accessMode: ReadWriteOnce
         size: 2Gi
+      tmp:
+        enabled: true
+        type: emptyDir
+      cache:
+        enabled: true
+        type: emptyDir
+        advancedMounts:
+          home-assistant:
+            app:
+              - path: /root/.cache
+                subPath: root
+              - path: /run
+                subPath: run
+      code-config:
+        enabled: true
+        type: emptyDir
+        advancedMounts:
+          code:
+            app:
+              - path: /root/.config
 
     service:
       home-assistant:

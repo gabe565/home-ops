@@ -145,3 +145,6 @@ spec:
           value: $(REDIS_CONN_STR)
         - name: GITEA__SESSION__PROVIDER_CONFIG
           value: $(REDIS_CONN_STR)
+
+    containerSecurityContext:
+      readOnlyRootFilesystem: true
