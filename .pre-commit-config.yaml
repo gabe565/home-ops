@@ -25,7 +25,7 @@ repos:
       - id: check-secrets-encrypted
 
   - repo: https://github.com/gabe565/template-kubernetes-apps-markdown
-    rev: v0.1.0
+    rev: v0.2.0
     hooks:
       - id: template
         args:
