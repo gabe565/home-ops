@@ -1,0 +1,52 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: home-ops-private
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  ref:
+    branch: main
+  secretRef:
+    name: home-ops-private
+  url: ssh://git@github.com/gabe565/home-ops-private.git
+  ignore: |
+    # exclude all
+    /*
+    # include flux directories
+    !/kubernetes/tennant
+    !/kubernetes/templates
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: apps-private
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  path: ./kubernetes/tennant/apps
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: home-ops-private
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-private
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  path: ./kubernetes/tennant/cluster
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: home-ops-private
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age

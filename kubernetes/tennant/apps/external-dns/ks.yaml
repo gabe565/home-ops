@@ -1,0 +1,17 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: app
+  namespace: external-dns
+spec:
+  interval: 1h
+  targetNamespace: external-dns
+  path: ./kubernetes/templates/apps/external-dns
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    namespace: flux-system
+    name: home-ops
+  postBuild:
+    substitute:
+      owner_id: tennant
