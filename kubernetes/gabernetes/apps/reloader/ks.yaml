@@ -6,7 +6,7 @@ metadata:
 spec:
   interval: 1h
   targetNamespace: reloader
-  path: ./kubernetes/gabernetes/apps/reloader/app
+  path: ./kubernetes/templates/apps/reloader
   prune: true
   sourceRef:
     kind: GitRepository
