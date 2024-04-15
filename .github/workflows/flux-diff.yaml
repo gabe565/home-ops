@@ -37,6 +37,7 @@ jobs:
           resource: ${{ steps.resource.outputs.resource }}
           strip-attrs: helm.sh/chart,checksum/config,app.kubernetes.io/version,chart
           sources: ${{ matrix.sources }}
+          live-branch: ${{ github.event.pull_request.base.sha }}
 
       - name: Generate Diff
         id: diff
