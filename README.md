@@ -148,7 +148,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
   </tr>
   <tr>
     <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/gabernetes/apps/external-dns/app/helmrelease.yaml">external-dns</a></td>
+    <td><a href="kubernetes/templates/apps/external-dns/helmrelease.yaml">external-dns</a></td>
   </tr>
   <tr>
     <td rowspan="2">flux-system</td>

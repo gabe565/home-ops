@@ -32,13 +32,8 @@ spec:
     triggerLoopOnEvent: true
     policy: sync
 
-    txtOwnerId: gabernetes
+    txtOwnerId: ${owner_id}
     env:
-      - name: EXTERNAL_DNS_DEFAULT_TARGETS
-        valueFrom:
-          configMapKeyRef:
-            name: external-dns-dynamic-ip
-            key: ip
       - name: CF_API_TOKEN
         valueFrom:
           secretKeyRef:
