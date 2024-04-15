@@ -23,9 +23,11 @@ jobs:
           - name: HelmRelease
             path: kubernetes
             resource: helmrelease
+            sources: home-ops
           - name: Kustomization
             path: kubernetes
             resource: kustomization
+            sources: home-ops
     steps:
       - name: Setup Flux CLI
         uses: fluxcd/flux2/action@v2.2.3
@@ -35,7 +37,7 @@ jobs:
           path: ${{ matrix.path }}
           resource: ${{ matrix.resource }}
           strip-attrs: helm.sh/chart,checksum/config,app.kubernetes.io/version,chart
-          sources: flux-system
+          sources: ${{ matrix.sources }}
 
       - name: Generate Diff
         id: diff

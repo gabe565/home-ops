@@ -151,10 +151,14 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><a href="kubernetes/gabernetes/apps/external-dns/app/helmrelease.yaml">external-dns</a></td>
   </tr>
   <tr>
-    <td>flux-system</td>
+    <td rowspan="2">flux-system</td>
+    <td><code>GitRepository</code></td>
+    <td><a href="https://github.com/gabe565/home-ops">home-ops</a></td>
+    <td rowspan="2"></td>
+  </tr>
+  <tr>
     <td><code>GitRepository</code></td>
     <td><a href="https://github.com/gabe565/home-ops-private">home-ops-private</a></td>
-    <td></td>
   </tr>
   <tr>
     <td>generic-device-plugin</td>

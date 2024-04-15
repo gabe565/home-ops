@@ -87,12 +87,6 @@
       "groupName": "Intel Device Plugin"
     },
     {
-      "matchManagers": ["kubernetes", "helm-values"],
-      "matchDatasources": ["docker"],
-      "matchPaths": ["**/flux-system/gotk-components.yaml"],
-      "enabled": false
-    },
-    {
       "matchDatasources": ["docker"],
       "matchPackagePrefixes": ["dessalines/"],
       "groupName": "Lemmy"

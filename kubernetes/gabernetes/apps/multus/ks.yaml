@@ -10,4 +10,4 @@ spec:
   sourceRef:
     kind: GitRepository
     namespace: flux-system
-    name: flux-system
+    name: home-ops
