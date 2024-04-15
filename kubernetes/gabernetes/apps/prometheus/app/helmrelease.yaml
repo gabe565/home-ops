@@ -122,6 +122,7 @@ spec:
             policy.gabe565.com/egress-nodes: "true"
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/ingress-namespace: "true"
+        enableRemoteWriteReceiver: true
         podMonitorSelectorNilUsesHelmValues: false
         serviceMonitorSelectorNilUsesHelmValues: false
         scrapeConfigSelectorNilUsesHelmValues: false

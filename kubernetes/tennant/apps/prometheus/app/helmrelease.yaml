@@ -1,0 +1,84 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: kube-prometheus-stack
+  namespace: prometheus
+spec:
+  chart:
+    spec:
+      chart: kube-prometheus-stack
+      version: 58.0.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: prometheus
+        name: prometheus-community
+  install:
+    crds: Create
+  upgrade:
+    crds: CreateReplace
+  interval: 1h
+  driftDetection:
+    mode: enabled
+    ignore:
+      # Ignore "validated" annotation which is not inserted during install
+      - target:
+          kind: PrometheusRule
+        paths:
+          - /metadata/annotations/prometheus-operator-validated
+  values:
+    grafana:
+      enabled: false
+    defaultRules:
+      disabled:
+        KubeControllerManagerDown: true
+        KubeProxyDown: true
+        KubeSchedulerDown: true
+        NodeRAIDDegraded: true
+    alertmanager:
+      enabled: false
+    prometheus:
+      agentMode: true
+      prometheusSpec:
+        podMetadata:
+          labels:
+            policy.gabe565.com/egress-nodes: "true"
+            policy.gabe565.com/egress-namespace: "true"
+            policy.gabe565.com/ingress-namespace: "true"
+        podMonitorSelectorNilUsesHelmValues: false
+        serviceMonitorSelectorNilUsesHelmValues: false
+        scrapeConfigSelectorNilUsesHelmValues: false
+        scrapeInterval: 1m
+        evaluationInterval: 1m
+        remoteWrite:
+          - name: Prometheus
+            url: https://${prometheus_url}/api/v1/write
+            basicAuth:
+              username:
+                name: app-vars
+                key: prometheus_username
+              password:
+                name: app-vars
+                key: prometheus_password
+    kubeApiServer:
+      enabled: false
+    kubelet:
+      enabled: false
+    kubeControllerManager:
+      enabled: false
+    coreDns:
+      enabled: false
+    kubeEtcd:
+      enabled: false
+    kubeScheduler:
+      enabled: false
+    kubeProxy:
+      enabled: false
+    prometheusOperator:
+      podLabels:
+        policy.gabe565.com/egress-kubeapi: "true"
+        policy.gabe565.com/egress-namespace: "true"
+        policy.gabe565.com/ingress-namespace: "true"
+    kube-state-metrics:
+      customLabels:
+        policy.gabe565.com/egress-kubeapi: "true"
