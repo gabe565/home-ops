@@ -1,0 +1,37 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: app
+  namespace: obico
+spec:
+  interval: 1h
+  targetNamespace: obico
+  path: ./kubernetes/gabernetes/apps/obico/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    namespace: flux-system
+    name: flux-system
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: app-vars
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: borgmatic
+  namespace: obico
+spec:
+  interval: 1h
+  targetNamespace: obico
+  path: ./kubernetes/gabernetes/apps/obico/borgmatic
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    namespace: flux-system
+    name: flux-system
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: borgmatic-vars

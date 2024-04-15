@@ -1,0 +1,14 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: app
+  namespace: nfs-provisioner
+spec:
+  interval: 1h
+  targetNamespace: nfs-provisioner
+  path: ./kubernetes/gabernetes/apps/nfs-subdir-external-provisioner/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    namespace: flux-system
+    name: flux-system

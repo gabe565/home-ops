@@ -1,0 +1,37 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: app
+  namespace: portfolio
+spec:
+  interval: 1h
+  targetNamespace: portfolio
+  path: ./kubernetes/gabernetes/apps/portfolio/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    namespace: flux-system
+    name: flux-system
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: app-vars
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: borgmatic
+  namespace: portfolio
+spec:
+  interval: 1h
+  targetNamespace: portfolio
+  path: ./kubernetes/gabernetes/apps/portfolio/borgmatic
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    namespace: flux-system
+    name: flux-system
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: borgmatic-vars

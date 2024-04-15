@@ -1,0 +1,56 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: app
+  namespace: adguard-home
+spec:
+  interval: 1h
+  targetNamespace: adguard-home
+  path: ./kubernetes/gabernetes/apps/adguard-home/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    namespace: flux-system
+    name: flux-system
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: app-vars
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: external-dns
+  namespace: adguard-home
+spec:
+  interval: 1h
+  targetNamespace: adguard-home
+  path: ./kubernetes/gabernetes/apps/adguard-home/external-dns
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    namespace: flux-system
+    name: flux-system
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: external-dns-vars
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: borgmatic
+  namespace: adguard-home
+spec:
+  interval: 1h
+  targetNamespace: adguard-home
+  path: ./kubernetes/gabernetes/apps/adguard-home/borgmatic
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    namespace: flux-system
+    name: flux-system
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: borgmatic-vars
