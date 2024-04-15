@@ -6,7 +6,7 @@ metadata:
 spec:
   interval: 1h
   targetNamespace: portfolio
-  path: ./kubernetes/gabernetes/apps/portfolio/app
+  path: ./kubernetes/tennant/apps/portfolio/app
   prune: true
   sourceRef:
     kind: GitRepository
@@ -25,7 +25,7 @@ metadata:
 spec:
   interval: 1h
   targetNamespace: portfolio
-  path: ./kubernetes/gabernetes/apps/portfolio/borgmatic
+  path: ./kubernetes/tennant/apps/portfolio/borgmatic
   prune: true
   sourceRef:
     kind: GitRepository

@@ -57,7 +57,7 @@ spec:
       data:
         enabled: true
         retain: true
-        storageClass: longhorn-ssd
+        storageClass: local-path
         accessMode: ReadWriteOnce
         size: 256Mi
     ingress:

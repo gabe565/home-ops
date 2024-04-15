@@ -57,9 +57,9 @@ spec:
     persistence:
       data:
         enabled: true
-        storageClass: nfs-client
+        storageClass: local-path
         size: 100Mi
-        accessMode: ReadWriteMany
+        accessMode: ReadWriteOnce
       ssh:
         enabled: true
         type: secret

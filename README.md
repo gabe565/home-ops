@@ -361,8 +361,8 @@ This Git repository contains the following directories under [Kubernetes](./kube
   <tr>
     <td>portfolio</td>
     <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/gabernetes/apps/portfolio/app/helmrelease.yaml">portfolio</a></td>
-    <td><a href="kubernetes/gabernetes/apps/portfolio/borgmatic/helmrelease.yaml">borgmatic</a></td>
+    <td><a href="kubernetes/tennant/apps/portfolio/app/helmrelease.yaml">portfolio</a></td>
+    <td><a href="kubernetes/tennant/apps/portfolio/borgmatic/helmrelease.yaml">borgmatic</a></td>
   </tr>
   <tr>
     <td rowspan="2">prometheus</td>
