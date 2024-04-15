@@ -6,7 +6,7 @@ metadata:
 spec:
   interval: 1h
   targetNamespace: cert-manager
-  path: ./kubernetes/gabernetes/apps/cert-manager/app
+  path: ./kubernetes/templates/apps/cert-manager/app
   prune: true
   sourceRef:
     kind: GitRepository
@@ -21,7 +21,7 @@ metadata:
 spec:
   interval: 1h
   targetNamespace: cert-manager
-  path: ./kubernetes/gabernetes/apps/cert-manager/issuers
+  path: ./kubernetes/templates/apps/cert-manager/issuers
   prune: true
   sourceRef:
     kind: GitRepository

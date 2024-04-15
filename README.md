@@ -101,7 +101,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
   <tr>
     <td>cert-manager</td>
     <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/gabernetes/apps/cert-manager/app/helmrelease.yaml">cert-manager</a></td>
+    <td><a href="kubernetes/templates/apps/cert-manager/app/helmrelease.yaml">cert-manager</a></td>
     <td></td>
   </tr>
   <tr>
