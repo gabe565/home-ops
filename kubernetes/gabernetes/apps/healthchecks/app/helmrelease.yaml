@@ -106,15 +106,6 @@ spec:
             hosts:
               - ${app_url}
 
-    secrets:
-      ping-key:
-        enabled: true
-        annotations:
-          reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
-          reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
-        stringData:
-          key: ${ping_key}
-
     serviceMonitor:
       healthchecks:
         enabled: true
