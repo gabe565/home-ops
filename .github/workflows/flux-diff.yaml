@@ -45,6 +45,8 @@ jobs:
           echo "diff<<EOF" >> $GITHUB_OUTPUT
           cat diff.patch >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
+          echo "added=$(grep -c '^+[^+]' diff.patch)" >> $GITHUB_OUTPUT
+          echo "removed=$(grep -c '^-[^-]' diff.patch)" >> $GITHUB_OUTPUT
 
       - if: ${{ steps.diff.outputs.diff != '' || failure() }}
         name: Add comment
@@ -52,12 +54,30 @@ jobs:
         with:
           message-id: ${{ github.event.pull_request.number }}/${{ matrix.cluster }}/${{ steps.resource.outputs.resource }}
           message-failure: |
-            ## ${{ matrix.resource }} Diff (`${{ matrix.cluster }}`)
+            ## ${{ matrix.resource }} Diff
+
+            <table>
+              <tr>
+                <td><b>Cluster</b></td>
+                <td><code>${{ matrix.cluster }}</code></td>
+              </tr>
+            </table>
 
             > [!CAUTION]
             > Failed to create diff. [View log.](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
           message: |
-            ## ${{ matrix.resource }} Diff (`${{ matrix.cluster }}`)
+            ## ${{ matrix.resource }} Diff
+
+            <table>
+              <tr>
+                <td><b>Cluster</b></td>
+                <td><code>${{ matrix.cluster }}</code></td>
+              </tr>
+              <tr>
+                <td><b>Changes</b></td>
+                <td>${\large\color{green}+${{ steps.diff.outputs.added }} \space\space \color{red}-${{ steps.diff.outputs.removed }}}$</td>
+              </tr>
+            </table>
 
             <details>
               <summary>Click to expand</summary>
