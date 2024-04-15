@@ -19,23 +19,22 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - name: HelmRelease
-            path: kubernetes
-            resource: helmrelease
-            sources: home-ops
-          - name: Kustomization
-            path: kubernetes
-            resource: kustomization
-            sources: home-ops
+        resource: [HelmRelease, Kustomization]
+        cluster: [gabernetes, tennant]
+        sources: [home-ops]
     steps:
       - name: Setup Flux CLI
         uses: fluxcd/flux2/action@v2.2.3
 
+      - id: resource
+        env:
+          RESOURCE: ${{ matrix.resource }}
+        run: echo "resource=${RESOURCE@L}" >> $GITHUB_OUTPUT
+
       - uses: allenporter/flux-local/action/diff@4.3.1
         with:
-          path: ${{ matrix.path }}
-          resource: ${{ matrix.resource }}
+          path: kubernetes/${{ matrix.cluster }}
+          resource: ${{ steps.resource.outputs.resource }}
           strip-attrs: helm.sh/chart,checksum/config,app.kubernetes.io/version,chart
           sources: ${{ matrix.sources }}
 
@@ -51,14 +50,14 @@ jobs:
         name: Add comment
         uses: mshick/add-pr-comment@v2
         with:
-          message-id: ${{ github.event.pull_request.number }}/${{ matrix.path }}/${{ matrix.resource }}
+          message-id: ${{ github.event.pull_request.number }}/${{ matrix.cluster }}/${{ steps.resource.outputs.resource }}
           message-failure: |
-            ## ${{ matrix.name }} Diff
+            ## ${{ matrix.resource }} Diff (`${{ matrix.cluster }}`)
 
             > [!CAUTION]
             > Failed to create diff. [View log.](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
           message: |
-            ## ${{ matrix.name }} Diff
+            ## ${{ matrix.resource }} Diff (`${{ matrix.cluster }}`)
 
             <details>
               <summary>Click to expand</summary>
