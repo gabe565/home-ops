@@ -75,7 +75,7 @@ jobs:
               </tr>
               <tr>
                 <td><b>Changes</b></td>
-                <td>${\large\color{green}+${{ steps.diff.outputs.added }} \space\space \color{red}-${{ steps.diff.outputs.removed }}}$</td>
+                <td>${\tt\large\color{green}+${{ steps.diff.outputs.added }}\enspace\color{red}-\negthinspace${{ steps.diff.outputs.removed }}}$</td>
               </tr>
             </table>
 
