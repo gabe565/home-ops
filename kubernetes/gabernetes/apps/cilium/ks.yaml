@@ -24,7 +24,6 @@ metadata:
   namespace: kube-system
 spec:
   interval: 1h
-  targetNamespace: kube-system
   path: ./kubernetes/gabernetes/apps/cilium/networkpolicies
   prune: true
   sourceRef:

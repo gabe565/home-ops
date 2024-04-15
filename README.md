@@ -211,7 +211,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
   <tr>
     <td>ingress-nginx</td>
     <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/gabernetes/apps/ingress-nginx/app/helmrelease.yaml">ingress-nginx</a></td>
+    <td><a href="kubernetes/templates/apps/ingress-nginx/helmrelease.yaml">ingress-nginx</a></td>
     <td></td>
   </tr>
   <tr>

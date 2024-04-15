@@ -65,12 +65,12 @@ spec:
 
       service:
         externalTrafficPolicy: Local
-        loadBalancerIP: 192.168.1.220
+        loadBalancerIP: ${load_balancer_ip}
 
       metrics:
-        enabled: true
+        enabled: ${metrics_enabled:=false}
         serviceMonitor:
-          enabled: true
+          enabled: ${metrics_enabled:=false}
           scrapeInterval: 1m
 
       admissionWebhooks:
@@ -79,9 +79,6 @@ spec:
         patch:
           labels:
             policy.gabe565.com/egress-kubeapi: "true"
-
-    tcp:
-      "2222": gitea/gitea-ssh:2222
 
     defaultBackend:
       enabled: true
