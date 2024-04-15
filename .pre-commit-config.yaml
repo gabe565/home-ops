@@ -30,4 +30,5 @@ repos:
       - id: template
         args:
           - --dirs=kubernetes
+          - --paths-re=^kubernetes/(?P<cluster>.+?)/
           - --supporting-services=borgmatic,postgresql,redis,mariadb

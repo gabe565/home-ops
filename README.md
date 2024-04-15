@@ -54,9 +54,19 @@ This Git repository contains the following directories under [Kubernetes](./kube
 └── 📁 templates      # re-useable components
 ```
 
-### App Listing
+### Repo Index
 
 <!-- Begin apps section -->
+<h3>Clusters</h3>
+<ul>
+  <li><a href="#gabernetes">gabernetes</a></li>
+  <li><a href="#templates">templates</a></li>
+  <li><a href="#tennant">tennant</a></li>
+</ul>
+
+<h3>Apps</h2>
+
+<h4>gabernetes</h2>
 <table>
   <tr>
     <th>Namespace</th>
@@ -99,12 +109,6 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td></td>
   </tr>
   <tr>
-    <td>cert-manager</td>
-    <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/templates/apps/cert-manager/app/helmrelease.yaml">cert-manager</a></td>
-    <td></td>
-  </tr>
-  <tr>
     <td>change-detection</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/change-detection/app/helmrelease.yaml">change-detection</a></td>
@@ -141,14 +145,10 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><a href="kubernetes/gabernetes/apps/esphome/borgmatic/helmrelease.yaml">borgmatic</a></td>
   </tr>
   <tr>
-    <td rowspan="2">external-dns</td>
+    <td>external-dns</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/external-dns/dynamic-ip/helmrelease.yaml">dynamic-ip</a></td>
-    <td rowspan="2"></td>
-  </tr>
-  <tr>
-    <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/templates/apps/external-dns/helmrelease.yaml">external-dns</a></td>
+    <td></td>
   </tr>
   <tr>
     <td rowspan="2">flux-system</td>
@@ -211,12 +211,6 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/immich/app/helmrelease.yaml">immich</a></td>
     <td><a href="kubernetes/gabernetes/apps/immich/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/immich/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/immich/redis/helmrelease.yaml">redis</a></td>
-  </tr>
-  <tr>
-    <td>ingress-nginx</td>
-    <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/templates/apps/ingress-nginx/helmrelease.yaml">ingress-nginx</a></td>
-    <td></td>
   </tr>
   <tr>
     <td>kromgo</td>
@@ -359,12 +353,6 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><a href="kubernetes/gabernetes/apps/plex/borgmatic/helmrelease.yaml">borgmatic</a></td>
   </tr>
   <tr>
-    <td>portfolio</td>
-    <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/tennant/apps/portfolio/app/helmrelease.yaml">portfolio</a></td>
-    <td><a href="kubernetes/tennant/apps/portfolio/borgmatic/helmrelease.yaml">borgmatic</a></td>
-  </tr>
-  <tr>
     <td rowspan="2">prometheus</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/prometheus/app/helmrelease.yaml">kube-prometheus-stack</a></td>
@@ -393,22 +381,10 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><a href="kubernetes/gabernetes/apps/radarr/borgmatic/helmrelease.yaml">borgmatic</a></td>
   </tr>
   <tr>
-    <td>reflector</td>
-    <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/templates/apps/reflector/helmrelease.yaml">reflector</a></td>
-    <td></td>
-  </tr>
-  <tr>
     <td>relax-sounds</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/relax-sounds/app/helmrelease.yaml">relax-sounds</a></td>
     <td><a href="kubernetes/gabernetes/apps/relax-sounds/borgmatic/helmrelease.yaml">borgmatic</a></td>
-  </tr>
-  <tr>
-    <td>reloader</td>
-    <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/templates/apps/reloader/helmrelease.yaml">reloader</a></td>
-    <td></td>
   </tr>
   <tr>
     <td>renovate</td>
@@ -499,6 +475,72 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/zwave-js-ui/app/helmrelease.yaml">zwave-js-ui</a></td>
     <td><a href="kubernetes/gabernetes/apps/zwave-js-ui/borgmatic/helmrelease.yaml">borgmatic</a></td>
+  </tr>
+</table>
+
+<h4>templates</h2>
+<table>
+  <tr>
+    <th>Namespace</th>
+    <th>Kind</th>
+    <th>Name</th>
+    <th>Supporting Services</th>
+  </tr>
+  <tr>
+    <td>cert-manager</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/templates/apps/cert-manager/app/helmrelease.yaml">cert-manager</a></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>external-dns</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/templates/apps/external-dns/helmrelease.yaml">external-dns</a></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>ingress-nginx</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/templates/apps/ingress-nginx/helmrelease.yaml">ingress-nginx</a></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>reflector</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/templates/apps/reflector/helmrelease.yaml">reflector</a></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>reloader</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/templates/apps/reloader/helmrelease.yaml">reloader</a></td>
+    <td></td>
+  </tr>
+</table>
+
+<h4>tennant</h2>
+<table>
+  <tr>
+    <th>Namespace</th>
+    <th>Kind</th>
+    <th>Name</th>
+    <th>Supporting Services</th>
+  </tr>
+  <tr>
+    <td rowspan="2">flux-system</td>
+    <td><code>GitRepository</code></td>
+    <td><a href="https://github.com/gabe565/home-ops">home-ops</a></td>
+    <td rowspan="2"></td>
+  </tr>
+  <tr>
+    <td><code>GitRepository</code></td>
+    <td><a href="https://github.com/gabe565/home-ops-private">home-ops-private</a></td>
+  </tr>
+  <tr>
+    <td>portfolio</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/tennant/apps/portfolio/app/helmrelease.yaml">portfolio</a></td>
+    <td><a href="kubernetes/tennant/apps/portfolio/borgmatic/helmrelease.yaml">borgmatic</a></td>
   </tr>
 </table>
 <!-- End apps section -->
