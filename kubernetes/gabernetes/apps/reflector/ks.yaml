@@ -6,7 +6,7 @@ metadata:
 spec:
   interval: 1h
   targetNamespace: reflector
-  path: ./kubernetes/gabernetes/apps/reflector/app
+  path: ./kubernetes/templates/apps/reflector
   prune: true
   sourceRef:
     kind: GitRepository

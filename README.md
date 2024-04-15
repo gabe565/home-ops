@@ -391,7 +391,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
   <tr>
     <td>reflector</td>
     <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/gabernetes/apps/reflector/app/helmrelease.yaml">reflector</a></td>
+    <td><a href="kubernetes/templates/apps/reflector/helmrelease.yaml">reflector</a></td>
     <td></td>
   </tr>
   <tr>
