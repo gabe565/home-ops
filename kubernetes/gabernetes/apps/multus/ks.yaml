@@ -1,3 +1,22 @@
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/source.toolkit.fluxcd.io/gitrepository_v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: multus
+  namespace: kube-system
+spec:
+  interval: 1h
+  url: https://github.com/k8snetworkplumbingwg/multus-cni
+  ref:
+    tag: v4.0.2
+  # language=gitignore
+  ignore: |
+    # exclude all
+    /*
+    # include deployments
+    !/deployments/multus-daemonset.yml
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
@@ -5,9 +24,10 @@ metadata:
   namespace: kube-system
 spec:
   interval: 1h
-  path: ./kubernetes/gabernetes/apps/multus/app
+  path: ./deployments
   prune: true
+  wait: true
+  targetNamespace: kube-system
   sourceRef:
     kind: GitRepository
-    namespace: flux-system
-    name: home-ops
+    name: multus

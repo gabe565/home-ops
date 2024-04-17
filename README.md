@@ -225,10 +225,10 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td></td>
   </tr>
   <tr>
-    <td rowspan="3">kube-system</td>
+    <td rowspan="4">kube-system</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/cilium/app/helmrelease.yaml">cilium</a></td>
-    <td rowspan="3"></td>
+    <td rowspan="4"></td>
   </tr>
   <tr>
     <td><code>HelmRelease</code></td>
@@ -237,6 +237,10 @@ This Git repository contains the following directories under [Kubernetes](./kube
   <tr>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/metrics-server/app/helmrelease.yaml">metrics-server</a></td>
+  </tr>
+  <tr>
+    <td><code>GitRepository</code></td>
+    <td><a href="https://github.com/k8snetworkplumbingwg/multus-cni">multus</a></td>
   </tr>
   <tr>
     <td>lidarr</td>
