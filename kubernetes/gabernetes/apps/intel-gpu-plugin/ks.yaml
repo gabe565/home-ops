@@ -1,14 +1,46 @@
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/source.toolkit.fluxcd.io/gitrepository_v1beta2.json
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: GitRepository
 metadata:
-  name: app
+  name: intel-gpu-plugin
   namespace: intel-gpu-plugin
 spec:
   interval: 1h
-  targetNamespace: intel-gpu-plugin
-  path: ./kubernetes/gabernetes/apps/intel-gpu-plugin/app
+  url: https://github.com/intel/intel-device-plugins-for-kubernetes
+  ref:
+    tag: v0.29.0
+  # language=gitignore
+  ignore: |
+    # exclude all
+    /*
+    # include gpu plugin
+    !/deployments/gpu_plugin
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: intel-gpu-plugin
+  namespace: intel-gpu-plugin
+spec:
+  interval: 1h
+  path: ./deployments/gpu_plugin
   prune: true
+  wait: true
+  targetNamespace: intel-gpu-plugin
   sourceRef:
     kind: GitRepository
-    namespace: flux-system
-    name: home-ops
+    name: intel-gpu-plugin
+  patches:
+    - target:
+        kind: DaemonSet
+        name: intel-gpu-plugin
+      # language=yaml
+      patch: |
+        - op: add
+          path: /spec/template/spec/containers/0/args
+          value:
+            - -shared-dev-num=5
+        - op: add
+          path: /spec/template/metadata/labels/policy.gabe565.com~1egress-kubeapi
+          value: "true"
