@@ -20,15 +20,6 @@
   ],
   "regexManagers": [
     {
-      "fileMatch": ["(^|/)kustomization\\.yaml$"],
-      "matchStrings": [
-        " +- https:\\/\\/github\\.com\\/(?<depName>.+)\\/releases\\/download\\/(?<currentValue>[^\\/]+)",
-        " +- https:\\/\\/github\\.com\\/(?<depName>.+)\\/raw\\/(?<currentValue>[^\\/]+)",
-        " +- https:\\/\\/raw\\.githubusercontent\\.com\\/(?<depName>[^\\/]\\/[^\\/]+)\\/(?<currentValue>[^\\/]+)"
-      ],
-      "datasourceTemplate": "github-releases"
-    },
-    {
       "fileMatch": ["(^|/)obico/.*\\.yaml$"],
       "matchStrings": [
         "\\s+repository: +ghcr\\.io\\/gabe565\\/obico\\/.+\\s+tag: sha-(?<currentDigest>.+)",
