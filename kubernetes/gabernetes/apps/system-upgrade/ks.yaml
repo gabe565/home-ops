@@ -1,17 +1,57 @@
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/source.toolkit.fluxcd.io/gitrepository_v1beta2.json
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: GitRepository
 metadata:
-  name: app
+  name: system-upgrade-controller
   namespace: system-upgrade
 spec:
   interval: 1h
-  targetNamespace: system-upgrade
-  path: ./kubernetes/gabernetes/apps/system-upgrade/app
+  url: https://github.com/rancher/system-upgrade-controller.git
+  ref:
+    tag: v0.13.4
+  # language=gitignore
+  ignore: |
+    # exclude all
+    /*
+    # include manifests
+    !/manifests
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: system-upgrade-controller
+  namespace: system-upgrade
+spec:
+  interval: 1h
+  path: ./manifests
   prune: true
+  wait: true
+  targetNamespace: system-upgrade
   sourceRef:
     kind: GitRepository
-    namespace: flux-system
-    name: home-ops
+    name: system-upgrade-controller
+  patches:
+    - target:
+        kind: Deployment
+        name: system-upgrade-controller
+      # language=yaml
+      patch: |
+        - op: add
+          path: /spec/template/metadata/labels/policy.gabe565.com~1egress-kubeapi
+          value: "true"
+        - op: add
+          path: /spec/template/metadata/labels/policy.gabe565.com~1egress-namespace
+          value: "true"
+        - op: add
+          path: /spec/template/metadata/labels/policy.gabe565.com~1egress-world
+          value: "true"
+        - op: add
+          path: /spec/template/metadata/labels/policy.gabe565.com~1ingress-namespace
+          value: "true"
+        - op: add
+          path: /spec/template/metadata/labels/policy.gabe565.com~1ingress-prometheus
+          value: "true"
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -28,4 +68,4 @@ spec:
     namespace: flux-system
     name: home-ops
   dependsOn:
-    - name: app
+    - name: system-upgrade-controller
