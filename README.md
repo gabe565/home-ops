@@ -213,6 +213,12 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><a href="kubernetes/gabernetes/apps/immich/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/immich/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/immich/redis/helmrelease.yaml">redis</a></td>
   </tr>
   <tr>
+    <td>intel-gpu-plugin</td>
+    <td><code>GitRepository</code></td>
+    <td><a href="https://github.com/intel/intel-device-plugins-for-kubernetes">intel-gpu-plugin</a></td>
+    <td></td>
+  </tr>
+  <tr>
     <td>kromgo</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/prometheus/kromgo/helmrelease.yaml">kromgo</a></td>

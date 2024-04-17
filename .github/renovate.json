@@ -83,11 +83,6 @@
     },
     {
       "matchDatasources": ["docker"],
-      "matchPackagePrefixes": ["intel/intel-gpu"],
-      "groupName": "Intel Device Plugin"
-    },
-    {
-      "matchDatasources": ["docker"],
       "matchPackagePrefixes": ["dessalines/"],
       "groupName": "Lemmy"
     },
