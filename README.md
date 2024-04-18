@@ -543,6 +543,12 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <th>Supporting Services</th>
   </tr>
   <tr>
+    <td>ascii-movie</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/tennant/apps/ascii-movie/app/helmrelease.yaml">ascii-movie</a></td>
+    <td></td>
+  </tr>
+  <tr>
     <td rowspan="2">flux-system</td>
     <td><code>GitRepository</code></td>
     <td><a href="https://github.com/gabe565/home-ops">home-ops</a></td>
