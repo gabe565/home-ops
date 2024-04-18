@@ -7,7 +7,7 @@ spec:
   chart:
     spec:
       chart: obico
-      version: 0.3.2
+      version: 0.4.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -18,6 +18,9 @@ spec:
     mode: enabled
   values:
     server:
+      image:
+        repository: ghcr.io/gabe565/obico/web
+        tag: latest@sha256:db84552403e45d54c6a062f0c1014db1c80f756329ab72231fd49450fcb60248
       env:
         DJANGO_SECRET_KEY: ${django_secret_key}
         EMAIL_HOST: ${smtp_hostname}
@@ -60,6 +63,9 @@ spec:
                 - ${app_url}
 
     ml-api:
+      image:
+        repository: ghcr.io/gabe565/obico/ml-api
+        tag: latest@sha256:df9501d502dbc7efc00fc607492e9fb80cd6f33898a7d3b2e8a3c2a6aa497079
       podLabels:
         policy.gabe565.com/egress-world: "true"
         policy.gabe565.com/ingress-namespage: "true"
