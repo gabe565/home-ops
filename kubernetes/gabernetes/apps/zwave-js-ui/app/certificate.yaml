@@ -4,4 +4,4 @@ metadata:
   name: ${certificate_name}
   namespace: zwave-js-ui
   annotations:
-    reflector.v1.k8s.emberstack.com/reflects: cert-manager ${certificate_name}
+    reflector.v1.k8s.emberstack.com/reflects: cert-manager/${certificate_name}
