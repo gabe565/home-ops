@@ -87,4 +87,4 @@ spec:
             keep_yearly: 20
             check_last: 3
             healthchecks:
-              ping_url: http://healthchecks.healthchecks:8000/ping/${healthchecks_uuid}
+              ping_url: ${healthchecks_ping_url}
