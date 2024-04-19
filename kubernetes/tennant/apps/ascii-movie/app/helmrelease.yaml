@@ -28,10 +28,27 @@ spec:
       policy.gabe565.com/ingress-prometheus: "true"
       policy.gabe565.com/ingress-world: "true"
 
-    service:
+    ingress:
       main:
+        enabled: true
         annotations:
-          external-dns.alpha.kubernetes.io/hostname: movie.gabe565.com
+          nginx.ingress.kubernetes.io/temporal-redirect: https://github.com/gabe565/ascii-movie
+        hosts:
+          - host: starwarstel.net
+            paths: &paths
+              - path: /
+          - host: "*.starwarstel.net"
+            paths: *paths
+          - host: movie.gabe565.com
+            paths: *paths
+        tls:
+          - secretName: starwarstel.net-tls
+            hosts:
+              - starwarstel.net
+              - "*.starwarstel.net"
+          - secretName: gabe565.com-tls
+            hosts:
+              - movie.gabe565.com
 
     securityContext:
       readOnlyRootFilesystem: true
