@@ -31,7 +31,7 @@ spec:
         policy.gabe565.com/egress-world: "true"
         policy.gabe565.com/ingress-prometheus: "true"
         policy.gabe565.com/ingress-ingress: "true"
-        policy.gabe565.com/egress-gotify: "true"
+        policy.gabe565.com/egress-geoip: "true"
 
       env:
         - name: AUTHENTIK_DISABLE_UPDATE_CHECK
@@ -91,6 +91,9 @@ spec:
       enabled: true
       existingSecret:
         secretName: authentik-geoip
+      env:
+        - name: GEOIPUPDATE_HOST
+          value: ${geoip_host}
       containerSecurityContext:
         readOnlyRootFilesystem: true
       volumeMounts:

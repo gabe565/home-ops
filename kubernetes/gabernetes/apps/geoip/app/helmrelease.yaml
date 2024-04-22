@@ -1,0 +1,104 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.1.0/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: geoip
+  namespace: geoip
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 3.1.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      geoip:
+        strategy: RollingUpdate
+        containers:
+          app:
+            image:
+              repository: ghcr.io/gabe565/geoip-cache-proxy
+              tag: beta
+              pullPolicy: Always
+            env:
+              TZ: America/Chicago
+              GEOIP_LOG_LEVEL: debug
+              GEOIP_REDIS_HOST: redis-master
+              GEOIP_REDIS_PASSWORD:
+                secretKeyRef:
+                  name: redis
+                  key: redis-password
+            securityContext:
+              readOnlyRootFilesystem: true
+            probes:
+              readiness: &probe
+                enabled: true
+                type: HTTP
+                port: 6060
+                path: /readyz
+              liveness:
+                <<: *probe
+                path: /livez
+              startup:
+                <<: *probe
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+        pod:
+          labels:
+            policy.gabe565.com/egress-namespace: "true"
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-ingress: "true"
+            policy.gabe565.com/ingress-world: "true"
+
+    service:
+      updates:
+        controller: geoip
+        ports:
+          http:
+            port: 80
+            targetPort: 8080
+      download:
+        controller: geoip
+        ports:
+          http:
+            port: 80
+            targetPort: 8081
+
+    ingress:
+      updates:
+        enabled: true
+        annotations: &annotations
+          nginx.ingress.kubernetes.io/whitelist-source-range: 192.168.1.0/24,10.42.0.0/16
+        hosts:
+          - host: ${updates_url}
+            paths:
+              - path: /
+                service:
+                  identifier: updates
+                  port: http
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${updates_url}
+      download:
+        enabled: true
+        annotations: *annotations
+        hosts:
+          - host: ${download_url}
+            paths:
+              - path: /
+                service:
+                  identifier: download
+                  port: http
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${download_url}

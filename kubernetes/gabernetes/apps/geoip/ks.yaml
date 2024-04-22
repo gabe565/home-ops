@@ -1,0 +1,37 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: app
+  namespace: geoip
+spec:
+  interval: 1h
+  targetNamespace: geoip
+  path: ./kubernetes/gabernetes/apps/geoip/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    namespace: flux-system
+    name: home-ops
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: app-vars
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: redis
+  namespace: geoip
+spec:
+  interval: 1h
+  targetNamespace: geoip
+  path: ./kubernetes/gabernetes/apps/geoip/redis
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    namespace: flux-system
+    name: home-ops
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: redis-vars

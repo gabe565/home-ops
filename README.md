@@ -167,6 +167,12 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td></td>
   </tr>
   <tr>
+    <td>geoip</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/geoip/app/helmrelease.yaml">geoip</a></td>
+    <td><a href="kubernetes/gabernetes/apps/geoip/redis/helmrelease.yaml">redis</a></td>
+  </tr>
+  <tr>
     <td>gitea</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/gitea/app/helmrelease.yaml">gitea</a></td>
