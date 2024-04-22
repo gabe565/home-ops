@@ -23,12 +23,23 @@ spec:
         enabled: false
       api:
         strategy: RollingUpdate
-        containers:
-          app:
-            image:
+        initContainers:
+          geoip:
+            image: &image
               repository: ghcr.io/shlinkio/shlink
               tag: 4.1.0-roadrunner@sha256:6d0fb5fb169bf76940d2c7c628aac78ea2dfbbd37e897c456c1ff198a6185f64
               pullPolicy: IfNotPresent
+            command:
+              - sh
+              - -c
+              - |
+                set -eux
+                cp -a ./vendor/shlinkio/shlink-ip-geolocation/src/GeoLite2/* /geoip
+                sed -i 's|https://download.maxmind.com|http://geoip-download.geoip|' \
+                  /geoip/GeoLite2Options.php
+        containers:
+          app:
+            image: *image
 
             env:
               TZ: America/Chicago
@@ -60,6 +71,7 @@ spec:
               readOnlyRootFilesystem: true
         pod:
           labels:
+            policy.gabe565.com/egress-geoip: "true"
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-ingress: "true"
@@ -104,10 +116,16 @@ spec:
       tmp:
         enabled: true
         type: emptyDir
+      geolite2:
+        enabled: true
+        type: emptyDir
         advancedMounts:
-          frontend:
+          api:
+            geoip:
+              - path: /geoip
             app:
-              - path: /tmp
+              - path: /etc/shlink/vendor/shlinkio/shlink-ip-geolocation/src/GeoLite2
+                readOnly: true
 
     ingress:
       shlink:
