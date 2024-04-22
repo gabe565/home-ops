@@ -35,6 +35,9 @@ spec:
                 secretKeyRef:
                   name: redis
                   key: redis-password
+            envFrom:
+              - secretRef:
+                  name: geoip-auth
             securityContext:
               readOnlyRootFilesystem: true
             probes:

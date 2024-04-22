@@ -50,6 +50,7 @@ spec:
               ANONYMIZE_REMOTE_ADDR: "false"
               ENABLE_PERIODIC_VISIT_LOCATE: "true"
               # AUTO_RESOLVE_TITLES: "true"
+              GEOLITE_LICENSE_KEY: stub
 
               DB_DRIVER: postgres
               DB_HOST: postgresql-rw
@@ -64,9 +65,6 @@ spec:
               TASK_WORKER_NUM: "4"
 
               SKIP_INITIAL_GEOLITE_DOWNLOAD: "true"
-            envFrom:
-              - secretRef:
-                  name: shlink-geolite
             securityContext:
               readOnlyRootFilesystem: true
         pod:
@@ -219,8 +217,3 @@ spec:
                   identifier: frontend
                   port: http
         tls: *admin-tls
-
-    secrets:
-      geolite:
-        stringData:
-          GEOLITE_LICENSE_KEY: ${geolite_license_key}

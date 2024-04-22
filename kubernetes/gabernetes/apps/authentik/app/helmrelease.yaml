@@ -89,8 +89,8 @@ spec:
 
     geoip:
       enabled: true
-      existingSecret:
-        secretName: authentik-geoip
+      accountId: "1"
+      licenseKey: stub
       env:
         - name: GEOIPUPDATE_HOST
           value: ${geoip_host}
