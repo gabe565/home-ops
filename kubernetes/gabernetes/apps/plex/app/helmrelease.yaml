@@ -62,7 +62,7 @@ spec:
         retain: true
         storageClass: longhorn-ssd
         accessMode: ReadWriteOnce
-        size: 8Gi
+        size: 16Gi
       data:
         enabled: true
         type: nfs
