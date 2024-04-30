@@ -12,7 +12,7 @@ spec:
       database: miniflux
       owner: miniflux
   storage:
-    storageClass: longhorn-ssd-database
+    storageClass: local-path
     size: 8Gi
   resources:
     requests:

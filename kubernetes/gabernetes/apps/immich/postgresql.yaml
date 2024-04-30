@@ -22,7 +22,7 @@ spec:
     shared_preload_libraries:
       - vectors.so
   storage:
-    storageClass: longhorn-ssd-database
+    storageClass: local-path
     size: 8Gi
   resources:
     requests:
