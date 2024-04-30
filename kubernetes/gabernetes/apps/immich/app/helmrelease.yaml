@@ -26,7 +26,7 @@ spec:
           app:
             image:
               repository: ghcr.io/immich-app/immich-server
-              tag: v1.102.3@sha256:bce8c500bfd89f01af056460431c7b20cec16d08b07299fd530824f6d420b656
+              tag: v1.103.1@sha256:10761af14a6145353169042f29d2e49943de75b57a5d19251b365fe0d41ee15a
               pullPolicy: IfNotPresent
             command: [./start-server.sh]
             env: &env
@@ -58,7 +58,7 @@ spec:
           app:
             image:
               repository: ghcr.io/immich-app/immich-server
-              tag: v1.102.3@sha256:bce8c500bfd89f01af056460431c7b20cec16d08b07299fd530824f6d420b656
+              tag: v1.103.1@sha256:10761af14a6145353169042f29d2e49943de75b57a5d19251b365fe0d41ee15a
               pullPolicy: IfNotPresent
             command: [./start-microservices.sh]
             env: *env
@@ -80,7 +80,7 @@ spec:
           app:
             image:
               repository: ghcr.io/immich-app/immich-machine-learning
-              tag: v1.102.3@sha256:f825b7d09f4645671a76310575334e09fa2585c1023c3f1b66db815db0aa14ee
+              tag: v1.103.1@sha256:708ff677ab952dda9d7cb9343a6d650a6ac02a4e6c7447015f9df95c780cfc42
               pullPolicy: IfNotPresent
             securityContext:
               readOnlyRootFilesystem: true
