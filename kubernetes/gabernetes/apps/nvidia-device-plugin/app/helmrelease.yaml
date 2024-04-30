@@ -27,3 +27,4 @@ spec:
         effect: NoSchedule
     nodeSelector:
       gabe565.com/gpu: nvidia
+    affinity: []
