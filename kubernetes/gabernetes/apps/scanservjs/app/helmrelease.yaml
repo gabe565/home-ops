@@ -58,14 +58,17 @@ spec:
         accessMode: ReadWriteOnce
         size: 1Gi
         globalMounts:
-          - path: /app/config
-      data:
+          - path: /etc/scanservjs
+            subPath: config
+          - path: /var/lib/scanservjs
+            subPath: data
+      output:
         enabled: true
         type: nfs
         server: 192.168.1.240
         path: /volume1/documents/Scans
         globalMounts:
-          - path: /app/data/output
+          - path: /var/lib/scanservjs/output
 
     service:
       scanservjs:
