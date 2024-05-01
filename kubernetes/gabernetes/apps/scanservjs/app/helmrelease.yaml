@@ -42,6 +42,7 @@ spec:
             securityContext:
               readOnlyRootFilesystem: true
         pod:
+          terminationGracePeriodSeconds: 1
           labels:
             policy.gabe565.com/egress-nodes: "true"
             policy.gabe565.com/egress-world: "true"
