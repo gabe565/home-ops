@@ -25,11 +25,6 @@ spec:
       # language=yaml
       data: |
         devices:
-          - name: canon-mp620
-            groups:
-              - usb:
-                  - vendor: 04a9
-                    product: 172f
           - name: zigbee
             groups:
               - paths:

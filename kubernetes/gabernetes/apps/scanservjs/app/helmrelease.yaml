@@ -28,11 +28,6 @@ spec:
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
-            resources:
-              requests:
-                squat.ai/canon-mp620: 1
-              limits:
-                squat.ai/canon-mp620: 1
             probes:
               startup:
                 enabled: true
@@ -45,6 +40,8 @@ spec:
                 enabled: true
         pod:
           labels:
+            policy.gabe565.com/egress-nodes: "true"
+            policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-ingress: "true"
           securityContext:
             fsGroup: 1000
@@ -69,6 +66,13 @@ spec:
         path: /volume1/documents/Scans
         globalMounts:
           - path: /var/lib/scanservjs/output
+      sane:
+        enabled: true
+        type: configMap
+        name: scanservjs-sane
+        globalMounts:
+          - path: /etc/sane.d/net.conf
+            subPath: net.conf
 
     service:
       scanservjs:
@@ -103,6 +107,13 @@ spec:
           nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
           nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
           nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+
+    configMaps:
+      sane:
+        enabled: true
+        data:
+          net.conf: |
+            192.168.1.245
 
     secrets:
       scantopl:
