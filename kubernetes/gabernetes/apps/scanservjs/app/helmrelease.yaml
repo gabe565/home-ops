@@ -38,6 +38,8 @@ spec:
                 enabled: true
               readiness:
                 enabled: true
+            securityContext:
+              readOnlyRootFilesystem: true
         pod:
           labels:
             policy.gabe565.com/egress-nodes: "true"
@@ -75,6 +77,11 @@ spec:
         globalMounts:
           - path: /etc/sane.d/net.conf
             subPath: net.conf
+      tmp:
+        enabled: true
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
 
     service:
       scanservjs:
