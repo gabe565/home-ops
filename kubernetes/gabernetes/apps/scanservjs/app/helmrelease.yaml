@@ -44,7 +44,9 @@ spec:
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-ingress: "true"
           securityContext:
-            fsGroup: 1000
+            runAsUser: 1026
+            runAsGroup: 100
+            fsGroup: 100
             fsGroupChangePolicy: OnRootMismatch
 
     persistence:
