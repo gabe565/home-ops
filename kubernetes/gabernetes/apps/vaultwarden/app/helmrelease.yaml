@@ -78,7 +78,7 @@ spec:
         retain: true
         accessMode: ReadWriteOnce
         storageClass: longhorn-ssd
-        size: 256Mi
+        size: 8Gi
 
     ingress:
       vaultwarden:
