@@ -36,6 +36,7 @@ spec:
                 secretKeyRef:
                   name: postgresql-app
                   key: uri
+              LOGIN_RATELIMIT_MAX_BURST: "2"
               PUSH_ENABLED: "true"
               PUSH_INSTALLATION_ID: ${push_installation_id}
               PUSH_INSTALLATION_KEY: ${push_installation_key}
