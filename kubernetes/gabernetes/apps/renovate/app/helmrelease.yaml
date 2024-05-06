@@ -31,13 +31,20 @@ spec:
             env:
               MEND_RNV_ACCEPT_TOS: "y"
               LOG_LEVEL: info
-              MEND_RNV_SQLITE_FILE_PATH: /tmp/renovate/renovate-ce.sqlite
               MEND_RNV_PLATFORM: github
               MEND_RNV_CRON_JOB_SCHEDULER: "0 */4 * * *"
               MEND_RNV_CRON_APP_SYNC: "0 */4 * * *"
               MEND_RNV_AUTODISCOVER_FILTER: "gabe565/*"
-              MEND_RNV_ENQUEUE_JOBS_ON_STARTUP: disabled
               RENOVATE_PAGINATE_ALL: "true"
+              MEND_RNV_DATA_HANDLER_TYPE: postgresql
+              PGHOST: postgresql-rw
+              PGPORT: "5432"
+              PGDATABASE: renovate
+              PGUSER: renovate
+              PGPASSWORD:
+                secretKeyRef:
+                  name: postgresql-app
+                  key: password
             envFrom:
               - secretRef:
                   name: renovate-env
@@ -61,6 +68,7 @@ spec:
                   periodSeconds: 5
         pod:
           labels:
+            policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-ingress: "true"
           affinity:

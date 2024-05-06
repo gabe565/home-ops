@@ -406,7 +406,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>renovate</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/renovate/app/helmrelease.yaml">renovate</a></td>
-    <td></td>
+    <td><a href="kubernetes/gabernetes/apps/renovate/postgresql.yaml">postgresql</a></td>
   </tr>
   <tr>
     <td>scanservjs</td>
