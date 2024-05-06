@@ -34,6 +34,7 @@ spec:
               MEND_RNV_PLATFORM: github
               MEND_RNV_CRON_JOB_SCHEDULER: "0 */4 * * *"
               MEND_RNV_CRON_APP_SYNC: "0 */4 * * *"
+              MEND_RNV_WORKER_CLEANUP: "0 0 * * *"
               MEND_RNV_AUTODISCOVER_FILTER: "gabe565/*"
               RENOVATE_PAGINATE_ALL: "true"
               MEND_RNV_DATA_HANDLER_TYPE: postgresql
