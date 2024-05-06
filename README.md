@@ -403,10 +403,14 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><a href="kubernetes/gabernetes/apps/relax-sounds/borgmatic/helmrelease.yaml">borgmatic</a></td>
   </tr>
   <tr>
-    <td>renovate</td>
+    <td rowspan="2">renovate</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/renovate/app/helmrelease.yaml">renovate</a></td>
-    <td><a href="kubernetes/gabernetes/apps/renovate/postgresql.yaml">postgresql</a></td>
+    <td rowspan="2"><a href="kubernetes/gabernetes/apps/renovate/postgresql.yaml">postgresql</a></td>
+  </tr>
+  <tr>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/renovate/app/exporter.yaml">renovate-exporter</a></td>
   </tr>
   <tr>
     <td>scanservjs</td>

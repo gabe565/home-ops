@@ -1,0 +1,72 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: renovate-exporter
+  namespace: renovate
+spec:
+  chart:
+    spec:
+      chart: prometheus-json-exporter
+      version: 0.11.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: prometheus-community
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    nameOverride: renovate-exporter
+
+    podLabels:
+      policy.gabe565.com/egress-namespace: "true"
+      policy.gabe565.com/ingress-prometheus: "true"
+
+    configuration:
+      # language=yaml
+      config: |
+        modules:
+          renovate:
+            http_client_config:
+              authorization:
+                credentials_file: /credentials/renovate.txt
+
+            metrics:
+              - name: renovate_organization_count
+                valuetype: gauge
+                path: "{ .app.organizationCount }"
+                help: The number of organizations known to renovate
+
+              - name: renovate_repository_count
+                valuetype: gauge
+                path: "{ .app.repositoryCount }"
+                help: The number of repositories known to renovate
+
+              - name: renovate_jobs_processed
+                valuetype: counter
+                path: "{ .jobs.history.processed }"
+                help: The number of jobs processed since the instance has started
+
+              - name: renovate_queue_size
+                valuetype: gauge
+                path: "{ .jobs.queue.size }"
+                help: The number of jobs currently in the queue
+
+    additionalVolumes:
+      - name: renovate-credentials
+        secret:
+          secretName: app-vars
+    additionalVolumeMounts:
+      - name: renovate-credentials
+        mountPath: /credentials/renovate.txt
+        subPath: api_secret
+
+    serviceMonitor:
+      enabled: true
+      defaults:
+        interval: 1m
+      targets:
+        - name: renovate
+          url: http://renovate.renovate.svc.cluster.local:8080/api/status
+          module: renovate
