@@ -11,7 +11,7 @@ spec:
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
-        namespace: prometheus
+        namespace: flux-system
         name: prometheus-community
   install:
     crds: Create

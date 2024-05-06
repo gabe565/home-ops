@@ -5,3 +5,4 @@ resources:
   - bjw-s.yaml
   - external-dns.yaml
   - gabe565.yaml
+  - prometheus-community.yaml
