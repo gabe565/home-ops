@@ -24,7 +24,7 @@ spec:
           app:
             image:
               repository: ghcr.io/paperless-ngx/paperless-ngx
-              tag: 2.7.2@sha256:703c990a790dfd4d25fb56df3afec27b13cb0926a3818bf265edac9c71311647
+              tag: 2.8.2@sha256:fe0bb42ecbe4513e021ed612170c4728e963a7b3c47903d285793c9938219980
               pullPolicy: IfNotPresent
             env:
               PAPERLESS_URL: https://${app_url}
