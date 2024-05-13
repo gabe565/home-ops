@@ -115,6 +115,11 @@
       "matchDatasources": ["docker"],
       "matchPackageNames": ["ghcr.io/cloudnative-pg/postgresql"],
       "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)-(?<build>\\d+)$"
+    },
+    {
+      "matchDatasources": ["docker", "github-tags"],
+      "matchPackageNames": ["ghcr.io/fluxcd/flux-manifests", "fluxcd/flux2"],
+      "groupName": "fluxcd/flux2"
     }
   ]
 }
