@@ -24,7 +24,7 @@ spec:
           app:
             image:
               repository: ghcr.io/onedr0p/lidarr
-              tag: 2.3.3.4204@sha256:0e5f965bf8c3786b2062894662f172a42e881948e8fe6165d14bd85e21450831
+              tag: 2.3.3.4204@sha256:f24377b110208fc13ca6256e8f533916f855bbe18f8cbb1d34befb1f782f355a
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
