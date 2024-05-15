@@ -53,6 +53,10 @@ spec:
     securityContext:
       readOnlyRootFilesystem: true
 
+    service:
+      main:
+        ipFamilyPolicy: PreferDualStack
+
     serviceMonitor:
       main:
         enabled: true

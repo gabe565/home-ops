@@ -66,6 +66,7 @@ spec:
       service:
         externalTrafficPolicy: Local
         loadBalancerIP: ${load_balancer_ip}
+        ipFamilyPolicy: PreferDualStack
 
       metrics:
         enabled: ${metrics_enabled:=false}
