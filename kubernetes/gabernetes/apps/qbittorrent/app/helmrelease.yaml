@@ -57,9 +57,12 @@ spec:
               DNS_ADDRESS: 10.8.0.1
               WIREGUARD_MTU: "1390"
               VERSION_INFORMATION: "off"
-            envFrom:
-              - secretRef:
-                  name: qbittorrent-gluetun
+              FIREWALL_VPN_INPUT_PORTS: ${bittorrent_port}
+              WIREGUARD_PRIVATE_KEY: ${wireguard_private_key}
+              WIREGUARD_ADDRESSES: ${wireguard_addresses}
+              WIREGUARD_PUBLIC_KEY: ${wireguard_public_key}
+              VPN_ENDPOINT_IP: ${vpn_endpoint_ip}
+              VPN_ENDPOINT_PORT: ${vpn_endpoint_port}
             securityContext:
               capabilities:
                 add:
