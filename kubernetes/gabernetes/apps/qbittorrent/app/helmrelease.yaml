@@ -30,6 +30,7 @@ spec:
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
+              QBITTORRENT__BT_PORT: ${bittorrent_port}
             probes:
               startup:
                 enabled: true
