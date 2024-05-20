@@ -1,0 +1,110 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.1.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: chat
+  namespace: chat
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 3.1.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      chat:
+        containers:
+          app:
+            image:
+              repository: ghcr.io/open-webui/open-webui
+              tag: v0.1.125@sha256:c40a16e6524e4a7f5182a3d3ffe5fa43addd66412f8cf7744affb94cdcd54256
+              pullPolicy: IfNotPresent
+            env:
+              TZ: America/Chicago
+              GLOBAL_LOG_LEVEL: WARNING
+              WEBUI_AUTH_TRUSTED_EMAIL_HEADER: X-authentik-email
+              WEBUI_SECRET_KEY: ${secret_key}
+              DATABASE_URL:
+                secretKeyRef:
+                  name: postgresql-app
+                  key: uri
+              OPENAI_API_KEY: ${openai_api_key}
+              ENABLE_LITELLM: "False"
+            probes:
+              liveness: &probe
+                enabled: true
+                type: HTTP
+                path: /health
+              readiness: *probe
+              startup:
+                <<: *probe
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+            securityContext:
+              readOnlyRootFilesystem: true
+        pod:
+          securityContext:
+            runAsUser: 65534
+            runAsGroup: 65534
+            fsGroup: 65534
+            fsGroupChangePolicy: OnRootMismatch
+          labels:
+            policy.gabe565.com/egress-namespace: "true"
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-ingress: "true"
+
+    service:
+      chat:
+        controller: chat
+        ports:
+          http:
+            port: 8080
+
+    persistence:
+      data:
+        enabled: true
+        storageClass: longhorn-ssd
+        accessMode: ReadWriteOnce
+        size: 1Gi
+        globalMounts:
+          - path: /app/backend/data
+            subPath: data
+          - path: /app/backend/static
+            subPath: static
+      tmp:
+        enabled: true
+        type: emptyDir
+        globalMounts:
+          - path: /app/backend/static
+
+    ingress:
+      chat:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/auth-url: |-
+            http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
+          nginx.ingress.kubernetes.io/auth-signin: |-
+            /outpost.goauthentik.io/start?rd=$escaped_request_uri
+          nginx.ingress.kubernetes.io/auth-response-headers: |-
+            Set-Cookie,X-authentik-username,X-authentik-groups,X-authentik-email,X-authentik-name,X-authentik-uid
+          nginx.ingress.kubernetes.io/auth-snippet: |
+            proxy_set_header X-Forwarded-Host $http_host;
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+                service:
+                  identifier: chat
+                  port: http
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}

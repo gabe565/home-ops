@@ -121,10 +121,10 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td></td>
   </tr>
   <tr>
-    <td>chatgpt</td>
+    <td>chat</td>
     <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/gabernetes/apps/chatgpt/app/helmrelease.yaml">chatgpt</a></td>
-    <td></td>
+    <td><a href="kubernetes/gabernetes/apps/chat/app/helmrelease.yaml">chat</a></td>
+    <td><a href="kubernetes/gabernetes/apps/chat/app/postgresql.yaml">postgresql</a></td>
   </tr>
   <tr>
     <td>cnpg-system</td>
