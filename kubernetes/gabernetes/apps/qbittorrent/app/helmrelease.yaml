@@ -82,7 +82,7 @@ spec:
           app:
             image:
               repository: ghcr.io/gabe565/vuetorrent
-              tag: 2.8.1@sha256:5d5f7362252dce48705a6208b983c34fad0aaf1c46997ca627d41ac25e696136
+              tag: 2.8.1@sha256:5390bcc55b9c8baf39d4583b7241fca3c03365a70e120747bd5f86cdc23652c2
               pullPolicy: IfNotPresent
             securityContext:
               readOnlyRootFilesystem: true
