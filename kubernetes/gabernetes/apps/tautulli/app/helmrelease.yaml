@@ -73,7 +73,7 @@ spec:
           nginx.ingress.kubernetes.io/auth-signin: |-
             /outpost.goauthentik.io/start?rd=$escaped_request_uri
           nginx.ingress.kubernetes.io/auth-response-headers: |-
-            Set-Cookie,X-authentik-username,X-authentik-groups,X-authentik-email,X-authentik-name,X-authentik-uid,Cookie
+            Set-Cookie,X-authentik-username,X-authentik-groups,X-authentik-email,X-authentik-name,X-authentik-uid
           nginx.ingress.kubernetes.io/auth-snippet: |
             proxy_set_header X-Forwarded-Host $http_host;
         hosts:
@@ -87,15 +87,3 @@ spec:
           - secretName: ${certificate_name}
             hosts:
               - ${app_url}
-      logout:
-        enabled: true
-        annotations:
-          nginx.ingress.kubernetes.io/temporal-redirect: https://${app_url}/outpost.goauthentik.io/sign_out
-        hosts:
-          - host: ${app_url}
-            paths:
-              - path: /auth/logout
-                service:
-                  identifier: tautulli
-                  port: http
-        tls: *tls
