@@ -38,7 +38,7 @@ spec:
               liveness: &probe
                 enabled: true
                 port: 35356
-                type: AUTO
+                type: HTTPS
               readiness: *probe
               startup:
                 <<: *probe
