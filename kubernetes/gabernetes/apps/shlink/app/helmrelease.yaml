@@ -187,9 +187,9 @@ spec:
                 return ngx.exit(404)
               else
                 local cjson = require "cjson"
-                ngx.say(cjson.encode(
-                  {{name="${app_url}", url="https://${app_url}", apiKey=apiKey}}
-                ))
+                ngx.say(cjson.encode({
+                  {name="${app_url}", url="https://${app_url}", apiKey=apiKey}
+                }))
                 return ngx.exit(200)
               end
             }
