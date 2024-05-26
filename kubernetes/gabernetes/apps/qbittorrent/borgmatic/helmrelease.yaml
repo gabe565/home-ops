@@ -15,7 +15,7 @@ spec:
   chart:
     spec:
       chart: borgmatic
-      version: 0.9.8
+      version: 0.9.9
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
