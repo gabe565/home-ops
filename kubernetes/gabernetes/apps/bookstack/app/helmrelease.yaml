@@ -49,8 +49,6 @@ spec:
     ingress:
       main:
         enabled: true
-        annotations:
-          nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
         hosts:
           - host: ${app_url}
             paths:
@@ -59,7 +57,6 @@ spec:
           - secretName: ${certificate_name}
             hosts:
               - ${app_url}
-              - www.${app_url}
 
     persistence:
       config:
