@@ -7,7 +7,7 @@ spec:
   chart:
     spec:
       chart: reloader
-      version: 1.0.104
+      version: 1.0.105
       sourceRef:
         kind: HelmRepository
         namespace: reloader
