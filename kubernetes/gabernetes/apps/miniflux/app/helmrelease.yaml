@@ -104,7 +104,12 @@ spec:
       redirect:
         enabled: true
         annotations:
-          nginx.ingress.kubernetes.io/temporal-redirect: https://${app_url}/oauth2/oidc/redirect
+          nginx.ingress.kubernetes.io/configuration-snippet: |
+            access_by_lua_block {
+              if ngx.var.cookie_MinifluxUserSessionID == nil then
+                return ngx.redirect("/oauth2/oidc/redirect")
+              end
+            }
         hosts:
           - host: ${app_url}
             paths:
