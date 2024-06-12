@@ -461,6 +461,12 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><a href="kubernetes/gabernetes/apps/tautulli/borgmatic/helmrelease.yaml">borgmatic</a></td>
   </tr>
   <tr>
+    <td>theme-park</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/theme-park/app/helmrelease.yaml">theme-park</a></td>
+    <td></td>
+  </tr>
+  <tr>
     <td>transsmute</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/transsmute/app/helmrelease.yaml">transsmute</a></td>

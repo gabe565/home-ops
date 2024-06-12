@@ -1,0 +1,73 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.2.1/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: theme-park
+  namespace: theme-park
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 3.2.1
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      theme-park:
+        strategy: RollingUpdate
+        containers:
+          app:
+            image:
+              repository: ghcr.io/onedr0p/theme-park
+              tag: 1.16.2@sha256:844f54965140483b9485cc2dffff73fa81a1d710c29d147613895b1013fee654
+              pullPolicy: IfNotPresent
+            env:
+              TZ: America/Chicago
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+            securityContext:
+              readOnlyRootFilesystem: true
+        pod:
+          labels:
+            policy.gabe565.com/ingress-ingress: "true"
+
+    persistence:
+      tmp:
+        enabled: true
+        type: emptyDir
+
+    service:
+      theme-park:
+        controller: theme-park
+        ports:
+          http:
+            port: 8080
+
+    ingress:
+      theme-park:
+        enabled: true
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+                service:
+                  identifier: theme-park
+                  port: http
+        tls: &tls
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
