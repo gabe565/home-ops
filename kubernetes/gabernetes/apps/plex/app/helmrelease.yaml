@@ -92,7 +92,7 @@ spec:
         annotations:
           nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
           nginx.ingress.kubernetes.io/configuration-snippet: |
-            sub_filter '</head>' '<link rel="stylesheet" href="${theme_park}/addons/plex/plex-alt-logo/plex-alt-logo.css"></head>';
+            sub_filter '</head>' '<link rel="stylesheet" href="${theme_park}/base/plex/overseerr.css"><link rel="stylesheet" href="${theme_park}/addons/plex/plex-alt-logo/plex-alt-logo.css"></head>';
         hosts:
           - host: ${app_url}
             paths:
