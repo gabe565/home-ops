@@ -28,9 +28,9 @@ spec:
               repository: ghcr.io/immich-app/immich-server
               tag: v1.106.3@sha256:80b9e59c55869ec3f4cfa204ce1ad096356252b834b5cc2b6421dff69aaa2e8a
               pullPolicy: IfNotPresent
-            command: [./start-server.sh]
             env: &env
               TZ: America/Chicago
+              IMMICH_WORKERS_INCLUDE: api
               DB_HOSTNAME: postgresql-rw
               DB_DATABASE_NAME: immich
               DB_USERNAME: immich
@@ -60,8 +60,10 @@ spec:
               repository: ghcr.io/immich-app/immich-server
               tag: v1.106.3@sha256:80b9e59c55869ec3f4cfa204ce1ad096356252b834b5cc2b6421dff69aaa2e8a
               pullPolicy: IfNotPresent
-            command: [./start-microservices.sh]
-            env: *env
+            env:
+              <<: *env
+              IMMICH_WORKERS_INCLUDE: null
+              IMMICH_WORKERS_EXCLUDE: api
             resources:
               requests:
                 gpu.intel.com/i915: 1
