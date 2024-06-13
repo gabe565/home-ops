@@ -154,6 +154,9 @@ spec:
             Set-Cookie,Authorization
           nginx.ingress.kubernetes.io/auth-snippet: |
             proxy_set_header X-Forwarded-Host $http_host;
+          nginx.ingress.kubernetes.io/configuration-snippet: |
+            proxy_set_header Accept-Encoding "";
+            sub_filter '</head>' '<link rel="stylesheet" href="${theme_park}/base/adguard/overseerr.css"></head>';
         hosts:
           - host: ${app_url}
             paths:
