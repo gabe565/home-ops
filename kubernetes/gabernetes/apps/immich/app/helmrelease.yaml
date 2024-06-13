@@ -26,11 +26,11 @@ spec:
           app:
             image:
               repository: ghcr.io/immich-app/immich-server
-              tag: v1.105.1@sha256:658b40420d7a39d6eb34c797cec8d36ff315f5adb168301aaf27dc4eafc8e228
+              tag: v1.106.3@sha256:80b9e59c55869ec3f4cfa204ce1ad096356252b834b5cc2b6421dff69aaa2e8a
               pullPolicy: IfNotPresent
-            command: [./start-server.sh]
             env: &env
               TZ: America/Chicago
+              IMMICH_WORKERS_INCLUDE: api
               DB_HOSTNAME: postgresql-rw
               DB_DATABASE_NAME: immich
               DB_USERNAME: immich
@@ -58,10 +58,12 @@ spec:
           app:
             image:
               repository: ghcr.io/immich-app/immich-server
-              tag: v1.105.1@sha256:658b40420d7a39d6eb34c797cec8d36ff315f5adb168301aaf27dc4eafc8e228
+              tag: v1.106.3@sha256:80b9e59c55869ec3f4cfa204ce1ad096356252b834b5cc2b6421dff69aaa2e8a
               pullPolicy: IfNotPresent
-            command: [./start-microservices.sh]
-            env: *env
+            env:
+              <<: *env
+              IMMICH_WORKERS_INCLUDE: null
+              IMMICH_WORKERS_EXCLUDE: api
             resources:
               requests:
                 gpu.intel.com/i915: 1
@@ -80,7 +82,7 @@ spec:
           app:
             image:
               repository: ghcr.io/immich-app/immich-machine-learning
-              tag: v1.105.1@sha256:2e2736ba2f2270485c0b6fa33eee66ea0b2279b70b92ea838a015c4d5289c9f0
+              tag: v1.106.3@sha256:ea112b507c71c32815f1c02782e20a2f5e8dc42d3ea1177b4fed4f25fce4c9d5
               pullPolicy: IfNotPresent
             securityContext:
               readOnlyRootFilesystem: true
