@@ -143,8 +143,12 @@ spec:
           nginx.ingress.kubernetes.io/auth-signin: /outpost.goauthentik.io/start
           nginx.ingress.kubernetes.io/auth-response-headers: Set-Cookie,Cookie
           nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Host $http_host;
-          nginx.ingress.kubernetes.io/configuration-snippet: proxy_set_header Referer '';
           nginx.ingress.kubernetes.io/proxy-body-size: 16M
+          nginx.ingress.kubernetes.io/configuration-snippet: |
+            proxy_set_header Referer "";
+            proxy_set_header Accept-Encoding "";
+            more_set_headers "Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline' theme-park.cook.gg; img-src 'self' theme-park.cook.gg data:; script-src 'self' 'unsafe-inline'; object-src 'none'; form-action 'self'; frame-ancestors 'self'";
+            sub_filter '</head>' '<link rel="stylesheet" href="${theme_park}/base/qbittorrent/overseerr.css"></head>';
         hosts:
           - host: ${app_url}
             paths:
