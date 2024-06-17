@@ -48,9 +48,9 @@ spec:
               readOnlyRootFilesystem: true
           unbound:
             image:
-              repository: mvance/unbound
-              tag: 1.20.0@sha256:4bf67b567f392956455bd4f8a4cdd48010e234f1a07c0a99c2cff2ddbb3e8a7a
-              pullPolicy: IfNotPresent
+              repository: ghcr.io/gabe565/unbound-cache
+              tag: beta
+              pullPolicy: Always
             env:
               TZ: America/Chicago
             probes:
@@ -64,25 +64,6 @@ spec:
                 spec:
                   failureThreshold: 30
                   periodSeconds: 5
-            lifecycle:
-              postStart:
-                exec:
-                  command:
-                    - bash
-                    - -c
-                    - |
-                      if [[ -f /opt/unbound/data/cache.txt ]]; then
-                        for i in {1..30}; do
-                          sleep 5
-                          if unbound-control load_cache </opt/unbound/data/cache.txt; then
-                            mv /opt/unbound/data/cache{,.1}.txt
-                            break
-                          fi
-                        done
-                      fi
-              preStop:
-                exec:
-                  command: [sh, -c, unbound-control dump_cache >/opt/unbound/data/cache.txt]
             securityContext:
               readOnlyRootFilesystem: true
         pod:
