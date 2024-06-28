@@ -1,5 +1,5 @@
 /* Header */
-.pf-c-login__main-header.ak-flow-executor {
+.pf-c-login__main-header, .pf-c-login__main-header.ak-flow-executor {
     padding-top: 3rem;
 }
 
@@ -12,13 +12,8 @@
     display: none;
 }
 
-/* Background overlay */
-.pf-c-background-image.ak-flow-executor::before {
-    filter: none;
-}
-
 /* Modal window */
-.pf-c-login__main.ak-flow-executor {
+.pf-c-login__main, .pf-c-login__main.ak-flow-executor {
     overflow: auto;
     border-radius: 40px;
     background-color: #0008;
@@ -29,7 +24,7 @@
 }
 
 @media (max-width: 560px) {
-    .pf-c-login__main.ak-flow-executor {
+    .pr-c-login__main, .pf-c-login__main.ak-flow-executor {
         border-radius: 0;
     }
 }
@@ -59,7 +54,7 @@ label.pf-c-form__label.style-scope.ak-form-element {
 }
 
 /* Buttons */
-button.pf-c-button.pf-m-primary.pf-m-block.style-scope {
+button.pf-c-button.pf-m-primary.pf-m-block {
     margin: 0 auto;
     width: 50%;
     border-radius: 20px;
