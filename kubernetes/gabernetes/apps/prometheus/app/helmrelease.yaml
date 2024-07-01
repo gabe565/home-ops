@@ -152,6 +152,7 @@ spec:
           nginx.ingress.kubernetes.io/auth-snippet: |
             proxy_set_header X-Forwarded-Host $http_host;
           nginx.ingress.kubernetes.io/client-body-buffer-size: 128k
+          nginx.ingress.kubernetes.io/enable-access-log: "false"
         hosts:
           - ${prometheus_url}
         tls:
