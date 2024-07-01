@@ -79,11 +79,6 @@
     },
     {
       "matchDatasources": ["docker"],
-      "matchPackagePrefixes": ["dessalines/"],
-      "groupName": "Lemmy"
-    },
-    {
-      "matchDatasources": ["docker"],
       "matchPackagePrefixes": ["vikunja/"],
       "groupName": "Vikunja"
     },
