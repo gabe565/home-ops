@@ -18,8 +18,9 @@
   "ignorePaths": [
     ".archive/**"
   ],
-  "regexManagers": [
+  "customManagers": [
     {
+      "customType": "regex",
       "fileMatch": ["(^|/)obico/.*\\.yaml$"],
       "matchStrings": [
         "\\s+repository: +ghcr\\.io\\/gabe565\\/obico\\/.+\\s+tag: sha-(?<currentDigest>.+)",
@@ -31,6 +32,7 @@
       "datasourceTemplate": "git-refs"
     },
     {
+      "customType": "regex",
       "fileMatch": ["(^|/)system-upgrade/.*\\.yaml$"],
       "matchStrings": [
         "version: (?<currentValue>.+)"
@@ -39,6 +41,7 @@
       "datasourceTemplate": "github-releases"
     },
     {
+      "customType": "regex",
       "fileMatch": ["cni-plugins\\.yaml$"],
       "matchStrings": [
         "version: (?<currentValue>.+)"
@@ -47,6 +50,7 @@
       "datasourceTemplate": "github-releases"
     },
     {
+      "customType": "regex",
       "fileMatch": ["\\.yaml$"],
       "matchStrings": [
         "DOCKER_MODS: ['\"]?(?<depName>.+):(?<currentValue>.+)['\"]?",
@@ -55,6 +59,7 @@
       "datasourceTemplate": "docker"
     },
     {
+      "customType": "regex",
       "fileMatch": ["\\.yaml$"],
       "matchStrings": [
         "# yaml-language-server: \\$schema=https:\\/\\/raw.githubusercontent.com\\/(?<depName>[^\\/]+/[^\\/]+)\\/(?<currentValue>[^\\/]+)"
