@@ -21,18 +21,6 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["(^|/)obico/.*\\.yaml$"],
-      "matchStrings": [
-        "\\s+repository: +ghcr\\.io\\/gabe565\\/obico\\/.+\\s+tag: sha-(?<currentDigest>.+)",
-        "\\s+name: +ghcr\\.io\\/gabe565\\/obico\\/.+\\s+newTag: sha-(?<currentDigest>.+)"
-      ],
-      "currentValueTemplate": "release",
-      "depNameTemplate": "TheSpaghettiDetective/obico-server",
-      "packageNameTemplate": "https://github.com/TheSpaghettiDetective/obico-server",
-      "datasourceTemplate": "git-refs"
-    },
-    {
-      "customType": "regex",
       "fileMatch": ["(^|/)system-upgrade/.*\\.yaml$"],
       "matchStrings": [
         "version: (?<currentValue>.+)"
