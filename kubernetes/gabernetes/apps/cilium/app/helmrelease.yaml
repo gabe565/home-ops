@@ -81,3 +81,6 @@ spec:
 
     cni:
       exclusive: false
+
+    bpf:
+      policyMapMax: 32768
