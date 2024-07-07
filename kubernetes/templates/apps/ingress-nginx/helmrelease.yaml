@@ -94,5 +94,7 @@ spec:
           value: "true"
         - name: READ_BUFFER_SIZE
           value: "8192"
+        - name: SEND_SAME_HTTP_CODE
+          value: "true"
       podLabels:
         policy.gabe565.com/ingress-namespace: "true"
