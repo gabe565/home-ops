@@ -13,5 +13,3 @@ configMapGenerator:
       disableNameSuffixHash: true
     files:
       - assets/custom.css
-      - assets/google.svg
-      - assets/plex.svg

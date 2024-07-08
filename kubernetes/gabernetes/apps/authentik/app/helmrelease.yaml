@@ -118,12 +118,6 @@ spec:
         - name: custom-assets
           mountPath: /web/dist/custom.css
           subPath: custom.css
-        - name: custom-assets
-          mountPath: /web/authentik/sources/google.svg
-          subPath: google.svg
-        - name: custom-assets
-          mountPath: /web/authentik/sources/plex.svg
-          subPath: plex.svg
 
       containerSecurityContext:
         readOnlyRootFilesystem: true
