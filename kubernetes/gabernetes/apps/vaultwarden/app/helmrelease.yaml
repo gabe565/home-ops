@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: ghcr.io/dani-garcia/vaultwarden
-              tag: 1.30.5-alpine@sha256:6f6ec220ed300e1a11475a91d270985915083512f9fb60c1c25783faaa66eef5
+              tag: 1.31.0-alpine@sha256:f87cade4696ba7e5b82ae129856032a4098af5326d683695757968cec30cc60c
 
             env:
               TZ: America/Chicago
