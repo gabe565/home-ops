@@ -53,13 +53,6 @@ spec:
         remoteWrite:
           - name: Prometheus
             url: https://${prometheus_url}/api/v1/write
-            basicAuth:
-              username:
-                name: app-vars
-                key: prometheus_username
-              password:
-                name: app-vars
-                key: prometheus_password
     kubeApiServer:
       enabled: false
     kubelet:

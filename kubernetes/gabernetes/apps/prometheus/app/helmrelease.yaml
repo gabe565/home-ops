@@ -153,6 +153,8 @@ spec:
             proxy_set_header X-Forwarded-Host $http_host;
           nginx.ingress.kubernetes.io/client-body-buffer-size: 128k
           nginx.ingress.kubernetes.io/enable-access-log: "false"
+          nginx.ingress.kubernetes.io/satisfy: any
+          nginx.ingress.kubernetes.io/whitelist-source-range: ${ingress_whitelist}
         hosts:
           - ${prometheus_url}
         tls:
