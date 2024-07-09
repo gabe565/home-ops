@@ -20,7 +20,6 @@ spec:
   values:
     controllers:
       piper:
-        strategy: RollingUpdate
         containers:
           app:
             image:
@@ -62,7 +61,10 @@ spec:
     persistence:
       data:
         enabled: true
-        type: emptyDir
+        retain: true
+        storageClass: longhorn-ssd
+        accessMode: ReadWriteOnce
+        size: 8Gi
       tmp:
         enabled: true
         type: emptyDir
