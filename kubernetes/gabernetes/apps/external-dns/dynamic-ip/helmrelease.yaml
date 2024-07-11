@@ -28,7 +28,7 @@ spec:
           app:
             image:
               repository: ghcr.io/gabe565/external-dns-dynamic-ip
-              tag: 1.30.2@sha256:1bd3c453531837b75c40bd8b06b6dfdca544c649ca3cf1e34e6016fca22850c4
+              tag: 1.30.2@sha256:4adc46fef970b09d7e4c5230be99cd6a996161a37ad93121518b13473ed58669
               pullPolicy: IfNotPresent
         pod:
           labels:
