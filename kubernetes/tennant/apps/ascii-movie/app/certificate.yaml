@@ -11,3 +11,11 @@ spec:
   issuerRef:
     name: letsencrypt-dns01
     kind: ClusterIssuer
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: gabe565.com-tls
+  namespace: ascii-movie
+  annotations:
+    reflector.v1.k8s.emberstack.com/reflects: cert-manager/gabe565.com-tls
