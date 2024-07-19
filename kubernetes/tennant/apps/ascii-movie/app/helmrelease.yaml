@@ -41,7 +41,7 @@ spec:
             paths: *paths
           - host: movie.gabe565.com
             paths: *paths
-        tls:
+        tls: &tls
           - secretName: starwarstel.net-tls
             hosts:
               - starwarstel.net
@@ -49,6 +49,17 @@ spec:
           - secretName: gabe565.com-tls
             hosts:
               - movie.gabe565.com
+      health:
+        enabled: true
+        hosts:
+          - host: starwarstel.net
+            paths:
+              - path: /health
+                service:
+                  name: ascii-movie-api
+                  port: 1977
+            pathType: Exact
+        tls: *tls
 
     securityContext:
       readOnlyRootFilesystem: true
