@@ -24,7 +24,7 @@ spec:
           app:
             image:
               repository: ghcr.io/zwave-js/zwave-js-ui
-              tag: 9.14.6@sha256:1a1dbeeb611b73a73eade454ba8aa505ce6dfdfa90c0b1c3c642516bf8c99ca9
+              tag: 9.16.0@sha256:192f729ed41d78af786b238480010f1e2ae95fb3893bbbcc3f5720b0e57e9443
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
