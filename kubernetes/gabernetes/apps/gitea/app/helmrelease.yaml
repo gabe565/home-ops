@@ -121,8 +121,6 @@ spec:
         other:
           SHOW_FOOTER_VERSION: "false"
           SHOW_FOOTER_TEMPLATE_LOAD_TIME: "false"
-        actions:
-          ENABLED: "true"
         queue:
           TYPE: redis
 
