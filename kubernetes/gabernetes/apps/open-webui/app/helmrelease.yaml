@@ -2,8 +2,8 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: chat
-  namespace: chat
+  name: open-webui
+  namespace: open-webui
 spec:
   chart:
     spec:
@@ -19,7 +19,7 @@ spec:
     mode: enabled
   values:
     controllers:
-      chat:
+      open-webui:
         containers:
           app:
             image:
@@ -62,8 +62,8 @@ spec:
             policy.gabe565.com/ingress-ingress: "true"
 
     service:
-      chat:
-        controller: chat
+      open-webui:
+        controller: open-webui
         ports:
           http:
             port: 8080
@@ -86,7 +86,7 @@ spec:
           - path: /app/backend/static
 
     ingress:
-      chat:
+      open-webui:
         enabled: true
         annotations:
           nginx.ingress.kubernetes.io/auth-url: |-
@@ -102,7 +102,7 @@ spec:
             paths:
               - path: /
                 service:
-                  identifier: chat
+                  identifier: open-webui
                   port: http
         tls:
           - secretName: ${certificate_name}

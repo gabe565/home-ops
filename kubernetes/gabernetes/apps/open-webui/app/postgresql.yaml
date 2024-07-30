@@ -2,7 +2,7 @@ apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: postgresql
-  namespace: chat
+  namespace: open-webui
 spec:
   instances: 3
   imageName: ghcr.io/cloudnative-pg/postgresql:16.3-10

@@ -121,12 +121,6 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td></td>
   </tr>
   <tr>
-    <td>chat</td>
-    <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/gabernetes/apps/chat/app/helmrelease.yaml">chat</a></td>
-    <td><a href="kubernetes/gabernetes/apps/chat/app/postgresql.yaml">postgresql</a></td>
-  </tr>
-  <tr>
     <td>cnpg-system</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/cnpg/app/helmrelease.yaml">cnpg</a></td>
@@ -343,6 +337,12 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/obico/app/helmrelease.yaml">obico</a></td>
     <td><a href="kubernetes/gabernetes/apps/obico/borgmatic/helmrelease.yaml">borgmatic</a></td>
+  </tr>
+  <tr>
+    <td>open-webui</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/open-webui/app/helmrelease.yaml">open-webui</a></td>
+    <td><a href="kubernetes/gabernetes/apps/open-webui/app/postgresql.yaml">postgresql</a></td>
   </tr>
   <tr>
     <td>overseerr</td>
