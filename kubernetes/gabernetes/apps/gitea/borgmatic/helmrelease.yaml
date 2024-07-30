@@ -77,6 +77,8 @@ spec:
                 label: borgbase
             source_directories:
               - /gitea-shared-storage
+            exclude_patterns:
+              - /gitea-shared-storage/packages
             archive_name_format: "gitea-{now:%Y-%m-%d-%H%M%S}"
             ssh_command: ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=ERROR
             retries: 2
