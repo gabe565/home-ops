@@ -82,8 +82,6 @@ spec:
       tmp:
         enabled: true
         type: emptyDir
-        globalMounts:
-          - path: /app/backend/static
 
     ingress:
       open-webui:
