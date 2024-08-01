@@ -20,7 +20,6 @@ spec:
   values:
     controllers:
       minio:
-        type: statefulset
         containers:
           app:
             image:
@@ -73,12 +72,14 @@ spec:
             runAsGroup: 1000
             fsGroup: 1000
             fsGroupChangePolicy: OnRootMismatch
-        statefulset:
-          volumeClaimTemplates:
-            - name: data
-              storageClass: longhorn-ssd
-              accessMode: ReadWriteOnce
-              size: 8Gi
+
+    persistence:
+      data:
+        enabled: true
+        storageClass: longhorn-ssd
+        accessMode: ReadWriteMany
+        size: 8Gi
+        retain: true
 
     service:
       minio:

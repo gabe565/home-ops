@@ -63,7 +63,7 @@ spec:
         name: borgbase-ssh
       data-minio-0:
         enabled: true
-        existingClaim: data-minio-0
+        existingClaim: minio-data
     configMaps:
       config:
         data:
