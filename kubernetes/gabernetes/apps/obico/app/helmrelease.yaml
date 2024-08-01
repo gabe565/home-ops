@@ -65,7 +65,7 @@ spec:
     ml-api:
       image:
         repository: ghcr.io/gabe565/obico/ml-api
-        tag: latest@sha256:931c9e5dd52754ae003dd88e8bd58ba0947c8477012aa15aa4de61ba83f77a6c
+        tag: latest@sha256:c3ac60421b67574751f096541f3eee513fc85ed4e34123b87e9e7c5046888b25
       podLabels:
         policy.gabe565.com/egress-world: "true"
         policy.gabe565.com/ingress-namespage: "true"
