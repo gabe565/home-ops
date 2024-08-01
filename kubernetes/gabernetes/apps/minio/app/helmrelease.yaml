@@ -20,6 +20,7 @@ spec:
   values:
     controllers:
       minio:
+        strategy: RollingUpdate
         containers:
           app:
             image:
