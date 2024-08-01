@@ -108,6 +108,11 @@
       "matchDatasources": ["docker", "github-tags"],
       "matchPackageNames": ["ghcr.io/fluxcd/flux-manifests", "fluxcd/flux2"],
       "groupName": "fluxcd/flux2"
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchPackagePrefixes": ["ghcr.io/immich-app/"],
+      "sourceUrl": "https://github.com/immich-app/immich"
     }
   ]
 }
