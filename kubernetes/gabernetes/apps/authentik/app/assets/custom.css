@@ -75,3 +75,9 @@ a.style-scope {
 ul.pf-c-list.style-scope.ak-stage-consent {
     text-align: left;
 }
+
+/* Social icons */
+:host([theme="dark"]) .pf-c-data-list__cell img:is([alt="Google"], [alt="Plex"]),
+ak-flow-executor[theme="dark"] .pf-c-login__main-footer-links img:is([alt="Google"], [alt="Plex"]) {
+    filter: none;
+}
