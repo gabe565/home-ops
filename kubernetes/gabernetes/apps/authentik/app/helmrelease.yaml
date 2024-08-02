@@ -34,12 +34,6 @@ spec:
         policy.gabe565.com/egress-geoip: "true"
 
       env:
-        - name: AUTHENTIK_DISABLE_UPDATE_CHECK
-          value: "true"
-        - name: AUTHENTIK_DISABLE_STARTUP_ANALYTICS
-          value: "true"
-        - name: AUTHENTIK_ERROR_REPORTING__ENABLED
-          value: "false"
         - name: AUTHENTIK_POSTGRESQL__PASSWORD
           valueFrom:
             secretKeyRef:
@@ -68,6 +62,8 @@ spec:
       # performance data to sentry.beryju.org, and is fully opt-in
       error_reporting:
         enabled: false
+      disable_update_check: true
+      disable_startup_analytics: true
 
       secret_key: ${authentik_secret_key}
 
