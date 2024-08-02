@@ -38,6 +38,8 @@ spec:
           value: "true"
         - name: AUTHENTIK_DISABLE_STARTUP_ANALYTICS
           value: "true"
+        - name: AUTHENTIK_ERROR_REPORTING__ENABLED
+          value: "false"
         - name: AUTHENTIK_POSTGRESQL__PASSWORD
           valueFrom:
             secretKeyRef:
