@@ -22,32 +22,13 @@ spec:
       qbittorrent:
         annotations:
           secret.reloader.stakater.com/reload: qbittorrent-gluetun
-        containers:
-          app:
-            image:
-              repository: ghcr.io/onedr0p/qbittorrent
-              tag: 4.6.5@sha256:c019af23966ebafcaf1713d4553bc043246858b711a7d57d8bee358a89990a3e
-              pullPolicy: IfNotPresent
-            env:
-              TZ: America/Chicago
-              QBITTORRENT__BT_PORT: ${bittorrent_port}
-            probes:
-              startup:
-                enabled: true
-                spec:
-                  failureThreshold: 30
-                  periodSeconds: 5
-              liveness:
-                enabled: true
-              readiness:
-                enabled: true
-            securityContext:
-              readOnlyRootFilesystem: true
+        initContainers:
           vpn:
             image:
               repository: qmcgaw/gluetun
               tag: v3.38.0@sha256:5522794f5cce6d84bc7f06b1e3a3b836ede9100c64aec94543cb503bb2ecb72f
               pullPolicy: IfNotPresent
+            restartPolicy: Always
             env:
               HEALTH_VPN_DURATION_INITIAL: 120s
               HEALTH_SUCCESS_WAIT_DURATION: 120s
@@ -69,6 +50,40 @@ spec:
                 add:
                   - NET_ADMIN
                   - SYS_MODULE
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  exec: &exec
+                    command: [/gluetun-entrypoint, healthcheck]
+                  periodSeconds: 60
+              startup:
+                <<: *probe
+                spec:
+                  exec: *exec
+                  periodSeconds: 5
+        containers:
+          app:
+            image:
+              repository: ghcr.io/onedr0p/qbittorrent
+              tag: 4.6.5@sha256:c019af23966ebafcaf1713d4553bc043246858b711a7d57d8bee358a89990a3e
+              pullPolicy: IfNotPresent
+            env:
+              TZ: America/Chicago
+              QBITTORRENT__BT_PORT: ${bittorrent_port}
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+            securityContext:
+              readOnlyRootFilesystem: true
         pod:
           labels:
             policy.gabe565.com/ingress-authentik: "true"
