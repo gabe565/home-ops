@@ -52,7 +52,7 @@ spec:
         evaluationInterval: 1m
         remoteWrite:
           - name: Prometheus
-            url: https://${prometheus_url}/api/v1/write
+            url: ${prometheus_url}/api/v1/write
     kubeApiServer:
       enabled: false
     kubelet:

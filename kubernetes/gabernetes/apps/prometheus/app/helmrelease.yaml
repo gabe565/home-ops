@@ -119,8 +119,10 @@ spec:
       prometheusSpec:
         podMetadata:
           labels:
+            policy.gabe565.com/egress-headscale: "true"
             policy.gabe565.com/egress-nodes: "true"
             policy.gabe565.com/egress-namespace: "true"
+            policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-namespace: "true"
         enableRemoteWriteReceiver: true
         podMonitorSelectorNilUsesHelmValues: false
@@ -133,6 +135,28 @@ spec:
             memory: 3Gi
           limits:
             memory: 6Gi
+        containers:
+          - name: vpn
+            image: ghcr.io/tailscale/tailscale:v1.70.0
+            env:
+              - name: TS_HOSTNAME
+                value: prometheus
+              - name: TS_EXTRA_ARGS
+                value: --login-server=http://headscale.headscale:8080
+              - name: TS_KUBE_SECRET
+                value: tailscale-state
+              - name: TS_AUTHKEY
+                value: ${vpn_auth_key}
+              - name: TS_NO_LOGS_NO_SUPPORT
+                value: "true"
+            livenessProbe: &probe
+              exec:
+                command: [tailscale, --socket=/tmp/tailscaled.sock, status]
+              periodSeconds: 60
+            startupProbe:
+              <<: *probe
+              failureThreshold: 60
+              periodSeconds: 5
         storageSpec:
           volumeClaimTemplate:
             spec:
