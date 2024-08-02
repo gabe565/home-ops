@@ -1,0 +1,33 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: egress-headscale
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/egress-headscale: "true"
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: headscale
+            app.kubernetes.io/name: headscale
+      toPorts:
+        - ports:
+            - port: "8123"
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: headscale
+  namespace: headscale
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: headscale
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            policy.gabe565.com/egress-headscale: "true"
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
