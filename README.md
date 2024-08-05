@@ -267,6 +267,12 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><a href="kubernetes/gabernetes/apps/matrimony/borgmatic/helmrelease.yaml">borgmatic</a></td>
   </tr>
   <tr>
+    <td>mattermost</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/mattermost/app/helmrelease.yaml">mattermost</a></td>
+    <td><a href="kubernetes/gabernetes/apps/mattermost/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/mattermost/app/postgresql.yaml">postgresql</a></td>
+  </tr>
+  <tr>
     <td>memos</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/memos/app/helmrelease.yaml">memos</a></td>

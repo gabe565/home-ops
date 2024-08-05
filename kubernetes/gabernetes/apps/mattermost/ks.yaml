@@ -1,0 +1,37 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: app
+  namespace: mattermost
+spec:
+  interval: 1h
+  targetNamespace: mattermost
+  path: ./kubernetes/gabernetes/apps/mattermost/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    namespace: flux-system
+    name: home-ops
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: app-vars
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: borgmatic
+  namespace: mattermost
+spec:
+  interval: 1h
+  targetNamespace: mattermost
+  path: ./kubernetes/gabernetes/apps/mattermost/borgmatic
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    namespace: flux-system
+    name: home-ops
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: borgmatic-vars
