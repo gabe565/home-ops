@@ -1,0 +1,160 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.3.2/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: mattermost
+  namespace: mattermost
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 3.3.2
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      mattermost:
+        type: statefulset
+        replicas: 2
+        containers:
+          mattermost:
+            image:
+              repository: git.gabe565.com/mirror/mattermost
+              tag: 9.11.0@sha256:d357a7b197d1cf71ca306c2ca411a84f7554e90a4e513f50558338156ed02f04
+              pullPolicy: IfNotPresent
+            env:
+              TZ: America/Chicago
+              MM_SERVICESETTINGS_SITEURL: https://${app_url}
+              MM_SERVICESETTINGS_ENABLELOCALMODE: "true"
+
+              # Database
+              MM_SQLSETTINGS_DRIVERNAME: postgres
+              DB_USERNAME:
+                secretKeyRef:
+                  name: postgresql-app
+                  key: username
+              DB_PASSWORD:
+                secretKeyRef:
+                  name: postgresql-app
+                  key: password
+              MM_SQLSETTINGS_DATASOURCE: postgres://$(DB_USERNAME):$(DB_PASSWORD)@postgresql-rw:5432/mattermost?binary_parameters=yes
+              MM_CONFIG:
+                value: $(MM_SQLSETTINGS_DATASOURCE)
+                dependsOn: MM_SQLSETTINGS_DATASOURCE
+
+              # Email
+              MM_EMAILSETTINGS_SMTPSERVER: ${smtp_host}
+              MM_EMAILSETTINGS_SMTPPORT: "465"
+              MM_EMAILSETTINGS_CONNECTIONSECURITY: TLS
+              MM_EMAILSETTINGS_ENABLESMTPAUTH: "true"
+              MM_EMAILSETTINGS_SMTPUSERNAME: ${smtp_from}
+              MM_EMAILSETTINGS_SMTPPASSWORD: ${smtp_password}
+              MM_EMAILSETTINGS_FEEDBACKNAME: ${app_name}
+              MM_EMAILSETTINGS_FEEDBACKEMAIL: ${smtp_from}
+              MM_EMAILSETTINGS_REPLYTOADDRESS: ${smtp_from}
+              MM_SUPPORTSETTINGS_SUPPORTEMAIL: ${smtp_from}
+
+              # Tracking
+              MM_LOGSETTINGS_ENABLEDIAGNOSTICS: "false"
+              MM_SERVICESETTINGS_ENABLESECURITYFIXALERT: "false"
+              MM_CLOUDSETTINGS_DISABLE: "true"
+
+              # Storage
+              MM_FILESETTINGS_DRIVERNAME: amazons3
+              MM_FILESETTINGS_AMAZONS3ENDPOINT: ${s3_endpoint}
+              MM_FILESETTINGS_AMAZONS3BUCKET: ${s3_bucket}
+              MM_FILESETTINGS_AMAZONS3ACCESSKEYID: ${s3_access_key}
+              MM_FILESETTINGS_AMAZONS3SECRETACCESSKEY: ${s3_secret_key}
+              MM_FILESETTINGS_AMAZONS3REQUESTTIMEOUTMILLISECONDS: "300000"
+              MM_FILESETTINGS_AMAZONS3UPLOADPARTSIZEBYTES: "5242880"
+              MM_FILESETTINGS_AMAZONS3SSL: "false"
+
+              # Logging
+              MM_LOGSETTINGS_ENABLECONSOLE: "true"
+              MM_LOGSETTINGS_CONSOLEJSON: "false"
+              MM_LOGSETTINGS_ENABLEFILE: "false"
+
+              # Plugins
+              MM_PLUGINSETTINGS_ENABLEUPLOADS: "true"
+            probes:
+              liveness: &probe
+                enabled: true
+                type: HTTP
+                path: /api/v4/system/ping
+              readiness: *probe
+              startup:
+                <<: *probe
+                spec:
+                  failureThreshold: 300
+                  periodSeconds: 5
+            securityContext:
+              readOnlyRootFilesystem: true
+              runAsUser: 2000
+              runAsGroup: 2000
+        pod:
+          imagePullSecrets:
+            - name: gitea
+          labels:
+            policy.gabe565.com/egress-namespace: "true"
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-ingress: "true"
+            policy.gabe565.com/ingress-namespace: "true"
+          securityContext:
+            fsGroup: 2000
+            fsGroupChangePolicy: OnRootMismatch
+          affinity:
+            podAntiAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 1
+                  podAffinityTerm:
+                    topologyKey: kubernetes.io/hostname
+                    labelSelector:
+                      matchLabels:
+                        app.kubernetes.io/name: mattermost
+                        app.kubernetes.io/component: mattermost
+
+    service:
+      mattermost:
+        controller: mattermost
+        ports:
+          http:
+            port: 8065
+
+    persistence:
+      tmp:
+        enabled: true
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+            subPath: tmp
+          - path: /var/tmp
+            subPath: var/tmp
+          - path: /mattermost/logs
+            subPath: logs
+          - path: /mattermost/plugins
+            subPath: plugins
+          - path: /mattermost/client/plugins
+            subPath: client/plugins
+
+    ingress:
+      mattermost:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/proxy-body-size: 100M
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+                service:
+                  identifier: mattermost
+                  port: http
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
