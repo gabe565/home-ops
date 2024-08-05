@@ -33,6 +33,7 @@ spec:
                 secretKeyRef:
                   name: postgresql-app
                   key: uri
+              MEMOS_PASSWORD_AUTH: "false"
             probes:
               startup:
                 enabled: true
