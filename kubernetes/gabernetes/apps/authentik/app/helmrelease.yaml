@@ -44,6 +44,14 @@ spec:
             secretKeyRef:
               name: redis
               key: redis-password
+        - name: AUTHENTIK_POSTGRESQL__READ_REPLICAS__0__HOST
+          value: postgresql-ro
+        - name: AUTHENTIK_POSTGRESQL__READ_REPLICAS__0__NAME
+          value: authentik
+        - name: AUTHENTIK_POSTGRESQL__READ_REPLICAS__0__USER
+          value: authentik
+        - name: AUTHENTIK_POSTGRESQL__READ_REPLICAS__0__PASSWORD
+          value: $(AUTHENTIK_POSTGRESQL__PASSWORD)
       envFrom:
         - secretRef:
             name: authentik-s3-envs
