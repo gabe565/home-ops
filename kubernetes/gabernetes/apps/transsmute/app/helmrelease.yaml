@@ -27,7 +27,7 @@ spec:
           app:
             image:
               repository: ghcr.io/gabe565/transsmute
-              tag: 1.3.0@sha256:03e9281cde665f85edd65da008a09f959c83d6ced998c7c9359cda2d2191d810
+              tag: 1.4.0@sha256:97015658d848c82f3e7f76b774f97dfad34a151c1cfeb56b0b1eb4b43c99c4ff
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
