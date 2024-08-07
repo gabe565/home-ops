@@ -29,6 +29,7 @@ spec:
             env:
               TZ: America/Chicago
               FORCE_DISABLE_SSL: "true"
+              TRUST_PROXY: 10.42.0.0/16
             resources:
               requests:
                 squat.ai/zwave: 1
