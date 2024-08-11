@@ -26,7 +26,7 @@ spec:
           vpn:
             image:
               repository: qmcgaw/gluetun
-              tag: v3.38.0@sha256:5522794f5cce6d84bc7f06b1e3a3b836ede9100c64aec94543cb503bb2ecb72f
+              tag: v3.39.0@sha256:2f011a9aca767af62008d879eefcbc80a8645bd4fd4466ab312cc941cb658ad1
               pullPolicy: IfNotPresent
             restartPolicy: Always
             env:
@@ -43,8 +43,8 @@ spec:
               WIREGUARD_PRIVATE_KEY: ${wireguard_private_key}
               WIREGUARD_ADDRESSES: ${wireguard_addresses}
               WIREGUARD_PUBLIC_KEY: ${wireguard_public_key}
-              VPN_ENDPOINT_IP: ${vpn_endpoint_ip}
-              VPN_ENDPOINT_PORT: ${vpn_endpoint_port}
+              WIREGUARD_ENDPOINT_IP: ${wireguard_endpoint_ip}
+              WIREGUARD_ENDPOINT_PORT: ${wireguard_endpoint_port}
             securityContext:
               capabilities:
                 add:
