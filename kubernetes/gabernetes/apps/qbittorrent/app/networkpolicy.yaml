@@ -36,8 +36,8 @@ spec:
               operator: Exists
   egress:
     - toCIDRSet:
-        - cidr: ${vpn_endpoint_ip}/32
+        - cidr: ${wireguard_endpoint_ip}/32
       toPorts:
         - ports:
-            - port: ${vpn_endpoint_port}
+            - port: ${wireguard_endpoint_port}
               protocol: UDP
