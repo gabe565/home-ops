@@ -59,13 +59,6 @@ spec:
     redis-cluster:
       enabled: false
 
-    service:
-      ssh:
-        type: LoadBalancer
-        port: 2222
-        loadBalancerIP: 192.168.1.227
-        externalTrafficPolicy: Local
-
     persistence:
       storageClass: longhorn-ssd
 
@@ -80,9 +73,8 @@ spec:
         server:
           DOMAIN: ${app_url}
           ROOT_URL: https://${app_url}
-          SSH_DOMAIN: ${ssh_domain}
-          SSH_PORT: "2222"
           LFS_JWT_SECRET: ${lfs_jwt_secret}
+          DISABLE_SSH: "true"
         database:
           DB_TYPE: postgres
           HOST: postgresql-rw:5432
