@@ -5,7 +5,7 @@ metadata:
   namespace: vikunja
 spec:
   instances: 3
-  imageName: ghcr.io/cloudnative-pg/postgresql:16.4-2
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.4-3
   enableSuperuserAccess: true
   bootstrap:
     initdb:
