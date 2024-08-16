@@ -88,6 +88,9 @@ spec:
           change-detection:
             app:
               - path: /datastore
+      tmp:
+        enabled: true
+        type: emptyDir
 
     ingress:
       change-detection:
