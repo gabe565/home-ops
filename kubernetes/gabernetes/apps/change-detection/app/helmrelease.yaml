@@ -29,7 +29,7 @@ spec:
             env:
               TZ: America/Chicago
               BASE_URL: https://${app_url}
-              PLAYWRIGHT_DRIVER_URL: ws://change-detection-browserless:3000
+              PLAYWRIGHT_DRIVER_URL: ws://change-detection-browserless:3000/chromium?token=${browser_token}&blockAds=true&launch={"stealth":true}
             probes:
               startup:
                 enabled: true
@@ -52,14 +52,15 @@ spec:
         containers:
           app:
             image:
-              repository: browserless/chrome
-              tag: 1.61.1-chrome-stable@sha256:efac47cfff3830d9a50b27d29f8bbb61949058ae336c823fbe9bd3c0d1debcc8
+              repository: ghcr.io/browserless/chromium
+              tag: v2.17.1@sha256:527098ce996e28e361100456ba073a54a18ca579692ceefe5a5f41776632daa8
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
+              DEBUG: "browserless*,-*:trace,-*:verbose"
               ENABLE_DEBUGGER: "false"
-              DEFAULT_BLOCK_ADS: "true"
-              DEFAULT_STEALTH: "true"
+              TOKEN: ${browser_token}
+              TIMEOUT: "60000"
         pod:
           labels:
             policy.gabe565.com/egress-world: "true"
