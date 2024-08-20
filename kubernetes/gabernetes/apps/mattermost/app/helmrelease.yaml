@@ -32,6 +32,7 @@ spec:
               TZ: America/Chicago
               MM_SERVICESETTINGS_SITEURL: https://${app_url}
               MM_SERVICESETTINGS_ENABLELOCALMODE: "true"
+              MM_SERVICESETTINGS_ENABLEAPICHANNELDELETION: "true"
 
               # Database
               MM_SQLSETTINGS_DRIVERNAME: postgres
