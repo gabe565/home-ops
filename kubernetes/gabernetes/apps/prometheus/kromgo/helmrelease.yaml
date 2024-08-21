@@ -31,6 +31,8 @@ spec:
               pullPolicy: IfNotPresent
             env:
               PROMETHEUS_URL: http://kube-prometheus-stack-prometheus:9090
+              SERVER_HOST: 0.0.0.0
+              HEALTH_HOST: 0.0.0.0
             securityContext:
               readOnlyRootFilesystem: true
             resources:
@@ -42,6 +44,7 @@ spec:
               liveness: &probe
                 enabled: true
                 type: HTTP
+                port: 8888
                 path: /-/ready
               readiness: *probe
               startup:
@@ -69,6 +72,9 @@ spec:
         ports:
           http:
             port: 8080
+            primary: true
+          health:
+            port: 8888
 
     ingress:
       kromgo:
