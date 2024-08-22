@@ -19,13 +19,3 @@ spec:
     substitute:
       load_balancer_ip: 192.168.1.220
       metrics_enabled: "true"
-  patches:
-    - target:
-        kind: HelmRelease
-        name: ingress-nginx
-      # language=yaml
-      patch: |
-        - op: add
-          path: /spec/values/tcp
-          value:
-            "2222": gitea/gitea-ssh:2222
