@@ -369,6 +369,12 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td></td>
   </tr>
   <tr>
+    <td>plausible</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/plausible/app/helmrelease.yaml">plausible</a></td>
+    <td><a href="kubernetes/gabernetes/apps/plausible/clickhouse/helmrelease.yaml">clickhouse</a>, <a href="kubernetes/gabernetes/apps/plausible/app/postgresql.yaml">postgresql</a></td>
+  </tr>
+  <tr>
     <td>plex</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/plex/app/helmrelease.yaml">plex</a></td>

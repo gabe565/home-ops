@@ -1,0 +1,22 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgresql
+  namespace: plausible
+spec:
+  instances: 3
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.4-4
+  enableSuperuserAccess: true
+  bootstrap:
+    initdb:
+      database: plausible
+      owner: plausible
+  storage:
+    storageClass: local-path
+    size: 8Gi
+  resources:
+    requests:
+      memory: 20Mi
+      cpu: 10m
+  smartShutdownTimeout: 1
+  stopDelay: 300

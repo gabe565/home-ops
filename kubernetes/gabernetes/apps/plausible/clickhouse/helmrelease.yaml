@@ -1,0 +1,117 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.3.2/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: clickhouse
+  namespace: plausible
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 3.3.2
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      clickhouse:
+        type: statefulset
+        containers:
+          app:
+            image:
+              repository: clickhouse/clickhouse-server
+              tag: 24.8.1.2684-alpine@sha256:9253d91397f5288bda75a690ccfd2c62b2b6be2e8452a4c9e95ebbed29288414
+              pullPolicy: IfNotPresent
+            securityContext:
+              readOnlyRootFilesystem: true
+            probes:
+              liveness: &probe
+                enabled: true
+                type: HTTP
+                path: /?query=SELECT+1
+              readiness: *probe
+              startup:
+                <<: *probe
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+        pod:
+          labels:
+            policy.gabe565.com/ingress-namespace: "true"
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 101
+            runAsGroup: 101
+            fsGroup: 101
+            fsGroupChangePolicy: OnRootMismatch
+
+    service:
+      clickhouse:
+        controller: clickhouse
+        ports:
+          http:
+            port: 8123
+
+    persistence:
+      data:
+        enabled: true
+        storageClass: longhorn-ssd
+        accessMode: ReadWriteOnce
+        size: 2Gi
+        retain: true
+        globalMounts:
+          - path: /var/lib/clickhouse
+      logs:
+        enabled: true
+        type: emptyDir
+        globalMounts:
+          - path: /var/log
+      config:
+        enabled: true
+        type: configMap
+        name: clickhouse-config
+        globalMounts:
+          - path: /etc/clickhouse-server/config.d/logging.xml
+            subPath: config.xml
+          - path: /etc/clickhouse-server/users.d/logging.xml
+            subPath: users.xml
+
+    configMaps:
+      config:
+        enabled: true
+        data:
+          # language=xml
+          config.xml: |
+            <clickhouse>
+                <logger>
+                    <level>warning</level>
+                    <console>true</console>
+                </logger>
+
+                <listen_host>0.0.0.0</listen_host>
+
+                <!-- Stop all the unnecessary logging -->
+                <query_thread_log remove="remove"/>
+                <query_log remove="remove"/>
+                <text_log remove="remove"/>
+                <trace_log remove="remove"/>
+                <metric_log remove="remove"/>
+                <asynchronous_metric_log remove="remove"/>
+                <session_log remove="remove"/>
+                <part_log remove="remove"/>
+            </clickhouse>
+          # language=xml
+          users.xml: |
+            <clickhouse>
+                <profiles>
+                    <default>
+                        <log_queries>0</log_queries>
+                        <log_query_threads>0</log_query_threads>
+                    </default>
+                </profiles>
+            </clickhouse>

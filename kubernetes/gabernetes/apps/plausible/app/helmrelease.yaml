@@ -1,0 +1,132 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.3.2/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: plausible
+  namespace: plausible
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 3.3.2
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      plausible:
+        strategy: RollingUpdate
+        annotations:
+          secret.reloader.stakater.com/reload: plausible-envs
+        initContainers:
+          geoip:
+            image:
+              repository: ghcr.io/maxmind/geoipupdate
+              tag: v7.0.1@sha256:80c57598a9ff552953e499cefc589cfe7b563d64262742ea42f2014251b557b0
+              pullPolicy: IfNotPresent
+            restartPolicy: Always
+            env:
+              GEOIPUPDATE_HOST: ${geoip_host}
+              GEOIPUPDATE_FREQUENCY: "8"
+              GEOIPUPDATE_PRESERVE_FILE_TIMES: "1"
+              GEOIPUPDATE_EDITION_IDS: GeoLite2-City
+              GEOIPUPDATE_ACCOUNT_ID: "1"
+              GEOIPUPDATE_LICENSE_KEY: stub
+            securityContext:
+              readOnlyRootFilesystem: true
+            probes:
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command: [ls, /usr/share/GeoIP/GeoLite2-City.mmdb]
+                  periodSeconds: 5
+        containers:
+          app:
+            image:
+              repository: ghcr.io/plausible/community-edition
+              tag: v2.1.1@sha256:2085e7a4bafd4bb1824e5fa1131ebdbd8ca78da1b2ebdefbc887f971f24f53c9
+              pullPolicy: IfNotPresent
+            command:
+              - sh
+              - -c
+              - |
+                set -eux
+                /entrypoint.sh db createdb
+                /entrypoint.sh db migrate
+                exec /entrypoint.sh run
+            env:
+              BASE_URL: https://${app_host}
+              DISABLE_REGISTRATION: invite_only
+              DATABASE_URL:
+                secretKeyRef:
+                  name: postgresql-app
+                  key: uri
+              CLICKHOUSE_DATABASE_URL: http://clickhouse:8123/plausible_events_db
+              IP_GEOLOCATION_DB: /usr/share/GeoIP/GeoLite2-City.mmdb
+            envFrom:
+              - secretRef:
+                  name: plausible-envs
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+            securityContext:
+              readOnlyRootFilesystem: true
+        pod:
+          terminationGracePeriodSeconds: 1
+          labels:
+            policy.gabe565.com/egress-geoip: "true"
+            policy.gabe565.com/egress-namespace: "true"
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-ingress: "true"
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            fsGroupChangePolicy: OnRootMismatch
+
+    persistence:
+      tmp:
+        enabled: true
+        type: emptyDir
+      geoip:
+        enabled: true
+        type: emptyDir
+        globalMounts:
+          - path: /usr/share/GeoIP
+
+    service:
+      plausible:
+        controller: plausible
+        ports:
+          http:
+            port: 8000
+
+    ingress:
+      plausible:
+        enabled: true
+        hosts:
+          - host: ${app_host}
+            paths:
+              - path: /
+                service:
+                  identifier: plausible
+                  port: http
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_host}
