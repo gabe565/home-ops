@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: ghcr.io/gabe565/portfolio
-              tag: 2.3.2@sha256:1a3cc3474851b778fa02a80ef71e5d478a2d8bc38ea79433102cd0c9f1867d6e #yampl {{ .tag }}@{{ .digest }}
+              tag: 2.3.3@sha256:b2c7b832adc23466c9e30bf8800d0f26a647abbe8ed042c6bb0c53984d207900 #yampl {{ .tag }}@{{ .digest }}
             env:
               TZ: America/Chicago
             probes:
