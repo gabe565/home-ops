@@ -115,12 +115,6 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td></td>
   </tr>
   <tr>
-    <td>charm</td>
-    <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/gabernetes/apps/charm/app/helmrelease.yaml">charm</a></td>
-    <td></td>
-  </tr>
-  <tr>
     <td>cnpg-system</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/cnpg/app/helmrelease.yaml">cnpg</a></td>
