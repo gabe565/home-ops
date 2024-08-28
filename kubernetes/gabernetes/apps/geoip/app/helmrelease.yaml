@@ -80,7 +80,7 @@ spec:
       updates:
         enabled: true
         annotations: &annotations
-          nginx.ingress.kubernetes.io/whitelist-source-range: 192.168.1.0/24,10.42.0.0/16
+          nginx.ingress.kubernetes.io/whitelist-source-range: 192.168.1.0/24,10.42.0.0/16,${vps_ip}/32
         hosts:
           - host: ${updates_url}
             paths:

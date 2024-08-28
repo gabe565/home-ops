@@ -25,8 +25,10 @@ spec:
 
       extraArgs:
         update-status-on-shutdown: "false"
+        maxmind-mirror: ${geoip_mirror}
 
       podLabels:
+        policy.gabe565.com/egress-geoip: "true"
         policy.gabe565.com/egress-kubeapi: "true"
         policy.gabe565.com/egress-namespace: "true"
         policy.gabe565.com/egress-world-with-lan: "true"
@@ -36,7 +38,7 @@ spec:
 
       allowSnippetAnnotations: true
 
-      maxmindLicenseKey: ${geoip_license_key}
+      maxmindLicenseKey: stub
 
       config:
         proxy-buffer-size: 16k
