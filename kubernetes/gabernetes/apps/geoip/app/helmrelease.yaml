@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: ghcr.io/gabe565/geoip-cache-proxy
-              tag: 0.0.2@sha256:0e83408e462d134cdab3ee0fb110dce439e4a586031a880df2312c1539ec88e4
+              tag: 0.1.0@sha256:a2d78652fc5c695928f6633e583496ca571a53e888adc9be599df89016bfc0ab
               pullPolicy: Always
             env:
               TZ: America/Chicago
