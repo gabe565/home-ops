@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: clickhouse/clickhouse-server
-              tag: 24.8.2.3-alpine@sha256:52b5bc40ddf6043eafaa46025a9858a70cb764adb5a061fe80f6efe1fcae7928
+              tag: 24.8.3.59-alpine@sha256:a37e26f07c2d76285bb5c1d5fc45b8560687b763fcf804be2468cf71d22a9406
               pullPolicy: IfNotPresent
             securityContext:
               readOnlyRootFilesystem: true
