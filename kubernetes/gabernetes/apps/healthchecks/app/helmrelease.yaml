@@ -31,6 +31,7 @@ spec:
               TZ: America/Chicago
               SITE_NAME: Cook Healthchecks
               SITE_ROOT: https://${app_url}
+              RP_ID: ${app_url}
               SITE_LOGO_URL: ${logo_url}
               DEBUG: "False"
               SECRET_KEY: ${secret_key}
