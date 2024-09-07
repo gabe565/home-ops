@@ -5,7 +5,7 @@ metadata:
   namespace: mattermost
 spec:
   instances: 3
-  imageName: ghcr.io/cloudnative-pg/postgresql:16.4-6
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.4-7
   enableSuperuserAccess: true
   bootstrap:
     initdb:
