@@ -113,6 +113,11 @@
       "matchDatasources": ["docker"],
       "matchPackagePrefixes": ["ghcr.io/immich-app/"],
       "sourceUrl": "https://github.com/immich-app/immich"
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/kube-vip/kube-vip"],
+      "sourceUrl": "https://github.com/kube-vip/kube-vip"
     }
   ]
 }
