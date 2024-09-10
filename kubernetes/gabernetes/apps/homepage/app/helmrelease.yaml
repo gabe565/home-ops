@@ -28,7 +28,7 @@ spec:
           app:
             image:
               repository: ghcr.io/gethomepage/homepage
-              tag: v0.9.7@sha256:985e5b5612aa369341f529adb7f16b00030a43d1e5ccef2cbee3ba91854d2ce3
+              tag: v0.9.9@sha256:5c264918d2d18a753da8657fee7e0579c8b11581b19275d9a93fde76a8267f3c
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
