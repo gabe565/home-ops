@@ -118,6 +118,11 @@
       "matchDatasources": ["docker"],
       "matchPackageNames": ["ghcr.io/kube-vip/kube-vip"],
       "sourceUrl": "https://github.com/kube-vip/kube-vip"
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/juanfont/headscale"],
+      "sourceUrl": "https://github.com/juanfont/headscale"
     }
   ]
 }
