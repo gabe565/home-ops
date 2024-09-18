@@ -36,7 +36,8 @@ spec:
               HEADSCALE_NOISE: "{}"
               HEADSCALE_NOISE_PRIVATE_KEY_PATH: /etc/headscale/noise_private.key
 
-              HEADSCALE_IP_PREFIXES: 100.64.0.0/10 fd7a:115c:a1e0::/48
+              HEADSCALE_PREFIXES_V4: 100.64.0.0/10
+              HEADSCALE_PREFIXES_V6: fd7a:115c:a1e0::/48
 
               HEADSCALE_DERP_URLS: https://controlplane.tailscale.com/derpmap/default
               HEADSCALE_DERP_AUTO_UPDATE_ENABLED: "true"
@@ -44,21 +45,21 @@ spec:
 
               HEADSCALE_EPHEMERAL_NODE_INACTIVITY_TIMEOUT: "30m"
 
-              HEADSCALE_DNS_CONFIG_NAMESERVERS: "1.1.1.1 1.0.0.1"
-              HEADSCALE_DNS_CONFIG_MAGIC_DNS: "true"
-              HEADSCALE_DNS_CONFIG_BASE_DOMAIN: ${base_domain}
+              HEADSCALE_DNS_NAMESERVERS_GLOBAL: "1.1.1.1 1.0.0.1"
+              HEADSCALE_DNS_MAGIC_DNS: "true"
+              HEADSCALE_DNS_BASE_DOMAIN: ${base_domain}
 
               HEADSCALE_OIDC_ISSUER: ${oidc_issuer}
               HEADSCALE_OIDC_CLIENT_ID: ${oidc_client_id}
               HEADSCALE_OIDC_CLIENT_SECRET: ${oidc_client_secret}
 
-              HEADSCALE_DB_TYPE: postgres
-              HEADSCALE_DB_HOST: postgresql-rw
-              HEADSCALE_DB_PORT: "5432"
-              HEADSCALE_DB_SSL: "true"
-              HEADSCALE_DB_NAME: headscale
-              HEADSCALE_DB_USER: headscale
-              HEADSCALE_DB_PASS:
+              HEADSCALE_DATABASE_TYPE: postgres
+              HEADSCALE_DATABASE_POSTGRES_HOST: postgresql-rw
+              HEADSCALE_DATABASE_POSTGRES_PORT: "5432"
+              HEADSCALE_DATABASE_POSTGRES_SSL: "true"
+              HEADSCALE_DATABASE_POSTGRES_NAME: headscale
+              HEADSCALE_DATABASE_POSTGRES_USER: headscale
+              HEADSCALE_DATABASE_POSTGRES_PASS:
                 secretKeyRef:
                   name: postgresql-app
                   key: password
