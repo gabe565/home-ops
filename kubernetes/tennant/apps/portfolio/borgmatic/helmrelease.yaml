@@ -73,6 +73,10 @@ spec:
                 label: borgbase
             source_directories:
               - /portfolio-data
+            exclude_patterns:
+              - /portfolio-data/backups
+              - /portfolio-data/data.db*
+              - /portfolio-data/logs.db*
             archive_name_format: "portfolio-{now:%Y-%m-%d-%H%M%S}"
             ssh_command: ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=ERROR
             retries: 2
@@ -82,5 +86,10 @@ spec:
             keep_monthly: 24
             keep_yearly: 20
             check_last: 3
+            sqlite_databases:
+              - name: data
+                path: /portfolio-data/data.db
+              - name: logs
+                path: /portfolio-data/logs.db
             healthchecks:
               ping_url: ${healthchecks_ping_url}

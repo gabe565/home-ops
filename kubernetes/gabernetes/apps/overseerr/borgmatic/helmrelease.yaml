@@ -73,6 +73,9 @@ spec:
                 label: borgbase
             source_directories:
               - /overseerr-config
+            exclude_patterns:
+              - /overseerr-config/logs
+              - /overseerr-config/db
             archive_name_format: "overseerr-{now:%Y-%m-%d-%H%M%S}"
             ssh_command: ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=ERROR
             retries: 2
@@ -82,5 +85,8 @@ spec:
             keep_monthly: 24
             keep_yearly: 20
             check_last: 3
+            sqlite_databases:
+              - name: overseerr
+                path: /overseerr-config/db/db.sqlite3
             healthchecks:
               ping_url: http://healthchecks.healthchecks:8000/ping/${healthchecks_uuid}
