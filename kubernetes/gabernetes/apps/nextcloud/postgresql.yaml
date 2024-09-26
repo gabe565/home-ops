@@ -5,7 +5,7 @@ metadata:
   namespace: nextcloud
 spec:
   instances: 3
-  imageName: ghcr.io/cloudnative-pg/postgresql:16.4-21
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.4-22
   enableSuperuserAccess: true
   bootstrap:
     initdb:
