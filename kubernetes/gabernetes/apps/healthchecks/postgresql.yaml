@@ -5,7 +5,7 @@ metadata:
   namespace: healthchecks
 spec:
   instances: 3
-  imageName: ghcr.io/cloudnative-pg/postgresql:16.4-22
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.4-26
   enableSuperuserAccess: true
   bootstrap:
     initdb:
