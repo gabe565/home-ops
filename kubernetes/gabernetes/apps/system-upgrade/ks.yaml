@@ -8,7 +8,7 @@ spec:
   interval: 1h
   url: https://github.com/rancher/system-upgrade-controller.git
   ref:
-    tag: v0.14.0
+    tag: v0.14.1
   # language=gitignore
   ignore: |
     # exclude all
