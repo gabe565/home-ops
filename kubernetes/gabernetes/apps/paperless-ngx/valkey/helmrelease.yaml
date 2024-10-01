@@ -1,13 +1,13 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: redis
-  namespace: gitea
+  name: valkey
+  namespace: paperless-ngx
 spec:
   chart:
     spec:
-      chart: redis
-      version: 20.0.1
+      chart: valkey
+      version: 1.0.1
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -19,11 +19,11 @@ spec:
   values:
     auth:
       enabled: true
-      password: ${redis_password}
-
-    replica:
-      replicaCount: 0
+      password: ${valkey_password}
 
     master:
       podLabels:
         policy.gabe565.com/ingress-namespace: "true"
+
+    replica:
+      replicaCount: 0

@@ -42,11 +42,11 @@ spec:
 
               VIKUNJA_KEYVALUE_TYPE: redis
               VIKUNJA_REDIS_ENABLED: "true"
-              VIKUNJA_REDIS_HOST: redis-master:6379
+              VIKUNJA_REDIS_HOST: valkey-master:6379
               VIKUNJA_REDIS_PASSWORD:
                 secretKeyRef:
-                  name: redis
-                  key: redis-password
+                  name: valkey
+                  key: valkey-password
 
               VIKUNJA_AUTH_LOCAL: "false"
             envFrom:

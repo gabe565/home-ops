@@ -20,12 +20,12 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: redis
+  name: valkey
   namespace: geoip
 spec:
   interval: 1h
   targetNamespace: geoip
-  path: ./kubernetes/gabernetes/apps/geoip/redis
+  path: ./kubernetes/gabernetes/apps/geoip/valkey
   prune: true
   sourceRef:
     kind: GitRepository
@@ -34,4 +34,4 @@ spec:
   postBuild:
     substituteFrom:
       - kind: Secret
-        name: redis-vars
+        name: valkey-vars

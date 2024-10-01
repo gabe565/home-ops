@@ -1,13 +1,13 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: redis
-  namespace: immich
+  name: valkey
+  namespace: gitea
 spec:
   chart:
     spec:
-      chart: redis
-      version: 20.0.1
+      chart: valkey
+      version: 1.0.1
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -19,14 +19,11 @@ spec:
   values:
     auth:
       enabled: true
-      password: ${redis_password}
-
-    master:
-      persistence:
-        storageClass: longhorn-ssd
-        size: 1Gi
-      podLabels:
-        policy.gabe565.com/ingress-namespace: "true"
+      password: ${valkey_password}
 
     replica:
       replicaCount: 0
+
+    master:
+      podLabels:
+        policy.gabe565.com/ingress-namespace: "true"

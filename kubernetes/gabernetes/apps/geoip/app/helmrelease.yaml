@@ -31,11 +31,11 @@ spec:
               TZ: America/Chicago
               GEOIP_LOG_LEVEL: debug
               GEOIP_LOG_FORMAT: color
-              GEOIP_REDIS_HOST: redis-master
+              GEOIP_REDIS_HOST: valkey-master
               GEOIP_REDIS_PASSWORD:
                 secretKeyRef:
-                  name: redis
-                  key: redis-password
+                  name: valkey
+                  key: valkey-password
             envFrom:
               - secretRef:
                   name: geoip-auth

@@ -20,12 +20,12 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: redis
+  name: valkey
   namespace: paperless-ngx
 spec:
   interval: 1h
   targetNamespace: paperless-ngx
-  path: ./kubernetes/gabernetes/apps/paperless-ngx/redis
+  path: ./kubernetes/gabernetes/apps/paperless-ngx/valkey
   prune: true
   sourceRef:
     kind: GitRepository
@@ -34,7 +34,7 @@ spec:
   postBuild:
     substituteFrom:
       - kind: Secret
-        name: redis-vars
+        name: valkey-vars
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization

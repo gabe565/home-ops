@@ -38,11 +38,11 @@ spec:
                 secretKeyRef:
                   name: postgresql-app
                   key: password
-              REDIS_HOSTNAME: redis-master
+              REDIS_HOSTNAME: valkey-master
               REDIS_PASSWORD:
                 secretKeyRef:
-                  name: redis
-                  key: redis-password
+                  name: valkey
+                  key: valkey-password
               MPLCONFIGDIR: /tmp/matplotlib
             securityContext:
               readOnlyRootFilesystem: true

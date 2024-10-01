@@ -94,7 +94,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>authentik</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/authentik/app/helmrelease.yaml">authentik</a></td>
-    <td><a href="kubernetes/gabernetes/apps/authentik/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/authentik/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/authentik/redis/helmrelease.yaml">redis</a></td>
+    <td><a href="kubernetes/gabernetes/apps/authentik/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/authentik/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/authentik/valkey/helmrelease.yaml">valkey</a></td>
   </tr>
   <tr>
     <td>bookstack</td>
@@ -158,13 +158,13 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>geoip</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/geoip/app/helmrelease.yaml">geoip</a></td>
-    <td><a href="kubernetes/gabernetes/apps/geoip/redis/helmrelease.yaml">redis</a></td>
+    <td><a href="kubernetes/gabernetes/apps/geoip/valkey/helmrelease.yaml">valkey</a></td>
   </tr>
   <tr>
     <td>gitea</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/gitea/app/helmrelease.yaml">gitea</a></td>
-    <td><a href="kubernetes/gabernetes/apps/gitea/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/gitea/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/gitea/redis/helmrelease.yaml">redis</a></td>
+    <td><a href="kubernetes/gabernetes/apps/gitea/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/gitea/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/gitea/valkey/helmrelease.yaml">valkey</a></td>
   </tr>
   <tr>
     <td>hammond</td>
@@ -204,7 +204,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>immich</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/immich/app/helmrelease.yaml">immich</a></td>
-    <td><a href="kubernetes/gabernetes/apps/immich/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/immich/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/immich/redis/helmrelease.yaml">redis</a></td>
+    <td><a href="kubernetes/gabernetes/apps/immich/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/immich/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/immich/valkey/helmrelease.yaml">valkey</a></td>
   </tr>
   <tr>
     <td>intel-gpu-plugin</td>
@@ -354,7 +354,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>paperless-ngx</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/paperless-ngx/app/helmrelease.yaml">paperless-ngx</a></td>
-    <td><a href="kubernetes/gabernetes/apps/paperless-ngx/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/paperless-ngx/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/paperless-ngx/redis/helmrelease.yaml">redis</a></td>
+    <td><a href="kubernetes/gabernetes/apps/paperless-ngx/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/paperless-ngx/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/paperless-ngx/valkey/helmrelease.yaml">valkey</a></td>
   </tr>
   <tr>
     <td>pictshare</td>
@@ -494,7 +494,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>vikunja</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/vikunja/app/helmrelease.yaml">vikunja</a></td>
-    <td><a href="kubernetes/gabernetes/apps/vikunja/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/vikunja/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/vikunja/redis/helmrelease.yaml">redis</a></td>
+    <td><a href="kubernetes/gabernetes/apps/vikunja/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/vikunja/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/vikunja/valkey/helmrelease.yaml">valkey</a></td>
   </tr>
   <tr>
     <td>weave-gitops</td>

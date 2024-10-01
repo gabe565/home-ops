@@ -46,10 +46,10 @@ spec:
 
               REDIS_PASSWORD:
                 secretKeyRef:
-                  name: redis
-                  key: redis-password
+                  name: valkey
+                  key: valkey-password
               PAPERLESS_REDIS:
-                value: redis://:$(REDIS_PASSWORD)@redis-master
+                value: redis://:$(REDIS_PASSWORD)@valkey-master
                 dependsOn: REDIS_PASSWORD
             probes:
               startup:
@@ -142,8 +142,3 @@ spec:
           - secretName: ${certificate_name}
             hosts:
               - ${app_url}
-
-    redis:
-      master:
-        podLabels:
-          policy.gabe565.com/ingress-namespace: "true"

@@ -1,13 +1,13 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: redis
-  namespace: vikunja
+  name: valkey
+  namespace: geoip
 spec:
   chart:
     spec:
-      chart: redis
-      version: 20.0.1
+      chart: valkey
+      version: 1.0.1
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -19,7 +19,7 @@ spec:
   values:
     auth:
       enabled: true
-      password: ${redis_password}
+      password: ${valkey_password}
 
     master:
       persistence:
