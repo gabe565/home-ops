@@ -39,6 +39,7 @@ spec:
               labelSelector:
                 matchLabels:
                   app.kubernetes.io/name: adguard-home
+                  apps.kubernetes.io/pod-index: "0"
     podLabels:
       policy.gabe565.com/egress-healthchecks: "true"
       policy.gabe565.com/egress-namespace: "true"
@@ -60,12 +61,9 @@ spec:
         enabled: true
         type: secret
         name: borgbase-ssh
-      adguard-home-config:
+      data-adguard-home-0:
         enabled: true
-        existingClaim: adguard-home-config
-      adguard-home-data:
-        enabled: true
-        existingClaim: adguard-home-data
+        existingClaim: data-adguard-home-0
     configMaps:
       config:
         data:
@@ -75,8 +73,8 @@ spec:
               - path: ${borg_repo}
                 label: borgbase
             source_directories:
-              - /adguard-home-config
-              - /adguard-home-data
+              - /data-adguard-home-0/conf
+              - /data-adguard-home-0/work
             archive_name_format: "adguard-home-{now:%Y-%m-%d-%H%M%S}"
             ssh_command: ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=ERROR
             retries: 2
