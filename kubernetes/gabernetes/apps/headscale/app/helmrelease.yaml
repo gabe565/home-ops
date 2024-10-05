@@ -88,7 +88,7 @@ spec:
           app:
             image:
               repository: ghcr.io/gurucomputing/headscale-ui
-              tag: 2024.02.24-beta1@sha256:4c618a7b6e8b32f5ef6af3c7e6936c63e8568ad9ae8d190dafb2551a64ff40a2
+              tag: 2024.10.05@sha256:2b091e39cadea2cbe174afe586365ee31c3b41de307c9d8a09df1a78a251ccb1
               pullPolicy: IfNotPresent
             securityContext:
               readOnlyRootFilesystem: true
