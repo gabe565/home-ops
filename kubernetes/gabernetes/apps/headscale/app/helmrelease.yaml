@@ -82,20 +82,31 @@ spec:
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-ingress: "true"
             policy.gabe565.com/ingress-prometheus: "true"
-      ui:
+      admin:
         strategy: RollingUpdate
         containers:
-          app:
+          main:
             image:
-              repository: ghcr.io/gurucomputing/headscale-ui
-              tag: 2024.02.24-beta1@sha256:4c618a7b6e8b32f5ef6af3c7e6936c63e8568ad9ae8d190dafb2551a64ff40a2
-              pullPolicy: IfNotPresent
+              repository: goodieshq/headscale-admin
+              tag: 0.1.12b
             securityContext:
               readOnlyRootFilesystem: true
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
         pod:
-          terminationGracePeriodSeconds: 3
           labels:
             policy.gabe565.com/ingress-ingress: "true"
+          securityContext:
+            runAsUser: 65534
+            runAsGroup: 65534
 
     service:
       headscale:
@@ -106,8 +117,8 @@ spec:
             port: 8080
           metrics:
             port: 9090
-      ui:
-        controller: ui
+      admin:
+        controller: admin
         ports:
           http:
             port: 80
@@ -134,12 +145,6 @@ spec:
             app:
               - path: /var/run/headscale
                 subPath: run
-          ui:
-            app:
-              - path: /data
-                subPath: data
-              - path: /home/appuser/.local
-                subPath: .local
 
     ingress:
       headscale:
@@ -155,14 +160,14 @@ spec:
           - secretName: ${certificate_name}
             hosts:
               - ${app_url}
-      ui:
+      admin:
         enabled: true
         hosts:
           - host: ${app_url}
             paths:
-              - path: /web
+              - path: /admin
                 service:
-                  identifier: ui
+                  identifier: admin
                   port: http
         tls: *tls
 
