@@ -5,7 +5,7 @@ metadata:
   namespace: open-webui
 spec:
   instances: 3
-  imageName: ghcr.io/cloudnative-pg/postgresql:16.4-30
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.4-31
   enableSuperuserAccess: true
   bootstrap:
     initdb:
