@@ -64,15 +64,17 @@ spec:
                   name: postgresql-app
                   key: password
             probes:
+              liveness:
+                enabled: true
+                type: HTTP
+                path: /health
+              readiness:
+                enabled: true
               startup:
                 enabled: true
                 spec:
                   failureThreshold: 30
                   periodSeconds: 5
-              liveness:
-                enabled: true
-              readiness:
-                enabled: true
             securityContext:
               readOnlyRootFilesystem: true
         pod:
