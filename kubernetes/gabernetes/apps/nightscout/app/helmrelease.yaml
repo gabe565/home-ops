@@ -51,6 +51,9 @@ spec:
     securityContext:
       readOnlyRootFilesystem: true
 
+    termination:
+      gracePeriodSeconds: 30
+
     ingress:
       main:
         enabled: true
