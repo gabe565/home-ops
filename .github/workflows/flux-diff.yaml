@@ -31,7 +31,7 @@ jobs:
           RESOURCE: ${{ matrix.resource }}
         run: echo "resource=${RESOURCE@L}" >> $GITHUB_OUTPUT
 
-      - uses: allenporter/flux-local/action/diff@5.5.1
+      - uses: allenporter/flux-local/action/diff@6.0.0
         with:
           path: kubernetes/${{ matrix.cluster }}
           resource: ${{ steps.resource.outputs.resource }}
