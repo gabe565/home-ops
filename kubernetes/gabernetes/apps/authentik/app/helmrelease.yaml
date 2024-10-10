@@ -120,10 +120,16 @@ spec:
         - name: custom-assets
           configMap:
             name: authentik-custom-assets
+        - name: webfinger
+          configMap:
+            name: webfinger
       volumeMounts:
         - name: custom-assets
           mountPath: /web/dist/custom.css
           subPath: custom.css
+        - name: webfinger
+          mountPath: /web/dist/.well-known/webfinger
+          subPath: webfinger
 
       containerSecurityContext:
         readOnlyRootFilesystem: true
