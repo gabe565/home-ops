@@ -5,3 +5,11 @@ metadata:
 spec:
   addresses:
   - 192.168.1.220-192.168.1.230
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: tailscale
+spec:
+  addresses:
+  - 100.64.1.0/24
