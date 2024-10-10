@@ -13,7 +13,7 @@ spec:
       version: 4.11.3
       sourceRef:
         kind: HelmRepository
-        namespace: ingress-nginx
+        namespace: flux-system
         name: ingress-nginx
       interval: 1h
   values:
