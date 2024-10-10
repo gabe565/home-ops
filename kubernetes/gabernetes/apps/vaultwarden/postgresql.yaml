@@ -5,7 +5,7 @@ metadata:
   namespace: vaultwarden
 spec:
   instances: 3
-  imageName: ghcr.io/cloudnative-pg/postgresql:16.4-31
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.4-34
   enableSuperuserAccess: true
   bootstrap:
     initdb:
