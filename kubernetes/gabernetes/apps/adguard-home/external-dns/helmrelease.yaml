@@ -33,8 +33,6 @@ spec:
             value: ${adguard_home_password}
           - name: SERVER_HOST
             value: 0.0.0.0
-          - name: SERVER_PORT
-            value: "8080"
         securityContext:
           readOnlyRootFilesystem: true
     interval: 1h
@@ -43,7 +41,7 @@ spec:
     registry: noop
 
     extraArgs:
-      - --webhook-provider-url=http://localhost:8080
+      - --webhook-provider-url=http://localhost:8888
 
     podLabels:
       policy.gabe565.com/egress-adguard-api: "true"
