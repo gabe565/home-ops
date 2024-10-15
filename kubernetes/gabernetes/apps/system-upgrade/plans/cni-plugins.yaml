@@ -10,7 +10,7 @@ spec:
     - key: gabe565.com/gpu
       operator: Exists
       effect: NoSchedule
-  version: v1.5.1
+  version: v1.6.0
   upgrade:
     image: alpine:3.20.3
     command:
