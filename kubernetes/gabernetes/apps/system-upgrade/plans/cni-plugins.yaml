@@ -24,6 +24,6 @@ spec:
         wget -q -O- \
           "https://github.com/containernetworking/plugins/releases/download/$VERSION/cni-plugins-linux-amd64-$VERSION.tgz" \
           | tar --overwrite -xzf -
-        rm -f LICENSE README.txt
+        find . -type f ! -executable -delete
         chown -R root:root .
         cp -a ./* /host/opt/cni/bin
