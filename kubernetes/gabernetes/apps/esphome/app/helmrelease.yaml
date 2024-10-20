@@ -29,7 +29,10 @@ spec:
                   matchLabels:
                     app.kubernetes.io/name: esphome
       securityContext:
-        fsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        seccompProfile: { type: RuntimeDefault }
 
     controllers:
       esphome:
@@ -42,6 +45,7 @@ spec:
             env:
               TZ: America/Chicago
               ESPHOME_DASHBOARD_USE_PING: true
+              PLATFORMIO_CORE_DIR: .tmp/platformio
             probes:
               startup:
                 enabled: true
@@ -54,6 +58,8 @@ spec:
                 enabled: true
             securityContext:
               readOnlyRootFilesystem: true
+              allowPrivilegeEscalation: false
+              capabilities: { drop: [ALL] }
         pod:
           terminationGracePeriodSeconds: 1
           dnsConfig:
@@ -76,6 +82,7 @@ spec:
               - --disable-update-check
               - --auth=none
               - --user-data-dir=/config/.vscode
+              - --extensions-dir=/config/.vscode
               - /config
             resources:
               limits:
@@ -83,7 +90,8 @@ spec:
                 memory: 500Mi
             securityContext:
               readOnlyRootFilesystem: true
-              runAsUser: 0
+              allowPrivilegeEscalation: false
+              capabilities: { drop: [ALL] }
         pod:
           labels:
             policy.gabe565.com/egress-world: "true"
@@ -108,13 +116,9 @@ spec:
         accessMode: ReadWriteMany
         size: 8Gi
         retain: true
-      code-config:
+      nonexistent:
         enabled: true
         type: emptyDir
-        advancedMounts:
-          code:
-            app:
-              - path: /root/.config
 
     ingress:
       esphome:
