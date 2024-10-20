@@ -63,6 +63,12 @@ spec:
 
     securityContext:
       readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      capabilities: { drop: [ALL] }
+
+    podSecurityContext:
+      runAsNonRoot: true
+      seccompProfile: { type: RuntimeDefault }
 
     service:
       main:
