@@ -25,6 +25,13 @@ spec:
               TZ: America/Chicago
               CSS_YOUTUBE_API_KEY: ${youtube_api_key}
               CSS_LOG_FORMAT: color
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: [ALL] }
         pod:
           labels:
             policy.gabe565.com/egress-world-with-lan: "true"
+          securityContext:
+            runAsNonRoot: true
+            seccompProfile: { type: RuntimeDefault }
