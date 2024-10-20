@@ -41,7 +41,11 @@ spec:
               readiness:
                 enabled: true
             securityContext:
+              runAsUser: 65534
+              runAsGroup: 65534
               readOnlyRootFilesystem: true
+              allowPrivilegeEscalation: false
+              capabilities: { drop: [ALL] }
         pod:
           labels:
             policy.gabe565.com/egress-namespace: "true"
@@ -61,10 +65,20 @@ spec:
               ENABLE_DEBUGGER: "false"
               TOKEN: ${browser_token}
               TIMEOUT: "60000"
+            securityContext:
+              runAsUser: 999
+              runAsGroup: 999
+              allowPrivilegeEscalation: false
+              capabilities: { drop: [ALL] }
         pod:
           labels:
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-namespace: "true"
+
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile: { type: RuntimeDefault }
 
     service:
       change-detection:
