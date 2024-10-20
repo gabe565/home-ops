@@ -142,7 +142,7 @@ spec:
               - name: TS_HOSTNAME
                 value: prometheus
               - name: TS_EXTRA_ARGS
-                value: --login-server=http://headscale.headscale:8080
+                value: --login-server=https://${vpn_host}
               - name: TS_KUBE_SECRET
                 value: tailscale-state
               - name: TS_AUTHKEY
