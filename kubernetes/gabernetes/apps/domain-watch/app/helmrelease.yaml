@@ -35,10 +35,17 @@ spec:
                 secretKeyRef:
                   name: app-vars
                   key: telegram_chat
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: [ALL] }
         pod:
           labels:
               policy.gabe565.com/egress-world: "true"
               policy.gabe565.com/ingress-prometheus: "true"
+          securityContext:
+            runAsNonRoot: true
+            seccompProfile: { type: RuntimeDefault }
 
     service:
       main:
