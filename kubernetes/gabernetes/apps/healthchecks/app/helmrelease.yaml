@@ -57,6 +57,12 @@ spec:
                 secretKeyRef:
                   name: postgresql-app
                   key: password
+
+              S3_ENDPOINT: ${s3_endpoint}
+              S3_REGION: us-central-1
+              S3_BUCKET: healthchecks
+              S3_ACCESS_KEY: ${s3_access_key}
+              S3_SECRET_KEY: ${s3_secret_key}
             probes:
               startup:
                 enabled: true
