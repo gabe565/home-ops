@@ -81,7 +81,7 @@ spec:
         user: authentik
 
       redis:
-        host: valkey-master
+        host: valkey-primary
 
       email:
         host: ${email_host}

@@ -38,7 +38,7 @@ spec:
                 secretKeyRef:
                   name: postgresql-app
                   key: password
-              REDIS_HOSTNAME: valkey-master
+              REDIS_HOSTNAME: valkey-primary
               REDIS_PASSWORD:
                 secretKeyRef:
                   name: valkey
