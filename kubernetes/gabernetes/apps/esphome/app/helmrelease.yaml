@@ -32,6 +32,8 @@ spec:
         runAsNonRoot: true
         runAsUser: 65534
         runAsGroup: 65534
+        fsGroup: 65534
+        fsGroupChangePolicy: OnRootMismatch
         seccompProfile: { type: RuntimeDefault }
 
     controllers:
@@ -45,7 +47,14 @@ spec:
             env:
               TZ: America/Chicago
               ESPHOME_DASHBOARD_USE_PING: true
-              PLATFORMIO_CORE_DIR: .tmp/platformio
+              # From https://github.com/ptr727/ESPHome-NonRoot
+              PLATFORMIO_CORE_DIR: /cache/pio
+              # ESPHome "build_path" option, default is "/config/.esphome/build/[project]"
+              ESPHOME_BUILD_PATH: /cache/build
+              # ESPHome "data_dir" option, default is "/config/.esphome"
+              ESPHOME_DATA_DIR: /cache/data
+              # Set pip cache directory, default is "~/.cache/pip"
+              PIP_CACHE_DIR: /cache/pip
             probes:
               startup:
                 enabled: true
@@ -81,8 +90,8 @@ spec:
               - --disable-telemetry
               - --disable-update-check
               - --auth=none
-              - --user-data-dir=/config/.vscode
-              - --extensions-dir=/config/.vscode
+              - --user-data-dir=/cache
+              - --extensions-dir=/cache
               - /config
             resources:
               limits:
@@ -116,9 +125,28 @@ spec:
         accessMode: ReadWriteMany
         size: 8Gi
         retain: true
-      nonexistent:
+      cache:
+        enabled: true
+        storageClass: longhorn-ssd
+        accessMode: ReadWriteOnce
+        size: 8Gi
+        advancedMounts:
+          esphome:
+            app:
+              - path: /cache
+                subPath: esphome
+          code:
+            app:
+              - path: /cache
+                subPath: code
+      tmp:
         enabled: true
         type: emptyDir
+        globalMounts:
+          - path: /nonexistent
+            subPath: home
+          - path: /tmp
+            subPath: tmp
 
     ingress:
       esphome:

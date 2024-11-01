@@ -73,10 +73,6 @@ spec:
                 label: borgbase
             source_directories:
               - /esphome-config
-            exclude_patterns:
-              - /esphome-config/.esphome
-              - /esphome-config/.tmp
-              - /esphome-config/build
             archive_name_format: "esphome-{now:%Y-%m-%d-%H%M%S}"
             ssh_command: ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=ERROR
             retries: 2
