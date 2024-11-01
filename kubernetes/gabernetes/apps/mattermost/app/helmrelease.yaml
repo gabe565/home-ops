@@ -26,7 +26,7 @@ spec:
           mattermost:
             image:
               repository: git.gabe565.com/mirror/mattermost
-              tag: 10.1.2@sha256:aad571e3e1c8754bdb1369e1dc6045051cc937e92d5f22c6705cacd9dc37b725
+              tag: 10.1.2@sha256:f77e5290b5a3434fb84249f10bc4b0a8a59d72fcc500e53d132c620d783fecb9
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
