@@ -16,3 +16,22 @@ spec:
     substituteFrom:
       - kind: Secret
         name: app-vars
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: clickhouse
+  namespace: plausible
+spec:
+  interval: 1h
+  targetNamespace: plausible
+  path: ./kubernetes/gabernetes/apps/plausible/clickhouse
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    namespace: flux-system
+    name: home-ops
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: app-vars
