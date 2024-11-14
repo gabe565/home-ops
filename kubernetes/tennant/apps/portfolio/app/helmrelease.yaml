@@ -28,6 +28,7 @@ spec:
               tag: 2.3.4@sha256:abc47992a242d3fb627359b21b50f251d3ab750db5c1123ebe0660a55de2cc54 #yampl {{ .tag }}@{{ .digest }}
             env:
               TZ: America/Chicago
+              TURNSTILE_SECRET: ${turnstile_secret}
             probes:
               startup:
                 enabled: true
