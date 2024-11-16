@@ -80,6 +80,10 @@ spec:
 
               # Plugins
               MM_PLUGINSETTINGS_ENABLEUPLOADS: "true"
+
+              # Connected Workspace
+              MM_CONNECTEDWORKSPACESSETTINGS_ENABLEREMOTECLUSTERSERVICE: "true"
+              MM_CONNECTEDWORKSPACESSETTINGS_ENABLESHAREDCHANNELS: "true"
             probes:
               liveness: &probe
                 enabled: true
