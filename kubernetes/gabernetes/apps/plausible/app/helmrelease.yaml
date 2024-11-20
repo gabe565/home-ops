@@ -31,7 +31,7 @@ spec:
               pullPolicy: IfNotPresent
             restartPolicy: Always
             env:
-              GEOIPUPDATE_HOST: ${geoip_host}
+              GEOIPUPDATE_HOST: http://geoip-updates.geoip
               GEOIPUPDATE_FREQUENCY: "8"
               GEOIPUPDATE_PRESERVE_FILE_TIMES: "1"
               GEOIPUPDATE_EDITION_IDS: GeoLite2-City
