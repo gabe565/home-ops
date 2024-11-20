@@ -95,6 +95,9 @@ spec:
 
     geoip:
       enabled: true
+      image:
+        repository: ghcr.io/maxmind/geoipupdate
+        tag: v7.1.0@sha256:e596817580fb150490f9897390a5a8b52bcfb8b9bb69354ae9bdfd47a949d84e
       accountId: "1"
       licenseKey: stub
       env:
