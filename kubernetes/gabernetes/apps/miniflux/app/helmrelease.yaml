@@ -49,6 +49,8 @@ spec:
 
               METRICS_COLLECTOR: "1"
               METRICS_ALLOWED_NETWORKS: 0.0.0.0/0
+
+              FETCH_YOUTUBE_WATCH_TIME: "1"
             probes:
               startup:
                 enabled: true
