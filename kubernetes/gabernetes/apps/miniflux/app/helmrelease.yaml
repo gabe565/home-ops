@@ -36,6 +36,8 @@ spec:
                   key: uri
               RUN_MIGRATIONS: "1"
 
+              POLLING_SCHEDULER: entry_frequency
+
               CREATE_ADMIN: "0"
               OAUTH2_PROVIDER: oidc
               OAUTH2_CLIENT_ID: ${oauth2_client_id}
