@@ -45,6 +45,7 @@ spec:
               OAUTH2_REDIRECT_URL: https://${app_url}/oauth2/oidc/callback
               OAUTH2_OIDC_DISCOVERY_ENDPOINT: https://${auth_host}/application/o/miniflux/
               OAUTH2_USER_CREATION: "1"
+              DISABLE_LOCAL_AUTH: "true"
 
               METRICS_COLLECTOR: "1"
               METRICS_ALLOWED_NETWORKS: 0.0.0.0/0
