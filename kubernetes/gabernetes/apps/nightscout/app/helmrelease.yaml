@@ -19,7 +19,7 @@ spec:
   values:
     image:
       repository: ghcr.io/gabe565/nightscout
-      tag: 15.0.0@sha256:a5bcaf803b7f586d319f0531470773d68a087ad99700b2df9090f72099b745ab
+      tag: 15.0.2@sha256:f8a76d4fdbb1a5a2ae95f1af174576c82f946fe33a9ef61225fe9d5b10c956d8
       pullPolicy: IfNotPresent
 
     env:
