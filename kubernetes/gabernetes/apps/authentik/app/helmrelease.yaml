@@ -102,7 +102,7 @@ spec:
       licenseKey: stub
       env:
         - name: GEOIPUPDATE_HOST
-          value: http://geoip-update.geoip
+          value: http://geoip-updates.geoip
       containerSecurityContext:
         readOnlyRootFilesystem: true
       volumeMounts:
