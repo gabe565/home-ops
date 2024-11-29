@@ -121,6 +121,14 @@ spec:
         ports:
           http:
             port: 8123
+      external:
+        controller: home-assistant
+        type: LoadBalancer
+        loadBalancerIP: 192.168.1.224
+        externalTrafficPolicy: Local
+        ports:
+          sonos:
+            port: 1400
       code:
         controller: code
         ports:
