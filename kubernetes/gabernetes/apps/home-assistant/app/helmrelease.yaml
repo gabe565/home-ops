@@ -53,6 +53,7 @@ spec:
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world-with-lan: "true"
             policy.gabe565.com/ingress-ingress: "true"
+            policy.gabe565.com/ingress-world: "true"
           affinity: &affinity
             podAffinity:
               preferredDuringSchedulingIgnoredDuringExecution:
