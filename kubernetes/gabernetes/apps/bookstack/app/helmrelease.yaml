@@ -22,6 +22,7 @@ spec:
 
     env:
       TZ: America/Chicago
+      APP_KEY: ${app_key}
 
       STORAGE_TYPE: s3
       STORAGE_S3_KEY: ${s3_access_key}
@@ -62,12 +63,6 @@ spec:
       config:
         enabled: true
         type: emptyDir
-      app-key:
-        enabled: true
-        type: secret
-        name: bookstack-app-key
-        mountPath: /config/BOOKSTACK_APP_KEY.txt
-        subPath: BOOKSTACK_APP_KEY.txt
 
     secrets:
       app-key:
