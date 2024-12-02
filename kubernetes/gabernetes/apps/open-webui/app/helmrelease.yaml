@@ -24,7 +24,7 @@ spec:
           app:
             image:
               repository: ghcr.io/open-webui/open-webui
-              tag: 0.4.6@sha256:01fe71e722088474496064ff781631698898cd9cbf37a7a7a7a89da3e3dc975e
+              tag: v0.4.7@sha256:81a8f439128597947c2b03f8ded8ff6211b75cfe3c8d56b807733ef84989800d
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
