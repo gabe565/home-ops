@@ -29,6 +29,7 @@ spec:
             env:
               TZ: America/Chicago
               TURNSTILE_SECRET: ${turnstile_secret}
+              MAPBOX_TOKEN: ${mapbox_token}
             probes:
               startup:
                 enabled: true
