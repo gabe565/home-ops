@@ -12,7 +12,7 @@ spec:
       effect: NoSchedule
   version: v1.6.0
   upgrade:
-    image: alpine:3.20.3
+    image: alpine:3.21.0
     command:
       - sh
       - -c
