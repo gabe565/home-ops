@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: healthchecks/healthchecks
-              tag: v3.7@sha256:b28daa5446b46add2e6b4e307a00919c9373441dfbb42a91531abb35cb595e23
+              tag: v3.8@sha256:d012133a4225b42f94044fc70e60c7a5c585a2b148f44b72caa15c261842a962
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
