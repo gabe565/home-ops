@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.5.1/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: extend
+  namespace: webos-dev-mode
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 3.5.1
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      extend:
+        type: cronjob
+        cronjob:
+          schedule: "0 0 * * *"
+        initContainers:
+          runitor:
+            image:
+              repository: runitor/runitor
+              tag: v1.3.0-alpine@sha256:c1f487d3e4f7e2e5129b9abc2d993d466564fd85f623fb717298c230b8be2953
+              pullPolicy: IfNotPresent
+            command: [cp, /usr/local/bin/runitor, /tmp]
+        containers:
+          app:
+            image:
+              repository: ghcr.io/gabe565/webos-dev-mode
+              tag: 0.0.1@sha256:67761dd343e6fafa7742afe4f04272768b69702f59b98e00d5964dde313639c6
+              pullPolicy: Always
+            env:
+              TZ: America/Chicago
+              WEBOS_TOKEN: ${webos_token}
+              HC_API_URL: http://healthchecks.healthchecks:8000/ping
+              CHECK_UUID: ${healthchecks_uuid}
+            command:
+              - /tmp/runitor
+              - webos-dev-mode
+              - extend
+            securityContext:
+              readOnlyRootFilesystem: true
+        pod:
+          labels:
+            policy.gabe565.com/egress-healthchecks: "true"
+            policy.gabe565.com/egress-world: "true"
+          securityContext:
+            runAsUser: 65534
+            runAsGroup: 65534
+            fsGroup: 65534
+
+    persistence:
+      tmp:
+        enabled: true
+        type: emptyDir

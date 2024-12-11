@@ -503,6 +503,12 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td></td>
   </tr>
   <tr>
+    <td>webos-dev-mode</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/webos-dev-mode/extend/helmrelease.yaml">extend</a></td>
+    <td></td>
+  </tr>
+  <tr>
     <td>zigbee2mqtt</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/zigbee2mqtt/app/helmrelease.yaml">zigbee2mqtt</a></td>
