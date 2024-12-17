@@ -73,7 +73,7 @@ spec:
         enabled: true
         storageClass: longhorn-ssd
         accessMode: ReadWriteOnce
-        size: 1Gi
+        size: 4Gi
         globalMounts:
           - path: /app/backend/data
             subPath: data
