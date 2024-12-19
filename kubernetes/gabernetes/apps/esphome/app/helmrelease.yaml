@@ -46,7 +46,6 @@ spec:
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
-              ESPHOME_DASHBOARD_USE_PING: true
               # From https://github.com/ptr727/ESPHome-NonRoot
               PLATFORMIO_CORE_DIR: /cache/pio
               # ESPHome "build_path" option, default is "/config/.esphome/build/[project]"
@@ -70,6 +69,8 @@ spec:
               allowPrivilegeEscalation: false
               capabilities: { drop: [ALL] }
         pod:
+          annotations:
+            k8s.v1.cni.cncf.io/networks: ipvlan
           terminationGracePeriodSeconds: 1
           dnsConfig:
             nameservers:
