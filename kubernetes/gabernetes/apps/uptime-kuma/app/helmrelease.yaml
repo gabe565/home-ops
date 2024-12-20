@@ -27,7 +27,7 @@ spec:
           app:
             image:
               repository: louislam/uptime-kuma
-              tag: 1.23.15-alpine@sha256:6aa3bec3f03651e69bf66b1053927d1afbe924326490216b136ff49a769c88be
+              tag: 1.23.16-alpine@sha256:f111cca721507faa0a57e1ffc75210d64c9a9ca0f8375e0336a2a9a88ae2987c
               pullPolicy: IfNotPresent
             command: [node, server/server.js]
             probes:
