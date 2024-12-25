@@ -31,6 +31,7 @@ spec:
               TZ: America/Chicago
               SITE_NAME: Cook Healthchecks
               SITE_ROOT: https://${app_url}
+              ALLOWED_HOSTS: "*"
               RP_ID: ${app_url}
               SITE_LOGO_URL: /static/img/logo.svg
               DEBUG: "False"
