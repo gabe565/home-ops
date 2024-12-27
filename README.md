@@ -103,12 +103,6 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><a href="kubernetes/gabernetes/apps/bookstack/borgmatic/helmrelease.yaml">borgmatic</a></td>
   </tr>
   <tr>
-    <td>castsponsorskip</td>
-    <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/gabernetes/apps/castsponsorskip/app/helmrelease.yaml">castsponsorskip</a></td>
-    <td></td>
-  </tr>
-  <tr>
     <td>change-detection</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/change-detection/app/helmrelease.yaml">change-detection</a></td>
@@ -507,6 +501,16 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/webos-dev-mode/extend/helmrelease.yaml">extend</a></td>
     <td></td>
+  </tr>
+  <tr>
+    <td rowspan="2">youtube</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/youtube/castsponsorskip/helmrelease.yaml">castsponsorskip</a></td>
+    <td rowspan="2"></td>
+  </tr>
+  <tr>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/youtube/isponsorblocktv/helmrelease.yaml">isponsorblocktv</a></td>
   </tr>
   <tr>
     <td>zigbee2mqtt</td>

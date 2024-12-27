@@ -1,0 +1,29 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: castsponsorskip
+  namespace: youtube
+spec:
+  interval: 1h
+  targetNamespace: youtube
+  path: ./kubernetes/gabernetes/apps/youtube/castsponsorskip
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    namespace: flux-system
+    name: home-ops
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: isponsorblocktv
+  namespace: youtube
+spec:
+  interval: 1h
+  targetNamespace: youtube
+  path: ./kubernetes/gabernetes/apps/youtube/isponsorblocktv
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    namespace: flux-system
+    name: home-ops

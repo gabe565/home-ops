@@ -2,7 +2,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: castsponsorskip
-  namespace: castsponsorskip
+  namespace: youtube
 spec:
   chart:
     spec:
@@ -23,7 +23,10 @@ spec:
           main:
             env:
               TZ: America/Chicago
-              CSS_YOUTUBE_API_KEY: ${youtube_api_key}
+              CSS_YOUTUBE_API_KEY:
+                secretKeyRef:
+                  name: youtube
+                  key: api_key
               CSS_LOG_FORMAT: color
             securityContext:
               allowPrivilegeEscalation: false

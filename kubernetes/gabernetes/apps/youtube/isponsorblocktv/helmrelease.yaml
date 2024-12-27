@@ -1,0 +1,70 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.5.1/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: isponsorblocktv
+  namespace: youtube
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 3.5.1
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      main:
+        initContainers:
+          set-api-key:
+            image:
+              repository: mikefarah/yq
+              tag: 4.44.6@sha256:b1d117c609ba990436ad1649299e2f6c378f62cb562caf30b6f2fb6144713422
+              pullPolicy: IfNotPresent
+            args:
+              - --inplace
+              - .apikey = strenv(YOUTUBE_API_KEY)
+              - /app/data/config.json
+            env:
+              YOUTUBE_API_KEY:
+                secretKeyRef:
+                  name: youtube
+                  key: api_key
+        containers:
+          main:
+            image:
+              repository: ghcr.io/dmunozv04/isponsorblocktv
+              tag: v2.2.1@sha256:97c9e4220074b67169cdafc7cb00b1fe53be9e1aadee08b81b05a3162c6ce426
+              pullPolicy: IfNotPresent
+            env:
+              TZ: America/Chicago
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: [ALL] }
+        pod:
+          labels:
+            policy.gabe565.com/egress-world: "true"
+          terminationGracePeriodSeconds: 1
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
+            fsGroup: 65534
+            fsGroupChangePolicy: OnRootMismatch
+            seccompProfile: { type: RuntimeDefault }
+
+    persistence:
+      data:
+        enabled: true
+        retain: true
+        accessMode: ReadWriteOnce
+        storageClass: longhorn-ssd
+        size: 8Gi
+        globalMounts:
+          - path: /app/data
