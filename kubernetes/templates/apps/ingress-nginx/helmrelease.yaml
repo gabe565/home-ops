@@ -41,6 +41,7 @@ spec:
       maxmindLicenseKey: stub
 
       config:
+        annotations-risk-level: Critical
         proxy-buffer-size: 16k
         use-gzip: "true"
         enable-brotli: "true"
