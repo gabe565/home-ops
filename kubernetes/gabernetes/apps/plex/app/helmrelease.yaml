@@ -108,7 +108,7 @@ spec:
       root:
         enabled: true
         annotations:
-          nginx.ingress.kubernetes.io/temporal-redirect: "https://${app_url}/web$request_uri"
+          nginx.ingress.kubernetes.io/temporal-redirect: "https://${app_url}/web"
         hosts:
           - host: ${app_url}
             paths:
