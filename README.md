@@ -369,14 +369,18 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><a href="kubernetes/gabernetes/apps/plex/borgmatic/helmrelease.yaml">borgmatic</a></td>
   </tr>
   <tr>
-    <td rowspan="2">prometheus</td>
+    <td rowspan="3">prometheus</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/prometheus/app/helmrelease.yaml">kube-prometheus-stack</a></td>
-    <td rowspan="2"><a href="kubernetes/gabernetes/apps/prometheus/borgmatic/helmrelease.yaml">borgmatic</a></td>
+    <td rowspan="3"><a href="kubernetes/gabernetes/apps/prometheus/borgmatic/helmrelease.yaml">borgmatic</a></td>
   </tr>
   <tr>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/prometheus/app/nut-exporter.yaml">nut-exporter</a></td>
+  </tr>
+  <tr>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/prometheus/app/wiim-exporter.yaml">wiim-exporter</a></td>
   </tr>
   <tr>
     <td>prowlarr</td>

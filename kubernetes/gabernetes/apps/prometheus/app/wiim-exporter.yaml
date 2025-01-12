@@ -1,0 +1,68 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: wiim-exporter
+  namespace: prometheus
+spec:
+  chart:
+    spec:
+      chart: prometheus-json-exporter
+      version: 0.14.1
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: prometheus-community
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    nameOverride: wiim-exporter
+
+    podLabels:
+      policy.gabe565.com/egress-world-with-lan: "true"
+      policy.gabe565.com/ingress-prometheus: "true"
+
+    configuration:
+      # language=yaml
+      config: |
+        modules:
+          wiim:
+            http_client_config:
+              tls_config:
+                insecure_skip_verify: true
+
+            metrics:
+              - name: cpu_temp_celsius
+                valuetype: gauge
+                path: "{ .temperature_cpu }"
+                help: CPU temperature in Celsius
+                labels:
+                  sensor: cpu
+              - name: tmp102_temp_celsius
+                valuetype: gauge
+                path: "{ .temperature_tmp102 }"
+                help: TMP102 temperature in Celsius
+                labels:
+                  sensor: tmp102
+
+    serviceMonitor:
+      enabled: true
+      defaults:
+        interval: 1m
+      targets:
+        - name: backyard
+          url: https://192.168.1.200/httpapi.asp?command=getStatusEx
+          module: wiim
+        - name: master-bedroom
+          url: https://192.168.1.201/httpapi.asp?command=getStatusEx
+          module: wiim
+        - name: study
+          url: https://192.168.1.202/httpapi.asp?command=getStatusEx
+          module: wiim
+        - name: living-room
+          url: https://192.168.1.203/httpapi.asp?command=getStatusEx
+          module: wiim
+        - name: kitchen
+          url: https://192.168.1.204/httpapi.asp?command=getStatusEx
+          module: wiim
