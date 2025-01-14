@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: ghcr.io/kube-vip/kube-vip
-              tag: v0.8.7@sha256:32829cc6f8630eba4e1b5e4df5bcbc34c767e70703d26e64a0f7317951c7b517
+              tag: v0.8.9@sha256:717b8bef2758c10042d64ae7949201ef7f243d928fce265b04e488e844bf9528
               pullPolicy: IfNotPresent
             args:
               - manager
