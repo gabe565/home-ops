@@ -57,6 +57,9 @@ spec:
         storageClass: longhorn-ssd
         accessMode: ReadWriteOnce
         size: 8Gi
+      tmp:
+        enabled: true
+        type: emptyDir
 
     serviceMonitor:
       main:
