@@ -123,6 +123,11 @@
       "matchDatasources": ["docker"],
       "matchPackageNames": ["ghcr.io/juanfont/headscale"],
       "sourceUrl": "https://github.com/juanfont/headscale"
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["goodieshq/headscale-admin"],
+      "sourceUrl": "https://github.com/GoodiesHQ/headscale-admin"
     }
   ]
 }
