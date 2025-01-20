@@ -75,7 +75,7 @@ spec:
               - /portfolio-data
             exclude_patterns:
               - /portfolio-data/backups
-              - /portfolio-data/data.db*
+              - /portfolio-data/auxiliary.db*
               - /portfolio-data/logs.db*
             archive_name_format: "portfolio-{now:%Y-%m-%d-%H%M%S}"
             ssh_command: ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=ERROR
@@ -88,7 +88,7 @@ spec:
             check_last: 3
             sqlite_databases:
               - name: data
-                path: /portfolio-data/data.db
+                path: /portfolio-data/auxiliary.db
               - name: logs
                 path: /portfolio-data/logs.db
             healthchecks:
