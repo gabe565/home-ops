@@ -44,3 +44,25 @@ spec:
       dynamic-ip:
         controller: dynamic-ip
         enabled: false
+
+    rbac:
+      roles:
+        dynamic-ip:
+          enabled: true
+          type: Role
+          rules:
+            - apiGroups: [""]
+              resources: [configmaps]
+              verbs: [get, patch, create]
+            - apiGroups: [apps, extensions]
+              resources: [deployments]
+              verbs: [get, patch]
+              resourceNames: [external-dns]
+      bindings:
+        dynamic-ip:
+          enabled: true
+          type: RoleBinding
+          roleRef:
+            identifier: dynamic-ip
+          subjects:
+            - identifier: default

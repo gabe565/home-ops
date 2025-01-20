@@ -121,3 +121,27 @@ spec:
 
     serviceAccount:
       create: true
+
+    rbac:
+      roles:
+        homepage:
+          enabled: true
+          type: ClusterRole
+          rules:
+            - apiGroups: [""]
+              verbs: [get, list]
+              resources: [namespaces, pods, nodes]
+            - apiGroups: [extensions, networking.k8s.io]
+              verbs: [get, list]
+              resources: [ingresses]
+            - apiGroups: [metrics.k8s.io]
+              verbs: [get, list]
+              resources: [nodes, pods]
+      bindings:
+        homepage:
+          enabled: true
+          type: ClusterRoleBinding
+          roleRef:
+            identifier: homepage
+          subjects:
+            - identifier: default

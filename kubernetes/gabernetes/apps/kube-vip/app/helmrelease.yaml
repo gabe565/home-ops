@@ -82,6 +82,30 @@ spec:
     serviceAccount:
       create: true
 
+    rbac:
+      roles:
+        kube-vip:
+          enabled: true
+          type: ClusterRole
+          rules:
+            - apiGroups: [""]
+              resources: [services, services/status, endpoints]
+              verbs: [list, get, watch, update]
+            - apiGroups: [""]
+              resources: [nodes]
+              verbs: [list, get, watch, update, patch]
+            - apiGroups: [coordination.k8s.io]
+              resources: [leases]
+              verbs: [list, get, watch, update, create]
+      bindings:
+        kube-vip:
+          enabled: true
+          type: ClusterRoleBinding
+          roleRef:
+            identifier: kube-vip
+          subjects:
+            - identifier: default
+
     service:
       metrics:
         nameOverride: metrics
