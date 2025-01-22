@@ -1,0 +1,133 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.6.1/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: hoarder
+  namespace: hoarder
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 3.6.1
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      hoarder:
+        initContainers:
+          migrate: &hoarder
+            image:
+              repository: ghcr.io/hoarder-app/hoarder
+              tag: 0.21.0@sha256:0fa320ade5d8f93195155e6df9f73f2ebd4176fe23210723a2d940c4715088f3
+              pullPolicy: IfNotPresent
+            workingDir: /db_migrations
+            command:
+              - node
+              - index.js
+            envFrom:
+              - secretRef:
+                  name: hoarder
+            env:
+              TZ: America/Chicago
+              DATA_DIR: /data
+              DISABLE_NEW_RELEASE_CHECK: "true"
+              NEXTAUTH_URL: https://${app_url}
+              MEILI_ADDR: http://meilisearch:7700
+              MEILI_MASTER_KEY:
+                secretKeyRef:
+                  name: meilisearch
+                  key: MEILI_MASTER_KEY
+              BROWSER_TOKEN:
+                secretKeyRef:
+                  name: browserless
+                  key: TOKEN
+              BROWSER_WEBSOCKET_URL: ws://browserless:3000/chromium?token=$(BROWSER_TOKEN)&blockAds=true&launch={"stealth":true}
+              BROWSER_CONNECT_ONDEMAND: "true"
+              CRAWLER_DOWNLOAD_BANNER_IMAGE: "true"
+              DISABLE_PASSWORD_AUTH: "true"
+              OAUTH_PROVIDER_NAME: Authentik
+            securityContext:
+              readOnlyRootFilesystem: true
+              allowPrivilegeEscalation: false
+              capabilities: {drop: [ALL]}
+        containers:
+          web:
+            <<: *hoarder
+            workingDir: /app/apps/web
+            command:
+              - node
+              - server.js
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+          worker:
+            <<: *hoarder
+            workingDir: /app/apps/workers
+            command:
+              - npm
+              - run
+              - start:prod
+        pod:
+          labels:
+            policy.gabe565.com/egress-ingress: "true"
+            policy.gabe565.com/egress-namespace: "true"
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-ingress: "true"
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            fsGroupChangePolicy: OnRootMismatch
+            runAsNonRoot: true
+            seccompProfile: {type: RuntimeDefault}
+
+    service:
+      hoarder:
+        controller: hoarder
+        ports:
+          http:
+            port: 3000
+
+    persistence:
+      data:
+        enabled: true
+        storageClass: longhorn-ssd
+        accessMode: ReadWriteOnce
+        size: 8Gi
+        retain: true
+      tmp:
+        enabled: true
+        type: emptyDir
+      cache:
+        enabled: true
+        type: emptyDir
+        globalMounts:
+          - path: /app/apps/web/.next/cache
+
+    ingress:
+      change-detection:
+        enabled: true
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+                service:
+                  identifier: hoarder
+                  port: http
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
