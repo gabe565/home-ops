@@ -237,12 +237,6 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td></td>
   </tr>
   <tr>
-    <td>linkding</td>
-    <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/gabernetes/apps/linkding/app/helmrelease.yaml">linkding</a></td>
-    <td><a href="kubernetes/gabernetes/apps/linkding/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/linkding/postgresql.yaml">postgresql</a></td>
-  </tr>
-  <tr>
     <td>longhorn-system</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/longhorn/app/helmrelease.yaml">longhorn</a></td>
