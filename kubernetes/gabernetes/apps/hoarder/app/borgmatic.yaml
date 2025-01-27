@@ -73,6 +73,9 @@ spec:
                 label: borgbase
             source_directories:
               - /hoarder-data
+            exclude_patterns:
+              - /hoarder-data/db.db*
+              - /hoarder-data/queue.db*
             archive_name_format: "hoarder-{now:%Y-%m-%d-%H%M%S}"
             ssh_command: ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=ERROR
             retries: 2
@@ -82,5 +85,10 @@ spec:
             keep_monthly: 24
             keep_yearly: 20
             check_last: 3
+            sqlite_databases:
+              - name: db
+                path: /hoarder-data/db.db
+              - name: tasks
+                path: /hoarder-data/queue.db
             healthchecks:
               ping_url: http://healthchecks.healthchecks:8000/ping/${borg_healthchecks_uuid}
