@@ -53,6 +53,7 @@ spec:
             policy.gabe565.com/ingress-ingress: "true"
           terminationGracePeriodSeconds: 1
       browserless:
+        strategy: RollingUpdate
         containers:
           app:
             image:

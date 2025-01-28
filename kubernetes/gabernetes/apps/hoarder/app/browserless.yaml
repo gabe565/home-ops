@@ -20,6 +20,7 @@ spec:
   values:
     controllers:
       browserless:
+        strategy: RollingUpdate
         containers:
           app:
             image:
