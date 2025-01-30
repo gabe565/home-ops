@@ -90,7 +90,7 @@ spec:
           main:
             image:
               repository: goodieshq/headscale-admin
-              tag: 0.24.4
+              tag: 0.24.5
             securityContext:
               readOnlyRootFilesystem: true
             probes:
