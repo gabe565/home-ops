@@ -27,6 +27,8 @@ spec:
               repository: clickhouse/clickhouse-server
               tag: 24.12.4.49-alpine@sha256:c39e8e909bdcf1cf3899dff8a7a6eec97fcb3cf4edc1fb543c7a421a2ee1134c
               pullPolicy: IfNotPresent
+            env:
+              CLICKHOUSE_SKIP_USER_SETUP: "1"
             securityContext:
               readOnlyRootFilesystem: true
             probes:
