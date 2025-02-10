@@ -158,7 +158,7 @@ spec:
         enabled: true
         annotations:
           nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
-          nginx.ingress.kubernetes.io/temporal-redirect: https://${app_url}$request_uri
+          nginx.ingress.kubernetes.io/temporal-redirect: https://${app_url}
         hosts:
           - host: ${old_app_url}
             paths:
