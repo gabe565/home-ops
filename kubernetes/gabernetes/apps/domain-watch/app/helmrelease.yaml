@@ -23,7 +23,7 @@ spec:
           main:
             image:
               repository: ghcr.io/gabe565/domain-watch
-              tag: 0.1.1@sha256:b546886e7bb8d35fbf284e89ef28dba87222b9746cd4549c3c6801dab6cc7a36
+              tag: 0.2.0@sha256:6ad13ee8f7818c4484a41cbe555b445c02d1d1677299d33fa4e7b22357ef5a59
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
