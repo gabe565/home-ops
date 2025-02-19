@@ -100,6 +100,11 @@ spec:
         enabled: true
         type: emptyDir
 
+    nginx:
+      image:
+        repository: nginxinc/nginx-unprivileged
+        tag: stable-alpine
+
     mariadb:
       enabled: true
       auth:
