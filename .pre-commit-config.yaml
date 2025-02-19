@@ -31,4 +31,4 @@ repos:
         args:
           - --dirs=kubernetes
           - --paths-re=^kubernetes/(?P<cluster>.+?)/
-          - --supporting-services=borgmatic,postgresql,redis,mariadb,clickhouse,valkey,browserless,meilisearch
+          - --supporting-services=borgmatic,postgresql,redis,mariadb,clickhouse,valkey,browserless,meilisearch,mongodb

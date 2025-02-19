@@ -1,0 +1,35 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: mongodb
+  namespace: your-spotify
+spec:
+  chart:
+    spec:
+      chart: mongodb
+      version: 16.4.4
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bitnami
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    useStatefulSet: true
+
+    podLabels:
+      policy.gabe565.com/ingress-namespace: "true"
+
+    auth:
+      rootPassword: ${mongodb_root_password}
+      databases: [your-spotify]
+      usernames: [your-spotify]
+      passwords:
+        - ${mongodb_password}
+
+    persistence:
+      enabled: true
+      storageClass: longhorn-ssd
+      size: 8Gi
