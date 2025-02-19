@@ -27,6 +27,14 @@ spec:
               repository: yooooomi/your_spotify_server
               tag: 1.12.0@sha256:081b53a4faf529b7e8ceb0147ba10f4780730b729aebf2edb469a8c30441e99a
               pullPolicy: IfNotPresent
+            workingDir: /app/apps/server
+            command:
+              - sh
+              - -c
+              - |
+                set -eux
+                yarn migrate
+                exec yarn start
             env:
               TIMEZONE: America/Chicago
               API_ENDPOINT: https://${app_url}/api
