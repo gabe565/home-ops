@@ -6,4 +6,5 @@ resources:
   - external-dns.yaml
   - gabe565.yaml
   - ingress-nginx.yaml
+  - meilisearch.yaml
   - prometheus-community.yaml
