@@ -7,7 +7,7 @@ spec:
   chart:
     spec:
       chart: ascii-movie
-      version: 0.16.3
+      version: 0.16.4
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
