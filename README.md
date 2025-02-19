@@ -185,10 +185,14 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><a href="kubernetes/gabernetes/apps/hoarder/app/borgmatic.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/hoarder/app/browserless.yaml">browserless</a>, <a href="kubernetes/gabernetes/apps/hoarder/app/meilisearch.yaml">meilisearch</a></td>
   </tr>
   <tr>
-    <td rowspan="2">home-assistant</td>
+    <td rowspan="3">home-assistant</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/home-assistant/app/ambient-weather-fusion.yaml">ambient-weather-fusion</a></td>
+    <td rowspan="3"><a href="kubernetes/gabernetes/apps/home-assistant/app/borgmatic.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/home-assistant/postgresql.yaml">postgresql</a></td>
+  </tr>
+  <tr>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/home-assistant/app/helmrelease.yaml">home-assistant</a></td>
-    <td rowspan="2"><a href="kubernetes/gabernetes/apps/home-assistant/app/borgmatic.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/home-assistant/postgresql.yaml">postgresql</a></td>
   </tr>
   <tr>
     <td><code>HelmRelease</code></td>

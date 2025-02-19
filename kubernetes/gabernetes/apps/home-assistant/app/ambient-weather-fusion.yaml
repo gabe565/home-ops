@@ -1,0 +1,42 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.6.1/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: ambient-weather-fusion
+  namespace: home-assistant
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 3.6.1
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      ambient-weather-fusion:
+        annotations:
+          secret.reloader.stakater.com/reload: ambient-weather-fusion-envs
+        containers:
+          app:
+            image:
+              repository: ghcr.io/gabe565/ambient-weather-fusion
+              tag: beta
+              pullPolicy: Always
+            env:
+              AW_MQTT_URL: mqtt://mosquitto.mosquitto:1883
+              AW_MQTT_USERNAME: ambient_weather_fusion
+            envFrom:
+              - secretRef:
+                  name: ambient-weather-fusion-envs
+            securityContext:
+              readOnlyRootFilesystem: true
+        pod:
+          labels:
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/egress-mosquitto: "true"
