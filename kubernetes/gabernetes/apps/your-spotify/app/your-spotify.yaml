@@ -49,7 +49,7 @@ spec:
                 enabled: true
               readiness:
                 enabled: true
-            securityContext: &securityContext
+            securityContext:
               readOnlyRootFilesystem: true
               allowPrivilegeEscalation: false
               capabilities: {drop: [ALL]}
@@ -76,14 +76,28 @@ spec:
             command:
               - cp
               - -a
-              - /app/apps/client/build/.
+              - apps/client/build/.
               - /build
-        containers:
-          client:
+            securityContext: &securityContext
+              allowPrivilegeEscalation: false
+              capabilities: {drop: [ALL]}
+          template:
             image: *clientImage
             env:
-              TIMEZONE: America/Chicago
               API_ENDPOINT: https://${app_url}/api
+            command:
+              - sh
+              - -c
+              - sh apps/client/scripts/run/variables.sh || true
+            securityContext:
+              <<: *securityContext
+              readOnlyRootFilesystem: true
+        containers:
+          client:
+            image:
+              repository: nginxinc/nginx-unprivileged
+              tag: stable-alpine
+              pullPolicy: IfNotPresent
             probes: *probes
             securityContext: *securityContext
         pod: *pod
@@ -111,8 +125,19 @@ spec:
           client:
             cp-build:
               - path: /build
-            client:
+            template:
               - path: /app/apps/client/build
+            client:
+              - path: /build
+      nginx:
+        enabled: true
+        type: configMap
+        name: your-spotify-nginx
+        advancedMounts:
+          client:
+            client:
+              - path: /etc/nginx/conf.d/default.conf
+                subPath: default.conf
 
     ingress:
       client:
@@ -153,3 +178,17 @@ spec:
                   identifier: server
                   port: http
         tls: *tls
+
+    configMaps:
+      nginx:
+        enabled: true
+        data:
+          default.conf: |
+            server {
+              listen 3000;
+              server_name localhost;
+              location / {
+                root /build;
+                try_files $uri /index.html;
+              }
+            }
