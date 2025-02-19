@@ -188,11 +188,11 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td rowspan="2">home-assistant</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/home-assistant/app/helmrelease.yaml">home-assistant</a></td>
-    <td rowspan="2"><a href="kubernetes/gabernetes/apps/home-assistant/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/home-assistant/postgresql.yaml">postgresql</a></td>
+    <td rowspan="2"><a href="kubernetes/gabernetes/apps/home-assistant/app/borgmatic.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/home-assistant/postgresql.yaml">postgresql</a></td>
   </tr>
   <tr>
     <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/gabernetes/apps/home-assistant/piper/helmrelease.yaml">piper</a></td>
+    <td><a href="kubernetes/gabernetes/apps/home-assistant/app/piper.yaml">piper</a></td>
   </tr>
   <tr>
     <td>homepage</td>
