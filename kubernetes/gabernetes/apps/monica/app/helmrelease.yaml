@@ -20,6 +20,13 @@ spec:
     controller:
       strategy: RollingUpdate
 
+    command:
+      - sh
+      - -c
+      - |
+        sed -E 's/(chown|chmod)/#\1/' /usr/local/bin/entrypoint.sh > /tmp/entrypoint.sh
+        exec bash /tmp/entrypoint.sh php-fpm
+
     env:
       TZ: America/Chicago
       CHECK_VERSION: "false"
@@ -56,6 +63,10 @@ spec:
 
     securityContext:
       readOnlyRootFilesystem: true
+      runAsUser: 82
+      runAsGroup: 82
+      allowPrivilegeEscalation: false
+      capabilities: {drop: [ALL]}
 
     ingress:
       main:
