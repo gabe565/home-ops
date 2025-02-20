@@ -60,6 +60,9 @@ spec:
             port: 8123
 
     persistence:
+      tmp:
+        enabled: true
+        type: emptyDir
       data:
         enabled: true
         storageClass: longhorn-ssd
