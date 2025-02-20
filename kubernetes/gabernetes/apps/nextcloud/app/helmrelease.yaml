@@ -7,7 +7,7 @@ spec:
   chart:
     spec:
       chart: nextcloud
-      version: 6.6.3
+      version: 6.6.4
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
