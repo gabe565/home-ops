@@ -42,6 +42,10 @@ spec:
                 enabled: true
             securityContext:
               readOnlyRootFilesystem: true
+              runAsUser: 1000
+              runAsGroup: 1000
+              allowPrivilegeEscalation: false
+              capabilities: {drop: [ALL]}
         pod:
           labels:
             policy.gabe565.com/egress-plex: "true"
@@ -49,6 +53,10 @@ spec:
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-authentik: "true"
             policy.gabe565.com/ingress-ingress: "true"
+          securityContext:
+            runAsNonRoot: true
+            fsGroup: 1000
+            fsGroupChangePolicy: OnRootMismatch
 
     service:
       overseerr:
