@@ -46,6 +46,9 @@ spec:
                   periodSeconds: 5
             securityContext:
               readOnlyRootFilesystem: true
+              runAsUser: 65534
+              runAsGroup: 65534
+              allowPrivilegeEscalation: false
           unbound:
             image:
               repository: ghcr.io/gabe565/unbound-cache
@@ -66,6 +69,7 @@ spec:
                   periodSeconds: 5
             securityContext:
               readOnlyRootFilesystem: true
+              allowPrivilegeEscalation: false
         pod:
           priorityClassName: system-cluster-critical
           labels:
@@ -73,6 +77,9 @@ spec:
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-ingress: "true"
             policy.gabe565.com/ingress-namespace: "true"
+          securityContext:
+            fsGroup: 65534
+            fsGroupChangePolicy: OnRootMismatch
           affinity:
             podAntiAffinity:
               preferredDuringSchedulingIgnoredDuringExecution:
@@ -119,6 +126,8 @@ spec:
               CRON: "*/10 * * * *"
             securityContext:
               readOnlyRootFilesystem: true
+              allowPrivilegeEscalation: false
+              capabilities: {drop: [ALL]}
         pod:
           labels:
             policy.gabe565.com/egress-namespace: "true"
