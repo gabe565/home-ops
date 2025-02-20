@@ -56,6 +56,10 @@ spec:
                   periodSeconds: 5
             securityContext:
               readOnlyRootFilesystem: true
+              runAsUser: 1883
+              runAsGroup: 1883
+              allowPrivilegeEscalation: false
+              capabilities: {drop: [ALL]}
         pod:
           labels:
             policy.gabe565.com/egress-world: "true"
