@@ -39,7 +39,7 @@ spec:
           main:
             image:
               repository: ghcr.io/dmunozv04/isponsorblocktv
-              tag: v2.2.1@sha256:97c9e4220074b67169cdafc7cb00b1fe53be9e1aadee08b81b05a3162c6ce426
+              tag: v2.3.0@sha256:8cdb9f50a08d4277e22f25a73abb1edf77ad24c6f3d1295bf2cb310e34f7ebea
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
