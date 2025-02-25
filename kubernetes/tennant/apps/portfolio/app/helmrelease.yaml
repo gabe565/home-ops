@@ -49,12 +49,14 @@ spec:
           securityContext:
             fsGroup: 1000
             fsGroupChangePolicy: OnRootMismatch
+
     service:
       portfolio:
         controller: portfolio
         ports:
           http:
             port: 80
+
     persistence:
       data:
         enabled: true
