@@ -24,7 +24,7 @@ spec:
           app:
             image:
               repository: ghcr.io/onedr0p/prowlarr
-              tag: 1.31.2.4975@sha256:945c4b9f642a14b65c8ec07f553334b763b26156998a81ddad6aafdbcb752a3b
+              tag: 1.31.2.4975@sha256:f1c8615cab30b98b2a71254ceafea5b99fa8000d71276df3347cb230e9e5af01
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
