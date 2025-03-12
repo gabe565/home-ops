@@ -26,7 +26,7 @@ spec:
           app:
             image:
               repository: ghcr.io/mend/renovate-ce
-              tag: 9.5.0-full@sha256:7b81d57b181616950507c9e232ae9e736933a463d3fdb1af50acef679241aeaf
+              tag: 9.6.0-full@sha256:ef9d942133d9a0bce8302130dd837a2884089fe1ddfbae587b569baaf6c58f33
               pullPolicy: IfNotPresent
             env:
               MEND_RNV_ACCEPT_TOS: "y"
