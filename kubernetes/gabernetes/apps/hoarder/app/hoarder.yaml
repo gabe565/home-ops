@@ -24,7 +24,7 @@ spec:
           migrate: &hoarder
             image:
               repository: ghcr.io/hoarder-app/hoarder
-              tag: 0.22.0@sha256:e2156f3de4a1eafc53afb6e682f20857be4449d7e9d24240afe6d9ccd280ed3b
+              tag: 0.23.0@sha256:97903be067ee5e071238894e8f949c587282f26911e27ae216e52a2f85d1ba7f
               pullPolicy: IfNotPresent
             workingDir: /db_migrations
             command:
