@@ -82,7 +82,8 @@
     {
       "matchDatasources": ["docker"],
       "matchPackageNames": ["ghcr.io/bakito/adguardhome-sync"],
-      "versioning": "regex:^(?<compatibility>.+-)?v?(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
+      "versioning": "regex:^(?<compatibility>.+-)?v?(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$",
+      "sourceUrl": "https://github.com/bakito/adguardhome-sync"
     },
     {
       "matchDatasources": ["helm"],
