@@ -32,6 +32,7 @@ spec:
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
+              HOMEPAGE_ALLOWED_HOSTS: "*"
             envFrom:
               - secretRef:
                   name: homepage-env
