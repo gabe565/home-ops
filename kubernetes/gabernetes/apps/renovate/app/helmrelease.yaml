@@ -32,7 +32,7 @@ spec:
               MEND_RNV_ACCEPT_TOS: "y"
               LOG_LEVEL: info
               MEND_RNV_PLATFORM: github
-              MEND_RNV_CRON_JOB_SCHEDULER: "0 */4 * * *"
+              MEND_RNV_CRON_JOB_SCHEDULER_ALL: "0 */4 * * *"
               MEND_RNV_CRON_APP_SYNC: "0 */4 * * *"
               MEND_RNV_AUTODISCOVER_FILTER: "gabe565/*"
               RENOVATE_PAGINATE_ALL: "true"
