@@ -15,6 +15,9 @@ spec:
   postBuild:
     substitute:
       owner_id: gabernetes
+    substituteFrom:
+      - kind: Secret
+        name: substitutions
   patches:
     - target:
         kind: HelmRelease

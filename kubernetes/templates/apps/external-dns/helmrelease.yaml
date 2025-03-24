@@ -36,6 +36,9 @@ spec:
     interval: 1h
     triggerLoopOnEvent: true
     policy: sync
+    extraArgs:
+      - --txt-encrypt-enabled
+      - --txt-encrypt-aes-key=${txt_encrypt_aes_key}
 
     txtOwnerId: ${owner_id}
     env:
