@@ -23,8 +23,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/onedr0p/radarr
-              tag: 5.19.3.9730@sha256:7218cd42b646bb773a2c683b95860c51103c3ca7e0b9171b4bc549b95ddc6896
+              repository: ghcr.io/home-operations/radarr
+              tag: 5.21.0.9792@sha256:9328fc7298bad129b257e1d79095981b38354796f25625f911bde6df5759a346
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
@@ -50,7 +50,7 @@ spec:
             policy.gabe565.com/ingress-overseerr: "true"
             policy.gabe565.com/ingress-prowlarr: "true"
           securityContext:
-            fsGroup: 568
+            fsGroup: 65534
             fsGroupChangePolicy: OnRootMismatch
 
     service:

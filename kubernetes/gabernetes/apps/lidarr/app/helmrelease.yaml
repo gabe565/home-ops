@@ -23,8 +23,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/onedr0p/lidarr
-              tag: 2.4.3.4248@sha256:fcf7417a7dfa9967a78d668904c62888272bd6dd814b4b9c4500618f51be6b86
+              repository: ghcr.io/home-operations/lidarr
+              tag: 2.10.1.4589@sha256:a73e3aa53c1e5286df06f86179dbcad671f697a0164db650fd594d59cb90e188
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
@@ -50,7 +50,7 @@ spec:
             policy.gabe565.com/ingress-overseerr: "true"
             policy.gabe565.com/ingress-prowlarr: "true"
           securityContext:
-            fsGroup: 568
+            fsGroup: 65534
             fsGroupChangePolicy: OnRootMismatch
 
     service:

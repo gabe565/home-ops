@@ -24,8 +24,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/onedr0p/theme-park
-              tag: 1.18.0@sha256:210d8f5d9466df493503184fb076bbf1fb9fbc2b42e273cd4516ac3fd1df7ba2
+              repository: ghcr.io/home-operations/theme-park
+              tag: 1.20.0@sha256:ee5a741acfc654abab9674335e17edcda29da2305094bbc114c7e70baf3c7517
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago

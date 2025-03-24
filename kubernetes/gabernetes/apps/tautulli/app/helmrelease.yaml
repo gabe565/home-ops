@@ -23,8 +23,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/onedr0p/tautulli
-              tag: 2.15.1@sha256:2d5a1bce27a8e29e287aec1735001e68fc23dea08806c7124587cdbfaf0ddcff
+              repository: ghcr.io/home-operations/tautulli
+              tag: 2.15.1@sha256:0925254e24ca12769d437527a9463f0738d98908bc41f1bd77072aa8f0307a4c
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
@@ -48,7 +48,7 @@ spec:
             policy.gabe565.com/ingress-authentik: "true"
             policy.gabe565.com/ingress-ingress: "true"
           securityContext:
-            fsGroup: 568
+            fsGroup: 65534
             fsGroupChangePolicy: OnRootMismatch
 
     service:
