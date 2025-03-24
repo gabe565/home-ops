@@ -10,12 +10,17 @@ spec:
   chart:
     spec:
       chart: external-dns
-      version: 1.15.2
+      version: 1.16.0
       sourceRef:
         kind: HelmRepository
         namespace: flux-system
         name: external-dns
       interval: 1h
+  # TODO: Enable schema validation when new chart version is released
+  install:
+    disableSchemaValidation: true
+  upgrade:
+    disableSchemaValidation: true
   values:
     deploymentAnnotations:
       secret.reloader.stakater.com/reload: cloudflare
