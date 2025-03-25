@@ -109,6 +109,12 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td></td>
   </tr>
   <tr>
+    <td>cloudflare-ddns</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/cloudflare-ddns/app/cloudflare-ddns.yaml">cloudflare-ddns</a></td>
+    <td></td>
+  </tr>
+  <tr>
     <td>cnpg-system</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/cnpg/app/helmrelease.yaml">cnpg</a></td>

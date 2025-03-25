@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.7.3/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: cloudflare-ddns
+  namespace: cloudflare-ddns
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 3.7.3
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      cloudflare-ddns:
+        type: cronjob
+        cronjob:
+          schedule: '*/5 * * * *'
+          ttlSecondsAfterFinished: 86400
+        containers:
+          app:
+            image:
+              repository: ghcr.io/gabe565/cloudflare-ddns
+              tag: 0.0.1@sha256:d81e15d124ff167b5160e8086afc1c4025b2294b6b0d9ae779a00c41f7937dd5
+              pullPolicy: IfNotPresent
+            env:
+              CF_API_TOKEN:
+                secretKeyRef:
+                  name: substitutions
+                  key: cf_api_token
+              DDNS_DOMAIN: ${domain}
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop: [ALL]
+        pod:
+          labels:
+            policy.gabe565.com/egress-world: "true"
+          securityContext:
+            runAsUser: 65534
+            runAsGroup: 65534
+            runAsNonRoot: true
+            seccompProfile: {type: RuntimeDefault}
