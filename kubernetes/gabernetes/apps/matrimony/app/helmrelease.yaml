@@ -75,4 +75,3 @@ spec:
           - secretName: ${certificate_name}
             hosts:
               - ${app_url}
-              - www.${app_url}
