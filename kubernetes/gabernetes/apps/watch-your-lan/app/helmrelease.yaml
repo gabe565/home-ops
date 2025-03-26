@@ -1,0 +1,103 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.7.2/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: watch-your-lan
+  namespace: watch-your-lan
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 3.7.2
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      watch-your-lan:
+        strategy: RollingUpdate
+        containers:
+          app:
+            image:
+              repository: ghcr.io/aceberg/watchyourlan
+              tag: 2.1.1@sha256:e58b3fc660ea6418c2e58a39796108f0f6713b1257fa55b2e63c9ca5efc06cb8
+              pullPolicy: IfNotPresent
+            env:
+              TZ: America/Chicago
+              ARP_STRS_JOINED: -gNx ${internal_subnet} -I net1
+              THEME: journal
+              USE_DB: postgres
+              PROMETHEUS_ENABLE: "true"
+              PG_CONNECT:
+                secretKeyRef:
+                  name: postgresql-app
+                  key: uri
+              SHOUTRRR_URL: ${shoutrrr_url}
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+        pod:
+          annotations:
+            k8s.v1.cni.cncf.io/networks: ipvlan
+          labels:
+            policy.gabe565.com/egress-namespace: "true"
+            policy.gabe565.com/ingress-ingress: "true"
+            policy.gabe565.com/ingress-prometheus: "true"
+
+    service:
+      watch-your-lan:
+        controller: watch-your-lan
+        ports:
+          http:
+            port: 8840
+
+    persistence:
+      data:
+        enabled: true
+        type: emptyDir
+
+    ingress:
+      watch-your-lan:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/auth-url: |-
+            http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
+          nginx.ingress.kubernetes.io/auth-signin: |-
+            https://$host/outpost.goauthentik.io/start?rd=$scheme://$http_host$escaped_request_uri
+          nginx.ingress.kubernetes.io/auth-response-headers: Set-Cookie
+          nginx.ingress.kubernetes.io/auth-snippet: |
+            proxy_set_header X-Forwarded-Host $http_host;
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+                service:
+                  identifier: watch-your-lan
+                  port: http
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
+
+    serviceMonitor:
+      main:
+        enabled: true
+        serviceName: watch-your-lan
+        endpoints:
+          - port: http
+            scheme: http
+            path: /metrics
+            interval: 2m
+            scrapeTimeout: 10s

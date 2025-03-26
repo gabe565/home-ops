@@ -1,0 +1,18 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: app
+  namespace: watch-your-lan
+spec:
+  interval: 1h
+  targetNamespace: watch-your-lan
+  path: ./kubernetes/gabernetes/apps/watch-your-lan/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    namespace: flux-system
+    name: home-ops
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: substitutions

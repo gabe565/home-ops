@@ -499,6 +499,12 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><a href="kubernetes/gabernetes/apps/vikunja/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/vikunja/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/vikunja/valkey/helmrelease.yaml">valkey</a></td>
   </tr>
   <tr>
+    <td>watch-your-lan</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/watch-your-lan/app/helmrelease.yaml">watch-your-lan</a></td>
+    <td><a href="kubernetes/gabernetes/apps/watch-your-lan/app/postgresql.yaml">postgresql</a></td>
+  </tr>
+  <tr>
     <td>weave-gitops</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/weave-gitops/app/helmrelease.yaml">weave-gitops</a></td>

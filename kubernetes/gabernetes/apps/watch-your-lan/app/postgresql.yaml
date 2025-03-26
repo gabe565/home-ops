@@ -1,0 +1,22 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgresql
+  namespace: watch-your-lan
+spec:
+  instances: 3
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.8-6
+  enableSuperuserAccess: true
+  bootstrap:
+    initdb:
+      database: lan
+      owner: lan
+  storage:
+    storageClass: local-path
+    size: 8Gi
+  resources:
+    requests:
+      memory: 10Mi
+      cpu: 10m
+  smartShutdownTimeout: 1
+  stopDelay: 300
