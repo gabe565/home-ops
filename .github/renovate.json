@@ -129,6 +129,11 @@
       "matchDatasources": ["docker"],
       "matchPackageNames": ["goodieshq/headscale-admin"],
       "sourceUrl": "https://github.com/GoodiesHQ/headscale-admin"
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/sct/overseerr"],
+      "sourceUrl": "https://github.com/sct/overseerr"
     }
   ]
 }
