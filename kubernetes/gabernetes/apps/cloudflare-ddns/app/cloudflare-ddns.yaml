@@ -35,7 +35,7 @@ spec:
                 secretKeyRef:
                   name: substitutions
                   key: cf_api_token
-              DDNS_DOMAIN: ${domain}
+              DDNS_DOMAINS: ${domain}
             securityContext:
               allowPrivilegeEscalation: false
               capabilities:
