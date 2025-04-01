@@ -30,7 +30,7 @@ spec:
       STORAGE_S3_BUCKET: bookstack
       STORAGE_S3_REGION: us-central-1
       STORAGE_S3_ENDPOINT: https://${s3_url}
-      STORAGE_URL: https://${s3_url}/bookstack
+      STORAGE_URL: https://bookstack.${s3_url}
 
       LOG_FAILED_LOGIN_MESSAGE: Failed login for %u
       AUTH_METHOD: saml2

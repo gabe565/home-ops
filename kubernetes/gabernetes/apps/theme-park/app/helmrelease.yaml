@@ -74,7 +74,7 @@ spec:
       plex-logo:
         enabled: true
         annotations:
-          nginx.ingress.kubernetes.io/temporal-redirect: "https://${s3_url}/theme-park/plex.svg"
+          nginx.ingress.kubernetes.io/temporal-redirect: "https://theme-park.${s3_url}/plex.svg"
         hosts:
           - host: ${app_url}
             paths:
