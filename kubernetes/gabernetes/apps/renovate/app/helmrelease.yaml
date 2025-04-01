@@ -40,6 +40,8 @@ spec:
               MEND_RNV_REPORTING_ENABLED: "true"
               MEND_RNV_SERVER_API_SECRET: ${api_secret}
               MEND_RNV_DATA_HANDLER_TYPE: postgresql
+              RENOVATE_REPORT_TYPE: s3
+              RENOVATE_REPORT_PATH: s3://renovate/report.json
               PGHOST: postgresql-rw
               PGPORT: "5432"
               PGDATABASE: renovate
