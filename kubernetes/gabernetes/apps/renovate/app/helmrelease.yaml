@@ -21,7 +21,7 @@ spec:
     controllers:
       renovate:
         annotations:
-          secret.reloader.stakater.com/reload: renovate-env
+          secret.reloader.stakater.com/reload: renovate-env,valkey
         containers:
           app:
             image:
@@ -52,6 +52,11 @@ spec:
                 secretKeyRef:
                   name: postgresql-app
                   key: password
+              REDIS_PASSWORD:
+                secretKeyRef:
+                  name: valkey
+                  key: valkey-password
+              RENOVATE_REDIS_URL: redis://:$(REDIS_PASSWORD)@valkey-primary:6379/0
             envFrom:
               - secretRef:
                   name: renovate-env
@@ -79,6 +84,7 @@ spec:
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-ingress: "true"
             policy.gabe565.com/ingress-namespace: "true"
+            valkey-client: "true"
           affinity:
             nodeAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
