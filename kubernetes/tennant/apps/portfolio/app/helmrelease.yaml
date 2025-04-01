@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: ghcr.io/gabe565/portfolio
-              tag: 2.6.0@sha256:d9e6205621d9e9f058833a56135a6980ac33380bba654ffc64e481b0e74011fa #yampl {{ .tag }}@{{ .digest }}
+              tag: 2.6.1@sha256:910ef36d625f9903000daedc23f6c9d002211db75697c529e56d4acd3ae6b628 #yampl {{ .tag }}@{{ .digest }}
             env:
               TZ: America/Chicago
               TURNSTILE_SECRET: ${turnstile_secret}
