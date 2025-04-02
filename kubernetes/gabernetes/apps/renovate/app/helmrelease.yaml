@@ -42,8 +42,6 @@ spec:
               MEND_RNV_DATA_HANDLER_TYPE: postgresql
               RENOVATE_REPOSITORY_CACHE: enabled
               RENOVATE_REPOSITORY_CACHE_TYPE: s3://renovate/repo_cache/
-              RENOVATE_REPORT_TYPE: s3
-              RENOVATE_REPORT_PATH: s3://renovate/report.json
               PGHOST: postgresql-rw
               PGPORT: "5432"
               PGDATABASE: renovate
