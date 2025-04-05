@@ -36,15 +36,16 @@ spec:
                 gpu.intel.com/i915: 1
                 memory: 4Gi
             probes:
-              startup:
+              liveness: &probe
                 enabled: true
+                type: HTTP
+                path: /identity
+              readiness: *probe
+              startup:
+                <<: *probe
                 spec:
                   failureThreshold: 30
                   periodSeconds: 5
-              liveness:
-                enabled: true
-              readiness:
-                enabled: true
             securityContext:
               readOnlyRootFilesystem: true
         pod:
