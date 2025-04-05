@@ -79,6 +79,8 @@ spec:
         extraFlags: |
           --max_statement_time=60
         resources:
+          requests:
+            cpu: 0m
           limits:
             cpu: 500m
         persistence:

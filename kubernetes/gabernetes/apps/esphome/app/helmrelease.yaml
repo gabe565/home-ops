@@ -93,6 +93,9 @@ spec:
               - --extensions-dir=/cache
               - /config
             resources:
+              requests:
+                cpu: 0m
+                memory: 50Mi
               limits:
                 cpu: 500m
                 memory: 500Mi
