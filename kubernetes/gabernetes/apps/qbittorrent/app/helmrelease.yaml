@@ -102,13 +102,18 @@ spec:
           app:
             image:
               repository: ghcr.io/gabe565/vuetorrent
-              tag: 2.23.1@sha256:956a929622a1676a69184df74640f5e6fba36dfc908cc722d8cb2c8ddbeae536
+              tag: 2.23.1-nonroot@sha256:e8ffc548bbe956483996ec8ccf61b7fe34a6b90ae25bf15664104da6863d635f
               pullPolicy: IfNotPresent
             securityContext:
               readOnlyRootFilesystem: true
         pod:
           labels:
             policy.gabe565.com/ingress-ingress: "true"
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 101
+            runAsGroup: 101
+            seccompProfile: {type: RuntimeDefault}
 
     persistence:
       config:
@@ -152,7 +157,7 @@ spec:
         controller: vuetorrent
         ports:
           http:
-            port: 80
+            port: 8080
 
     ingress:
       qbittorrent:
