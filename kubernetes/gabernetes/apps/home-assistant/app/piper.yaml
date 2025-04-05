@@ -30,7 +30,7 @@ spec:
               - --voice=en_GB-alba-medium
             resources:
               requests:
-                cpu: 500m
+                cpu: 0m
               limits:
                 cpu: 1000m
             probes:
