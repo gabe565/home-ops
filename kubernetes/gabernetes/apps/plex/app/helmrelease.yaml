@@ -76,13 +76,17 @@ spec:
         type: nfs
         server: 192.168.1.240
         path: /volume1/media
-      transcode:
-        enabled: true
-        type: emptyDir
-        sizeLimit: 32Gi
       tmp:
         enabled: true
         type: emptyDir
+        sizeLimit: 32Gi
+        globalMounts:
+          - path: /tmp
+            subPath: tmp
+          - path: /config/Library/Application Support/Plex Media Server/Cache
+            subPath: Cache
+          - path: /config/Library/Application Support/Plex Media Server/Logs
+            subPath: Logs
 
     service:
       plex:
