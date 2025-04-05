@@ -39,7 +39,9 @@ spec:
               readiness:
                 enabled: true
             securityContext:
+              allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
+              capabilities: {drop: [ALL]}
         pod:
           labels:
             policy.gabe565.com/egress-plex: "true"
@@ -50,8 +52,12 @@ spec:
             policy.gabe565.com/ingress-overseerr: "true"
             policy.gabe565.com/ingress-prowlarr: "true"
           securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
             fsGroup: 65534
             fsGroupChangePolicy: OnRootMismatch
+            seccompProfile: {type: RuntimeDefault}
 
     service:
       radarr:
