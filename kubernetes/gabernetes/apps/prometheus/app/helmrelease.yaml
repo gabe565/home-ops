@@ -132,9 +132,9 @@ spec:
         evaluationInterval: 1m
         resources:
           requests:
-            memory: 3Gi
+            memory: 2Gi
           limits:
-            memory: 6Gi
+            memory: 5Gi
         containers:
           - name: vpn
             image: ghcr.io/tailscale/tailscale:v1.82.0
