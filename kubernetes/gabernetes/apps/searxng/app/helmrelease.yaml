@@ -32,16 +32,16 @@ spec:
               SEARXNG_SECRET: ${searxng_secret}
               SEARXNG_URL: https://${app_url}
               UWSGI_WORKERS: "1"
-              REDIS_PASSWORD:
+              VALKEY_PASSWORD:
                 secretKeyRef:
-                  name: redis
-                  key: redis-password
-              SEARXNG_REDIS_URL: redis://:$(REDIS_PASSWORD)@redis-master:6379/0
+                  name: valkey
+                  key: valkey-password
+              SEARXNG_REDIS_URL: redis://:$(VALKEY_PASSWORD)@valkey-primary:6379/0
         pod:
           labels:
-            policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-ingress: "true"
+            valkey-client: "true"
           terminationGracePeriodSeconds: "0"
 
     service:
