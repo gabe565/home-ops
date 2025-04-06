@@ -45,12 +45,21 @@ spec:
               readiness:
                 enabled: true
             securityContext:
+              allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
+              capabilities: {drop: ["ALL"]}
         pod:
           labels:
             policy.gabe565.com/egress-mosquitto: "true"
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-ingress: "true"
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
+            fsGroup: 65534
+            fsGroupChangePolicy: OnRootMismatch
+            seccompProfile: {type: RuntimeDefault}
 
     service:
       zigbee2mqtt:
