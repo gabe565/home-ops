@@ -49,13 +49,16 @@ spec:
                   failureThreshold: 30
                   periodSeconds: 5
             securityContext:
+              allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
+              capabilities: {drop: [ALL]}
         pod:
           securityContext:
             runAsUser: 65534
             runAsGroup: 65534
             fsGroup: 65534
             fsGroupChangePolicy: OnRootMismatch
+            seccompProfile: {type: RuntimeDefault}
           labels:
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
