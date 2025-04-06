@@ -88,7 +88,11 @@ spec:
               readiness:
                 enabled: true
             securityContext:
+              runAsUser: 65534
+              runAsGroup: 65534
+              allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
+              capabilities: {drop: [ALL]}
         pod:
           labels:
             policy.gabe565.com/ingress-authentik: "true"
@@ -96,6 +100,7 @@ spec:
           securityContext:
             fsGroup: 65534
             fsGroupChangePolicy: OnRootMismatch
+            seccompProfile: {type: RuntimeDefault}
       vuetorrent:
         strategy: RollingUpdate
         containers:
