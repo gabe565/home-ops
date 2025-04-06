@@ -7,7 +7,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.7.3
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -18,7 +18,7 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      searxng:
         annotations:
           secret.reloader.stakater.com/reload: searxng-config
         strategy: RollingUpdate
@@ -45,10 +45,11 @@ spec:
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-ingress: "true"
             valkey-client: "true"
-          terminationGracePeriodSeconds: "0"
+          terminationGracePeriodSeconds: 1
 
     service:
-      main:
+      searxng:
+        controller: searxng
         ports:
           http:
             port: 8080
@@ -81,7 +82,8 @@ spec:
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: searxng
+                  port: http
         tls:
           - secretName: ${certificate_name}
             hosts:
