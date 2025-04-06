@@ -20,7 +20,7 @@ spec:
     controllers:
       searxng:
         annotations:
-          secret.reloader.stakater.com/reload: searxng-config
+          configmap.reloader.stakater.com/reload: searxng-config
         strategy: RollingUpdate
         containers:
           main:
@@ -68,7 +68,7 @@ spec:
     persistence:
       config:
         enabled: true
-        type: secret
+        type: configMap
         name: searxng-config
         globalMounts:
           - path: /etc/searxng/settings.yml
