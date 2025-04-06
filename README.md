@@ -355,12 +355,6 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><a href="kubernetes/gabernetes/apps/paperless-ngx/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/paperless-ngx/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/paperless-ngx/valkey/helmrelease.yaml">valkey</a></td>
   </tr>
   <tr>
-    <td>pictshare</td>
-    <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/gabernetes/apps/pictshare/app/helmrelease.yaml">pictshare</a></td>
-    <td></td>
-  </tr>
-  <tr>
     <td>plausible</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/plausible/app/helmrelease.yaml">plausible</a></td>
