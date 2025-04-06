@@ -31,6 +31,7 @@ spec:
               GLOBAL_LOG_LEVEL: WARNING
               WEBUI_AUTH_TRUSTED_EMAIL_HEADER: X-authentik-email
               WEBUI_SECRET_KEY: ${secret_key}
+              CORS_ALLOW_ORIGIN: https://${app_url}
               DATABASE_URL:
                 secretKeyRef:
                   name: postgresql-app
