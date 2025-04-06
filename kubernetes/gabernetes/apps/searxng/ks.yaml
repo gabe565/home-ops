@@ -6,12 +6,12 @@ metadata:
 spec:
   interval: 1h
   targetNamespace: searxng
-  path: ./kubernetes/apps/searxng/app
+  path: ./kubernetes/gabernetes/apps/searxng/app
   prune: true
   sourceRef:
     kind: GitRepository
     namespace: flux-system
-    name: flux-system
+    name: home-ops
   postBuild:
     substituteFrom:
       - kind: Secret
@@ -25,12 +25,12 @@ metadata:
 spec:
   interval: 1h
   targetNamespace: searxng
-  path: ./kubernetes/apps/searxng/redis
+  path: ./kubernetes/gabernetes/apps/searxng/redis
   prune: true
   sourceRef:
     kind: GitRepository
     namespace: flux-system
-    name: flux-system
+    name: home-ops
   postBuild:
     substituteFrom:
       - kind: Secret
