@@ -39,6 +39,17 @@ spec:
               SEARXNG_REDIS_URL:
                 value: redis://:$(VALKEY_PASSWORD)@valkey-primary:6379/0
                 dependsOn: VALKEY_PASSWORD
+            probes:
+              liveness: &probe
+                enabled: true
+                type: HTTP
+                path: /healthz
+              readiness: *probe
+              startup:
+                <<: *probe
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
         pod:
           labels:
             policy.gabe565.com/egress-namespace: "true"
