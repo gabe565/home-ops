@@ -421,6 +421,12 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td></td>
   </tr>
   <tr>
+    <td>searxng</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/searxng/app/helmrelease.yaml">searxng</a></td>
+    <td><a href="kubernetes/gabernetes/apps/searxng/redis/helmrelease.yaml">redis</a></td>
+  </tr>
+  <tr>
     <td>shlink</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/shlink/app/helmrelease.yaml">shlink</a></td>
