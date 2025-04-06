@@ -32,13 +32,6 @@ spec:
               SEARXNG_SECRET: ${searxng_secret}
               SEARXNG_URL: https://${app_url}
               UWSGI_WORKERS: "1"
-              VALKEY_PASSWORD:
-                secretKeyRef:
-                  name: valkey
-                  key: valkey-password
-              SEARXNG_REDIS_URL:
-                value: redis://:$(VALKEY_PASSWORD)@valkey-primary:6379/0
-                dependsOn: VALKEY_PASSWORD
             probes:
               liveness: &probe
                 enabled: true
