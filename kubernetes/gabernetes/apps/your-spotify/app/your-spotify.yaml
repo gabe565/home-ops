@@ -137,6 +137,7 @@ spec:
               - path: /app/apps/client/build
             client:
               - path: /build
+                readOnly: true
       nginx:
         enabled: true
         type: configMap
