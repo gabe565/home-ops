@@ -94,7 +94,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>authentik</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/authentik/app/helmrelease.yaml">authentik</a></td>
-    <td><a href="kubernetes/gabernetes/apps/authentik/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/authentik/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/authentik/valkey/helmrelease.yaml">valkey</a></td>
+    <td><a href="kubernetes/gabernetes/apps/authentik/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/authentik/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/searxng/app/valkey.yaml">valkey</a></td>
   </tr>
   <tr>
     <td>bookstack</td>
@@ -424,7 +424,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>searxng</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/searxng/app/helmrelease.yaml">searxng</a></td>
-    <td><a href="kubernetes/gabernetes/apps/searxng/redis/helmrelease.yaml">redis</a></td>
+    <td></td>
   </tr>
   <tr>
     <td>shlink</td>
