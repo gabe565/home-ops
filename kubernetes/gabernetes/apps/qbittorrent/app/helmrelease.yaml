@@ -78,15 +78,14 @@ spec:
               TZ: America/Chicago
               QBITTORRENT__BT_PORT: ${bittorrent_port}
             probes:
-              startup:
+              liveness: &probe
                 enabled: true
+              readiness: *probe
+              startup:
+                <<: *probe
                 spec:
                   failureThreshold: 30
                   periodSeconds: 5
-              liveness:
-                enabled: true
-              readiness:
-                enabled: true
             securityContext:
               runAsUser: 65534
               runAsGroup: 65534
@@ -111,6 +110,14 @@ spec:
               pullPolicy: IfNotPresent
             securityContext:
               readOnlyRootFilesystem: true
+            probes:
+              startup:
+                enabled: true
+                type: HTTP
+                path: /
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
         pod:
           labels:
             policy.gabe565.com/ingress-ingress: "true"
