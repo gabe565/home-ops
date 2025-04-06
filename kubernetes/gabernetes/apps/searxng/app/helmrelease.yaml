@@ -56,7 +56,6 @@ spec:
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-ingress: "true"
             valkey-client: "true"
-          terminationGracePeriodSeconds: 1
 
     service:
       searxng:
