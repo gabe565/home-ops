@@ -2,8 +2,8 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: hoarder
-  namespace: hoarder
+  name: karakeep
+  namespace: karakeep
 spec:
   chart:
     spec:
@@ -19,11 +19,11 @@ spec:
     mode: enabled
   values:
     controllers:
-      hoarder:
+      karakeep:
         initContainers:
-          migrate: &hoarder
+          migrate: &karakeep
             image:
-              repository: ghcr.io/hoarder-app/hoarder
+              repository: ghcr.io/karakeep-app/karakeep
               tag: 0.23.2@sha256:04956fc529d4675cfa849313f270ae863094d1f2be4c922172f06a62ef9bd4ac
               pullPolicy: IfNotPresent
             workingDir: /db_migrations
@@ -32,7 +32,7 @@ spec:
               - index.js
             envFrom:
               - secretRef:
-                  name: hoarder
+                  name: karakeep
             env:
               TZ: America/Chicago
               DATA_DIR: /data
@@ -58,7 +58,7 @@ spec:
               capabilities: {drop: [ALL]}
         containers:
           web:
-            <<: *hoarder
+            <<: *karakeep
             workingDir: /app/apps/web
             command:
               - node
@@ -74,7 +74,7 @@ spec:
               readiness:
                 enabled: true
           worker:
-            <<: *hoarder
+            <<: *karakeep
             workingDir: /app/apps/workers
             command:
               - npm
@@ -95,8 +95,8 @@ spec:
             seccompProfile: {type: RuntimeDefault}
 
     service:
-      hoarder:
-        controller: hoarder
+      karakeep:
+        controller: karakeep
         ports:
           http:
             port: 3000
@@ -125,7 +125,7 @@ spec:
             paths:
               - path: /
                 service:
-                  identifier: hoarder
+                  identifier: karakeep
                   port: http
         tls:
           - secretName: ${certificate_name}

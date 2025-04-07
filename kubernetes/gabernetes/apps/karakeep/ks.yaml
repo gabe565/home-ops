@@ -2,11 +2,11 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: app
-  namespace: hoarder
+  namespace: karakeep
 spec:
   interval: 1h
-  targetNamespace: hoarder
-  path: ./kubernetes/gabernetes/apps/hoarder/app
+  targetNamespace: karakeep
+  path: ./kubernetes/gabernetes/apps/karakeep/app
   prune: true
   sourceRef:
     kind: GitRepository

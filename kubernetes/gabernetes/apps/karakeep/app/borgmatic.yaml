@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: borgbase-ssh
-  namespace: hoarder
+  namespace: karakeep
   annotations:
     reflector.v1.k8s.emberstack.com/reflects: default/borgbase-ssh
 ---
@@ -10,7 +10,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: borgmatic
-  namespace: hoarder
+  namespace: karakeep
 spec:
   chart:
     spec:
@@ -38,7 +38,7 @@ spec:
               topologyKey: kubernetes.io/hostname
               labelSelector:
                 matchLabels:
-                  app.kubernetes.io/name: hoarder
+                  app.kubernetes.io/name: karakeep
     podLabels:
       policy.gabe565.com/egress-healthchecks: "true"
       policy.gabe565.com/egress-namespace: "true"
@@ -60,9 +60,9 @@ spec:
         enabled: true
         type: secret
         name: borgbase-ssh
-      hoarder-data:
+      karakeep-data:
         enabled: true
-        existingClaim: hoarder-data
+        existingClaim: karakeep-data
     configMaps:
       config:
         data:
@@ -72,12 +72,13 @@ spec:
               - path: ${borg_repo}
                 label: borgbase
             source_directories:
-              - /hoarder-data
+              - /karakeep-data
             exclude_patterns:
-              - /hoarder-data/db.db*
-              - /hoarder-data/queue.db*
-            archive_name_format: "hoarder-{now:%Y-%m-%d-%H%M%S}"
+              - /karakeep-data/db.db*
+              - /karakeep-data/queue.db*
+            archive_name_format: "karakeep-{now:%Y-%m-%d-%H%M%S}"
             ssh_command: ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=ERROR
+            match_archives: sh:*
             retries: 2
             retry_wait: 10
             keep_daily: 90
@@ -87,8 +88,8 @@ spec:
             check_last: 3
             sqlite_databases:
               - name: db
-                path: /hoarder-data/db.db
+                path: /karakeep-data/db.db
               - name: tasks
-                path: /hoarder-data/queue.db
+                path: /karakeep-data/queue.db
             healthchecks:
               ping_url: http://healthchecks.healthchecks:8000/ping/${borg_healthchecks_uuid}
