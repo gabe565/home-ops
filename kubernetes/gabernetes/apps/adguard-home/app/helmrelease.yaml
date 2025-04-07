@@ -22,8 +22,6 @@ spec:
       adguard-home:
         type: statefulset
         replicas: 2
-        annotations:
-          configmap.reloader.stakater.com/reload: unbound
         containers:
           app:
             image:
@@ -48,27 +46,6 @@ spec:
               readOnlyRootFilesystem: true
               runAsUser: 65534
               runAsGroup: 65534
-              allowPrivilegeEscalation: false
-          unbound:
-            image:
-              repository: ghcr.io/gabe565/unbound-cache
-              tag: beta
-              pullPolicy: Always
-            env:
-              TZ: America/Chicago
-            probes:
-              liveness: &probe
-                enabled: true
-                type: TCP
-                port: 5353
-              readiness: *probe
-              startup:
-                <<: *probe
-                spec:
-                  failureThreshold: 30
-                  periodSeconds: 5
-            securityContext:
-              readOnlyRootFilesystem: true
               allowPrivilegeEscalation: false
         pod:
           priorityClassName: system-cluster-critical
@@ -96,15 +73,11 @@ spec:
               storageClass: longhorn-ssd
               accessMode: ReadWriteOnce
               size: 2Gi
-              advancedMounts:
-                app:
-                  - path: /opt/adguardhome/conf
-                    subPath: conf
-                  - path: /opt/adguardhome/work
-                    subPath: work
-                unbound:
-                  - path: /opt/unbound/data
-                    subPath: unbound
+              globalMounts:
+                - path: /opt/adguardhome/conf
+                  subPath: conf
+                - path: /opt/adguardhome/work
+                  subPath: work
       sync:
         containers:
           app:
@@ -176,27 +149,6 @@ spec:
         extraSelectorLabels:
           apps.kubernetes.io/pod-index: "1"
         loadBalancerIP: 192.168.1.222
-
-    persistence:
-      unbound:
-        enabled: true
-        type: configMap
-        name: unbound
-        advancedMounts:
-          adguard-home:
-            unbound:
-              - path: /opt/unbound/etc/unbound/unbound.conf
-                subPath: unbound.conf
-      tmp:
-        enabled: true
-        type: emptyDir
-        advancedMounts:
-          adguard-home:
-            unbound:
-              - path: /opt/unbound/etc/unbound/dev
-                subPath: dev
-              - path: /opt/unbound/etc/unbound/var
-                subPath: var
 
     ingress:
       origin: &ingress
