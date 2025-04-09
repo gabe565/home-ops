@@ -39,6 +39,8 @@ spec:
               HEADSCALE_PREFIXES_V4: 100.64.0.0/10
               HEADSCALE_PREFIXES_V6: fd7a:115c:a1e0::/48
 
+              HEADSCALE_POLICY_MODE: database
+
               HEADSCALE_DERP_URLS: https://controlplane.tailscale.com/derpmap/default
               HEADSCALE_DERP_AUTO_UPDATE_ENABLED: "true"
               HEADSCALE_DERP_UPDATE_FREQUENCY: "24h"
