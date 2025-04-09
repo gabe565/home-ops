@@ -141,14 +141,10 @@ spec:
             env:
               - name: TS_HOSTNAME
                 value: prometheus
-              - name: TS_EXTRA_ARGS
-                value: --login-server=https://${vpn_host}
               - name: TS_KUBE_SECRET
                 value: tailscale-state
               - name: TS_AUTHKEY
                 value: ${vpn_auth_key}
-              - name: TS_NO_LOGS_NO_SUPPORT
-                value: "true"
             livenessProbe: &probe
               exec:
                 command: [tailscale, --socket=/tmp/tailscaled.sock, status]
