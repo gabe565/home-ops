@@ -1,0 +1,73 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.7.3/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: webfinger
+  namespace: authentik
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 3.7.3
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      webfinger:
+        strategy: RollingUpdate
+        containers:
+          app:
+            image:
+              repository: ghcr.io/gabe565/tailscale-authentik-webfinger
+              tag: beta
+              pullPolicy: Always
+            env:
+              TZ: America/Chicago
+              AK_HOST: ${app_url}
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: [ALL]}
+            probes:
+              readiness: &probe
+                enabled: true
+                type: HTTP
+                path: /ping
+              liveness: *probe
+              startup:
+                <<: *probe
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+        pod:
+          securityContext:
+            runAsNonRoot: true
+            seccompProfile: {type: RuntimeDefault}
+
+    service:
+      webfinger:
+        controller: webfinger
+        ports:
+          http:
+            port: 3000
+
+    ingress:
+      webfinger:
+        enabled: true
+        hosts:
+          - host: ${webfinger_host}
+            paths:
+              - path: /.well-known/webfinger
+                service:
+                  identifier: webfinger
+                  port: http
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${webfinger_host}
