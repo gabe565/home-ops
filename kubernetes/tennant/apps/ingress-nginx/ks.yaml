@@ -6,7 +6,7 @@ metadata:
 spec:
   interval: 1h
   targetNamespace: ingress-nginx
-  path: ./kubernetes/templates/apps/ingress-nginx
+  path: ./kubernetes/tennant/apps/ingress-nginx/app
   prune: true
   sourceRef:
     kind: GitRepository

@@ -1,22 +1,10 @@
-apiVersion: helm.toolkit.fluxcd.io/v2
-kind: HelmRelease
+apiVersion: v1
+kind: ConfigMap
 metadata:
-  name: ingress-nginx
-  namespace: ingress-nginx
-spec:
-  interval: 1h
-  driftDetection:
-    mode: enabled
-  chart:
-    spec:
-      chart: ingress-nginx
-      version: 4.12.1
-      sourceRef:
-        kind: HelmRepository
-        namespace: flux-system
-        name: ingress-nginx
-      interval: 1h
-  values:
+  name: defaults
+data:
+  # language=yaml
+  values.yaml: |
     rbac:
       create: true
 
@@ -25,7 +13,6 @@ spec:
 
       extraArgs:
         update-status-on-shutdown: "false"
-        maxmind-mirror: ${geoip_mirror}
 
       podLabels:
         policy.gabe565.com/egress-geoip: "true"
@@ -38,8 +25,6 @@ spec:
 
       allowSnippetAnnotations: true
 
-      maxmindLicenseKey: stub
-
       config:
         annotations-risk-level: Critical
         proxy-buffer-size: 16k
@@ -50,7 +35,6 @@ spec:
         disable-ipv6: "true"
         disable-ipv6-dns: "true"
         keep-alive-requests: "1000"
-        use-geoip2: "true"
         custom-http-errors: 401,403,404,500,501,502,503,504
 
       extraEnvs:
@@ -62,20 +46,6 @@ spec:
         X-Content-Type-Options: nosniff
         X-Frame-Options: SAMEORIGIN
         X-XSS-Protection: 1; mode=block
-
-      ingressClassResource:
-        default: true
-
-      service:
-        externalTrafficPolicy: Local
-        loadBalancerIP: ${load_balancer_ip}
-        ipFamilyPolicy: PreferDualStack
-
-      metrics:
-        enabled: ${metrics_enabled:=false}
-        serviceMonitor:
-          enabled: ${metrics_enabled:=false}
-          scrapeInterval: 1m
 
       admissionWebhooks:
         labels:
