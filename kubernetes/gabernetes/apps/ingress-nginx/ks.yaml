@@ -6,7 +6,7 @@ metadata:
 spec:
   interval: 1h
   targetNamespace: ingress-nginx
-  path: ./kubernetes/templates/apps/ingress-nginx
+  path: ./kubernetes/gabernetes/apps/ingress-nginx/app
   prune: true
   sourceRef:
     kind: GitRepository
@@ -16,6 +16,3 @@ spec:
     substituteFrom:
       - kind: Secret
         name: app-vars
-    substitute:
-      load_balancer_ip: 192.168.1.220
-      metrics_enabled: "true"
