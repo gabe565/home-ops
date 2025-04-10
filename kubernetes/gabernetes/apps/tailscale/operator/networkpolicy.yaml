@@ -1,0 +1,27 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: ingress-tailscale
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/ingress-ingress: "true"
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: tailscale
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: tailscale
+  namespace: tailscale
+spec:
+  endpointSelector: {}
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            policy.gabe565.com/ingress-tailscale: "true"
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists

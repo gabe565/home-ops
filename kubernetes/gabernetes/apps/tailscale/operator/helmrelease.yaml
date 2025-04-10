@@ -1,0 +1,30 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: tailscale-operator
+  namespace: tailscale
+spec:
+  chart:
+    spec:
+      chart: tailscale-operator
+      version: 1.82.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: tailscale
+        name: tailscale
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  install:
+    crds: Create
+  upgrade:
+    crds: CreateReplace
+  values:
+    operatorConfig:
+      podLabels:
+        policy.gabe565.com/egress-kubeapi: "true"
+        policy.gabe565.com/egress-world-with-lan: "true"
+
+    proxyConfig:
+      defaultProxyClass: default

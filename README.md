@@ -467,6 +467,12 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td></td>
   </tr>
   <tr>
+    <td>tailscale</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/tailscale/operator/helmrelease.yaml">tailscale-operator</a></td>
+    <td></td>
+  </tr>
+  <tr>
     <td>tandoor</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/tandoor/app/helmrelease.yaml">tandoor</a></td>
