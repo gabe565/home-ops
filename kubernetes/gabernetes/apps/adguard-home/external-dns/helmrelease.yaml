@@ -16,6 +16,11 @@ spec:
         namespace: flux-system
         name: external-dns
       interval: 1h
+  # TODO: Enable schema validation when new chart version is released
+  install:
+    disableSchemaValidation: true
+  upgrade:
+    disableSchemaValidation: true
   values:
     provider:
       name: webhook
