@@ -109,13 +109,11 @@ spec:
       tmp:
         enabled: true
         type: emptyDir
-      supervisord:
-        enabled: true
-        type: emptyDir
+        medium: Memory
         globalMounts:
-          - path: /var/log/supervisord
-            subPath: log
-          - path: /var/run/supervisord
+          - path: /tmp
+            subPath: tmp
+          - path: /run
             subPath: run
 
     ingress:
