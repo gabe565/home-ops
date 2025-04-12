@@ -64,6 +64,7 @@ spec:
           - host: ${webfinger_host}
             paths:
               - path: /.well-known/webfinger
+                pathType: ImplementationSpecific
                 service:
                   identifier: webfinger
                   port: http
