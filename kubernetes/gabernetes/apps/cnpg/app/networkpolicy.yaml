@@ -25,6 +25,9 @@ spec:
       - key: cnpg.io/cluster
         operator: Exists
   ingress:
+    - fromEntities:
+        - host
+        - remote-node
     - fromEndpoints:
         - {}
     - fromEndpoints:
