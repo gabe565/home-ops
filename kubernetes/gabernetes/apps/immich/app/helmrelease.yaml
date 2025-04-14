@@ -18,7 +18,13 @@ spec:
     mode: enabled
   values:
     defaultPodOptions:
-      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: {type: RuntimeDefault}
 
     controllers:
       server:
@@ -44,8 +50,10 @@ spec:
                   name: valkey
                   key: valkey-password
               MPLCONFIGDIR: /tmp/matplotlib
-            securityContext:
+            securityContext: &securityContext
+              allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
+              capabilities: {drop: [ALL]}
         pod:
           terminationGracePeriodSeconds: 1
           labels:
@@ -69,8 +77,7 @@ spec:
                 gpu.intel.com/i915: 1
               limits:
                 gpu.intel.com/i915: 1
-            securityContext:
-              readOnlyRootFilesystem: true
+            securityContext: *securityContext
         pod:
           terminationGracePeriodSeconds: 1
           labels:
@@ -84,8 +91,7 @@ spec:
               repository: ghcr.io/immich-app/immich-machine-learning
               tag: v1.131.2@sha256:29836cf73146057ac388546021fff3e00c923e22a28587cceb5108a5e537987d
               pullPolicy: IfNotPresent
-            securityContext:
-              readOnlyRootFilesystem: true
+            securityContext: *securityContext
         pod:
           labels:
             policy.gabe565.com/egress-world: "true"
