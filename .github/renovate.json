@@ -134,6 +134,11 @@
       "matchDatasources": ["docker"],
       "matchPackageNames": ["ghcr.io/sct/overseerr"],
       "sourceUrl": "https://github.com/sct/overseerr"
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["yooooomi/your_spotify_*"],
+      "groupName": "yooooomi/your_spotify"
     }
   ]
 }
