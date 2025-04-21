@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: ghcr.io/kube-vip/kube-vip
-              tag: v0.8.10@sha256:e01c90bcdd3eb37a46aaf04f6c86cca3e66dd0db7a231f3c8e8aa105635c158a
+              tag: v0.9.0@sha256:b8ca3bf3d7d14cab890ca7696e721f718fa23c57bce9268aebc72de04617335f
               pullPolicy: IfNotPresent
             args:
               - manager
@@ -33,7 +33,7 @@ spec:
               vip_arp: "true"
               port: "6443"
               vip_interface: eno1
-              vip_cidr: "32"
+              vip_subnet: "32"
               cp_enable: "true"
               cp_namespace: kube-system
               vip_ddns: "false"
