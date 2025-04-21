@@ -33,7 +33,7 @@ spec:
               vip_arp: "true"
               port: "6443"
               vip_interface: eno1
-              vip_cidr: "32"
+              vip_subnet: "32"
               cp_enable: "true"
               cp_namespace: kube-system
               vip_ddns: "false"
