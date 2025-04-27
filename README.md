@@ -257,6 +257,12 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td></td>
   </tr>
   <tr>
+    <td>linx</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/linx/app/helmrelease.yaml">linx</a></td>
+    <td></td>
+  </tr>
+  <tr>
     <td>longhorn-system</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/longhorn/app/helmrelease.yaml">longhorn</a></td>
