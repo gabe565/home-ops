@@ -229,7 +229,7 @@ spec:
           - host: ${vuetorrent_url}
             paths:
               - path: /sw.js
-                pathType: Exact
+                pathType: ImplementationSpecific
                 service:
                   identifier: vuetorrent
                   port: http
