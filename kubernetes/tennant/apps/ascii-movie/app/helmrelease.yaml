@@ -28,6 +28,14 @@ spec:
       policy.gabe565.com/ingress-prometheus: "true"
       policy.gabe565.com/ingress-world: "true"
 
+    resources:
+      requests:
+        cpu: 30m
+        memory: 100Mi
+      limits:
+        cpu: 1
+        memory: 1Gi
+
     ingress:
       main:
         enabled: true
