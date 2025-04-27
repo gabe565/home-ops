@@ -1,4 +1,20 @@
 apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: minio
+spec:
+  endpointSelector: {}
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: minio
+            app.kubernetes.io/name: minio
+            app.kubernetes.io/component: minio
+      toPorts:
+        - ports:
+            - port: "9000"
+---
+apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
   name: minio
