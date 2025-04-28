@@ -20,6 +20,11 @@ spec:
   interval: 1h
   driftDetection:
     mode: enabled
+    ignore:
+      - target:
+          kind: CustomResourceDefinition
+        paths:
+          - /spec/conversion/webhook/clientConfig/caBundle
   values:
     controller:
       labels:
