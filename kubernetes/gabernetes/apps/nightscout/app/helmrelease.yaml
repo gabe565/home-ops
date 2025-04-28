@@ -109,6 +109,7 @@ spec:
           - host: ${app_url}
             paths:
               - path: /sw.js
+                pathType: ImplementationSpecific
         tls: *bg-tls
 
     mongodb:

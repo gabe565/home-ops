@@ -79,6 +79,7 @@ spec:
           - host: ${app_url}
             paths:
               - path: /css/addons/plex/plex-alt-logo/SeekPng.com_your-logo-here-png_2467553.png
+                pathType: ImplementationSpecific
                 service:
                   identifier: theme-park
                   port: http

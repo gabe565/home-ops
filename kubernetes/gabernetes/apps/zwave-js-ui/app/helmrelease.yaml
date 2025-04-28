@@ -116,7 +116,7 @@ spec:
           - host: ${app_url}
             paths:
               - path: /sw.js
-                pathType: Exact
+                pathType: ImplementationSpecific
                 service:
                   identifier: zwave-js-ui
                   port: http
