@@ -15,6 +15,8 @@ spec:
         namespace: flux-system
         name: bjw-s
       interval: 1h
+  driftDetection:
+    mode: enabled
   values:
     controllers:
       linx:
