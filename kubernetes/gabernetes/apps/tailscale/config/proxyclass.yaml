@@ -9,3 +9,4 @@ spec:
         policy.gabe565.com/egress-kubeapi: "true"
         policy.gabe565.com/egress-nodes: "true"
         policy.gabe565.com/egress-world-with-lan: "true"
+        policy.gabe565.com/egress-nginx-internal: "true"
