@@ -45,7 +45,7 @@ spec:
         pod:
           labels:
             policy.gabe565.com/egress-world: "true"
-            policy.gabe565.com/ingress-ingress: "true"
+            policy.gabe565.com/ingress-nginx: "true"
           securityContext:
             fsGroup: 1000
             fsGroupChangePolicy: OnRootMismatch

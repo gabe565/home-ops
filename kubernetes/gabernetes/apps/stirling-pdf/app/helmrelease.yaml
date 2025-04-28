@@ -46,7 +46,7 @@ spec:
               readOnlyRootFilesystem: true
         pod:
           labels:
-            policy.gabe565.com/ingress-ingress: "true"
+            policy.gabe565.com/ingress-nginx: "true"
           securityContext:
             runAsNonRoot: true
             runAsUser: 1000

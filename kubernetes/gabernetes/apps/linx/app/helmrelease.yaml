@@ -64,7 +64,7 @@ spec:
         pod:
           labels:
             policy.gabe565.com/egress-world: "true"
-            policy.gabe565.com/ingress-ingress: "true"
+            policy.gabe565.com/ingress-nginx: "true"
           securityContext:
             runAsNonRoot: true
             runAsUser: 65534

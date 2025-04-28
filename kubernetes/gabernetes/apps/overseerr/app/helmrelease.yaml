@@ -51,7 +51,7 @@ spec:
             policy.gabe565.com/egress-tautulli: "true"
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-authentik: "true"
-            policy.gabe565.com/ingress-ingress: "true"
+            policy.gabe565.com/ingress-nginx: "true"
           securityContext:
             runAsNonRoot: true
             fsGroup: 1000

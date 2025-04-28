@@ -54,7 +54,7 @@ spec:
           labels:
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-home-assistant: "true"
-            policy.gabe565.com/ingress-ingress: "true"
+            policy.gabe565.com/ingress-nginx: "true"
             policy.gabe565.com/ingress-world: "true"
           securityContext:
             runAsNonRoot: true

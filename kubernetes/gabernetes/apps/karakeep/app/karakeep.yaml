@@ -82,10 +82,10 @@ spec:
               - start:prod
         pod:
           labels:
-            policy.gabe565.com/egress-ingress: "true"
+            policy.gabe565.com/egress-nginx: "true"
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
-            policy.gabe565.com/ingress-ingress: "true"
+            policy.gabe565.com/ingress-nginx: "true"
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000

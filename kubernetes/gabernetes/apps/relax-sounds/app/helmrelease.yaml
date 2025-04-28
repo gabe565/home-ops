@@ -30,7 +30,7 @@ spec:
               TZ: America/Chicago
         pod:
           labels:
-            policy.gabe565.com/ingress-ingress: "true"
+            policy.gabe565.com/ingress-nginx: "true"
             policy.gabe565.com/ingress-prometheus: "true"
 
     ingress:

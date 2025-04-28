@@ -77,7 +77,7 @@ spec:
           labels:
             policy.gabe565.com/egress-adguard-dns: "true"
             policy.gabe565.com/egress-world-with-lan: "true"
-            policy.gabe565.com/ingress-ingress: "true"
+            policy.gabe565.com/ingress-nginx: "true"
       code:
         containers:
           app:
@@ -106,7 +106,7 @@ spec:
         pod:
           labels:
             policy.gabe565.com/egress-world: "true"
-            policy.gabe565.com/ingress-ingress: "true"
+            policy.gabe565.com/ingress-nginx: "true"
 
     service:
       esphome:

@@ -21,7 +21,7 @@ spec:
 
     podLabels:
       policy.gabe565.com/egress-kubeapi: "true"
-      policy.gabe565.com/ingress-ingress: "true"
+      policy.gabe565.com/ingress-nginx: "true"
 
     additionalArgs: [--auth-methods=oidc]
 

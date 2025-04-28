@@ -49,7 +49,7 @@ spec:
             policy.gabe565.com/egress-prowlarr: "true"
             policy.gabe565.com/egress-qbittorrent: "true"
             policy.gabe565.com/egress-world: "true"
-            policy.gabe565.com/ingress-ingress: "true"
+            policy.gabe565.com/ingress-nginx: "true"
             policy.gabe565.com/ingress-overseerr: "true"
             policy.gabe565.com/ingress-prowlarr: "true"
           securityContext:

@@ -27,7 +27,7 @@ spec:
       LOG_UPLOADER: "true"
 
     podLabels:
-      policy.gabe565.com/ingress-ingress: "true"
+      policy.gabe565.com/ingress-nginx: "true"
 
     ingress:
       main:

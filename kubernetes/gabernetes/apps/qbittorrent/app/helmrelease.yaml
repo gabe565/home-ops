@@ -95,7 +95,7 @@ spec:
         pod:
           labels:
             policy.gabe565.com/ingress-authentik: "true"
-            policy.gabe565.com/ingress-ingress: "true"
+            policy.gabe565.com/ingress-nginx: "true"
           securityContext:
             fsGroup: 65534
             fsGroupChangePolicy: OnRootMismatch
@@ -120,7 +120,7 @@ spec:
                   periodSeconds: 5
         pod:
           labels:
-            policy.gabe565.com/ingress-ingress: "true"
+            policy.gabe565.com/ingress-nginx: "true"
           securityContext:
             runAsNonRoot: true
             runAsUser: 101

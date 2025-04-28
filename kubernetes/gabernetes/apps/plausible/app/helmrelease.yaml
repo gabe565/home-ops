@@ -91,7 +91,7 @@ spec:
             policy.gabe565.com/egress-geoip: "true"
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
-            policy.gabe565.com/ingress-ingress: "true"
+            policy.gabe565.com/ingress-nginx: "true"
           securityContext:
             runAsNonRoot: true
             runAsUser: 1000

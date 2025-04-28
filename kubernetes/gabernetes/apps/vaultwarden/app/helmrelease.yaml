@@ -62,7 +62,7 @@ spec:
           labels:
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
-            policy.gabe565.com/ingress-ingress: "true"
+            policy.gabe565.com/ingress-nginx: "true"
           securityContext:
             fsGroup: 65534
             runAsGroup: 65534

@@ -22,7 +22,7 @@ spec:
       JWT_SECRET: ${jwt_secret}
 
     podLabels:
-      policy.gabe565.com/ingress-ingress: "true"
+      policy.gabe565.com/ingress-nginx: "true"
 
     securityContext:
       readOnlyRootFilesystem: true

@@ -1,11 +1,11 @@
 apiVersion: cilium.io/v2
 kind: CiliumClusterwideNetworkPolicy
 metadata:
-  name: ingress-ingress
+  name: ingress-nginx
 spec:
   endpointSelector:
     matchLabels:
-      policy.gabe565.com/ingress-ingress: "true"
+      policy.gabe565.com/ingress-nginx: "true"
   ingress:
     - fromEndpoints:
         - matchLabels:
@@ -26,7 +26,7 @@ spec:
   egress:
     - toEndpoints:
         - matchLabels:
-            policy.gabe565.com/ingress-ingress: "true"
+            policy.gabe565.com/ingress-nginx: "true"
           matchExpressions:
             - key: io.kubernetes.pod.namespace
               operator: Exists
@@ -34,11 +34,11 @@ spec:
 apiVersion: cilium.io/v2
 kind: CiliumClusterwideNetworkPolicy
 metadata:
-  name: egress-ingress
+  name: egress-nginx
 spec:
   endpointSelector:
     matchLabels:
-      policy.gabe565.com/egress-ingress: "true"
+      policy.gabe565.com/egress-nginx: "true"
   egress:
     - toEndpoints:
         - matchLabels:
@@ -59,7 +59,7 @@ spec:
   ingress:
     - fromEndpoints:
         - matchLabels:
-            policy.gabe565.com/egress-ingress: "true"
+            policy.gabe565.com/egress-nginx: "true"
           matchExpressions:
             - key: io.kubernetes.pod.namespace
               operator: Exists
