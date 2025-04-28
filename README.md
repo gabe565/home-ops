@@ -137,6 +137,16 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><a href="kubernetes/gabernetes/apps/esphome/borgmatic/helmrelease.yaml">borgmatic</a></td>
   </tr>
   <tr>
+    <td rowspan="2">external-dns</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/external-dns/app/external.yaml">external-dns</a></td>
+    <td rowspan="2"></td>
+  </tr>
+  <tr>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/external-dns/app/internal.yaml">internal-dns</a></td>
+  </tr>
+  <tr>
     <td rowspan="2">flux-system</td>
     <td><code>GitRepository</code></td>
     <td><a href="https://github.com/gabe565/home-ops">home-ops</a></td>
@@ -589,12 +599,6 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td></td>
   </tr>
   <tr>
-    <td>external-dns</td>
-    <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/templates/apps/external-dns/helmrelease.yaml">external-dns</a></td>
-    <td></td>
-  </tr>
-  <tr>
     <td>reflector</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/templates/apps/reflector/helmrelease.yaml">reflector</a></td>
@@ -620,6 +624,12 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>ascii-movie</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/tennant/apps/ascii-movie/app/helmrelease.yaml">ascii-movie</a></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>external-dns</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/tennant/apps/external-dns/app/helmrelease.yaml">external-dns</a></td>
     <td></td>
   </tr>
   <tr>

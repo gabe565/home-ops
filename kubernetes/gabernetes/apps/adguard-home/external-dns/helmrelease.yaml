@@ -47,6 +47,7 @@ spec:
 
     extraArgs:
       - --webhook-provider-url=http://localhost:8888
+      - --ingress-class=nginx
 
     podLabels:
       policy.gabe565.com/egress-adguard-api: "true"

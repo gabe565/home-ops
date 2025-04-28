@@ -1,0 +1,54 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: external-dns
+  namespace: external-dns
+spec:
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  chart:
+    spec:
+      chart: external-dns
+      version: 1.16.1
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: external-dns
+      interval: 1h
+  # TODO: Enable schema validation when new chart version is released
+  install:
+    disableSchemaValidation: true
+  upgrade:
+    disableSchemaValidation: true
+  values:
+    deploymentAnnotations:
+      secret.reloader.stakater.com/reload: cloudflare
+
+    podLabels:
+      policy.gabe565.com/egress-kubeapi: "true"
+      policy.gabe565.com/egress-world: "true"
+
+    priorityClassName: system-cluster-critical
+
+    provider:
+      name: cloudflare
+    interval: 1h
+    triggerLoopOnEvent: true
+    policy: sync
+    extraArgs:
+      - --txt-encrypt-enabled
+      - --txt-encrypt-aes-key=${txt_encrypt_aes_key}
+      # https://github.com/kubernetes-sigs/external-dns/issues/5010#issuecomment-2640511737
+      - --txt-prefix=extdns-%{record_type}.
+      - --ingress-class=nginx
+
+    txtOwnerId: ${external_owner_id}
+    env:
+      - name: CF_API_TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: cloudflare
+            key: token
+      - name: EXTERNAL_DNS_DEFAULT_TARGETS
+        value: ${ddns_domain}

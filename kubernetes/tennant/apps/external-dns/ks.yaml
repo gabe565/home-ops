@@ -6,7 +6,7 @@ metadata:
 spec:
   interval: 1h
   targetNamespace: external-dns
-  path: ./kubernetes/templates/apps/external-dns
+  path: ./kubernetes/tennant/apps/external-dns/app
   prune: true
   sourceRef:
     kind: GitRepository

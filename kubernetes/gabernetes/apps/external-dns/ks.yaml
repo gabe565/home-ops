@@ -6,7 +6,7 @@ metadata:
 spec:
   interval: 1h
   targetNamespace: external-dns
-  path: ./kubernetes/templates/apps/external-dns
+  path: ./kubernetes/gabernetes/apps/external-dns/app
   prune: true
   sourceRef:
     kind: GitRepository
@@ -14,18 +14,8 @@ spec:
     name: home-ops
   postBuild:
     substitute:
-      owner_id: gabernetes
+      external_owner_id: gabernetes
+      internal_owner_id: gabernetes-internal
     substituteFrom:
       - kind: Secret
         name: substitutions
-  patches:
-    - target:
-        kind: HelmRelease
-        name: external-dns
-      # language=yaml
-      patch: |
-        - op: add
-          path: /spec/values/env/-
-          value:
-            name: EXTERNAL_DNS_DEFAULT_TARGETS
-            value: ${ddns_domain}
