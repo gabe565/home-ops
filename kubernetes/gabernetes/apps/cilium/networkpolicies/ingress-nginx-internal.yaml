@@ -1,0 +1,65 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: ingress-nginx-internal
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/ingress-nginx-internal: "true"
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: ingress-nginx-internal
+            app.kubernetes.io/name: ingress-nginx
+            app.kubernetes.io/component: controller
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: ingress-nginx-internal
+  namespace: ingress-nginx-internal
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: ingress-nginx
+      app.kubernetes.io/component: controller
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            policy.gabe565.com/ingress-nginx-internal: "true"
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
+---
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: egress-nginx-internal
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/egress-nginx-internal: "true"
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: ingress-nginx-internal
+            app.kubernetes.io/name: ingress-nginx
+            app.kubernetes.io/component: controller
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: egress-nginx-internal
+  namespace: ingress-nginx-internal
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: ingress-nginx
+      app.kubernetes.io/component: controller
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            policy.gabe565.com/egress-nginx-internal: "true"
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
