@@ -84,3 +84,5 @@ spec:
 
     bpf:
       policyMapMax: 32768
+
+    MTU: 1500
