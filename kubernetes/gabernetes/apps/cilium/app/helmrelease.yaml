@@ -85,4 +85,4 @@ spec:
     bpf:
       policyMapMax: 32768
 
-    MTU: 1500
+    devices: eno1
