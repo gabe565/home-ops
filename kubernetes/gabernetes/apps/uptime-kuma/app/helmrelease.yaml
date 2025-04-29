@@ -41,6 +41,8 @@ spec:
               readiness:
                 enabled: true
             securityContext:
+              allowPrivilegeEscalation: false
+              capabilities: {drop: [ALL]}
               readOnlyRootFilesystem: true
         pod:
           labels:
@@ -49,10 +51,12 @@ spec:
             policy.gabe565.com/ingress-nginx: "true"
             policy.gabe565.com/ingress-prometheus: "true"
           securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
-            fsGroup: 1000
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
+            fsGroup: 65534
             fsGroupChangePolicy: OnRootMismatch
+            seccompProfile: {type: RuntimeDefault}
           dnsPolicy: None
           dnsConfig:
             nameservers:
