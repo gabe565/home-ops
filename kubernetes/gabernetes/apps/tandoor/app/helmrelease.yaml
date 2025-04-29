@@ -72,6 +72,8 @@ spec:
               readiness:
                 enabled: true
             securityContext:
+              allowPrivilegeEscalation: false
+              capabilities: {drop: [ALL]}
               readOnlyRootFilesystem: true
         pod:
           enableServiceLinks: false
@@ -80,9 +82,12 @@ spec:
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-nginx: "true"
           securityContext:
+            runAsNonRoot: true
             runAsUser: 65534
             runAsGroup: 65534
             fsGroup: 65534
+            fsGroupChangePolicy: OnRootMismatch
+            seccompProfile: {type: RuntimeDefault}
 
     service:
       tandoor:
