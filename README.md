@@ -543,12 +543,6 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><a href="kubernetes/gabernetes/apps/watch-your-lan/app/postgresql.yaml">postgresql</a></td>
   </tr>
   <tr>
-    <td>weave-gitops</td>
-    <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/gabernetes/apps/weave-gitops/app/helmrelease.yaml">weave-gitops</a></td>
-    <td></td>
-  </tr>
-  <tr>
     <td>webos-dev-mode</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/webos-dev-mode/extend/helmrelease.yaml">extend</a></td>
