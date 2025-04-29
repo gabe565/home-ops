@@ -137,7 +137,7 @@
     },
     {
       "matchDatasources": ["docker"],
-      "matchPackageNames": ["yooooomi/your_spotify_*"],
+      "matchPackageNames": ["ghcr.io/yooooomi/your_spotify_*"],
       "groupName": "yooooomi/your_spotify"
     }
   ]
