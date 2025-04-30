@@ -47,6 +47,10 @@ spec:
               - path: /
           - host: "*.starwarstel.net"
             paths: *paths
+          - host: asciitel.net
+            paths: *paths
+          - host: "*.asciitel.net"
+            paths: *paths
           - host: movie.gabe565.com
             paths: *paths
         tls: &tls
@@ -54,6 +58,10 @@ spec:
             hosts:
               - starwarstel.net
               - "*.starwarstel.net"
+          - secretName: asciitel.net-tls
+            hosts:
+              - asciitel.net
+              - "*.asciitel.net"
           - secretName: gabe565.com-tls
             hosts:
               - movie.gabe565.com
@@ -61,11 +69,14 @@ spec:
         enabled: true
         hosts:
           - host: starwarstel.net
-            paths:
+            paths: &paths
               - path: /health
                 service:
                   name: ascii-movie-api
                   port: 1977
+            pathType: Exact
+          - host: asciitel.net
+            paths: *paths
             pathType: Exact
         tls: *tls
 

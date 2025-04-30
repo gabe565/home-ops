@@ -12,6 +12,20 @@ spec:
     name: letsencrypt-dns01
     kind: ClusterIssuer
 ---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: asciitel.net
+  namespace: ascii-movie
+spec:
+  secretName: asciitel.net-tls
+  dnsNames:
+    - asciitel.net
+    - "*.asciitel.net"
+  issuerRef:
+    name: letsencrypt-dns01
+    kind: ClusterIssuer
+---
 apiVersion: v1
 kind: Secret
 metadata:
