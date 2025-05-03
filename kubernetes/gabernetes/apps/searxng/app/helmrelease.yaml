@@ -25,7 +25,7 @@ spec:
         initContainers:
           config-envsubst:
             image:
-              repository: mikefarah/yq
+              repository: ghcr.io/mikefarah/yq
               tag: 4.45.2@sha256:48f0bd428026b782dfae8e8e07e03b5b385bb957035963c5383ca4cea46d82d4
               pullPolicy: IfNotPresent
             envFrom:
