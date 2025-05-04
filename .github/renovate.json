@@ -67,16 +67,18 @@
     },
     {
       "matchDatasources": ["docker"],
-      "matchPackagePrefixes": ["vikunja/"],
+      "matchPackageNames": ["vikunja/vikunja"],
       "groupName": "Vikunja"
     },
     {
-      "matchPackagePrefixes": ["ghcr.io/immich-app/"],
-      "groupName": "Immich"
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/immich-app/**"],
+      "groupName": "Immich",
+      "sourceUrl": "https://github.com/immich-app/immich"
     },
     {
       "matchDatasources": ["docker"],
-      "matchPackagePatterns": ["minio"],
+      "matchPackageNames": ["quay.io/minio/minio"],
       "versioning": "regex:^RELEASE\\.(?<major>\\d+)-(?<minor>\\d+)-(?<patch>\\d+)T.*Z$"
     },
     {
@@ -87,7 +89,7 @@
     },
     {
       "matchDatasources": ["helm"],
-      "matchPackagePatterns": ["authentik"],
+      "matchPackageNames": ["authentik"],
       "extends": ["github>gabe565/renovate-config:fullVersion"]
     },
     {
@@ -109,11 +111,6 @@
       "matchDatasources": ["docker", "github-tags"],
       "matchPackageNames": ["ghcr.io/fluxcd/flux-manifests", "fluxcd/flux2"],
       "groupName": "fluxcd/flux2"
-    },
-    {
-      "matchDatasources": ["docker"],
-      "matchPackagePrefixes": ["ghcr.io/immich-app/"],
-      "sourceUrl": "https://github.com/immich-app/immich"
     },
     {
       "matchDatasources": ["docker"],
