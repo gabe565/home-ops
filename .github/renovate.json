@@ -7,19 +7,13 @@
     "github>gabe565/renovate-config:githubActions"
   ],
   "kubernetes": {
-    "fileMatch": [
-      "\\.yaml$"
-    ]
+    "fileMatch": ["\\.yaml$"]
   },
   "helm-values": {
-    "fileMatch": [
-      "\\.yaml$"
-    ]
+    "fileMatch": ["\\.yaml$"]
   },
   "flux": {
-    "fileMatch": [
-      "\\.yaml$"
-    ]
+    "fileMatch": ["\\.yaml$"]
   },
   "ignorePaths": [
     ".archive/**"
@@ -27,9 +21,7 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": [
-        "(^|/)system-upgrade/.*\\.yaml$"
-      ],
+      "fileMatch": ["(^|/)system-upgrade/.*\\.yaml$"],
       "matchStrings": [
         "version: (?<currentValue>.+)"
       ],
@@ -38,9 +30,7 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "cni-plugins\\.yaml$"
-      ],
+      "fileMatch": ["cni-plugins\\.yaml$"],
       "matchStrings": [
         "version: (?<currentValue>.+)"
       ],
@@ -49,9 +39,7 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "\\.yaml$"
-      ],
+      "fileMatch": ["\\.yaml$"],
       "matchStrings": [
         "DOCKER_MODS: ['\"]?(?<depName>.+):(?<currentValue>.+)['\"]?",
         "imageName: ['\"]?(?<depName>.+?):(?<currentValue>.+)['\"]?"
@@ -60,9 +48,7 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "\\.yaml$"
-      ],
+      "fileMatch": ["\\.yaml$"],
       "matchStrings": [
         "# yaml-language-server: \\$schema=https:\\/\\/raw.githubusercontent.com\\/(?<depName>[^\\/]+/[^\\/]+)\\/(?<currentValue>[^\\/]+)"
       ],
@@ -71,155 +57,84 @@
   ],
   "packageRules": [
     {
-      "matchDatasources": [
-        "helm"
-      ],
+      "matchDatasources": ["helm"],
       "commitMessageTopic": "{{depName}} Helm release"
     },
     {
-      "matchDatasources": [
-        "github-releases"
-      ],
-      "matchPackageNames": [
-        "k3s-io/k3s"
-      ],
+      "matchDatasources": ["github-releases"],
+      "matchPackageNames": ["k3s-io/k3s"],
       "separateMinorPatch": true
     },
     {
-      "matchDatasources": [
-        "docker"
-      ],
-      "groupName": "Vikunja",
-      "matchPackageNames": [
-        "vikunja/{/,}**"
-      ]
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["vikunja/vikunja"],
+      "groupName": "Vikunja"
     },
     {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/immich-app/**"],
       "groupName": "Immich",
-      "matchPackageNames": [
-        "ghcr.io/immich-app/{/,}**"
-      ]
+      "sourceUrl": "https://github.com/immich-app/immich"
     },
     {
-      "matchDatasources": [
-        "docker"
-      ],
-      "versioning": "regex:^RELEASE\\.(?<major>\\d+)-(?<minor>\\d+)-(?<patch>\\d+)T.*Z$",
-      "matchPackageNames": [
-        "/minio/"
-      ]
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["quay.io/minio/minio"],
+      "versioning": "regex:^RELEASE\\.(?<major>\\d+)-(?<minor>\\d+)-(?<patch>\\d+)T.*Z$"
     },
     {
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "ghcr.io/bakito/adguardhome-sync"
-      ],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/bakito/adguardhome-sync"],
       "versioning": "regex:^(?<compatibility>.+-)?v?(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$",
       "sourceUrl": "https://github.com/bakito/adguardhome-sync"
     },
     {
-      "matchDatasources": [
-        "helm"
-      ],
-      "extends": [
-        "github>gabe565/renovate-config:fullVersion"
-      ],
-      "matchPackageNames": [
-        "/authentik/"
-      ]
+      "matchDatasources": ["helm"],
+      "matchPackageNames": ["authentik"],
+      "extends": ["github>gabe565/renovate-config:fullVersion"]
     },
     {
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "ghcr.io/gurucomputing/headscale-ui"
-      ],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/gurucomputing/headscale-ui"],
       "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)(?:-beta-?(?<build>\\d+)?)?$"
     },
     {
-      "matchDatasources": [
-        "github-tags"
-      ],
-      "matchPackageNames": [
-        "bjw-s/helm-charts"
-      ],
+      "matchDatasources": ["github-tags"],
+      "matchPackageNames": ["bjw-s/helm-charts"],
       "versioning": "regex:^(?<compatibility>.+)-(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
     },
     {
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "ghcr.io/cloudnative-pg/postgresql"
-      ],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/cloudnative-pg/postgresql"],
       "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)-(?<build>\\d+)$"
     },
     {
-      "matchDatasources": [
-        "docker",
-        "github-tags"
-      ],
-      "matchPackageNames": [
-        "ghcr.io/fluxcd/flux-manifests",
-        "fluxcd/flux2"
-      ],
+      "matchDatasources": ["docker", "github-tags"],
+      "matchPackageNames": ["ghcr.io/fluxcd/flux-manifests", "fluxcd/flux2"],
       "groupName": "fluxcd/flux2"
     },
     {
-      "matchDatasources": [
-        "docker"
-      ],
-      "sourceUrl": "https://github.com/immich-app/immich",
-      "matchPackageNames": [
-        "ghcr.io/immich-app/{/,}**"
-      ]
-    },
-    {
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "ghcr.io/kube-vip/kube-vip"
-      ],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/kube-vip/kube-vip"],
       "sourceUrl": "https://github.com/kube-vip/kube-vip"
     },
     {
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "ghcr.io/juanfont/headscale"
-      ],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/juanfont/headscale"],
       "sourceUrl": "https://github.com/juanfont/headscale"
     },
     {
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "goodieshq/headscale-admin"
-      ],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["goodieshq/headscale-admin"],
       "sourceUrl": "https://github.com/GoodiesHQ/headscale-admin"
     },
     {
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "ghcr.io/sct/overseerr"
-      ],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/sct/overseerr"],
       "sourceUrl": "https://github.com/sct/overseerr"
     },
     {
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "ghcr.io/yooooomi/your_spotify_*"
-      ],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/yooooomi/your_spotify_*"],
       "groupName": "yooooomi/your_spotify"
     }
   ]
