@@ -75,7 +75,7 @@ spec:
             check_last: 3
             healthchecks:
               ping_url: http://healthchecks.healthchecks:8000/ping/${healthchecks_uuid}
-            mysql_databases:
+            mariadb_databases:
               - name: monica
                 hostname: monica-mariadb
                 username: monica
