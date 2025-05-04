@@ -29,6 +29,7 @@ spec:
       type: cronjob
       cronjob:
         schedule: 10 2 * * *
+        concurrencyPolicy: Replace
         ttlSecondsAfterFinished: 3600
     podLabels:
       policy.gabe565.com/egress-healthchecks: "true"

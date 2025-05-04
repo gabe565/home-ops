@@ -29,6 +29,7 @@ spec:
       type: cronjob
       cronjob:
         schedule: 45 0 * * *
+        concurrencyPolicy: Replace
         ttlSecondsAfterFinished: 3600
     affinity:
       podAffinity:
