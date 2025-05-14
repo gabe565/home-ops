@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: ghcr.io/juanfont/headscale
-              tag: v0.25.1@sha256:a7a8ae9616bb964a3eed8101ebb020213f73668142a84806ec37a5eeb2c1fceb
+              tag: v0.26.0@sha256:7e6439473c299cde05ff9215fe4e2ae9d83361504876fac0eb8e10f55128838d
               pullPolicy: IfNotPresent
             command: [headscale, serve]
             env:
