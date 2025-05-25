@@ -27,7 +27,7 @@ spec:
           runitor:
             image:
               repository: runitor/runitor
-              tag: v1.3.0-alpine@sha256:da98815ca3c9ba1424771c436b3b8f0690deb3ec465f3f3a4345ae37b973bfe6
+              tag: v1.4.0-alpine@sha256:621fb195512e5fa263869f8a1edf819dcaaeba21efe9f3a67276ff9a17f60a2e
               pullPolicy: IfNotPresent
             command: [cp, /usr/local/bin/runitor, /tmp]
         containers:
