@@ -73,7 +73,9 @@
     {
       "matchDatasources": ["docker"],
       "matchPackageNames": ["ghcr.io/immich-app/**"],
-      "groupName": "Immich",
+      "overrideDatasource": "github-releases",
+      "overridePackageName": "immich-app/immich",
+      "groupName": "immich",
       "sourceUrl": "https://github.com/immich-app/immich"
     },
     {
