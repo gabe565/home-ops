@@ -22,6 +22,7 @@ spec:
     crds: CreateReplace
   values:
     operatorConfig:
+      hostname: gabernetes-operator
       podLabels:
         policy.gabe565.com/egress-kubeapi: "true"
         policy.gabe565.com/egress-nodes: "true"
