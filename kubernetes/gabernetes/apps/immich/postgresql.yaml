@@ -5,7 +5,7 @@ metadata:
   namespace: immich
 spec:
   instances: 3
-  imageName: ghcr.io/tensorchord/cloudnative-pgvecto.rs:16.3-v0.2.1
+  imageName: ghcr.io/tensorchord/cloudnative-vectorchord:16.9-0.4.1
   enableSuperuserAccess: true
   bootstrap:
     initdb:
@@ -15,12 +15,12 @@ spec:
         - CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
         - CREATE EXTENSION IF NOT EXISTS cube;
         - CREATE EXTENSION IF NOT EXISTS earthdistance;
-        - CREATE EXTENSION IF NOT EXISTS vectors;
+        - CREATE EXTENSION IF NOT EXISTS vchord CASCADE;
         - CREATE EXTENSION IF NOT EXISTS pg_trgm;
         - CREATE EXTENSION IF NOT EXISTS unaccent;
   postgresql:
     shared_preload_libraries:
-      - vectors.so
+      - vchord.so
   storage:
     storageClass: local-path
     size: 8Gi
