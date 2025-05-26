@@ -32,7 +32,7 @@ spec:
           app:
             image:
               repository: ghcr.io/immich-app/immich-server
-              tag: v1.132.3@sha256:6680d88486251b0264a78a1934fe82eef875555aa6d84d703a0980328a5d5c31
+              tag: v1.133.1@54bafccbf91d249f2d98575dd3a1f13453f0c478
               pullPolicy: IfNotPresent
             env: &env
               TZ: America/Chicago
@@ -66,7 +66,7 @@ spec:
           app:
             image:
               repository: ghcr.io/immich-app/immich-server
-              tag: v1.132.3@sha256:6680d88486251b0264a78a1934fe82eef875555aa6d84d703a0980328a5d5c31
+              tag: v1.133.1@54bafccbf91d249f2d98575dd3a1f13453f0c478
               pullPolicy: IfNotPresent
             env:
               <<: *env
@@ -89,7 +89,7 @@ spec:
           app:
             image:
               repository: ghcr.io/immich-app/immich-machine-learning
-              tag: v1.131.2@sha256:29836cf73146057ac388546021fff3e00c923e22a28587cceb5108a5e537987d
+              tag: v1.133.1@54bafccbf91d249f2d98575dd3a1f13453f0c478
               pullPolicy: IfNotPresent
             securityContext: *securityContext
         pod:
