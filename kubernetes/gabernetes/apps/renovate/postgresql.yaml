@@ -5,7 +5,7 @@ metadata:
   namespace: renovate
 spec:
   instances: 3
-  imageName: ghcr.io/cloudnative-pg/postgresql:16.9-1
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.5-1
   enableSuperuserAccess: true
   bootstrap:
     initdb:
