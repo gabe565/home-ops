@@ -136,6 +136,11 @@
       "matchDatasources": ["docker"],
       "matchPackageNames": ["ghcr.io/yooooomi/your_spotify_*"],
       "groupName": "yooooomi/your_spotify"
+    },
+    {
+      "matchDatasources": ["docker", "helm"],
+      "matchPackageNames": ["ghcr.io/tailscale/tailscale", "tailscale-operator"],
+      "groupName": "tailscale"
     }
   ]
 }
