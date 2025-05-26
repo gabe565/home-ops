@@ -28,5 +28,8 @@ spec:
         policy.gabe565.com/egress-nodes: "true"
         policy.gabe565.com/egress-world-with-lan: "true"
 
+    apiServerProxyConfig:
+      mode: "true"
+
     proxyConfig:
       defaultProxyClass: default
