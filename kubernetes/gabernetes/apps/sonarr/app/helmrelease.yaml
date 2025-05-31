@@ -79,6 +79,9 @@ spec:
         path: /volume1/media
         globalMounts:
           - path: /mnt/media
+      tmp:
+        enabled: true
+        type: emptyDir
 
     ingress:
       sonarr:

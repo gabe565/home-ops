@@ -68,6 +68,9 @@ spec:
         enabled: true
         accessMode: ReadWriteOnce
         size: 2Gi
+      tmp:
+        enabled: true
+        type: emptyDir
 
     ingress:
       prowlarr:
