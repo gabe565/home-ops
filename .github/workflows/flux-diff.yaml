@@ -76,7 +76,7 @@ jobs:
               </tr>
               <tr>
                 <td><b>Changes</b></td>
-                <td>${\tt\large\color{green}+${{ steps.diff.outputs.added }}\enspace\color{red}-\negthinspace${{ steps.diff.outputs.removed }}}$</td>
+                <td><picture><img alt="+${{ steps.diff.outputs.added }} −${{ steps.diff.outputs.removed }}" src="https://img.shields.io/badge/%2B${{ steps.diff.outputs.added }}-%E2%88%92${{ steps.diff.outputs.removed }}-red?labelColor=brightgreen"></picture></td>
               </tr>
             </table>
 
