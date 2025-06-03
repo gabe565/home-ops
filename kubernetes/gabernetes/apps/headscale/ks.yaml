@@ -6,7 +6,7 @@ metadata:
 spec:
   interval: 1h
   targetNamespace: headscale
-  path: ./kubernetes/gabernetes/apps/headscale/app
+  path: ./kubernetes/gabernetes/apps/headscale/resources
   prune: true
   sourceRef:
     kind: GitRepository

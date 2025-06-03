@@ -1,0 +1,90 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.7.3/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: headplane
+  namespace: headscale
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 3.7.3
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      headplane:
+        annotations:
+          secret.reloader.stakater.com/reload: headplane-config
+        containers:
+          app:
+            image:
+              repository: ghcr.io/tale/headplane
+              tag: 0.6.0@sha256:b56ea59fd9424470bdb335f0be5524915fc4c34cc826ce25e583f440e4e56864
+            probes:
+              liveness: &probe
+                enabled: true
+                type: HTTP
+                path: /admin/healthz
+              readiness: *probe
+              startup:
+                <<: *probe
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+        pod:
+          terminationGracePeriodSeconds: 1
+          labels:
+            policy.gabe565.com/egress-namespace: "true"
+            policy.gabe565.com/egress-world: "true"
+
+    service:
+      headplane:
+        controller: headplane
+        ports:
+          http:
+            port: 3001
+
+    persistence:
+      config:
+        enabled: true
+        type: secret
+        name: headplane-config
+        globalMounts:
+          - path: /etc/headplane
+      data:
+        enabled: true
+        storageClass: longhorn-ssd
+        accessMode: ReadWriteOnce
+        size: 1Gi
+        retain: true
+        globalMounts:
+          - path: /var/lib/headplane
+      tmp:
+        enabled: true
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+            subPath: tmp
+
+    ingress:
+      headplane:
+        enabled: true
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /admin
+                pathType: ImplementationSpecific
+                service:
+                  identifier: headplane
+                  port: http
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
