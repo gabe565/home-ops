@@ -351,8 +351,8 @@ This Git repository contains the following directories under [Kubernetes](./kube
   <tr>
     <td>nightscout</td>
     <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/gabernetes/apps/nightscout/app/helmrelease.yaml">nightscout</a></td>
-    <td><a href="kubernetes/gabernetes/apps/nightscout/borgmatic/helmrelease.yaml">borgmatic</a></td>
+    <td><a href="kubernetes/gabernetes/apps/nightscout/resources/app/helmrelease.yaml">nightscout</a></td>
+    <td><a href="kubernetes/gabernetes/apps/nightscout/resources/borgmatic/helmrelease.yaml">borgmatic</a></td>
   </tr>
   <tr>
     <td>node-feature-discovery</td>
