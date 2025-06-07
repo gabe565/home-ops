@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.0.1/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: trmnl
+  namespace: nightscout
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 4.0.1
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      trmnl:
+        containers:
+          trmnl:
+            image:
+              repository: ghcr.io/gabe565/trmnl-nightscout
+              tag: beta
+              pullPolicy: Always
+            envFrom:
+              - secretRef:
+                  name: trmnl-env
+            env:
+              TZ: America/Chicago
+              PUBLIC_URL: https://${trmnl_url}
+              NIGHTSCOUT_URL: http://nightscout.nightscout:1337
+              REAL_IP_HEADER: "true"
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: [ALL]}
+            probes:
+              liveness: &probe
+                type: HTTP
+                path: /ping
+              readiness: *probe
+              startup:
+                <<: *probe
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+        pod:
+          labels:
+            policy.gabe565.com/egress-namespace: "true"
+            policy.gabe565.com/ingress-nginx: "true"
+          securityContext:
+            runAsUser: 65534
+            runAsGroup: 65534
+            seccompProfile: {type: RuntimeDefault}
+
+    service:
+      trmnl:
+        controller: trmnl
+        ports:
+          http:
+            port: 8080
+
+    ingress:
+      trmnl:
+        enabled: true
+        hosts:
+          - host: ${trmnl_url}
+            paths:
+              - path: /
+                service:
+                  identifier: trmnl
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${trmnl_url}
