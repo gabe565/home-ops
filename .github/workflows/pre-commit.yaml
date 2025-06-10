@@ -29,6 +29,6 @@ jobs:
           restore-keys:
             ${{ runner.os }}-pre-commit-
       - run: pre-commit run --show-diff-on-failure --color=always --all-files || true
-      - uses: stefanzweifel/git-auto-commit-action@v5
+      - uses: stefanzweifel/git-auto-commit-action@v6
         with:
           commit_message: "chore: Apply code formatting"
