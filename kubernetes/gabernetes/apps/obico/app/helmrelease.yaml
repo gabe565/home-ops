@@ -51,6 +51,7 @@ spec:
       ingress:
         main:
           enabled: true
+          ingressClassName: nginx-internal
           annotations:
             nginx.ingress.kubernetes.io/proxy-body-size: 64m
           hosts:
