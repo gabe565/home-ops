@@ -42,6 +42,7 @@ spec:
               capabilities: {drop: [ALL]}
             probes:
               liveness: &probe
+                enabled: true
                 type: HTTP
                 path: /ping
               readiness: *probe
