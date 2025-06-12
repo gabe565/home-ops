@@ -20,6 +20,7 @@ spec:
   values:
     controllers:
       trmnl:
+        strategy: RollingUpdate
         containers:
           trmnl:
             image:
