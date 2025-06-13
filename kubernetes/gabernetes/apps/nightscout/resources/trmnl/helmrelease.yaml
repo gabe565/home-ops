@@ -32,7 +32,7 @@ spec:
                   name: trmnl-env
             env:
               TZ: America/Chicago
-              PUBLIC_URL: https://${trmnl_url}
+              IMAGE_URL: https://${trmnl_url}
               NIGHTSCOUT_URL: http://nightscout.nightscout:1337
               REAL_IP_HEADER: "true"
               TIME_FORMAT: 15:04
