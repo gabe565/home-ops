@@ -32,7 +32,7 @@ spec:
                   name: trmnl-env
             env:
               TZ: America/Chicago
-              IMAGE_URL: https://${trmnl_url}
+              IMAGE_URL: http://192.168.1.228
               NIGHTSCOUT_URL: http://nightscout.nightscout:1337
               REAL_IP_HEADER: "true"
               TIME_FORMAT: 15:04
@@ -55,6 +55,7 @@ spec:
           labels:
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/ingress-nginx: "true"
+            policy.gabe565.com/ingress-world: "true"
           securityContext:
             runAsUser: 65534
             runAsGroup: 65534
@@ -63,9 +64,13 @@ spec:
     service:
       trmnl:
         controller: trmnl
+        type: LoadBalancer
+        loadBalancerIP: 192.168.1.228
+        externalTrafficPolicy: Local
         ports:
           http:
-            port: 8080
+            port: 80
+            targetPort: 8080
 
     ingress:
       trmnl:
