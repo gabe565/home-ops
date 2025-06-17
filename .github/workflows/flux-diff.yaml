@@ -93,6 +93,7 @@ jobs:
     name: Flux Diff Successful
     runs-on: ubuntu-24.04
     needs: [flux-diff]
+    permissions: {}
     if: ${{ always() }}
     steps:
       - if: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
