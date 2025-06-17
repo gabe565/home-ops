@@ -25,7 +25,7 @@ spec:
           trmnl:
             image:
               repository: ghcr.io/gabe565/trmnl-nightscout
-              tag: v0.1.0@sha256:03832d445ecb303e7c4fdd60c971199ebe07c2adb8d1ec14ff783d341ab1122d
+              tag: v0.2.0@sha256:b7f545c96cd9bdefcd4fa50cde4a1b93726393678ca73723fc7ac781277b2852
               pullPolicy: Always
             envFrom:
               - secretRef:
