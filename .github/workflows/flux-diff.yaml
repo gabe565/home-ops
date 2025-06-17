@@ -24,14 +24,14 @@ jobs:
         sources: [home-ops]
     steps:
       - name: Setup Flux CLI
-        uses: fluxcd/flux2/action@v2.6.1
+        uses: fluxcd/flux2/action@b73c7f7191086ca7629840e680e71873349787f8 # v2.6.1
 
       - id: resource
         env:
           RESOURCE: ${{ matrix.resource }}
         run: echo "resource=${RESOURCE@L}" >> $GITHUB_OUTPUT
 
-      - uses: allenporter/flux-local/action/diff@7.5.4
+      - uses: allenporter/flux-local/action/diff@3a92449cc98cc0f8debb9a608a264f533967b92b # 7.5.4
         with:
           path: kubernetes/${{ matrix.cluster }}
           resource: ${{ steps.resource.outputs.resource }}
@@ -51,7 +51,7 @@ jobs:
 
       - if: ${{ steps.diff.outputs.diff != '' || failure() }}
         name: Add comment
-        uses: mshick/add-pr-comment@v2
+        uses: mshick/add-pr-comment@b8f338c590a895d50bcbfa6c5859251edc8952fc # v2.8.2
         with:
           message-id: ${{ github.event.pull_request.number }}/${{ matrix.cluster }}/${{ steps.resource.outputs.resource }}
           message-failure: |
