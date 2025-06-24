@@ -32,6 +32,7 @@ spec:
               MINIO_UPDATE: "off"
               MINIO_DOMAIN: ${s3_url}
               MINIO_SERVER_URL: http://127.0.0.1:9000
+              MINIO_BROWSER_REDIRECT: "false"
               MINIO_BROWSER_REDIRECT_URL: https://${app_url}
               MINIO_API_CORS_ALLOW_ORIGIN: https://${app_url},https://${s3_url}
               MINIO_API_ROOT_ACCESS: "off"
