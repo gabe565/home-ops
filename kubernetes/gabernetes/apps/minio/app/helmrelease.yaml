@@ -66,6 +66,7 @@ spec:
             policy.gabe565.com/egress-authentik: "true"
             policy.gabe565.com/egress-prometheus: "true"
             policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-nginx-internal: "true"
             policy.gabe565.com/ingress-nginx: "true"
             policy.gabe565.com/ingress-prometheus: "true"
           securityContext:
@@ -93,9 +94,9 @@ spec:
             port: 9000
 
     ingress:
-      minio:
+      s3:
         enabled: true
-        annotations:
+        annotations: &annotations
           nginx.ingress.kubernetes.io/custom-http-errors: "501,502,503,504"
           nginx.ingress.kubernetes.io/proxy-body-size: 64m
           # language=nginx configuration
@@ -104,12 +105,6 @@ spec:
                 return 403;
             }
         hosts:
-          - host: ${app_url}
-            paths:
-              - path: /
-                service:
-                  identifier: minio
-                  port: http
           - host: ${s3_url}
             paths:
               - path: /
@@ -123,13 +118,25 @@ spec:
                   identifier: minio
                   port: s3
         tls:
-          - secretName: ${app_certificate_name}
-            hosts:
-              - ${app_url}
           - secretName: ${s3_certificate_name}
             hosts:
               - ${s3_url}
               - "*.${s3_url}"
+      admin:
+        enabled: true
+        annotations: *annotations
+        className: nginx-internal
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+                service:
+                  identifier: minio
+                  port: http
+        tls:
+          - secretName: ${app_certificate_name}
+            hosts:
+              - ${app_url}
 
     serviceMonitor:
       main:
