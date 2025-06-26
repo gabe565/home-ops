@@ -64,9 +64,8 @@ spec:
               readOnlyRootFilesystem: true
         pod:
           labels:
-            policy.gabe565.com/egress-authentik: "true"
+            policy.gabe565.com/egress-nginx: "true"
             policy.gabe565.com/egress-prometheus: "true"
-            policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-nginx-internal: "true"
             policy.gabe565.com/ingress-nginx: "true"
             policy.gabe565.com/ingress-prometheus: "true"
@@ -75,6 +74,10 @@ spec:
             runAsGroup: 1000
             fsGroup: 1000
             fsGroupChangePolicy: OnRootMismatch
+          hostAliases:
+            - ip: 192.168.1.220
+              hostnames:
+                - ${oidc_host}
 
     persistence:
       data:
