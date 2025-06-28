@@ -202,7 +202,7 @@ spec:
         annotations:
           <<: *annotations
           nginx.ingress.kubernetes.io/configuration-snippet: |
-            proxy_set_header Referer '';
+            proxy_set_header Referer "";
             expires -1;
         hosts:
           - host: ${vuetorrent_url}
@@ -212,6 +212,7 @@ spec:
                   identifier: vuetorrent
                   port: http
               - path: /api
+                pathType: ImplementationSpecific
                 service:
                   identifier: qbittorrent
                   port: http
