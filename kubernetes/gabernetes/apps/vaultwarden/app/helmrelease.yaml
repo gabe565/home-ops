@@ -117,5 +117,6 @@ spec:
           - host: ${app_url}
             paths:
               - path: /admin
+                pathType: ImplementationSpecific
                 service: *svc
         tls: *tls

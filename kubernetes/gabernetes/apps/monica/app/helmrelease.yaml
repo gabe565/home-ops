@@ -97,6 +97,7 @@ spec:
           - host: ${app_url}
             paths:
               - path: /logout
+                pathType: ImplementationSpecific
         tls: *tls
 
     persistence:
