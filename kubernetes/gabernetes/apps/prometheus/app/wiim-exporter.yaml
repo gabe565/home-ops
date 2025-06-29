@@ -7,7 +7,7 @@ spec:
   chart:
     spec:
       chart: prometheus-json-exporter
-      version: 0.17.0
+      version: 0.18.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
