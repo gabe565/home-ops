@@ -5,7 +5,7 @@ metadata:
   namespace: vikunja
 spec:
   instances: 3
-  imageName: ghcr.io/cloudnative-pg/postgresql:17.5-1
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.5-minimal-bookworm@sha256:a0915ad91a8963004dcb6972d529b2ea6665ccc2f5f40a016b1a7b4306b7eb1f
   enableSuperuserAccess: true
   bootstrap:
     initdb:
