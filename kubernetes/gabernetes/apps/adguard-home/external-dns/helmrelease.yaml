@@ -27,7 +27,7 @@ spec:
       webhook:
         image:
           repository: ghcr.io/muhlba91/external-dns-provider-adguard
-          tag: v8.0.1@sha256:267761a55dde38b7cba7b3bff59d0437402538a29659b03144dc9c132c887444
+          tag: v9.0.1@sha256:08fc9f649dbab69bc3474b102b0098262ffbd2281509443d10a697dadb1eaa77
           pullPolicy: IfNotPresent
         env:
           - name: ADGUARD_URL
