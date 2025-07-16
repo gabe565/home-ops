@@ -39,7 +39,7 @@ spec:
           app:
             image:
               repository: eclipse-mosquitto
-              tag: 2.0.21@sha256:94f5a3d7deafa59fa3440d227ddad558f59d293c612138de841eec61bfa4d353
+              tag: 2.0.22@sha256:d219d3a72847f3aed6a1d66975972d3b17f86e39e8f6f6b86b4088b879c1a2d6
               pullPolicy: IfNotPresent
             command: [mosquitto, -c, /mosquitto/config/mosquitto.conf]
             env:
