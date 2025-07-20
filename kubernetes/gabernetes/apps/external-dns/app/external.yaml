@@ -42,6 +42,7 @@ spec:
       # https://github.com/kubernetes-sigs/external-dns/issues/5010#issuecomment-2640511737
       - --txt-prefix=extdns-%{record_type}.
       - --ingress-class=nginx
+      - --force-default-targets
 
     txtOwnerId: ${external_owner_id}
     env:
