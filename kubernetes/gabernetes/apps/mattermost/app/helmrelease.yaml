@@ -40,11 +40,11 @@ spec:
                 secretKeyRef:
                   name: postgresql-app
                   key: password
-              MM_SQLSETTINGS_DATASOURCE: postgres://mattermost:$(DB_PASSWORD)@postgresql-rw:5432/mattermost?binary_parameters=yes
+              MM_SQLSETTINGS_DATASOURCE: postgres://mattermost:$(DB_PASSWORD)@postgresql-rw:5432/mattermost?binary_parameters=yes&sslmode=disable
               MM_CONFIG:
                 value: $(MM_SQLSETTINGS_DATASOURCE)
                 dependsOn: MM_SQLSETTINGS_DATASOURCE
-              MM_SQLSETTINGS_DATASOURCEREPLICAS:  postgres://mattermost:$(DB_PASSWORD)@postgresql-ro:5432/mattermost?binary_parameters=yes
+              MM_SQLSETTINGS_DATASOURCEREPLICAS:  postgres://mattermost:$(DB_PASSWORD)@postgresql-ro:5432/mattermost?binary_parameters=yes&sslmode=disable
 
               # Email
               MM_EMAILSETTINGS_SMTPSERVER: ${smtp_host}
