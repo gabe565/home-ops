@@ -23,7 +23,7 @@ spec:
     disableSchemaValidation: true
   values:
     deploymentAnnotations:
-      secret.reloader.stakater.com/reload: cloudflare
+      secret.reloader.stakater.com/reload: cloudflare,substitutions
 
     priorityClassName: system-cluster-critical
 
@@ -34,7 +34,6 @@ spec:
     policy: sync
     extraArgs:
       - --txt-encrypt-enabled
-      - --txt-encrypt-aes-key=${txt_encrypt_aes_key}
       # https://github.com/kubernetes-sigs/external-dns/issues/5010#issuecomment-2640511737
       - --txt-prefix=extdns-%{record_type}.
 
@@ -45,3 +44,8 @@ spec:
           secretKeyRef:
             name: cloudflare
             key: token
+      - name: EXTERNAL_DNS_TXT_ENCRYPT_AES_KEY
+        valueFrom:
+          secretKeyRef:
+            name: substitutions
+            key: txt_encrypt_aes_key
