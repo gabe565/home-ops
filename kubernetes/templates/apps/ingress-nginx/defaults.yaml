@@ -28,6 +28,7 @@ data:
       config:
         annotations-risk-level: Critical
         proxy-buffer-size: 16k
+        proxy-busy-buffers-size: 16k
         use-gzip: "true"
         enable-brotli: "true"
         hsts-max-age: "31536000"
