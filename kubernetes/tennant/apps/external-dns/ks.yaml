@@ -13,8 +13,6 @@ spec:
     namespace: flux-system
     name: home-ops
   postBuild:
-    substitute:
-      owner_id: tennant
     substituteFrom:
       - kind: Secret
         name: substitutions

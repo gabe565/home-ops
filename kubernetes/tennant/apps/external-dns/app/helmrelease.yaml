@@ -37,7 +37,7 @@ spec:
       # https://github.com/kubernetes-sigs/external-dns/issues/5010#issuecomment-2640511737
       - --txt-prefix=extdns-%{record_type}.
 
-    txtOwnerId: ${owner_id}
+    txtOwnerId: tennant
     env:
       - name: CF_API_TOKEN
         valueFrom:

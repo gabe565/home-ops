@@ -43,7 +43,7 @@ spec:
       - --ingress-class=nginx
       - --force-default-targets
 
-    txtOwnerId: ${external_owner_id}
+    txtOwnerId: gabernetes
     env:
       - name: CF_API_TOKEN
         valueFrom:

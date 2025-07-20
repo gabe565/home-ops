@@ -13,9 +13,6 @@ spec:
     namespace: flux-system
     name: home-ops
   postBuild:
-    substitute:
-      external_owner_id: gabernetes
-      internal_owner_id: gabernetes-internal
     substituteFrom:
       - kind: Secret
         name: substitutions
