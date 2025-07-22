@@ -14,7 +14,7 @@ spec:
             app.kubernetes.io/component: server
       toPorts:
         - ports:
-            - port: "3001"
+            - port: "2283"
 ---
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
