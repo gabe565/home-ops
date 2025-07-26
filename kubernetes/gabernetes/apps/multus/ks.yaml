@@ -8,7 +8,7 @@ spec:
   interval: 1h
   url: https://github.com/k8snetworkplumbingwg/multus-cni
   ref:
-    tag: v4.2.1
+    tag: v4.2.2
   # language=gitignore
   ignore: |
     # exclude all
