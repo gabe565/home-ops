@@ -442,7 +442,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>relax-sounds</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/relax-sounds/app/helmrelease.yaml">relax-sounds</a></td>
-    <td><a href="kubernetes/gabernetes/apps/relax-sounds/borgmatic/helmrelease.yaml">borgmatic</a></td>
+    <td><a href="kubernetes/gabernetes/apps/relax-sounds/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/relax-sounds/app/valkey/helmrelease.yaml">valkey</a></td>
   </tr>
   <tr>
     <td rowspan="2">renovate</td>

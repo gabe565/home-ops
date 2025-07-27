@@ -28,6 +28,12 @@ spec:
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
+              RELAX_VALKEY_ENABLED: "true"
+              RELAX_VALKEY_HOST: valkey
+              RELAX_VALKEY_PASSWORD:
+                secretKeyRef:
+                  name: valkey
+                  key: valkey-password
         pod:
           labels:
             policy.gabe565.com/ingress-nginx: "true"
