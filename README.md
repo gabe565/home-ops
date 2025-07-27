@@ -352,7 +352,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td rowspan="2">nightscout</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/nightscout/resources/app/helmrelease.yaml">nightscout</a></td>
-    <td rowspan="2"><a href="kubernetes/gabernetes/apps/nightscout/resources/borgmatic/helmrelease.yaml">borgmatic</a></td>
+    <td rowspan="2"><a href="kubernetes/gabernetes/apps/nightscout/resources/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/nightscout/resources/mongodb/helmrelease.yaml">mongodb</a></td>
   </tr>
   <tr>
     <td><code>HelmRelease</code></td>
@@ -559,8 +559,8 @@ This Git repository contains the following directories under [Kubernetes](./kube
   <tr>
     <td>your-spotify</td>
     <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/gabernetes/apps/your-spotify/app/your-spotify.yaml">your-spotify</a></td>
-    <td><a href="kubernetes/gabernetes/apps/your-spotify/app/borgmatic.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/your-spotify/app/mongodb.yaml">mongodb</a></td>
+    <td><a href="kubernetes/gabernetes/apps/your-spotify/app/helmrelease.yaml">your-spotify</a></td>
+    <td><a href="kubernetes/gabernetes/apps/your-spotify/app/borgmatic.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/your-spotify/app/mongodb/helmrelease.yaml">mongodb</a></td>
   </tr>
   <tr>
     <td rowspan="2">youtube</td>

@@ -41,6 +41,11 @@ spec:
       THEME: "colors"
       TIME_FORMAT: "24"
       INSECURE_USE_HTTP: "true"
+      DB_PASSWORD:
+        secretKeyRef:
+          name: mongodb
+          key: mongodb-passwords
+      MONGODB_URI: mongodb://nightscout:$(DB_PASSWORD)@mongodb/nightscout
 
     podLabels:
       policy.gabe565.com/egress-namespace: "true"
@@ -114,20 +119,4 @@ spec:
         tls: *bg-tls
 
     mongodb:
-      enabled: true
-      auth:
-        passwords:
-          - ${mongodb_password}
-        rootPassword: ${mongodb_root_password}
-      persistence:
-        enabled: true
-        storageClass: longhorn-ssd
-        size: 2Gi
-      livenessProbe:
-        periodSeconds: 30
-      readinessProbe:
-        periodSeconds: 30
-      nodeSelector:
-        feature.node.kubernetes.io/cpu-cpuid.AVX: "true"
-      podLabels:
-        policy.gabe565.com/ingress-namespace: "true"
+      enabled: false

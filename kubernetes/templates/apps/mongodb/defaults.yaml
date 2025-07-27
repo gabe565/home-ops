@@ -1,0 +1,118 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongodb-defaults
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
+data:
+  # language=yaml
+  values.yaml: |
+    controllers:
+      main:
+        type: statefulset
+        containers:
+          mongodb:
+            env:
+              MONGO_INITDB_ROOT_USERNAME: root
+              MONGO_INITDB_ROOT_PASSWORD_FILE: /secrets/mongodb-root-password
+              MONGODB_EXTRA_PASSWORDS_FILE: /secrets/mongodb-passwords
+            securityContext:
+              readOnlyRootFilesystem: true
+              allowPrivilegeEscalation: false
+              capabilities: {drop: [ALL]}
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command: [/scripts/liveness.sh]
+                  periodSeconds: 60
+                  timeoutSeconds: 10
+              readiness:
+                <<: *probe
+                spec:
+                  exec:
+                    command: [/scripts/readiness.sh]
+                  periodSeconds: 60
+                  timeoutSeconds: 10
+              startup:
+                <<: *probe
+                spec:
+                  exec:
+                    command: [/scripts/liveness.sh]
+                  failureThreshold: 30
+                  periodSeconds: 5
+        pod:
+          nodeSelector:
+            feature.node.kubernetes.io/cpu-cpuid.AVX: "true"
+          labels:
+            policy.gabe565.com/ingress-namespace: "true"
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 999
+            runAsGroup: 999
+            fsGroup: 999
+            fsGroupChangePolicy: OnRootMismatch
+            seccompProfile: {type: RuntimeDefault}
+
+    persistence:
+      data:
+        globalMounts:
+          - path: /data/db
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+            subPath: tmp
+          - path: /data
+            subPath: data
+      initdb:
+        type: configMap
+        identifier: initdb
+        globalMounts:
+          - path: /docker-entrypoint-initdb.d
+      scripts:
+        type: configMap
+        identifier: scripts
+        defaultMode: 0o550
+      secrets:
+        type: secret
+        identifier: mongodb
+
+    service:
+      main:
+        controller: main
+        ports:
+          mongodb:
+            port: 27017
+
+    configMaps:
+      initdb:
+        data:
+          # language=javascript
+          create-user.js: |
+            let {
+                MONGO_INITDB_DATABASE: appDB,
+                MONGODB_EXTRA_USERNAMES: user,
+                MONGODB_EXTRA_PASSWORDS: pwd,
+                MONGODB_EXTRA_PASSWORDS_FILE: passwordFile,
+            } = process.env;
+
+            if (!pwd && passwordFile) {
+                pwd = fs.readFileSync(passwordFile, 'utf8');
+            }
+
+            if (appDB && user && pwd) {
+                db.createUser({ user, pwd, roles: [{ role: "readWrite", db: appDB }]});
+            }
+      scripts:
+        data:
+          # language=shell script
+          liveness.sh: |
+            #!/bin/sh
+            exec mongosh --quiet --eval 'db.adminCommand("ping")'
+          # language=shell script
+          readiness.sh: |
+            #!/bin/sh
+            exec mongosh --quiet --eval 'if (!(db.hello().isWritablePrimary || db.hello().secondary)) { throw new Error("Not ready") }'
