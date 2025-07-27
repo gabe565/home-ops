@@ -1,0 +1,97 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mariadb-defaults
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
+data:
+  # language=yaml
+  values.yaml: |
+    controllers:
+      main:
+        type: statefulset
+        containers:
+          mariadb:
+            env:
+              MARIADB_ROOT_PASSWORD_FILE: /secrets/mariadb-root-password
+              MARIADB_PASSWORD_FILE: /secrets/mariadb-password
+            securityContext:
+              readOnlyRootFilesystem: true
+              allowPrivilegeEscalation: false
+              capabilities: {drop: [ALL]}
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command: [/scripts/liveness.sh]
+              readiness:
+                <<: *probe
+                spec:
+                  exec:
+                    command: [/scripts/readiness.sh]
+              startup:
+                <<: *probe
+                spec:
+                  exec:
+                    command: [/scripts/liveness.sh]
+                  initialDelaySeconds: 10
+                  failureThreshold: 60
+                  periodSeconds: 5
+        pod:
+          labels:
+            policy.gabe565.com/ingress-namespace: "true"
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 999
+            runAsGroup: 999
+            fsGroup: 999
+            fsGroupChangePolicy: OnRootMismatch
+            seccompProfile: {type: RuntimeDefault}
+
+    persistence:
+      data:
+        globalMounts:
+          - path: /var/lib/mysql
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+            subPath: tmp
+          - path: /run/mysqld
+            subPath: run/mysqld
+      scripts:
+        type: configMap
+        identifier: scripts
+        defaultMode: 0o550
+      secrets:
+        type: secret
+        identifier: password
+
+    service:
+      main:
+        controller: main
+        ports:
+          mongodb:
+            port: 3306
+
+    configMaps:
+      scripts:
+        data:
+          # language=shell script
+          liveness.sh: |
+            #!/bin/sh
+            password="${MARIADB_ROOT_PASSWORD:-}"
+            if [ -n "${MARIADB_ROOT_PASSWORD_FILE:-}" ]; then
+                password=$(cat "$MARIADB_ROOT_PASSWORD_FILE")
+            fi
+            mariadb-admin status -uroot -p"$password"
+          # language=shell script
+          readiness.sh: |
+            #!/bin/sh
+            password="${MARIADB_ROOT_PASSWORD:-}"
+            if [ -n "${MARIADB_ROOT_PASSWORD_FILE:-}" ]; then
+                password=$(cat "$MARIADB_ROOT_PASSWORD_FILE")
+            fi
+            mariadb-admin ping -uroot -p"$password"
