@@ -6,72 +6,106 @@ metadata:
 spec:
   chart:
     spec:
-      chart: nightscout
-      version: 0.13.0
+      chart: app-template
+      version: 4.1.2
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
         namespace: flux-system
-        name: gabe565
+        name: bjw-s
   interval: 1h
   driftDetection:
     mode: enabled
   values:
-    image:
-      repository: ghcr.io/gabe565/nightscout
-      tag: 15.0.3-websocket@sha256:1410f1c64df0b3367ed6b3e8252dfad08859ffa6e91585450a129067a8419b6d
-      pullPolicy: IfNotPresent
+    controllers:
+      main:
+        containers:
+          nightscout:
+            image:
+              repository: ghcr.io/gabe565/nightscout
+              tag: 15.0.3-websocket@sha256:1410f1c64df0b3367ed6b3e8252dfad08859ffa6e91585450a129067a8419b6d
+              pullPolicy: IfNotPresent
+            env:
+              HOSTNAME: "::"
+              PORT: "1337"
+              TZ: America/Chicago
+              TIME_FORMAT: "24"
+              INSECURE_USE_HTTP: "true"
+              API_SECRET: ${api_secret}
+              AUTH_DEFAULT_ROLES: denied
 
-    env:
-      TZ: "America/Chicago"
-      API_SECRET: ${api_secret}
-      AUTH_DEFAULT_ROLES: "denied"
-      ALARM_TIMEAGO_URGENT: "off"
-      ALARM_TIMEAGO_WARN: "off"
-      ALARM_TYPES: " "
-      DAY_START: "9.0"
-      DAY_END: "23.0"
-      DEVICESTATUS_ADVANCED: "true"
-      DISABLE: "ar2 simplealarms upbat dbsize"
-      EDIT_MODE: "on"
-      ENABLE: "careportal simplealarms"
-      SCALE_Y: "linear"
-      SHOW_FORECAST: " "
-      SHOW_RAWBG: "noise"
-      THEME: "colors"
-      TIME_FORMAT: "24"
-      INSECURE_USE_HTTP: "true"
-      DB_PASSWORD:
-        secretKeyRef:
-          name: mongodb
-          key: mongodb-passwords
-      MONGODB_URI: mongodb://nightscout:$(DB_PASSWORD)@mongodb/nightscout
+              DB_PASSWORD:
+                secretKeyRef:
+                  name: mongodb
+                  key: mongodb-passwords
+              MONGODB_URI:
+                value: mongodb://nightscout:$(DB_PASSWORD)@mongodb/nightscout
+                dependsOn: DB_PASSWORD
+              MONGODB_COLLECTION: entries
 
-    podLabels:
-      policy.gabe565.com/egress-namespace: "true"
-      policy.gabe565.com/egress-world: "true"
-      policy.gabe565.com/ingress-home-assistant: "true"
-      policy.gabe565.com/ingress-namespace: "true"
-      policy.gabe565.com/ingress-nginx: "true"
+              ENABLE: careportal simplealarms
+              DISABLE: ar2 simplealarms upbat dbsize
 
-    securityContext:
-      allowPrivilegeEscalation: false
-      readOnlyRootFilesystem: true
-      capabilities: {drop: [ALL]}
+              DISPLAY_UNITS: mg/dl
+              ALARM_TIMEAGO_URGENT: off
+              ALARM_TIMEAGO_WARN: off
+              ALARM_TYPES: " "
+              DAY_START: "9.0"
+              DAY_END: "23.0"
+              DEVICESTATUS_ADVANCED: "true"
+              EDIT_MODE: on
+              SCALE_Y: linear
+              SHOW_FORECAST: " "
+              SHOW_RAWBG: noise
+              THEME: colors
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: [ALL]}
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command: [/scripts/liveness.sh]
+                  periodSeconds: 30
+              readiness:
+                enabled: true
+        pod:
+          labels:
+            policy.gabe565.com/egress-namespace: "true"
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-home-assistant: "true"
+            policy.gabe565.com/ingress-namespace: "true"
+            policy.gabe565.com/ingress-nginx: "true"
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            fsGroupChangePolicy: OnRootMismatch
+            seccompProfile: {type: RuntimeDefault}
 
-    podSecurityContext:
-      runAsUser: 1000
-      runAsGroup: 1000
-      fsGroup: 1000
-      fsGroupChangePolicy: OnRootMismatch
-      seccompProfile: {type: RuntimeDefault}
+    persistence:
+      scripts:
+        type: configMap
+        identifier: scripts
+        defaultMode: 0o550
 
-    termination:
-      gracePeriodSeconds: 30
+    service:
+      main:
+        controller: main
+        ports:
+          http:
+            port: 1337
 
     ingress:
-      main:
-        enabled: true
+      nightscout:
         annotations:
           nginx.ingress.kubernetes.io/auth-url: |-
             http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
@@ -91,6 +125,8 @@ spec:
           - host: ${app_url}
             paths:
               - path: /
+                service:
+                  identifier: main
         tls: &bg-tls
           - secretName: ${certificate_name}
             hosts:
@@ -101,6 +137,8 @@ spec:
           - host: ${api_url}
             paths:
               - path: /
+                service:
+                  identifier: main
         tls:
           - secretName: ${certificate_name}
             hosts:
@@ -116,7 +154,23 @@ spec:
             paths:
               - path: /sw.js
                 pathType: ImplementationSpecific
+                service:
+                  identifier: main
         tls: *bg-tls
 
-    mongodb:
-      enabled: false
+    configMaps:
+      scripts:
+        data:
+          # language=shell script
+          liveness.sh: |
+            #!/bin/sh
+            response="$(
+              wget -q -O - \
+                --header 'X-Forwarded-Proto: https' \
+                --header "Api-Secret: $(echo -n "$API_SECRET" | sha1sum | cut -d' ' -f1)" \
+                "http://localhost:$PORT/api/v2/status" \
+            )"
+            if ! echo "$response" | grep -Fq 'STATUS OK'; then
+              echo "$response"
+              exit 1
+            fi
