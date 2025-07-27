@@ -31,7 +31,10 @@ spec:
 
     persistence:
       data:
-        type: emptyDir
+        storageClass: longhorn-ssd
+        accessMode: ReadWriteOnce
+        size: 8Gi
+        retain: true
 
     secrets:
       password:
