@@ -8,7 +8,7 @@ data:
   # language=yaml
   values.yaml: |
     controllers:
-      main:
+      valkey:
         type: statefulset
         containers:
           valkey:
@@ -64,8 +64,8 @@ data:
         identifier: password
 
     service:
-      main:
-        controller: main
+      valkey:
+        controller: valkey
         ports:
           mongodb:
             port: 6379

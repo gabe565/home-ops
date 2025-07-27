@@ -22,7 +22,7 @@ spec:
       name: mongodb-defaults
   values:
     controllers:
-      main:
+      mongodb:
         containers:
           mongodb:
             image:

@@ -8,7 +8,7 @@ data:
   # language=yaml
   values.yaml: |
     controllers:
-      main:
+      mongodb:
         type: statefulset
         containers:
           mongodb:
@@ -81,8 +81,8 @@ data:
         identifier: mongodb
 
     service:
-      main:
-        controller: main
+      mongodb:
+        controller: mongodb
         ports:
           mongodb:
             port: 27017

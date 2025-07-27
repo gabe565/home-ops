@@ -22,7 +22,7 @@ spec:
       name: mariadb-defaults
   values:
     controllers:
-      main:
+      mariadb:
         containers:
           mariadb:
             image:

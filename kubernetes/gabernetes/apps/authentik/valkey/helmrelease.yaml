@@ -22,7 +22,7 @@ spec:
       name: valkey-defaults
   values:
     controllers:
-      main:
+      valkey:
         containers:
           valkey:
             image:
