@@ -104,7 +104,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>bookstack</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/bookstack/app/helmrelease.yaml">bookstack</a></td>
-    <td><a href="kubernetes/gabernetes/apps/bookstack/borgmatic/helmrelease.yaml">borgmatic</a></td>
+    <td><a href="kubernetes/gabernetes/apps/bookstack/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/bookstack/app/mariadb/helmrelease.yaml">mariadb</a></td>
   </tr>
   <tr>
     <td>change-detection</td>

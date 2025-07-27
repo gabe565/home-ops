@@ -1,0 +1,48 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.1.2/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: mariadb
+  namespace: bookstack
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 4.1.2
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  valuesFrom:
+    - kind: ConfigMap
+      name: mariadb-defaults
+  values:
+    controllers:
+      main:
+        containers:
+          mariadb:
+            image:
+              repository: mariadb
+              tag: 11.8.2
+            args:
+              - --max_statement_time=60
+            env:
+              MARIADB_DATABASE: bookstack
+              MARIADB_USER: bookstack
+
+    persistence:
+      data:
+        storageClass: longhorn-ssd
+        accessMode: ReadWriteOnce
+        size: 8Gi
+        retain: true
+
+    secrets:
+      password:
+        stringData:
+          mariadb-root-password: ${mariadb_root_password}
+          mariadb-password: ${mariadb_password}

@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.1.2/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -6,86 +7,104 @@ metadata:
 spec:
   chart:
     spec:
-      chart: bookstack
-      version: 0.20.0
+      chart: app-template
+      version: 4.1.2
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
         namespace: flux-system
-        name: gabe565
+        name: bjw-s
   interval: 1h
   driftDetection:
     mode: enabled
   values:
-    controller:
-      strategy: RollingUpdate
+    controllers:
+      main:
+        strategy: RollingUpdate
+        containers:
+          bookstack:
+            image:
+              repository: ghcr.io/linuxserver/bookstack
+              tag: version-v25.05.2@sha256:25a3c58393c9cf21a733e13191e7ac7e281e3ea3328da275c0d776f24d95c893
+              pullPolicy: IfNotPresent
+            env:
+              TZ: America/Chicago
+              APP_URL: https://${app_url}
+              APP_KEY: ${app_key}
 
-    env:
-      TZ: America/Chicago
-      APP_KEY: ${app_key}
+              DB_HOST: mariadb
+              DB_DATABASE: bookstack
+              DB_USERNAME: bookstack
+              DB_PASSWORD:
+                secretKeyRef:
+                  name: mariadb
+                  key: mariadb-password
 
-      STORAGE_TYPE: s3
-      STORAGE_S3_KEY: ${s3_access_key}
-      STORAGE_S3_SECRET: ${s3_secret_key}
-      STORAGE_S3_BUCKET: bookstack
-      STORAGE_S3_REGION: us-central-1
-      STORAGE_S3_ENDPOINT: https://${s3_url}
-      STORAGE_URL: https://bookstack.${s3_url}
+              STORAGE_TYPE: s3
+              STORAGE_S3_KEY: ${s3_access_key}
+              STORAGE_S3_SECRET: ${s3_secret_key}
+              STORAGE_S3_BUCKET: bookstack
+              STORAGE_S3_REGION: us-central-1
+              STORAGE_S3_ENDPOINT: https://${s3_url}
+              STORAGE_URL: https://bookstack.${s3_url}
 
-      LOG_FAILED_LOGIN_MESSAGE: Failed login for %u
-      AUTH_METHOD: saml2
-      AUTH_AUTO_INITIATE: "true"
-      SAML2_NAME: Authentik
-      SAML2_EMAIL_ATTRIBUTE: email
-      SAML2_EXTERNAL_ID_ATTRIBUTE: http://schemas.goauthentik.io/2021/02/saml/username
-      SAML2_DISPLAY_NAME_ATTRIBUTES: Name
-      SAML2_IDP_ENTITYID: https://${authentik_host}/api/v3/providers/saml/2/metadata/?download
-      SAML2_AUTOLOAD_METADATA: "true"
+              LOG_FAILED_LOGIN_MESSAGE: Failed login for %u
+              AUTH_METHOD: saml2
+              AUTH_AUTO_INITIATE: "true"
+              SAML2_NAME: Authentik
+              SAML2_EMAIL_ATTRIBUTE: email
+              SAML2_EXTERNAL_ID_ATTRIBUTE: http://schemas.goauthentik.io/2021/02/saml/username
+              SAML2_DISPLAY_NAME_ATTRIBUTES: Name
+              SAML2_IDP_ENTITYID: https://${authentik_host}/api/v3/providers/saml/2/metadata/?download
+              SAML2_AUTOLOAD_METADATA: "true"
+            probes:
+              liveness: &probe
+                enabled: true
+                type: HTTP
+                path: /status
+              readiness: *probe
+              startup:
+                <<: *probe
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+        pod:
+          labels:
+            policy.gabe565.com/egress-namespace: "true"
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-nginx: "true"
+          securityContext:
+            seccompProfile: {type: RuntimeDefault}
 
-    podLabels:
-      policy.gabe565.com/egress-namespace: "true"
-      policy.gabe565.com/egress-world: "true"
-      policy.gabe565.com/ingress-nginx: "true"
+    persistence:
+      config:
+        type: emptyDir
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+            subPath: tmp
+          - path: /run
+            subPath: run
+
+    service:
+      main:
+        ports:
+          http:
+            port: 80
 
     ingress:
       main:
-        enabled: true
         hosts:
           - host: ${app_url}
             paths:
               - path: /
+                service:
+                  identifier: main
         tls:
           - secretName: ${certificate_name}
             hosts:
               - ${app_url}
-
-    persistence:
-      config:
-        enabled: true
-        type: emptyDir
-
-    secrets:
-      app-key:
-        enabled: true
-        stringData:
-          BOOKSTACK_APP_KEY.txt: ${app_key}
-
-    mariadb:
-      enabled: true
-      auth:
-        password: ${mariadb_password}
-        rootPassword: ${mariadb_root_password}
-      primary:
-        extraFlags: |
-          --max_statement_time=60
-        resources:
-          requests:
-            cpu: 0m
-          limits:
-            cpu: 500m
-        persistence:
-          enabled: true
-          storageClass: longhorn-ssd
-          size: 2Gi
-        podLabels:
-          policy.gabe565.com/ingress-namespace: "true"
