@@ -130,7 +130,7 @@ spec:
               name: valkey
               key: valkey-password
         - name: REDIS_CONN_STR
-          value: redis://:$(REDIS_PASSWORD)@valkey-primary:6379/0?pool_size=100&idle_timeout=180s
+          value: redis://:$(REDIS_PASSWORD)@valkey:6379/0?pool_size=100&idle_timeout=180s
         - name: GITEA__CACHE__HOST
           value: $(REDIS_CONN_STR)
         - name: GITEA__QUEUE__CONN_STR

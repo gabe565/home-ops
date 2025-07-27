@@ -42,7 +42,7 @@ spec:
 
               VIKUNJA_KEYVALUE_TYPE: redis
               VIKUNJA_REDIS_ENABLED: "true"
-              VIKUNJA_REDIS_HOST: valkey-primary:6379
+              VIKUNJA_REDIS_HOST: valkey:6379
               VIKUNJA_REDIS_PASSWORD:
                 secretKeyRef:
                   name: valkey

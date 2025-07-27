@@ -448,7 +448,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td rowspan="2">renovate</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/renovate/app/helmrelease.yaml">renovate</a></td>
-    <td rowspan="2"><a href="kubernetes/gabernetes/apps/renovate/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/renovate/app/valkey.yaml">valkey</a></td>
+    <td rowspan="2"><a href="kubernetes/gabernetes/apps/renovate/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/renovate/app/valkey/helmrelease.yaml">valkey</a></td>
   </tr>
   <tr>
     <td><code>HelmRelease</code></td>

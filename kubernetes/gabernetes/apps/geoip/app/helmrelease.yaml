@@ -31,7 +31,7 @@ spec:
               TZ: America/Chicago
               GEOIP_LOG_LEVEL: debug
               GEOIP_LOG_FORMAT: color
-              GEOIP_REDIS_HOST: valkey-primary
+              GEOIP_REDIS_HOST: valkey
               GEOIP_REDIS_PASSWORD:
                 secretKeyRef:
                   name: valkey

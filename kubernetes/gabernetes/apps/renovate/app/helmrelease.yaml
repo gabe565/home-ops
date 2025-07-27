@@ -54,7 +54,7 @@ spec:
                 secretKeyRef:
                   name: valkey
                   key: valkey-password
-              RENOVATE_REDIS_URL: redis://:$(REDIS_PASSWORD)@valkey-primary:6379/0
+              RENOVATE_REDIS_URL: redis://:$(REDIS_PASSWORD)@valkey:6379/0
             envFrom:
               - secretRef:
                   name: renovate-env

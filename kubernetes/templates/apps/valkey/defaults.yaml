@@ -1,0 +1,107 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: valkey-defaults
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
+data:
+  # language=yaml
+  values.yaml: |
+    controllers:
+      main:
+        type: statefulset
+        containers:
+          valkey:
+            command: [/scripts/start.sh]
+            env:
+              VALKEY_PASSWORD_FILE: /secrets/valkey-password
+              VALKEY_PORT: 6379
+            securityContext:
+              readOnlyRootFilesystem: true
+              allowPrivilegeEscalation: false
+              capabilities: {drop: [ALL]}
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command: [/scripts/liveness.sh]
+                  periodSeconds: 300
+                  timeoutSeconds: 5
+              readiness:
+                <<: *probe
+                spec:
+                  exec:
+                    command: [/scripts/readiness.sh]
+                  periodSeconds: 300
+              startup:
+                <<: *probe
+                spec:
+                  exec:
+                    command: [/scripts/liveness.sh]
+                  failureThreshold: 30
+                  periodSeconds: 5
+        pod:
+          labels:
+            policy.gabe565.com/ingress-namespace: "true"
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 999
+            runAsGroup: 999
+            fsGroup: 999
+            fsGroupChangePolicy: OnRootMismatch
+            seccompProfile: {type: RuntimeDefault}
+
+    persistence:
+      data:
+      scripts:
+        type: configMap
+        identifier: scripts
+        defaultMode: 0o550
+      secrets:
+        type: secret
+        identifier: password
+
+    service:
+      main:
+        controller: main
+        ports:
+          mongodb:
+            port: 6379
+
+    configMaps:
+      scripts:
+        data:
+          # language=shell script
+          start.sh: |
+            #!/bin/bash
+            [[ -f $VALKEY_PASSWORD_FILE ]] && export VALKEY_PASSWORD="$(< "$VALKEY_PASSWORD_FILE")"
+            ARGS=(--port "$VALKEY_PORT")
+            ARGS+=(--requirepass "$VALKEY_PASSWORD")
+            ARGS+=(--primaryauth "$VALKEY_PASSWORD")
+            ARGS+=(--appendonly yes)
+            exec valkey-server "${ARGS[@]}"
+          # language=shell script
+          ping.sh: |
+            #!/bin/bash
+            [[ -f $VALKEY_PASSWORD_FILE ]] && export VALKEY_PASSWORD="$(< "$VALKEY_PASSWORD_FILE")"
+            [[ -n "$VALKEY_PASSWORD" ]] && export REDISCLI_AUTH="$VALKEY_PASSWORD"
+            exec valkey-cli -h localhost -p "$VALKEY_PORT" ping
+          # language=shell script
+          liveness.sh: |
+            #!/bin/bash
+            response="$(/scripts/ping.sh)"
+            responseFirstWord=$(echo $response | head -n1 | awk '{print $1;}')
+            if [ "$response" != "PONG" ] && [ "$responseFirstWord" != "LOADING" ] && [ "$responseFirstWord" != "MASTERDOWN" ]; then
+              echo "$response"
+              exit 1
+            fi
+          # language=shell script
+          readiness.sh: |
+            #!/bin/bash
+            response="$(/scripts/ping.sh)"
+            if [ "$response" != "PONG" ]; then
+              echo "$response"
+              exit 1
+            fi
