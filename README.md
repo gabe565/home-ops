@@ -328,7 +328,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>monica</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/monica/app/helmrelease.yaml">monica</a></td>
-    <td><a href="kubernetes/gabernetes/apps/monica/borgmatic/helmrelease.yaml">borgmatic</a></td>
+    <td><a href="kubernetes/gabernetes/apps/monica/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/monica/app/mariadb/helmrelease.yaml">mariadb</a></td>
   </tr>
   <tr>
     <td>mosquitto</td>

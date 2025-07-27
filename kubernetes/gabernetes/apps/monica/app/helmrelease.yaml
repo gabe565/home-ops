@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.1.2/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -6,78 +7,150 @@ metadata:
 spec:
   chart:
     spec:
-      chart: monica
-      version: 0.10.0
+      chart: app-template
+      version: 4.1.2
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
         namespace: flux-system
-        name: gabe565
+        name: bjw-s
   interval: 1h
   driftDetection:
     mode: enabled
   values:
-    controller:
-      strategy: RollingUpdate
+    controllers:
+      monica:
+        strategy: RollingUpdate
+        initContainers:
+          copy:
+            image: &image
+              repository: monica
+              tag: 4.1.2-fpm-alpine@sha256:570aec255276ddd65355153c016747bf31b95877d044a0ffa5fe6d485f3b54d1
+              pullPolicy: IfNotPresent
+            command:
+              - cp
+              - -a
+              - /var/www/html/public/.
+              - /public
+        containers:
+          monica:
+            image: *image
+            env:
+              TZ: America/Chicago
+              APP_ENV: production
+              LOG_CHANNEL: stderr
+              APP_URL: https://${app_url}
+              CHECK_VERSION: "false"
+              SESSION_LIFETIME: "240"
+              APP_KEY: ${app_key}
 
-    command:
-      - sh
-      - -c
-      - |
-        sed -E 's/(chown|chmod)/#\1/' /usr/local/bin/entrypoint.sh > /tmp/entrypoint.sh
-        exec bash /tmp/entrypoint.sh php-fpm
+              DB_HOST: mariadb
+              DB_DATABASE: monica
+              DB_USERNAME: monica
+              DB_PASSWORD:
+                secretKeyRef:
+                  name: mariadb
+                  key: mariadb-password
 
-    env:
-      TZ: America/Chicago
-      CHECK_VERSION: "false"
-      SESSION_LIFETIME: "240"
-      APP_KEY: ${app_key}
-      MAIL_PASSWORD: ${mail_password}
-      LOCATION_IQ_API_KEY: ${location_iq_api_key}
-      DARKSKY_API_KEY: ${darksky_api_key}
+              MAIL_PASSWORD: ${mail_password}
+              LOCATION_IQ_API_KEY: ${location_iq_api_key}
+              DARKSKY_API_KEY: ${darksky_api_key}
 
-      FILESYSTEM_DISK: s3
-      AWS_ACCESS_KEY_ID: ${s3_access_key}
-      AWS_SECRET_ACCESS_KEY: ${s3_secret_key}
-      AWS_DEFAULT_REGION: us-central-1
-      AWS_BUCKET: monica
-      AWS_ENDPOINT: https://${s3_url}
-      AWS_USE_PATH_STYLE_ENDPOINT: "true"
+              FILESYSTEM_DISK: s3
+              AWS_ACCESS_KEY_ID: ${s3_access_key}
+              AWS_SECRET_ACCESS_KEY: ${s3_secret_key}
+              AWS_DEFAULT_REGION: us-central-1
+              AWS_BUCKET: monica
+              AWS_ENDPOINT: https://${s3_url}
+              AWS_USE_PATH_STYLE_ENDPOINT: "true"
 
-      MAIL_MAILER: smtp
-      MAIL_HOST: ${smtp_host}
-      MAIL_PORT: 587
-      MAIL_USERNAME: ${smtp_username}
-      MAIL_ENCRYPTION: tls
-      MAIL_FROM_ADDRESS: ${smtp_username}
-      MAIL_FROM_NAME: Cook Contacts
+              MAIL_MAILER: smtp
+              MAIL_HOST: ${smtp_host}
+              MAIL_PORT: 587
+              MAIL_USERNAME: ${smtp_username}
+              MAIL_ENCRYPTION: tls
+              MAIL_FROM_ADDRESS: ${smtp_username}
+              MAIL_FROM_NAME: Cook Contacts
 
-      ENABLE_GEOLOCATION: "true"
-      ENABLE_WEATHER: "true"
+              ENABLE_GEOLOCATION: "true"
+              ENABLE_WEATHER: "true"
+            securityContext:
+              readOnlyRootFilesystem: true
+              allowPrivilegeEscalation: false
+            probes:
+              liveness: &probe
+                enabled: true
+                type: HTTP
+                path: /
+              readiness: *probe
+              startup:
+                <<: *probe
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+          nginx:
+            image:
+              repository: nginxinc/nginx-unprivileged
+              tag: stable-alpine
+            securityContext:
+              readOnlyRootFilesystem: true
+              allowPrivilegeEscalation: false
+              capabilities: {drop: [ALL]}
+        pod:
+          labels:
+            policy.gabe565.com/egress-namespace: "true"
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-authentik: "true"
+            policy.gabe565.com/ingress-nginx: "true"
 
-    podLabels:
-      policy.gabe565.com/egress-namespace: "true"
-      policy.gabe565.com/egress-world: "true"
-      policy.gabe565.com/ingress-authentik: "true"
-      policy.gabe565.com/ingress-nginx: "true"
+    persistence:
+      nginx:
+        type: configMap
+        identifier: nginx
+        advancedMounts:
+          monica:
+            nginx:
+              - path: /etc/nginx/conf.d
+      tmp:
+        type: emptyDir
+        advancedMounts:
+          monica:
+            copy:
+              - path: /public
+                subPath: public
+            monica:
+              - path: /tmp
+                subPath: tmp
+              - path: /var/www/html/public
+                subPath: public
+              - path: /var/www/html/storage
+                subPath: storage
+              - path: /var/www/html/bootstrap/cache
+                subPath: cache
+            nginx:
+              - path: /tmp
+                subPath: tmp
+              - path: /var/www/html/public
+                subPath: public
+              - path: /var/www/html/storage
+                subPath: storage
 
-    securityContext:
-      readOnlyRootFilesystem: true
-      runAsUser: 82
-      runAsGroup: 82
-      allowPrivilegeEscalation: false
-      capabilities: {drop: [ALL]}
+    service:
+      monica:
+        controller: monica
+        ports:
+          http:
+            port: 8080
+            primary: true
+          fastcgi:
+            port: 9000
 
     ingress:
-      main:
-        enabled: true
+      monica:
         annotations:
-          nginx.ingress.kubernetes.io/auth-url: |-
-            http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
-          nginx.ingress.kubernetes.io/auth-signin: |-
-            https://$host/outpost.goauthentik.io/start?rd=$scheme://$http_host$escaped_request_uri
-          nginx.ingress.kubernetes.io/auth-response-headers: |-
-            Set-Cookie,Cookie
+          nginx.ingress.kubernetes.io/auth-url: http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
+          nginx.ingress.kubernetes.io/auth-signin: https://$host/outpost.goauthentik.io/start?rd=$scheme://$http_host$escaped_request_uri
+          nginx.ingress.kubernetes.io/auth-response-headers: Set-Cookie,Cookie
           nginx.ingress.kubernetes.io/auth-snippet: |
             proxy_set_header X-Forwarded-Host $http_host;
           nginx.ingress.kubernetes.io/proxy-body-size: 16M
@@ -85,6 +158,8 @@ spec:
           - host: ${app_url}
             paths:
               - path: /
+                service:
+                  identifier: monica
         tls: &tls
           - secretName: ${certificate_name}
             hosts:
@@ -98,34 +173,31 @@ spec:
             paths:
               - path: /logout
                 pathType: ImplementationSpecific
+                service:
+                  identifier: monica
         tls: *tls
 
-    persistence:
-      storage:
-        enabled: true
-        type: emptyDir
-      cache:
-        enabled: true
-        type: emptyDir
-        mountPath: /var/www/html/bootstrap/cache
-      tmp:
-        enabled: true
-        type: emptyDir
+    configMaps:
+      nginx:
+        data:
+          # language=nginx configuration
+          default.conf: |
+            server {
+                listen 8080;
+                access_log off;
+                root /var/www/html/public;
 
-    nginx:
-      image:
-        repository: nginxinc/nginx-unprivileged
-        tag: stable-alpine
+                index index.php;
 
-    mariadb:
-      enabled: true
-      auth:
-        password: ${mariadb_password}
-        rootPassword: ${mariadb_root_password}
-      primary:
-        persistence:
-          enabled: true
-          storageClass: longhorn-ssd
-          size: 1Gi
-        podLabels:
-          policy.gabe565.com/ingress-namespace: "true"
+                client_max_body_size 0;
+
+                location / {
+                    try_files $uri $uri/ /index.php?$query_string;
+                }
+
+                location ~ \.php$ {
+                    fastcgi_pass localhost:9000;
+                    fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+                    include fastcgi_params;
+                }
+            }
