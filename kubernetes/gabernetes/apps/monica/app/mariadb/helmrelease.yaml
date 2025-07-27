@@ -27,7 +27,7 @@ spec:
           mariadb:
             image:
               repository: mariadb
-              tag: 11.8.2
+              tag: 11.8.2@sha256:2bcbaec92bd9d4f6591bc8103d3a8e6d0512ee2235506e47a2e129d190444405
             env:
               MARIADB_DATABASE: monica
               MARIADB_USER: monica
