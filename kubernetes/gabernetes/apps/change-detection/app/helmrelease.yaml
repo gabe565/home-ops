@@ -29,7 +29,9 @@ spec:
             env:
               TZ: America/Chicago
               BASE_URL: https://${app_url}
-              PLAYWRIGHT_DRIVER_URL: ws://change-detection-browserless:3000/chromium?token=${browser_token}&blockAds=true&launch={"stealth":true}
+              PLAYWRIGHT_DRIVER_URL: >-
+                {{- $launch := dict "headless" "false" "stealth" "true" "args" (list "--window-size=1920,1080" "--force-color-profile=srgb") -}}
+                ws://change-detection-browserless:3000/chromium?token=${browser_token}&blockAds=true&launch={{ toJson $launch }}
             probes:
               startup:
                 enabled: true
