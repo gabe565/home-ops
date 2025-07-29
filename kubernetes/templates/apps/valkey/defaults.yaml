@@ -27,20 +27,17 @@ data:
                 spec:
                   exec:
                     command: [/scripts/liveness.sh]
-                  periodSeconds: 300
-                  timeoutSeconds: 5
               readiness:
                 <<: *probe
                 spec:
                   exec:
                     command: [/scripts/readiness.sh]
-                  periodSeconds: 300
               startup:
                 <<: *probe
                 spec:
                   exec:
                     command: [/scripts/liveness.sh]
-                  failureThreshold: 30
+                  failureThreshold: 60
                   periodSeconds: 5
         pod:
           labels:
