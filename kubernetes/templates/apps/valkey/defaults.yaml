@@ -64,7 +64,7 @@ data:
       valkey:
         controller: valkey
         ports:
-          mongodb:
+          valkey:
             port: 6379
 
     configMaps:

@@ -73,7 +73,7 @@ data:
       mariadb:
         controller: mariadb
         ports:
-          mongodb:
+          mariadb:
             port: 3306
 
     configMaps:
