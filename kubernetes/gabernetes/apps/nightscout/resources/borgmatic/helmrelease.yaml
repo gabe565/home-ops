@@ -49,7 +49,7 @@ spec:
       BORG_PASSPHRASE: ${borg_passphrase}
       MONGODB_PASSWORD:
         secretKeyRef:
-          name: nightscout-mongodb
+          name: mongodb
           key: mongodb-passwords
       PING_KEY:
         secretKeyRef:
@@ -87,6 +87,6 @@ spec:
               ping_url: http://healthchecks.healthchecks:8000/ping/${healthchecks_uuid}
             mongodb_databases:
               - name: nightscout
-                hostname: nightscout-mongodb
+                hostname: mongodb
                 username: nightscout
                 password: $${MONGODB_PASSWORD}

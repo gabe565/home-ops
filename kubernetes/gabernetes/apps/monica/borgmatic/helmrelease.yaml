@@ -40,7 +40,7 @@ spec:
       BORG_PASSPHRASE: ${borg_passphrase}
       MYSQL_PWD:
         secretKeyRef:
-          name: monica-mariadb
+          name: mariadb
           key: mariadb-password
       PING_KEY:
         secretKeyRef:
@@ -78,6 +78,6 @@ spec:
               ping_url: http://healthchecks.healthchecks:8000/ping/${healthchecks_uuid}
             mariadb_databases:
               - name: monica
-                hostname: monica-mariadb
+                hostname: mariadb
                 username: monica
                 options: --skip-comments
