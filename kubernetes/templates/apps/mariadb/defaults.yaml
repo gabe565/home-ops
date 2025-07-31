@@ -20,19 +20,21 @@ data:
               allowPrivilegeEscalation: false
               capabilities: {drop: [ALL]}
             probes:
-              liveness: &probe
+              liveness:
                 enabled: true
                 custom: true
                 spec:
                   exec:
                     command: [/scripts/liveness.sh]
               readiness:
-                <<: *probe
+                enabled: true
+                custom: true
                 spec:
                   exec:
                     command: [/scripts/readiness.sh]
               startup:
-                <<: *probe
+                enabled: true
+                custom: true
                 spec:
                   exec:
                     command: [/scripts/liveness.sh]

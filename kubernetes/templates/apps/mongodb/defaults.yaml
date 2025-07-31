@@ -21,7 +21,7 @@ data:
               allowPrivilegeEscalation: false
               capabilities: {drop: [ALL]}
             probes:
-              liveness: &probe
+              liveness:
                 enabled: true
                 custom: true
                 spec:
@@ -30,14 +30,16 @@ data:
                   periodSeconds: 60
                   timeoutSeconds: 10
               readiness:
-                <<: *probe
+                enabled: true
+                custom: true
                 spec:
                   exec:
                     command: [/scripts/readiness.sh]
                   periodSeconds: 60
                   timeoutSeconds: 10
               startup:
-                <<: *probe
+                enabled: true
+                custom: true
                 spec:
                   exec:
                     command: [/scripts/liveness.sh]
