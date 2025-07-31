@@ -36,7 +36,6 @@ data:
                 spec:
                   exec:
                     command: [/scripts/liveness.sh]
-                  initialDelaySeconds: 10
                   failureThreshold: 60
                   periodSeconds: 5
         pod:
@@ -84,14 +83,14 @@ data:
             #!/bin/sh
             password="${MARIADB_ROOT_PASSWORD:-}"
             if [ -n "${MARIADB_ROOT_PASSWORD_FILE:-}" ]; then
-                password=$(cat "$MARIADB_ROOT_PASSWORD_FILE")
+                password="$(cat "$MARIADB_ROOT_PASSWORD_FILE")"
             fi
-            mariadb-admin status -uroot -p"$password"
+            exec mariadb-admin status -b -uroot -p"$password"
           # language=shell script
           readiness.sh: |
             #!/bin/sh
             password="${MARIADB_ROOT_PASSWORD:-}"
             if [ -n "${MARIADB_ROOT_PASSWORD_FILE:-}" ]; then
-                password=$(cat "$MARIADB_ROOT_PASSWORD_FILE")
+                password="$(cat "$MARIADB_ROOT_PASSWORD_FILE")"
             fi
-            mariadb-admin ping -uroot -p"$password"
+            exec mariadb-admin ping -b -uroot -p"$password"
