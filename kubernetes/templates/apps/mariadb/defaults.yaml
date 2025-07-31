@@ -51,6 +51,7 @@ data:
 
     persistence:
       data:
+        retain: true
         globalMounts:
           - path: /var/lib/mysql
       tmp:
