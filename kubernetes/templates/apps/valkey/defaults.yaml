@@ -47,8 +47,8 @@ data:
           securityContext:
             runAsNonRoot: true
             runAsUser: 999
-            runAsGroup: 999
-            fsGroup: 999
+            runAsGroup: 1000
+            fsGroup: 1000
             fsGroupChangePolicy: OnRootMismatch
             seccompProfile: {type: RuntimeDefault}
 
