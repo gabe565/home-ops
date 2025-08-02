@@ -75,7 +75,7 @@ data:
           # language=shell script
           start.sh: |
             #!/bin/sh
-            [[ -f $VALKEY_PASSWORD_FILE ]] && export VALKEY_PASSWORD="$(cat "$VALKEY_PASSWORD_FILE")"
+            [ -f $VALKEY_PASSWORD_FILE ] && export VALKEY_PASSWORD="$(cat "$VALKEY_PASSWORD_FILE")"
             exec valkey-server \
               --port "$VALKEY_PORT" \
               --requirepass "$VALKEY_PASSWORD" \
@@ -84,8 +84,8 @@ data:
           # language=shell script
           ping.sh: |
             #!/bin/sh
-            [[ -f $VALKEY_PASSWORD_FILE ]] && export VALKEY_PASSWORD="$(cat "$VALKEY_PASSWORD_FILE")"
-            [[ -n "$VALKEY_PASSWORD" ]] && export REDISCLI_AUTH="$VALKEY_PASSWORD"
+            [ -f $VALKEY_PASSWORD_FILE ] && export VALKEY_PASSWORD="$(cat "$VALKEY_PASSWORD_FILE")"
+            [ -n "$VALKEY_PASSWORD" ] && export REDISCLI_AUTH="$VALKEY_PASSWORD"
             exec valkey-cli -h localhost -p "$VALKEY_PORT" ping
           # language=shell script
           liveness.sh: |
