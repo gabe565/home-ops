@@ -57,6 +57,9 @@ data:
       secret:
         type: secret
         identifier: valkey
+      config:
+        type: configMap
+        identifier: config
       scripts:
         type: configMap
         identifier: scripts
@@ -70,6 +73,13 @@ data:
             port: 6379
 
     configMaps:
+      config:
+        data:
+          valkey.conf: |
+            # Enable AOF https://redis.io/topics/persistence#append-only-file
+            appendonly yes
+            # Disable RDB persistence, AOF persistence already enabled.
+            save ""
       scripts:
         data:
           # language=shell script
@@ -77,10 +87,10 @@ data:
             #!/bin/sh
             [ -f $VALKEY_PASSWORD_FILE ] && export VALKEY_PASSWORD="$(cat "$VALKEY_PASSWORD_FILE")"
             exec valkey-server \
+              /config/valkey.conf \
               --port "$VALKEY_PORT" \
               --requirepass "$VALKEY_PASSWORD" \
               --primaryauth "$VALKEY_PASSWORD" \
-              --appendonly yes \
               "$@" $VALKEY_EXTRA_FLAGS
           # language=shell script
           ping.sh: |
