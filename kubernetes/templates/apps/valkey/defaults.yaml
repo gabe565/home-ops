@@ -14,7 +14,7 @@ data:
           valkey:
             command: [/scripts/start.sh]
             env:
-              VALKEY_PASSWORD_FILE: /secrets/valkey-password
+              VALKEY_PASSWORD_FILE: /secret/valkey-password
               VALKEY_PORT: 6379
             securityContext:
               readOnlyRootFilesystem: true
@@ -54,13 +54,13 @@ data:
 
     persistence:
       data:
+      secret:
+        type: secret
+        identifier: valkey
       scripts:
         type: configMap
         identifier: scripts
         defaultMode: 0o550
-      secrets:
-        type: secret
-        identifier: password
 
     service:
       valkey:

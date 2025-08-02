@@ -13,8 +13,8 @@ data:
         containers:
           mariadb:
             env:
-              MARIADB_ROOT_PASSWORD_FILE: /secrets/mariadb-root-password
-              MARIADB_PASSWORD_FILE: /secrets/mariadb-password
+              MARIADB_ROOT_PASSWORD_FILE: /secret/mariadb-root-password
+              MARIADB_PASSWORD_FILE: /secret/mariadb-password
             securityContext:
               readOnlyRootFilesystem: true
               allowPrivilegeEscalation: false
@@ -56,6 +56,9 @@ data:
         retain: true
         globalMounts:
           - path: /var/lib/mysql
+      secret:
+        type: secret
+        identifier: mariadb
       tmp:
         type: emptyDir
         globalMounts:
@@ -67,9 +70,6 @@ data:
         type: configMap
         identifier: scripts
         defaultMode: 0o550
-      secrets:
-        type: secret
-        identifier: password
 
     service:
       mariadb:

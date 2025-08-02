@@ -34,6 +34,6 @@ spec:
         type: emptyDir
 
     secrets:
-      password:
+      valkey:
         stringData:
           valkey-password: ${valkey_password}

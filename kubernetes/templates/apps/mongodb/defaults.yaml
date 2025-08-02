@@ -14,8 +14,8 @@ data:
           mongodb:
             env:
               MONGO_INITDB_ROOT_USERNAME: root
-              MONGO_INITDB_ROOT_PASSWORD_FILE: /secrets/mongodb-root-password
-              MONGODB_EXTRA_PASSWORDS_FILE: /secrets/mongodb-passwords
+              MONGO_INITDB_ROOT_PASSWORD_FILE: /secret/mongodb-root-password
+              MONGODB_EXTRA_PASSWORDS_FILE: /secret/mongodb-passwords
             securityContext:
               readOnlyRootFilesystem: true
               allowPrivilegeEscalation: false
@@ -62,6 +62,9 @@ data:
       data:
         globalMounts:
           - path: /data/db
+      secret:
+        type: secret
+        identifier: mongodb
       tmp:
         type: emptyDir
         globalMounts:
@@ -78,9 +81,6 @@ data:
         type: configMap
         identifier: scripts
         defaultMode: 0o550
-      secrets:
-        type: secret
-        identifier: mongodb
 
     service:
       mongodb:

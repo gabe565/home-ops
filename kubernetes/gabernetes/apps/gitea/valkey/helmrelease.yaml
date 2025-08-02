@@ -37,6 +37,6 @@ spec:
         retain: true
 
     secrets:
-      password:
+      valkey:
         stringData:
           valkey-password: ${valkey_password}
