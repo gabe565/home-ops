@@ -80,7 +80,8 @@ data:
               --port "$VALKEY_PORT" \
               --requirepass "$VALKEY_PASSWORD" \
               --primaryauth "$VALKEY_PASSWORD" \
-              --appendonly yes
+              --appendonly yes \
+              "$@" $VALKEY_EXTRA_FLAGS
           # language=shell script
           ping.sh: |
             #!/bin/sh
