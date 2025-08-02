@@ -68,5 +68,5 @@ spec:
         interval: 1m
       targets:
         - name: renovate
-          url: http://renovate.renovate.svc.cluster.local:8080/api/status
+          url: http://renovate.renovate.svc.cluster.local:8080/system/v1/status
           module: renovate
