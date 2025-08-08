@@ -32,7 +32,7 @@ spec:
                   name: trmnl-env
             env:
               TZ: America/Chicago
-              IMAGE_URL: http://192.168.1.228
+              IMAGE_URL: http://192.168.1.224
               NIGHTSCOUT_URL: http://nightscout.nightscout:1337
               REAL_IP_HEADER: "true"
               TIME_FORMAT: 15:04
@@ -65,7 +65,7 @@ spec:
       trmnl:
         controller: trmnl
         type: LoadBalancer
-        loadBalancerIP: 192.168.1.228
+        loadBalancerIP: 192.168.1.224
         externalTrafficPolicy: Local
         ports:
           http:
