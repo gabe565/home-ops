@@ -14,10 +14,15 @@ metadata:
   annotations:
     reflector.v1.k8s.emberstack.com/reflects: cert-manager/${certificate_name}
 ---
-apiVersion: v1
-kind: Secret
+apiVersion: cert-manager.io/v1
+kind: Certificate
 metadata:
- name: mosquitto-tls
- namespace: home-assistant
- annotations:
-   reflector.v1.k8s.emberstack.com/reflects: mosquitto/mosquitto-tls
+  name: mqtt-tls
+  namespace: home-assistant
+spec:
+  secretName: mqtt-tls
+  commonName: homeassistant
+  duration: 87600h # 10 years
+  issuerRef:
+    kind: ClusterIssuer
+    name: selfsigned
