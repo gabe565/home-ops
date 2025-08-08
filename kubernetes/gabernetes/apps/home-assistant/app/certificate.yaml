@@ -13,3 +13,11 @@ metadata:
   namespace: home-assistant
   annotations:
     reflector.v1.k8s.emberstack.com/reflects: cert-manager/${certificate_name}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+ name: mosquitto-tls
+ namespace: home-assistant
+ annotations:
+   reflector.v1.k8s.emberstack.com/reflects: mosquitto/mosquitto-tls
