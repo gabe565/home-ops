@@ -5,9 +5,6 @@ metadata:
   namespace: mosquitto
 spec:
   secretName: mosquitto-tls
-  secretTemplate:
-    annotations:
-      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
   dnsNames:
     - ${app_url}
     - mosquitto.mosquitto
