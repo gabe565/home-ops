@@ -21,7 +21,7 @@ spec:
     controllers:
       ambient-weather-fusion:
         annotations:
-          secret.reloader.stakater.com/reload: envs,mosquitto-tls
+          secret.reloader.stakater.com/reload: envs,mqtt-tls
         containers:
           app:
             image:
@@ -30,8 +30,9 @@ spec:
               pullPolicy: Always
             env:
               AW_MQTT_URL: mqtts://mosquitto.mosquitto:8883
-              AW_MQTT_USERNAME: ambient_weather_fusion
-              AW_MQTT_CA_PATH: /mosquitto-tls/ca.crt
+              AW_MQTT_CA: /mqtt-tls/ca.crt
+              AW_MQTT_CLIENT_CERT: /mqtt-tls/tls.crt
+              AW_MQTT_CLIENT_KEY: /mqtt-tls/tls.key
             envFrom:
               - secretRef:
                   name: envs
@@ -43,10 +44,7 @@ spec:
             policy.gabe565.com/egress-mosquitto: "true"
 
     persistence:
-      mosquitto-tls:
+      mqtt-tls:
         enabled: true
         type: secret
-        name: mosquitto-tls
-        globalMounts:
-          - path: /mosquitto-tls/ca.crt
-            subPath: ca.crt
+        name: mqtt-tls
