@@ -21,20 +21,7 @@ spec:
     controllers:
       mosquitto:
         annotations:
-          secret.reloader.stakater.com/reload: mosquitto-auth
-        initContainers:
-          split-ca-crt:
-            image:
-              repository: alpine
-              tag: 3.22.1@sha256:4bcff63911fcb4448bd4fdacec207030997caf25e9bea4045fa6c8c44de311d1
-              pullPolicy: IfNotPresent
-            command:
-              - sh
-              - -c
-              - |
-                set -eux
-                apk add --no-cache coreutils
-                csplit -f /tls/ca/tls- -b "%1d.crt" -s -z /tls/tls.crt '/-----BEGIN CERTIFICATE-----/' '{1}'
+          secret.reloader.stakater.com/reload: mosquitto-auth,mosquitto-tls
         containers:
           app:
             image:
@@ -114,14 +101,7 @@ spec:
       tls:
         enabled: true
         type: secret
-        name: ${certificate_name}
-        globalMounts:
-          - path: /tls
-      ca:
-        enabled: true
-        type: emptyDir
-        globalMounts:
-          - path: /tls/ca
+        name: mosquitto-tls
 
     configMaps:
       config:
@@ -139,8 +119,8 @@ spec:
             persistence_location /mosquitto/data
             autosave_interval 1800
 
-            cafile /tls/ca/tls-1.crt
-            certfile /tls/ca/tls-0.crt
+            cafile /tls/ca.crt
+            certfile /tls/tls.crt
             keyfile /tls/tls.key
 
             log_dest stderr

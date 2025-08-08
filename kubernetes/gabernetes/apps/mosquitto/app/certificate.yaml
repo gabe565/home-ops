@@ -1,13 +1,16 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: ${app_url}
+  name: mosquitto-tls
   namespace: mosquitto
 spec:
-  secretName: ${certificate_name}
-  commonName: ${app_url}
+  secretName: mosquitto-tls
   dnsNames:
     - ${app_url}
+    - mosquitto.mosquitto
+  ipAddresses:
+    - 192.168.1.226
+  duration: 8760h # 1 year
   issuerRef:
-    name: letsencrypt-dns01
     kind: ClusterIssuer
+    name: selfsigned
