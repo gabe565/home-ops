@@ -21,7 +21,7 @@ spec:
     controllers:
       zigbee2mqtt:
         annotations:
-          secret.reloader.stakater.com/reload: mosquitto-tls
+          secret.reloader.stakater.com/reload: mqtt-tls
         containers:
           app:
             image:
@@ -75,13 +75,10 @@ spec:
         enabled: true
         accessMode: ReadWriteOnce
         size: 128Mi
-      mosquitto-tls:
+      mqtt-tls:
         enabled: true
         type: secret
-        name: mosquitto-tls
-        globalMounts:
-          - path: /mosquitto-tls/ca.crt
-            subPath: ca.crt
+        name: mqtt-tls
 
     ingress:
       zigbee2mqtt:

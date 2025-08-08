@@ -6,10 +6,15 @@ metadata:
   annotations:
     reflector.v1.k8s.emberstack.com/reflects: cert-manager/${certificate_name}
 ---
-apiVersion: v1
-kind: Secret
+apiVersion: cert-manager.io/v1
+kind: Certificate
 metadata:
- name: mosquitto-tls
- namespace: zigbee2mqtt
- annotations:
-   reflector.v1.k8s.emberstack.com/reflects: mosquitto/mosquitto-tls
+  name: mqtt-tls
+  namespace: zigbee2mqtt
+spec:
+  secretName: mqtt-tls
+  commonName: zigbee2mqtt
+  duration: 8760h # 1 year
+  issuerRef:
+    kind: ClusterIssuer
+    name: selfsigned
