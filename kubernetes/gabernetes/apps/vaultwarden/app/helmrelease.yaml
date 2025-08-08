@@ -20,6 +20,8 @@ spec:
   values:
     controllers:
       vaultwarden:
+        annotations:
+          secret.reloader.stakater.com/reload: internal-tls
         strategy: Recreate
         containers:
           app:
@@ -31,6 +33,7 @@ spec:
               TZ: America/Chicago
               DOMAIN: https://${app_url}
               ROCKET_PORT: "8080"
+              ROCKET_TLS: '{certs="/tls/tls.crt",key="/tls/tls.key"}'
               ADMIN_TOKEN: ${admin_token}
               DATABASE_URL:
                 secretKeyRef:
@@ -47,7 +50,7 @@ spec:
             probes:
               liveness: &probe
                 enabled: true
-                type: HTTP
+                type: HTTPS
                 path: /alive
               readiness: *probe
               startup:
@@ -88,10 +91,16 @@ spec:
         accessMode: ReadWriteOnce
         storageClass: longhorn-ssd
         size: 8Gi
+      tls:
+        enabled: true
+        type: secret
+        name: internal-tls
 
     ingress:
       vaultwarden:
         enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
         hosts:
           - host: ${app_url}
             paths:
@@ -106,6 +115,7 @@ spec:
       admin:
         enabled: true
         annotations:
+          nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
           nginx.ingress.kubernetes.io/auth-url: |-
             http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
           nginx.ingress.kubernetes.io/auth-signin: |-
