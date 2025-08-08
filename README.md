@@ -85,6 +85,12 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><a href="kubernetes/gabernetes/apps/adguard-home/external-dns/helmrelease.yaml">adguard-home-external-dns</a></td>
   </tr>
   <tr>
+    <td>ambient-weather-fusion</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/ambient-weather-fusion/resources/helmrelease.yaml">ambient-weather-fusion</a></td>
+    <td></td>
+  </tr>
+  <tr>
     <td>ascii-movie</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/ascii-movie/app/helmrelease.yaml">ascii-movie</a></td>
@@ -197,14 +203,10 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><a href="kubernetes/gabernetes/apps/healthchecks/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/healthchecks/postgresql.yaml">postgresql</a></td>
   </tr>
   <tr>
-    <td rowspan="3">home-assistant</td>
-    <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/gabernetes/apps/home-assistant/app/ambient-weather-fusion.yaml">ambient-weather-fusion</a></td>
-    <td rowspan="3"><a href="kubernetes/gabernetes/apps/home-assistant/app/borgmatic.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/home-assistant/postgresql.yaml">postgresql</a></td>
-  </tr>
-  <tr>
+    <td rowspan="2">home-assistant</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/home-assistant/app/helmrelease.yaml">home-assistant</a></td>
+    <td rowspan="2"><a href="kubernetes/gabernetes/apps/home-assistant/app/borgmatic.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/home-assistant/postgresql.yaml">postgresql</a></td>
   </tr>
   <tr>
     <td><code>HelmRelease</code></td>

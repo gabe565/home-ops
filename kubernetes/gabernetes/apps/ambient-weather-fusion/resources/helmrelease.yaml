@@ -3,7 +3,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: ambient-weather-fusion
-  namespace: home-assistant
+  namespace: ambient-weather-fusion
 spec:
   chart:
     spec:
@@ -21,7 +21,7 @@ spec:
     controllers:
       ambient-weather-fusion:
         annotations:
-          secret.reloader.stakater.com/reload: ambient-weather-fusion-envs,mosquitto-tls
+          secret.reloader.stakater.com/reload: envs,mosquitto-tls
         containers:
           app:
             image:
@@ -34,7 +34,7 @@ spec:
               AW_MQTT_CA_PATH: /mosquitto-tls/ca.crt
             envFrom:
               - secretRef:
-                  name: ambient-weather-fusion-envs
+                  name: envs
             securityContext:
               readOnlyRootFilesystem: true
         pod:
