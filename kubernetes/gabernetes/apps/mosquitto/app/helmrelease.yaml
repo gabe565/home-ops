@@ -48,6 +48,10 @@ spec:
               allowPrivilegeEscalation: false
               capabilities: {drop: [ALL]}
         pod:
+          securityContext:
+            fsGroup: 1883
+            fsGroupChangePolicy: OnRootMismatch
+            seccompProfile: {type: RuntimeDefault}
           labels:
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-nginx: "true"
@@ -91,13 +95,7 @@ spec:
         enabled: true
         type: secret
         name: mosquitto-auth
-        advancedMounts:
-          mosquitto:
-            app:
-              - path: /mosquitto/config/passwd
-                subPath: passwd
-              - path: /mosquitto/config/acl
-                subPath: acl
+        defaultMode: 0o440
       tls:
         enabled: true
         type: secret
@@ -127,5 +125,5 @@ spec:
             log_type error
             log_type warning
 
-            password_file /mosquitto/config/passwd
-            acl_file /mosquitto/config/acl
+            password_file /auth/passwd
+            acl_file /auth/acl
