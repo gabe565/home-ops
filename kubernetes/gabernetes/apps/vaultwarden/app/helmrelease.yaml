@@ -45,15 +45,16 @@ spec:
               USER_SEND_LIMIT: "1000000" # 1GB
 
             probes:
-              startup:
+              liveness: &probe
                 enabled: true
+                type: HTTP
+                path: /alive
+              readiness: *probe
+              startup:
+                <<: *probe
                 spec:
                   failureThreshold: 30
                   periodSeconds: 5
-              liveness:
-                enabled: true
-              readiness:
-                enabled: true
 
             securityContext:
               allowPrivilegeEscalation: false
