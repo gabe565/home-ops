@@ -21,6 +21,14 @@ spec:
       type: Recreate
 
     deployment:
+      annotations:
+        secret.reloader.stakater.com/reload: internal-tls
+      labels:
+        policy.gabe565.com/egress-namespace: "true"
+        policy.gabe565.com/egress-world: "true"
+        policy.gabe565.com/ingress-nginx: "true"
+        policy.gabe565.com/ingress-prometheus: "true"
+        policy.gabe565.com/ingress-world: "true"
       env:
         - name: TZ
           value: America/Chicago
@@ -28,17 +36,12 @@ spec:
           value: "1001"
         - name: USER_GID
           value: "1003"
-      labels:
-        policy.gabe565.com/egress-namespace: "true"
-        policy.gabe565.com/egress-world: "true"
-        policy.gabe565.com/ingress-nginx: "true"
-        policy.gabe565.com/ingress-prometheus: "true"
-        policy.gabe565.com/ingress-world: "true"
 
     ingress:
       enabled: true
       className: nginx
       annotations:
+        nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
         nginx.ingress.kubernetes.io/from-to-www-redirect: "false"
         nginx.ingress.kubernetes.io/proxy-body-size: "0"
       hosts:
@@ -63,6 +66,15 @@ spec:
     persistence:
       storageClass: longhorn-ssd
 
+    extraVolumes:
+      - name: tls
+        secret:
+          secretName: internal-tls
+
+    extraVolumeMounts:
+      - name: tls
+        mountPath: /tls
+
     gitea:
       admin:
         password: ${gitea_admin_password}
@@ -74,6 +86,9 @@ spec:
         server:
           DOMAIN: ${app_url}
           ROOT_URL: https://${app_url}
+          PROTOCOL: https
+          CERT_FILE: /tls/tls.crt
+          KEY_FILE: /tls/tls.key
           LFS_JWT_SECRET: ${lfs_jwt_secret}
           DISABLE_SSH: "true"
         database:
