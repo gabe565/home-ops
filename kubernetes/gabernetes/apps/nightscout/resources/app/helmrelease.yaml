@@ -19,6 +19,8 @@ spec:
   values:
     controllers:
       main:
+        annotations:
+          secret.reloader.stakater.com/reload: internal-tls
         containers:
           nightscout:
             image:
@@ -28,9 +30,12 @@ spec:
             env:
               HOSTNAME: "::"
               PORT: "1337"
+              SSL_CERT: /tls/tls.crt
+              SSL_KEY: /tls/tls.key
+              SSL_CA: /tls/ca.crt
+
               TZ: America/Chicago
               TIME_FORMAT: "24"
-              INSECURE_USE_HTTP: "true"
               API_SECRET: ${api_secret}
               AUTH_DEFAULT_ROLES: denied
 
@@ -92,6 +97,9 @@ spec:
             seccompProfile: {type: RuntimeDefault}
 
     persistence:
+      tls:
+        type: secret
+        name: internal-tls
       scripts:
         type: configMap
         identifier: scripts
@@ -107,6 +115,7 @@ spec:
     ingress:
       nightscout:
         annotations:
+          nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
           nginx.ingress.kubernetes.io/auth-url: |-
             http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
           nginx.ingress.kubernetes.io/auth-signin: https://$host/outpost.goauthentik.io/start?rd=$scheme://$http_host$escaped_request_uri
@@ -133,6 +142,8 @@ spec:
               - ${app_url}
       api:
         enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
         hosts:
           - host: ${api_url}
             paths:
@@ -166,9 +177,10 @@ spec:
             #!/bin/sh
             response="$(
               wget -q -O - \
+                --no-check-certificate \
                 --header 'X-Forwarded-Proto: https' \
                 --header "Api-Secret: $(echo -n "$API_SECRET" | sha1sum | cut -d' ' -f1)" \
-                "http://localhost:$PORT/api/v2/status" \
+                "https://localhost:$PORT/api/v2/status" \
             )"
             if ! echo "$response" | grep -Fq 'STATUS OK'; then
               echo "$response"
