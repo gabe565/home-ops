@@ -104,13 +104,13 @@ spec:
       cache:
         enabled: true
         type: emptyDir
-        advancedMounts:
-          home-assistant:
-            app:
-              - path: /root/.cache
-                subPath: root
-              - path: /run
-                subPath: run
+        globalMounts:
+          - path: /root/.cache
+            subPath: root/.cache
+          - path: /root/.local
+            subPath: root/.local
+          - path: /run
+            subPath: run
       code-config:
         enabled: true
         type: emptyDir
