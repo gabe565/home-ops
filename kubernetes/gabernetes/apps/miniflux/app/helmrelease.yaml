@@ -76,7 +76,8 @@ spec:
         controller: miniflux
         ports:
           http:
-            port: 8080
+            port: 443
+            targetPort: 8080
 
     ingress:
       miniflux:

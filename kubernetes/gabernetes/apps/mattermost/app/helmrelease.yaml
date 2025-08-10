@@ -20,6 +20,8 @@ spec:
   values:
     controllers:
       mattermost:
+        annotations:
+          secret.reloader.stakater.com/reload: internal-tls
         type: statefulset
         replicas: 2
         containers:
@@ -33,6 +35,9 @@ spec:
               MM_SERVICESETTINGS_SITEURL: https://${app_url}
               MM_SERVICESETTINGS_ENABLELOCALMODE: "true"
               MM_SERVICESETTINGS_ENABLEAPICHANNELDELETION: "true"
+              MM_SERVICESETTINGS_CONNECTIONSECURITY: TLS
+              MM_SERVICESETTINGS_TLSCERTFILE: /tls/tls.crt
+              MM_SERVICESETTINGS_TLSKEYFILE: /tls/tls.key
 
               # Database
               MM_SQLSETTINGS_DRIVERNAME: postgres
@@ -87,7 +92,7 @@ spec:
             probes:
               liveness: &probe
                 enabled: true
-                type: HTTP
+                type: HTTPS
                 path: /api/v4/system/ping
               readiness: *probe
               startup:
@@ -141,6 +146,9 @@ spec:
             protocol: UDP
 
     persistence:
+      tls:
+        type: secret
+        name: internal-tls
       tmp:
         enabled: true
         type: emptyDir
@@ -160,6 +168,7 @@ spec:
       mattermost:
         enabled: true
         annotations:
+          nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
           nginx.ingress.kubernetes.io/proxy-body-size: 100M
         hosts:
           - host: ${app_url}
