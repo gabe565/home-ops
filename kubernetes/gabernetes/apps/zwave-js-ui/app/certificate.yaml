@@ -5,3 +5,18 @@ metadata:
   namespace: zwave-js-ui
   annotations:
     reflector.v1.k8s.emberstack.com/reflects: cert-manager/${certificate_name}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: internal-tls
+  namespace: zwave-js-ui
+spec:
+  secretName: internal-tls
+  dnsNames:
+    - ${app_url}
+    - zwave-js-ui.zwave-js-ui
+  duration: 8760h # 1 year
+  issuerRef:
+    kind: ClusterIssuer
+    name: selfsigned
