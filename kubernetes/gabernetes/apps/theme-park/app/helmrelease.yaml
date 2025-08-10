@@ -20,6 +20,8 @@ spec:
   values:
     controllers:
       theme-park:
+        annotations:
+          configmap.reloader.stakater.com/reload: plex-alt-logo
         strategy: RollingUpdate
         containers:
           app:
@@ -55,6 +57,11 @@ spec:
             seccompProfile: {type: RuntimeDefault}
 
     persistence:
+      plex-alt-logo:
+        type: configMap
+        name: plex-alt-logo
+        globalMounts:
+          - path: /usr/share/nginx/html/css/addons/plex/plex-alt-logo
       tmp:
         type: emptyDir
 
@@ -75,20 +82,7 @@ spec:
                 service:
                   identifier: theme-park
                   port: http
-        tls: &tls
+        tls:
           - secretName: ${certificate_name}
             hosts:
               - ${app_url}
-      plex-logo:
-        enabled: true
-        annotations:
-          nginx.ingress.kubernetes.io/temporal-redirect: "https://theme-park.${s3_url}/plex.svg"
-        hosts:
-          - host: ${app_url}
-            paths:
-              - path: /css/addons/plex/plex-alt-logo/SeekPng.com_your-logo-here-png_2467553.png
-                pathType: ImplementationSpecific
-                service:
-                  identifier: theme-park
-                  port: http
-        tls: *tls
