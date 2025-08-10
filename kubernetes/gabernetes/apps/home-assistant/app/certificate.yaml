@@ -26,3 +26,33 @@ spec:
   issuerRef:
     kind: ClusterIssuer
     name: selfsigned
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: internal-tls
+  namespace: home-assistant
+spec:
+  secretName: internal-tls
+  dnsNames:
+    - ${app_url}
+    - home-assistant.home-assistant
+  duration: 8760h # 1 year
+  issuerRef:
+    kind: ClusterIssuer
+    name: selfsigned
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: code-internal-tls
+  namespace: home-assistant
+spec:
+  secretName: code-internal-tls
+  dnsNames:
+    - ${code_url}
+    - home-assistant-code.home-assistant
+  duration: 8760h # 1 year
+  issuerRef:
+    kind: ClusterIssuer
+    name: selfsigned
