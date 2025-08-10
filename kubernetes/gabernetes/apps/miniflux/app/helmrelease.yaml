@@ -70,7 +70,9 @@ spec:
                   failureThreshold: 30
                   periodSeconds: 5
             securityContext:
+              allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
+              capabilities: {drop: [ALL]}
         pod:
           labels:
             policy.gabe565.com/egress-nginx: "true"
@@ -78,11 +80,20 @@ spec:
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-nginx: "true"
             policy.gabe565.com/ingress-prometheus: "true"
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
+            fsGroup: 65534
+            fsGroupChangePolicy: OnRootMismatch
+            seccompProfile: {type: RuntimeDefault}
 
     persistence:
       tls:
         type: secret
         name: internal-tls
+      tmp:
+        type: emptyDir
 
     service:
       miniflux:
