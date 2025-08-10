@@ -20,6 +20,8 @@ spec:
   values:
     controllers:
       miniflux:
+        annotations:
+          secret.reloader.stakater.com/reload: internal-tls
         strategy: RollingUpdate
         containers:
           app:
@@ -29,6 +31,9 @@ spec:
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
+
+              CERT_FILE: /tls/tls.crt
+              KEY_FILE: /tls/tls.key
 
               DATABASE_URL:
                 secretKeyRef:
@@ -71,6 +76,11 @@ spec:
             policy.gabe565.com/ingress-nginx: "true"
             policy.gabe565.com/ingress-prometheus: "true"
 
+    persistence:
+      tls:
+        type: secret
+        name: internal-tls
+
     service:
       miniflux:
         controller: miniflux
@@ -82,6 +92,8 @@ spec:
     ingress:
       miniflux:
         enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
         hosts:
           - host: ${app_url}
             paths:
