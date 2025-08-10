@@ -57,15 +57,18 @@ spec:
 
               FETCH_YOUTUBE_WATCH_TIME: "1"
             probes:
-              startup:
+              liveness: &probe
                 enabled: true
+                type: HTTPS
+                path: /liveness
+              readiness:
+                <<: *probe
+                path: /readiness
+              startup:
+                <<: *probe
                 spec:
                   failureThreshold: 30
                   periodSeconds: 5
-              liveness:
-                enabled: true
-              readiness:
-                enabled: true
             securityContext:
               readOnlyRootFilesystem: true
         pod:
@@ -86,8 +89,7 @@ spec:
         controller: miniflux
         ports:
           http:
-            port: 443
-            targetPort: 8080
+            port: 8080
 
     ingress:
       miniflux:
