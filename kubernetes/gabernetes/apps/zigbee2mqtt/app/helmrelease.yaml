@@ -21,7 +21,7 @@ spec:
     controllers:
       zigbee2mqtt:
         annotations:
-          secret.reloader.stakater.com/reload: mqtt-tls
+          secret.reloader.stakater.com/reload: internal-tls,mqtt-tls
         containers:
           app:
             image:
@@ -63,22 +63,24 @@ spec:
             fsGroupChangePolicy: OnRootMismatch
             seccompProfile: {type: RuntimeDefault}
 
+    persistence:
+      data:
+        enabled: true
+        accessMode: ReadWriteOnce
+        size: 128Mi
+      tls:
+        type: secret
+        name: internal-tls
+      mqtt-tls:
+        type: secret
+        name: mqtt-tls
+
     service:
       zigbee2mqtt:
         controller: zigbee2mqtt
         ports:
           http:
             port: 8080
-
-    persistence:
-      data:
-        enabled: true
-        accessMode: ReadWriteOnce
-        size: 128Mi
-      mqtt-tls:
-        enabled: true
-        type: secret
-        name: mqtt-tls
 
     ingress:
       zigbee2mqtt:
@@ -95,6 +97,7 @@ spec:
             hosts:
               - ${app_url}
         annotations:
+          nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
           nginx.ingress.kubernetes.io/auth-url: |-
             http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
           nginx.ingress.kubernetes.io/auth-signin: |-
