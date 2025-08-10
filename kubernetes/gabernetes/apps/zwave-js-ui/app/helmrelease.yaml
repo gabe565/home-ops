@@ -36,15 +36,24 @@ spec:
               limits:
                 squat.ai/zwave: 1
             probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet: &httpGet
+                    port: 8091
+                    path: /health
+                    httpHeaders:
+                      - name: Accept
+                        value: text/plain
+              readiness: *probe
               startup:
+                <<: *probe
                 enabled: true
                 spec:
+                  httpGet: *httpGet
                   failureThreshold: 30
                   periodSeconds: 5
-              liveness:
-                enabled: true
-              readiness:
-                enabled: true
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
