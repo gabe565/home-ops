@@ -20,6 +20,8 @@ spec:
   values:
     controllers:
       trmnl:
+        annotations:
+          secret.reloader.stakater.com/reload: internal-tls
         strategy: RollingUpdate
         containers:
           trmnl:
@@ -33,7 +35,8 @@ spec:
             env:
               TZ: America/Chicago
               IMAGE_URL: http://192.168.1.224
-              NIGHTSCOUT_URL: http://nightscout.nightscout:1337
+              NIGHTSCOUT_URL: https://nightscout.nightscout:1337
+              NIGHTSCOUT_CA_CERT_PATH: /tls/ca.crt
               REAL_IP_HEADER: "true"
               TIME_FORMAT: 15:04
             securityContext:
@@ -60,6 +63,14 @@ spec:
             runAsUser: 65534
             runAsGroup: 65534
             seccompProfile: {type: RuntimeDefault}
+
+    persistence:
+      tls:
+        type: secret
+        name: internal-tls
+        globalMounts:
+          - path: /tls/ca.crt
+            subPath: ca.crt
 
     service:
       trmnl:
