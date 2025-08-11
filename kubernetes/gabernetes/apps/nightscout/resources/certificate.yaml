@@ -21,3 +21,18 @@ spec:
   issuerRef:
     kind: ClusterIssuer
     name: selfsigned
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: trmnl-internal-tls
+  namespace: nightscout
+spec:
+  secretName: trmnl-internal-tls
+  dnsNames:
+    - ${trmnl_url}
+    - trmnl.nightscout
+  duration: 8760h # 1 year
+  issuerRef:
+    kind: ClusterIssuer
+    name: selfsigned

@@ -34,7 +34,9 @@ spec:
                   name: trmnl-env
             env:
               TZ: America/Chicago
-              IMAGE_URL: http://192.168.1.224
+              IMAGE_URL: https://${trmnl_url}
+              TLS_CERT_PATH: /tls/tls.crt
+              TLS_KEY_PATH: /tls/tls.key
               NIGHTSCOUT_URL: https://nightscout.nightscout:1337
               NIGHTSCOUT_CA_CERT_PATH: /tls/ca.crt
               REAL_IP_HEADER: "true"
@@ -46,7 +48,7 @@ spec:
             probes:
               liveness: &probe
                 enabled: true
-                type: HTTP
+                type: HTTPS
                 path: /ping
               readiness: *probe
               startup:
@@ -67,25 +69,20 @@ spec:
     persistence:
       tls:
         type: secret
-        name: internal-tls
-        globalMounts:
-          - path: /tls/ca.crt
-            subPath: ca.crt
+        name: trmnl-internal-tls
 
     service:
       trmnl:
         controller: trmnl
-        type: LoadBalancer
-        loadBalancerIP: 192.168.1.224
-        externalTrafficPolicy: Local
         ports:
           http:
-            port: 80
-            targetPort: 8080
+            port: 8080
 
     ingress:
       trmnl:
         enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
         hosts:
           - host: ${trmnl_url}
             paths:
