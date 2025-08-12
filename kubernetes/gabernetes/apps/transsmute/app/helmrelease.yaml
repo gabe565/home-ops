@@ -37,15 +37,16 @@ spec:
               - secretRef:
                   name: transsmute-env
             probes:
-              startup:
+              liveness: &probe
                 enabled: true
+                type: HTTPS
+                path: /ping
+              readiness: *probe
+              startup:
+                <<: *probe
                 spec:
                   failureThreshold: 30
                   periodSeconds: 5
-              liveness:
-                enabled: true
-              readiness:
-                enabled: true
             securityContext:
               readOnlyRootFilesystem: true
         pod:
