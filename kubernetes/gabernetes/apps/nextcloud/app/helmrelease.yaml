@@ -41,6 +41,7 @@ spec:
 
     ingress:
       enabled: true
+      className: nginx-internal
       annotations:
         nginx.ingress.kubernetes.io/proxy-body-size: 4G
       tls:
