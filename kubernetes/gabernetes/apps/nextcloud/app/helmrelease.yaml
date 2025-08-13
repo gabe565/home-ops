@@ -22,11 +22,22 @@ spec:
 
     nextcloud:
       host: ${app_url}
+      extraEnv:
+        - name: REDIS_HOST
+          value: valkey
+        - name: REDIS_HOST_PORT
+          value: "6379"
+        - name: REDIS_HOST_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: valkey
+              key: valkey-password
 
     podLabels:
       policy.gabe565.com/egress-namespace: "true"
       policy.gabe565.com/egress-world: "true"
       policy.gabe565.com/ingress-nginx: "true"
+      valkey-client: "true"
 
     ingress:
       enabled: true
@@ -44,16 +55,7 @@ spec:
         tag: stable-alpine
 
     redis:
-      enabled: true
-      auth:
-        password: ${redis_password}
-      master:
-        persistence:
-          enabled: false
-        podLabels:
-          policy.gabe565.com/ingress-namespace: "true"
-      replica:
-        replicaCount: 0
+      enabled: false
 
     internalDatabase:
       enabled: false

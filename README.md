@@ -342,7 +342,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>nextcloud</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/nextcloud/app/helmrelease.yaml">nextcloud</a></td>
-    <td><a href="kubernetes/gabernetes/apps/nextcloud/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/nextcloud/postgresql.yaml">postgresql</a></td>
+    <td><a href="kubernetes/gabernetes/apps/nextcloud/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/nextcloud/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/nextcloud/app/valkey/helmrelease.yaml">valkey</a></td>
   </tr>
   <tr>
     <td>nfs-provisioner</td>
