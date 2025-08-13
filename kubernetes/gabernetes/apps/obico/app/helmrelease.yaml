@@ -30,11 +30,17 @@ spec:
         EMAIL_PORT: '587'
         EMAIL_USE_TLS: 'True'
         TELEGRAM_BOT_TOKEN: ${telegram_bot_token}
+        REDIS_PASSWORD:
+          secretKeyRef:
+            name: valkey
+            key: valkey-password
+        REDIS_URL: redis://:$(REDIS_PASSWORD)@valkey:6379
 
       podLabels:
         policy.gabe565.com/egress-namespace: "true"
         policy.gabe565.com/egress-world: "true"
         policy.gabe565.com/ingress-nginx: "true"
+        valkey-client: "true"
 
       persistence:
         data:
@@ -72,6 +78,4 @@ spec:
         policy.gabe565.com/ingress-namespage: "true"
 
     redis:
-      master:
-        podLabels:
-          policy.gabe565.com/ingress-namespace: "true"
+      enabled: false

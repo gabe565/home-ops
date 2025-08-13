@@ -376,7 +376,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>obico</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/obico/app/helmrelease.yaml">obico</a></td>
-    <td><a href="kubernetes/gabernetes/apps/obico/borgmatic/helmrelease.yaml">borgmatic</a></td>
+    <td><a href="kubernetes/gabernetes/apps/obico/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/obico/app/valkey/helmrelease.yaml">valkey</a></td>
   </tr>
   <tr>
     <td>open-webui</td>
