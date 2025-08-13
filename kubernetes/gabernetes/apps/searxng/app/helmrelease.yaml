@@ -38,7 +38,7 @@ spec:
         containers:
           app:
             image:
-              repository: searxng/searxng
+              repository: ghcr.io/searxng/searxng
               tag: latest
             env:
               TZ: America/Chicago
