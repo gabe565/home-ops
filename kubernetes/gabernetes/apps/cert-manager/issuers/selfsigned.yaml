@@ -32,3 +32,23 @@ metadata:
 spec:
   ca:
     secretName: selfsigned-ca-tls
+---
+apiVersion: trust.cert-manager.io/v1alpha1
+kind: Bundle
+metadata:
+  name: ca-bundle
+spec:
+  sources:
+    - useDefaultCAs: true
+    - secret:
+        name: selfsigned-ca-tls
+        key: tls.crt
+  target:
+    namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: cert-manager
+    configMap:
+      key: ca-certificates.crt
+      metadata:
+        annotations:
+          reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
