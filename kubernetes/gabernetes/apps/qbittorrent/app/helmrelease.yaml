@@ -21,7 +21,7 @@ spec:
     controllers:
       qbittorrent:
         annotations:
-          secret.reloader.stakater.com/reload: qbittorrent-gluetun
+          secret.reloader.stakater.com/reload: qbittorrent-gluetun,internal-tls
         initContainers:
           vpn:
             image:
@@ -146,6 +146,13 @@ spec:
           qbittorrent:
             app:
               - path: /downloads
+      tls:
+        type: secret
+        name: internal-tls
+        advancedMounts:
+          qbittorrent:
+            app:
+              - path: /tls
       tmp:
         enabled: true
         type: emptyDir
@@ -175,6 +182,7 @@ spec:
       qbittorrent:
         enabled: true
         annotations: &annotations
+          nginx.ingress.kubernetes.io/backend-protocol: HTTPS
           nginx.ingress.kubernetes.io/auth-url:
             http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
           nginx.ingress.kubernetes.io/auth-signin: https://$host/outpost.goauthentik.io/start
@@ -184,8 +192,8 @@ spec:
           nginx.ingress.kubernetes.io/configuration-snippet: |
             proxy_set_header Referer "";
             proxy_set_header Accept-Encoding "";
-            more_set_headers "Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline' theme-park.cook.gg; img-src 'self' theme-park.cook.gg data:; script-src 'self' 'unsafe-inline'; object-src 'none'; form-action 'self'; frame-ancestors 'self'";
-            sub_filter '</head>' '<link rel="stylesheet" href="${theme_park}/base/qbittorrent/overseerr.css"></head>';
+            more_set_headers "Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline' ${theme_park}; img-src 'self' ${theme_park} data:; script-src 'self' 'unsafe-inline'; object-src 'none'; form-action 'self'; frame-ancestors 'self'";
+            sub_filter '</head>' '<link rel="stylesheet" href="https://${theme_park}/css/base/qbittorrent/overseerr.css"></head>';
         hosts:
           - host: ${app_url}
             paths:
@@ -201,8 +209,8 @@ spec:
         enabled: true
         annotations:
           <<: *annotations
+          nginx.ingress.kubernetes.io/backend-protocol: HTTP
           nginx.ingress.kubernetes.io/configuration-snippet: |
-            proxy_set_header Referer "";
             expires -1;
         hosts:
           - host: ${vuetorrent_url}
@@ -211,15 +219,25 @@ spec:
                 service:
                   identifier: vuetorrent
                   port: http
+        tls: &vuetorrent-tls
+          - secretName: ${certificate_name}
+            hosts:
+              - ${vuetorrent_url}
+      vuetorrent-api:
+        enabled: true
+        annotations:
+          <<: *annotations
+          nginx.ingress.kubernetes.io/configuration-snippet: |
+            proxy_set_header Referer "";
+        hosts:
+          - host: ${vuetorrent_url}
+            paths:
               - path: /api
                 pathType: ImplementationSpecific
                 service:
                   identifier: qbittorrent
                   port: http
-        tls: &vuetorrent-tls
-          - secretName: ${certificate_name}
-            hosts:
-              - ${vuetorrent_url}
+        tls: *vuetorrent-tls
       vuetorrent-sw:
         enabled: true
         annotations:
