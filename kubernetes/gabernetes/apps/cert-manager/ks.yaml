@@ -16,6 +16,21 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
+  name: trust-manager
+  namespace: cert-manager
+spec:
+  interval: 1h
+  targetNamespace: cert-manager
+  path: ./kubernetes/gabernetes/apps/cert-manager/trust-manager
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    namespace: flux-system
+    name: home-ops
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
   name: issuers
   namespace: cert-manager
 spec:
@@ -29,6 +44,7 @@ spec:
     name: home-ops
   dependsOn:
     - name: app
+    - name: trust-manager
   postBuild:
     substituteFrom:
       - kind: Secret

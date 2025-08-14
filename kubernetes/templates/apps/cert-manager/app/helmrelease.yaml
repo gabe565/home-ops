@@ -14,7 +14,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         namespace: cert-manager
-        name: cert-manager
+        name: jetstack
       interval: 1h
   install:
     crds: Create
