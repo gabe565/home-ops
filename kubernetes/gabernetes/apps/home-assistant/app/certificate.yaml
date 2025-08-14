@@ -40,7 +40,7 @@ spec:
   duration: 8760h # 1 year
   issuerRef:
     kind: ClusterIssuer
-    name: selfsigned
+    name: cooks
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
@@ -55,4 +55,4 @@ spec:
   duration: 8760h # 1 year
   issuerRef:
     kind: ClusterIssuer
-    name: selfsigned
+    name: cooks
