@@ -20,6 +20,8 @@ spec:
   values:
     controllers:
       sonarr:
+        annotations:
+          configmap.reloader.stakater.com/reload: ca-bundle
         containers:
           app:
             image:
@@ -82,6 +84,12 @@ spec:
       tmp:
         enabled: true
         type: emptyDir
+      ca-bundle:
+        type: configMap
+        name: ca-bundle
+        globalMounts:
+          - path: /etc/ssl/certs/ca-certificates.crt
+            subPath: ca-certificates.crt
 
     ingress:
       sonarr:
