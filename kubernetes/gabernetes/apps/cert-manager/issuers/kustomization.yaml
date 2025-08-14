@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - ../../../../templates/apps/cert-manager/issuers
   - selfsigned.yaml
+  - mqtt.yaml

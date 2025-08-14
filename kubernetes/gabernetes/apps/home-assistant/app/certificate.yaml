@@ -25,7 +25,7 @@ spec:
   duration: 87600h # 10 years
   issuerRef:
     kind: ClusterIssuer
-    name: selfsigned
+    name: mqtt
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
