@@ -5,3 +5,11 @@ metadata:
   namespace: prowlarr
   annotations:
     reflector.v1.k8s.emberstack.com/reflects: cert-manager/${certificate_name}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ca-bundle
+  namespace: prowlarr
+  annotations:
+    reflector.v1.k8s.emberstack.com/reflects: cert-manager/ca-bundle
