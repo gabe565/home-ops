@@ -5,7 +5,10 @@ metadata:
   namespace: cert-manager
 spec:
   isCA: true
-  commonName: cooks-ca
+  commonName: Cooks Root
+  subject:
+    countries: [US]
+    organizations: [Cooks]
   duration: 87600h # 10 years
   secretName: cooks-ca-tls
   privateKey:
