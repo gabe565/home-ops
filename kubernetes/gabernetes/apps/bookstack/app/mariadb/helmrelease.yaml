@@ -27,7 +27,7 @@ spec:
           mariadb:
             image:
               repository: mariadb
-              tag: 11.8.2@sha256:2bcbaec92bd9d4f6591bc8103d3a8e6d0512ee2235506e47a2e129d190444405
+              tag: 12.0.2@sha256:b30cc65b57a11a2e791ad5c06284e599fe9f1bf3fe9081a88d85bcf36389be4a
             args:
               - --max_statement_time=60
             env:
