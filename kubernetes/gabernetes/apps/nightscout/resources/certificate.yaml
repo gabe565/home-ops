@@ -18,6 +18,7 @@ spec:
     - ${api_url}
     - nightscout.nightscout
   duration: 8760h # 1 year
+  renewBefore: 720h # 30 days
   issuerRef:
     kind: ClusterIssuer
     name: cooks
@@ -33,6 +34,7 @@ spec:
     - ${trmnl_url}
     - trmnl.nightscout
   duration: 8760h # 1 year
+  renewBefore: 720h # 30 days
   issuerRef:
     kind: ClusterIssuer
     name: cooks

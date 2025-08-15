@@ -15,6 +15,7 @@ spec:
   secretName: mqtt-tls
   commonName: zigbee2mqtt
   duration: 8760h # 1 year
+  renewBefore: 720h # 30 days
   issuerRef:
     kind: ClusterIssuer
     name: mqtt
@@ -30,6 +31,7 @@ spec:
     - ${app_url}
     - zigbee2mqtt.zigbee2mqtt
   duration: 8760h # 1 year
+  renewBefore: 720h # 30 days
   issuerRef:
     kind: ClusterIssuer
     name: cooks

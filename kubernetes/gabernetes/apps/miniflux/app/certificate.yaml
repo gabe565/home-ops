@@ -17,6 +17,7 @@ spec:
     - ${app_url}
     - miniflux.miniflux
   duration: 8760h # 1 year
+  renewBefore: 720h # 30 days
   issuerRef:
     kind: ClusterIssuer
     name: cooks

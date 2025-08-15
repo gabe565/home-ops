@@ -10,6 +10,7 @@ spec:
     countries: [US]
     organizations: [Cooks]
   duration: 87600h # 10 years
+  renewBefore: 720h # 30 days
   secretName: mqtt-ca-tls
   privateKey:
     algorithm: ECDSA

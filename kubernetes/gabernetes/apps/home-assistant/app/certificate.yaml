@@ -23,6 +23,7 @@ spec:
   secretName: mqtt-tls
   commonName: homeassistant
   duration: 87600h # 10 years
+  renewBefore: 720h # 30 days
   issuerRef:
     kind: ClusterIssuer
     name: mqtt
@@ -38,6 +39,7 @@ spec:
     - ${app_url}
     - home-assistant.home-assistant
   duration: 8760h # 1 year
+  renewBefore: 720h # 30 days
   issuerRef:
     kind: ClusterIssuer
     name: cooks
@@ -53,6 +55,7 @@ spec:
     - ${code_url}
     - home-assistant-code.home-assistant
   duration: 8760h # 1 year
+  renewBefore: 720h # 30 days
   issuerRef:
     kind: ClusterIssuer
     name: cooks
