@@ -14,6 +14,7 @@ spec:
       toPorts:
         - ports:
             - port: "8686"
+            - port: "6969"
 ---
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
