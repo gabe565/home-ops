@@ -47,7 +47,9 @@ spec:
                 secretKeyRef:
                   name: browserless
                   key: TOKEN
-              BROWSER_WEBSOCKET_URL: ws://browserless:3000/chromium?token=$(BROWSER_TOKEN)&blockAds=true&launch={"stealth":true}
+              BROWSER_WEBSOCKET_URL: >-
+                {{- $launch := dict "headless" "false" "stealth" "true" "args" (list "--window-size=1920,1080" "--force-color-profile=srgb") -}}
+                ws://browserless:3000/chromium?token=$(BROWSER_TOKEN)&blockAds=true&launch={{ toJson $launch }}
               BROWSER_CONNECT_ONDEMAND: "true"
               CRAWLER_DOWNLOAD_BANNER_IMAGE: "true"
               DISABLE_PASSWORD_AUTH: "true"
