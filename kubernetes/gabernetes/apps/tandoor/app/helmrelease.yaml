@@ -20,6 +20,8 @@ spec:
   values:
     controllers:
       tandoor:
+        annotations:
+          secret.reloader.stakater.com/reload: internal-tls
         strategy: RollingUpdate
         containers:
           app:
@@ -30,6 +32,7 @@ spec:
             env:
               TZ: America/Chicago
               SECRET_KEY: ${secret_key}
+              GUNICORN_CMD_ARGS: --certfile=/tls/tls.crt --keyfile=/tls/tls.key
               GUNICORN_WORKERS: "1"
               FRACTION_PREF_DEFAULT: "1"
               DEBUG: "0"
@@ -105,13 +108,17 @@ spec:
             subPath: staticfiles
           - path: /opt/recipes/cookbook/static/django_js_reverse
             subPath: django_js_reverse
+      tls:
+        type: secret
+        name: internal-tls
       tmp:
-        enabled: true
         type: emptyDir
 
     ingress:
       tandoor:
         enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/backend-protocol: HTTPS
         hosts:
           - host: ${app_url}
             paths:
