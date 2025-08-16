@@ -25,6 +25,10 @@ spec:
         enabled: true
         nodeEncryption: true
 
+    kubeProxyReplacement: true
+    k8sServiceHost: 127.0.0.1
+    k8sServicePort: 6444
+
     policyEnforcementMode: default
 
     hubble:
