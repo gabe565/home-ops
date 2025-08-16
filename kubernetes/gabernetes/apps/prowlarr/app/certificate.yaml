@@ -13,3 +13,24 @@ metadata:
   namespace: prowlarr
   annotations:
     reflector.v1.k8s.emberstack.com/reflects: cert-manager/ca-bundle
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: internal-tls
+  namespace: prowlarr
+spec:
+  secretName: internal-tls
+  dnsNames:
+    - ${app_url}
+    - prowlarr.prowlarr
+  duration: 8760h # 1 year
+  renewBefore: 720h # 30 days
+  issuerRef:
+    kind: ClusterIssuer
+    name: cooks
+  keystores:
+    pkcs12:
+      create: true
+      password: ${pkcs12_password}
+      profile: Modern2023
