@@ -4,9 +4,3 @@ resources:
   - certificate.yaml
   - helmrelease.yaml
   - networkpolicy.yaml
-configMapGenerator:
-  - name: unbound
-    options:
-      disableNameSuffixHash: true
-    files:
-      - unbound.conf
