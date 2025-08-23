@@ -15,6 +15,13 @@ data:
             env:
               MARIADB_ROOT_PASSWORD_FILE: /secret/mariadb-root-password
               MARIADB_PASSWORD_FILE: /secret/mariadb-password
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+                ephemeral-storage: 50Mi
+              limits:
+                ephemeral-storage: 2Gi
             securityContext:
               readOnlyRootFilesystem: true
               allowPrivilegeEscalation: false

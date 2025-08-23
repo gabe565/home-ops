@@ -16,6 +16,13 @@ data:
               MONGO_INITDB_ROOT_USERNAME: root
               MONGO_INITDB_ROOT_PASSWORD_FILE: /secret/mongodb-root-password
               MONGODB_EXTRA_PASSWORDS_FILE: /secret/mongodb-passwords
+            resources:
+              requests:
+                cpu: 100m
+                memory: 512Mi
+                ephemeral-storage: 50Mi
+              limits:
+                ephemeral-storage: 2Gi
             securityContext:
               readOnlyRootFilesystem: true
               allowPrivilegeEscalation: false

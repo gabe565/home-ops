@@ -16,6 +16,13 @@ data:
             env:
               VALKEY_PASSWORD_FILE: /secret/valkey-password
               VALKEY_PORT: 6379
+            resources:
+              requests:
+                cpu: 25m
+                memory: 128Mi
+                ephemeral-storage: 50Mi
+              limits:
+                ephemeral-storage: 2Gi
             securityContext:
               readOnlyRootFilesystem: true
               allowPrivilegeEscalation: false
