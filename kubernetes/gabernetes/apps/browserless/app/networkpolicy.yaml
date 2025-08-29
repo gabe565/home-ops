@@ -1,0 +1,33 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: egress-browserless
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/egress-browserless: "true"
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: browserless
+            app.kubernetes.io/name: browserless
+      toPorts:
+        - ports:
+            - port: "3000"
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: browserless
+  namespace: browserless
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: browserless
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            policy.gabe565.com/egress-browserless: "true"
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists

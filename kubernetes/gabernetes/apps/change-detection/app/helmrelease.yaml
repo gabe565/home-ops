@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.7.3/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.2.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.7.3
+      version: 4.2.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -19,7 +19,9 @@ spec:
     mode: enabled
   values:
     controllers:
-      change-detection:
+      main:
+        annotations:
+          secret.reloader.stakater.com/reload: browserless
         containers:
           app:
             image:
@@ -29,9 +31,15 @@ spec:
             env:
               TZ: America/Chicago
               BASE_URL: https://${app_url}
-              PLAYWRIGHT_DRIVER_URL: >-
-                {{- $launch := dict "headless" "false" "stealth" "true" "args" (list "--window-size=1920,1080" "--force-color-profile=srgb") -}}
-                ws://change-detection-browserless:3000/chromium?token=${browser_token}&blockAds=true&launch={{ toJson $launch }}
+              BROWSER_TOKEN:
+                secretKeyRef:
+                  name: browserless
+                  key: token
+              PLAYWRIGHT_DRIVER_URL:
+                value: >-
+                  {{- $launch := dict "headless" "false" "stealth" "true" "args" (list "--window-size=1920,1080" "--force-color-profile=srgb") -}}
+                  ws://browserless.browserless/chromium?token=$(BROWSER_TOKEN)&blockAds=true&launch={{ toJson $launch }}
+                dependsOn: BROWSER_TOKEN
             probes:
               startup:
                 enabled: true
@@ -50,69 +58,36 @@ spec:
               capabilities: { drop: [ALL] }
         pod:
           labels:
+            policy.gabe565.com/egress-browserless: "true"
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-nginx: "true"
+          securityContext:
+            runAsNonRoot: true
+            seccompProfile: { type: RuntimeDefault }
           terminationGracePeriodSeconds: 1
-      browserless:
-        strategy: RollingUpdate
-        containers:
-          app:
-            image:
-              repository: ghcr.io/browserless/chromium
-              tag: v2.34.1@sha256:eeac26dc8da5bad6ff321acc3692d614da9ffc95ba0df7af944ded6649787ce5
-              pullPolicy: IfNotPresent
-            env:
-              TZ: America/Chicago
-              DEBUG: "browserless*,-*:trace,-*:verbose"
-              ENABLE_DEBUGGER: "false"
-              TOKEN: ${browser_token}
-              TIMEOUT: "60000"
-            securityContext:
-              runAsUser: 999
-              runAsGroup: 999
-              allowPrivilegeEscalation: false
-              capabilities: { drop: [ALL] }
-        pod:
-          labels:
-            policy.gabe565.com/egress-world: "true"
-            policy.gabe565.com/ingress-namespace: "true"
-
-    defaultPodOptions:
-      securityContext:
-        runAsNonRoot: true
-        seccompProfile: { type: RuntimeDefault }
 
     service:
-      change-detection:
-        controller: change-detection
+      main:
+        controller: main
         ports:
           http:
             port: 5000
-      browserless:
-        controller: browserless
-        ports:
-          http:
-            port: 3000
 
     persistence:
       data:
-        enabled: true
+        suffix: data
         storageClass: longhorn-ssd
         accessMode: ReadWriteOnce
         size: 1Gi
         retain: true
-        advancedMounts:
-          change-detection:
-            app:
-              - path: /datastore
+        globalMounts:
+          - path: /datastore
       tmp:
-        enabled: true
         type: emptyDir
 
     ingress:
-      change-detection:
-        enabled: true
+      main:
         annotations:
           nginx.ingress.kubernetes.io/auth-url: |-
             http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
@@ -127,7 +102,7 @@ spec:
             paths:
               - path: /
                 service:
-                  identifier: change-detection
+                  identifier: main
                   port: http
         tls:
           - secretName: ${certificate_name}

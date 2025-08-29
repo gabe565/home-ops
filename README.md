@@ -113,6 +113,12 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><a href="kubernetes/gabernetes/apps/bookstack/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/bookstack/app/mariadb/helmrelease.yaml">mariadb</a></td>
   </tr>
   <tr>
+    <td>browserless</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/browserless/app/helmrelease.yaml">browserless</a></td>
+    <td></td>
+  </tr>
+  <tr>
     <td>cert-manager</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/cert-manager/trust-manager/helmrelease.yaml">trust-manager</a></td>
@@ -252,7 +258,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>karakeep</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/karakeep/app/karakeep.yaml">karakeep</a></td>
-    <td><a href="kubernetes/gabernetes/apps/karakeep/app/borgmatic.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/karakeep/app/browserless.yaml">browserless</a>, <a href="kubernetes/gabernetes/apps/karakeep/app/meilisearch.yaml">meilisearch</a></td>
+    <td><a href="kubernetes/gabernetes/apps/karakeep/app/borgmatic.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/karakeep/app/meilisearch.yaml">meilisearch</a></td>
   </tr>
   <tr>
     <td>kromgo</td>

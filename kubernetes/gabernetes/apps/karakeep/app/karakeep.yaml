@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.7.3/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.2.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.7.3
+      version: 4.2.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -19,7 +19,9 @@ spec:
     mode: enabled
   values:
     controllers:
-      karakeep:
+      main:
+        annotations:
+          secret.reloader.stakater.com/reload: browserless
         initContainers:
           migrate: &karakeep
             image:
@@ -46,10 +48,12 @@ spec:
               BROWSER_TOKEN:
                 secretKeyRef:
                   name: browserless
-                  key: TOKEN
-              BROWSER_WEBSOCKET_URL: >-
-                {{- $launch := dict "headless" "false" "stealth" "true" "args" (list "--window-size=1920,1080" "--force-color-profile=srgb") -}}
-                ws://browserless:3000/chromium/playwright?token=$(BROWSER_TOKEN)&blockAds=true&launch={{ toJson $launch }}
+                  key: token
+              BROWSER_WEBSOCKET_URL:
+                value: >-
+                  {{- $launch := dict "headless" "false" "stealth" "true" "args" (list "--window-size=1920,1080" "--force-color-profile=srgb") -}}
+                  ws://browserless.browserless/chromium/playwright?token=$(BROWSER_TOKEN)&blockAds=true&launch={{ toJson $launch }}
+                dependsOn: BROWSER_TOKEN
               BROWSER_CONNECT_ONDEMAND: "true"
               CRAWLER_DOWNLOAD_BANNER_IMAGE: "true"
               DISABLE_PASSWORD_AUTH: "true"
@@ -84,6 +88,7 @@ spec:
               - start:prod
         pod:
           labels:
+            policy.gabe565.com/egress-browserless: "true"
             policy.gabe565.com/egress-nginx: "true"
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
@@ -97,37 +102,34 @@ spec:
             seccompProfile: {type: RuntimeDefault}
 
     service:
-      karakeep:
-        controller: karakeep
+      main:
+        controller: main
         ports:
           http:
             port: 3000
 
     persistence:
       data:
-        enabled: true
+        suffix: data
         storageClass: longhorn-ssd
         accessMode: ReadWriteOnce
         size: 8Gi
         retain: true
       tmp:
-        enabled: true
         type: emptyDir
       cache:
-        enabled: true
         type: emptyDir
         globalMounts:
           - path: /app/apps/web/.next/cache
 
     ingress:
-      change-detection:
-        enabled: true
+      main:
         hosts:
           - host: ${app_url}
             paths:
               - path: /
                 service:
-                  identifier: karakeep
+                  identifier: main
                   port: http
         tls:
           - secretName: ${certificate_name}
