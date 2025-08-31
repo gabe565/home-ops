@@ -1,0 +1,33 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: egress-trmnl-nightscout
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/egress-trmnl-nightscout: "true"
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: trmnl
+            app.kubernetes.io/name: trmnl
+      toPorts:
+        - ports:
+            - port: "443"
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: trmnl
+  namespace: trmnl
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: trmnl
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            policy.gabe565.com/egress-trmnl-nightscout: "true"
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
