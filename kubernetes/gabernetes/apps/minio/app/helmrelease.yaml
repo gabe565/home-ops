@@ -24,8 +24,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/usa-reddragon/minio
-              tag: RELEASE.2025-06-25T02-55-12Z@sha256:5bd12949593180e2c584d5b9c8f16c326e2586725a61066556f1eac36b2a244f
+              repository: git.gabe565.com/mirror/minio
+              tag: RELEASE.2025-08-29T21-27-49Z@sha256:438e4a42a7de2c81b1454156fa5c0fe526e884b4970367fa2370bfb91d79b213
               pullPolicy: IfNotPresent
             env:
               MINIO_SITE_NAME: us-central-1
@@ -63,6 +63,8 @@ spec:
             securityContext:
               readOnlyRootFilesystem: true
         pod:
+          imagePullSecrets:
+            - name: gitea
           labels:
             policy.gabe565.com/egress-nginx: "true"
             policy.gabe565.com/egress-prometheus: "true"
