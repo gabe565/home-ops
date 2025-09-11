@@ -1,0 +1,153 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.2.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: tronbyt
+  namespace: tronbyt
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 4.2.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      tronbyt:
+        annotations:
+          secret.reloader.stakater.com/reload: internal-tls,valkey
+        containers:
+          app:
+            image:
+              repository: ghcr.io/tronbyt/server
+              tag: main@sha256:5f34265cdeec6f45da280a8bb8dc9d8acd72e1908eefbb9682dafaf7f9c14361
+              pullPolicy: IfNotPresent
+            env:
+              TZ: America/Chicago
+              PRODUCTION: "1"
+              SERVER_HOSTNAME: ${app_host}
+              SERVER_PROTOCOL: https
+              SERVER_PORT: "443"
+              REDIS_PASSWORD:
+                secretKeyRef:
+                  name: valkey
+                  key: valkey-password
+              REDIS_URL:
+                dependsOn: REDIS_PASSWORD
+                value: redis://:$(REDIS_PASSWORD)@valkey:6379
+            probes:
+              liveness: &probe
+                enabled: true
+                type: HTTPS
+                path: /health
+                spec:
+                  failureThreshold: 6
+              readiness: *probe
+              startup:
+                <<: *probe
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: [ALL]}
+        pod:
+          terminationGracePeriodSeconds: 1
+          labels:
+            policy.gabe565.com/egress-namespace: "true"
+            policy.gabe565.com/egress-nightscout: "true"
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-nginx: "true"
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            fsGroupChangePolicy: OnRootMismatch
+            seccompProfile: {type: RuntimeDefault}
+
+    service:
+      tronbyt:
+        controller: tronbyt
+        ports:
+          http:
+            port: 8000
+
+    persistence:
+      data:
+        accessMode: ReadWriteOnce
+        size: 4Gi
+        retain: true
+        globalMounts:
+          - path: /app/data
+            subPath: data
+          - path: /app/users
+            subPath: users
+      gunicorn:
+        type: configMap
+        identifier: gunicorn
+        globalMounts:
+          - path: /app/gunicorn.conf.py
+            subPath: gunicorn.conf.py
+      tls:
+        type: secret
+        name: internal-tls
+      ca-bundle:
+        type: configMap
+        name: ca-bundle
+        globalMounts:
+          - path: /etc/ssl/certs/ca-certificates.crt
+            subPath: ca-certificates.crt
+      tmp:
+        type: emptyDir
+        medium: Memory
+
+    ingress:
+      tronbyt:
+        annotations:
+          nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+          nginx.ingress.kubernetes.io/whitelist-source-range: "192.168.1.0/24,10.42.0.0/16"
+        hosts:
+          - host: ${app_host}
+            paths:
+              - path: /
+                service:
+                  identifier: tronbyt
+                  port: http
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_host}
+
+    configMaps:
+      gunicorn:
+        data:
+          # language=python
+          gunicorn.conf.py: |
+            from gunicorn.workers import base
+
+            bind = "0.0.0.0:8000"
+            certfile = "/tls/tls.crt"
+            keyfile = "/tls/tls.key"
+            workers = 2
+            threads = 8
+            preload_app = True
+
+            # https://github.com/benoitc/gunicorn/issues/1391
+            def post_worker_init(worker: base.Worker) -> None:
+                import atexit
+                import importlib
+
+                _exit_function = getattr(
+                    importlib.import_module("multiprocessing.util"), "_exit_function", None
+                )
+                if _exit_function:
+                    atexit.unregister(_exit_function)
+                worker.log.info("worker post_worker_init done, (pid: {})".format(worker.pid))

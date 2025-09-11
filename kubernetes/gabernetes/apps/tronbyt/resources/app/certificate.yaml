@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ${certificate_name}
+  namespace: tronbyt
+  annotations:
+    reflector.v1.k8s.emberstack.com/reflects: cert-manager/${certificate_name}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ca-bundle
+  namespace: tronbyt
+  annotations:
+    reflector.v1.k8s.emberstack.com/reflects: cert-manager/ca-bundle
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: internal-tls
+  namespace: tronbyt
+spec:
+  secretName: internal-tls
+  dnsNames:
+    - ${app_host}
+    - tronbyt.tronbyt
+  duration: 8760h # 1 year
+  renewBefore: 720h # 30 days
+  issuerRef:
+    kind: ClusterIssuer
+    name: cooks
