@@ -1,0 +1,64 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.2.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: ics-calendar-tidbyt
+  namespace: tronbyt
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 4.2.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      main:
+        strategy: RollingUpdate
+        containers:
+          app:
+            image:
+              repository: ghcr.io/gabe565/ics-calendar-tidbyt
+              tag: v1.0.0@sha256:24424f9c101a66fa3ba9af8504503604fb1ea7d94dae7e454a3577eeb35a6388
+              pullPolicy: IfNotPresent
+            env:
+              TZ: America/Chicago
+            probes:
+              liveness: &probe
+                enabled: true
+                type: HTTP
+                path: /ping
+              readiness: *probe
+              startup:
+                <<: *probe
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: [ALL]}
+        pod:
+          labels:
+            policy.gabe565.com/ingress-namespace: "true"
+            policy.gabe565.com/egress-world: "true"
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
+            fsGroup: 65534
+            fsGroupChangePolicy: OnRootMismatch
+            seccompProfile: {type: RuntimeDefault}
+
+    service:
+      main:
+        controller: main
+        ports:
+          http:
+            port: 8080
