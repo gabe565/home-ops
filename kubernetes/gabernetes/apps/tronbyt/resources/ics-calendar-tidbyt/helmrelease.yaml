@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: ghcr.io/gabe565/ics-calendar-tidbyt
-              tag: beta@sha256:8d302f1fb2608326b71cd4a8d2231c8b25bb2a2630ec235d0eabdb4a8db9fd7e
+              tag: beta@sha256:37ea74ca3f2d3ce08138a7ae18e07075c63aa4437d59fe9e1a5e0119df74aaec
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
