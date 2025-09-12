@@ -44,7 +44,6 @@ spec:
         pod:
           terminationGracePeriodSeconds: 1
           labels:
-            policy.gabe565.com/egress-nodes: "true"
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-nginx: "true"
           securityContext:
@@ -60,10 +59,7 @@ spec:
         size: 1Gi
         retain: true
         globalMounts:
-          - path: /etc/scanservjs
-            subPath: config
           - path: /var/lib/scanservjs
-            subPath: data
       output:
         type: nfs
         server: 192.168.1.240
@@ -74,8 +70,8 @@ spec:
         type: configMap
         identifier: sane
         globalMounts:
-          - path: /etc/sane.d/net.conf
-            subPath: net.conf
+          - path: /etc/sane.d/pixma.conf
+            subPath: pixma.conf
       scan-temp:
         type: emptyDir
         globalMounts:
@@ -118,12 +114,37 @@ spec:
           nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
 
     configMaps:
+      config:
+        data:
+          # language=javascript
+          config.local.js: |
+            module.exports = {
+              afterDevices(devices) {
+                devices.forEach(d => {
+                  if (d.id.startsWith('pixma:')) {
+                    d.features['--resolution'].default = 600;
+                    d.features['-x'].limits = [0, 217];
+                    d.features['-y'].limits = [0, 298];
+                  }
+                });
+              }
+            };
       sane:
         data:
-          net.conf: |
-            192.168.1.245
+          pixma.conf: |
+            bjnp://192.168.2.8
 
     secrets:
       scantopl:
         stringData:
           PLTOKEN: ${paperless_token}
+
+    networkpolicies:
+      scanner:
+        controller: scanservjs
+        policyTypes: [Egress]
+        rules:
+          egress:
+            - to:
+                - ipBlock:
+                    cidr: 192.168.2.8/32
