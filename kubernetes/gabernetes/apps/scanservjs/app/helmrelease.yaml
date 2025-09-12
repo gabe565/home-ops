@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.7.3/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.2.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.7.3
+      version: 4.2.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -54,36 +54,30 @@ spec:
             fsGroupChangePolicy: OnRootMismatch
 
     persistence:
-      config:
-        enabled: true
-        retain: true
+      data:
         storageClass: longhorn-ssd
         accessMode: ReadWriteOnce
         size: 1Gi
+        retain: true
         globalMounts:
           - path: /etc/scanservjs
             subPath: config
           - path: /var/lib/scanservjs
             subPath: data
       output:
-        enabled: true
         type: nfs
         server: 192.168.1.240
         path: /volume1/documents/Scans
         globalMounts:
           - path: /var/lib/scanservjs/output
       sane:
-        enabled: true
         type: configMap
-        name: scanservjs-sane
+        identifier: sane
         globalMounts:
           - path: /etc/sane.d/net.conf
             subPath: net.conf
       tmp:
-        enabled: true
         type: emptyDir
-        globalMounts:
-          - path: /tmp
 
     service:
       scanservjs:
@@ -94,7 +88,6 @@ spec:
 
     ingress:
       scanservjs:
-        enabled: true
         hosts:
           - host: ${app_url}
             paths:
@@ -121,13 +114,11 @@ spec:
 
     configMaps:
       sane:
-        enabled: true
         data:
           net.conf: |
             192.168.1.245
 
     secrets:
       scantopl:
-        enabled: true
         stringData:
           PLTOKEN: ${paperless_token}
