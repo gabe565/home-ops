@@ -76,8 +76,13 @@ spec:
         globalMounts:
           - path: /etc/sane.d/net.conf
             subPath: net.conf
+      scan-temp:
+        type: emptyDir
+        globalMounts:
+          - path: /var/lib/scanservjs/temp
       tmp:
         type: emptyDir
+        medium: Memory
 
     service:
       scanservjs:
