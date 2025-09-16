@@ -31,6 +31,8 @@ spec:
               TZ: America/Chicago
               DOCKER_ENABLE_SECURITY: "false"
               INSTALL_BOOK_AND_ADVANCED_HTML_OPS: "false"
+              system.enableAnalytics: "false"
+              DISABLE_PIXEL: "true"
             probes:
               liveness: &probe
                 enabled: true
