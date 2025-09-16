@@ -49,9 +49,9 @@ spec:
             policy.gabe565.com/ingress-nginx: "true"
           securityContext:
             runAsNonRoot: true
-            runAsUser: 1000
-            runAsGroup: 1000
-            fsGroup: 1000
+            runAsUser: 101
+            runAsGroup: 102
+            fsGroup: 102
             fsGroupChangePolicy: OnRootMismatch
 
     persistence:
