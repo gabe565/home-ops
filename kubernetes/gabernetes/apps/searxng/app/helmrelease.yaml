@@ -23,10 +23,10 @@ spec:
           configmap.reloader.stakater.com/reload: searxng-config
         strategy: RollingUpdate
         initContainers:
-          config-envsubst:
+          config-yampl:
             image:
-              repository: ghcr.io/mikefarah/yq
-              tag: 4.47.2@sha256:76def1f56f456ecc1c3173ea275218ee17139bc2018c5a07887b15afd88ec03e
+              repository: ghcr.io/clevyr/yampl
+              tag: 0.9.1@sha256:f7a709bc4aff7717626dc5feab4429482ceb98e9cfef07b8ff4a0598b8185827
               pullPolicy: IfNotPresent
             envFrom:
               - secretRef:
@@ -34,7 +34,7 @@ spec:
             command:
               - sh
               - -c
-              - exec yq '(.. | select(tag == "!!str")) |= envsubst' /config/settings.yml > /etc/searxng/settings.yml
+              - exec yampl --strip /config/settings.yml > /etc/searxng/settings.yml
         containers:
           app:
             image:
@@ -88,7 +88,7 @@ spec:
         name: searxng-config
         advancedMounts:
           searxng:
-            config-envsubst:
+            config-yampl:
               - path: /config
       tmp:
         enabled: true
