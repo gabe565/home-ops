@@ -18,11 +18,11 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      nightscout:
         annotations:
           secret.reloader.stakater.com/reload: internal-tls
         containers:
-          nightscout:
+          app:
             image:
               repository: ghcr.io/gabe565/nightscout
               tag: 15.0.3-websocket@sha256:1410f1c64df0b3367ed6b3e8252dfad08859ffa6e91585450a129067a8419b6d
@@ -68,20 +68,23 @@ spec:
               readOnlyRootFilesystem: true
               capabilities: {drop: [ALL]}
             probes:
-              startup:
-                enabled: true
-                spec:
-                  failureThreshold: 30
-                  periodSeconds: 5
-              liveness:
+              liveness: &probe
                 enabled: true
                 custom: true
                 spec:
-                  exec:
-                    command: [/scripts/liveness.sh]
-                  periodSeconds: 30
-              readiness:
+                  httpGet:
+                    port: 1337
+                    scheme: HTTPS
+                    path: /api/v2/status.txt
+                    httpHeaders:
+                      - name: Api-Secret
+                        value: '{{ .Values.controllers.nightscout.containers.app.env.API_SECRET | sha1sum }}'
+              readiness: *probe
+              startup:
                 enabled: true
+                spec:
+                  failureThreshold: 60
+                  periodSeconds: 5
         pod:
           labels:
             policy.gabe565.com/egress-namespace: "true"
@@ -100,14 +103,10 @@ spec:
       tls:
         type: secret
         name: internal-tls
-      scripts:
-        type: configMap
-        identifier: scripts
-        defaultMode: 0o550
 
     service:
-      main:
-        controller: main
+      nightscout:
+        controller: nightscout
         ports:
           http:
             port: 1337
@@ -135,7 +134,7 @@ spec:
             paths:
               - path: /
                 service:
-                  identifier: main
+                  identifier: nightscout
         tls: &bg-tls
           - secretName: ${certificate_name}
             hosts:
@@ -149,7 +148,7 @@ spec:
             paths:
               - path: /
                 service:
-                  identifier: main
+                  identifier: nightscout
         tls:
           - secretName: ${certificate_name}
             hosts:
@@ -166,23 +165,5 @@ spec:
               - path: /sw.js
                 pathType: ImplementationSpecific
                 service:
-                  identifier: main
+                  identifier: nightscout
         tls: *bg-tls
-
-    configMaps:
-      scripts:
-        data:
-          # language=shell script
-          liveness.sh: |
-            #!/bin/sh
-            response="$(
-              wget -q -O - \
-                --no-check-certificate \
-                --header 'X-Forwarded-Proto: https' \
-                --header "Api-Secret: $(echo -n "$API_SECRET" | sha1sum | cut -d' ' -f1)" \
-                "https://localhost:$PORT/api/v2/status.txt" \
-            )"
-            if [ "$response" != 'STATUS OK' ]; then
-              echo "$response"
-              exit 1
-            fi
