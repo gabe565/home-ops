@@ -90,7 +90,7 @@ spec:
                   periodSeconds: 5
           nginx:
             image:
-              repository: nginxinc/nginx-unprivileged
+              repository: ghcr.io/nginx/nginx-unprivileged
               tag: stable-alpine
             securityContext:
               readOnlyRootFilesystem: true

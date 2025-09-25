@@ -103,7 +103,7 @@ spec:
         containers:
           client:
             image:
-              repository: nginxinc/nginx-unprivileged
+              repository: ghcr.io/nginx/nginx-unprivileged
               tag: stable-alpine
               pullPolicy: IfNotPresent
             probes: *probes

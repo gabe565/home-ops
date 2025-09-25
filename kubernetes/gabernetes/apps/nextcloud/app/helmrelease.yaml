@@ -52,7 +52,7 @@ spec:
     nginx:
       enabled: true
       image:
-        repository: nginxinc/nginx-unprivileged
+        repository: ghcr.io/nginx/nginx-unprivileged
         tag: stable-alpine
 
     redis:
