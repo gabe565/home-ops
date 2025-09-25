@@ -17,6 +17,9 @@ spec:
         name: reflector
       interval: 1h
   values:
+    image:
+      repository: ghcr.io/emberstack/kubernetes-reflector
+
     priorityClassName: system-cluster-critical
 
     podLabels:
