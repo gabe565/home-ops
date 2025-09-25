@@ -22,6 +22,8 @@ spec:
     crds: CreateReplace
   values:
     operatorConfig:
+      image:
+        repository: ghcr.io/tailscale/k8s-operator
       hostname: gabernetes-operator
       podLabels:
         policy.gabe565.com/egress-kubeapi: "true"
@@ -32,4 +34,6 @@ spec:
       mode: "true"
 
     proxyConfig:
+      image:
+        repository: ghcr.io/tailscale/tailscale
       defaultProxyClass: default
