@@ -78,7 +78,7 @@ spec:
                     path: /api/v2/status.txt
                     httpHeaders:
                       - name: Api-Secret
-                        value: '{{ .Values.controllers.nightscout.containers.app.env.API_SECRET | sha1sum }}'
+                        value: '{{ sha1sum "${probe_token}" }}'
               readiness: *probe
               startup:
                 enabled: true
