@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.7.3/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.3.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.7.3
+      version: 4.3.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -23,13 +23,6 @@ spec:
         type: cronjob
         cronjob:
           schedule: "0 0 * * *"
-        initContainers:
-          runitor:
-            image:
-              repository: runitor/runitor
-              tag: v1.4.1-alpine@sha256:1b9d88825a51421b0e8c5ac9d7bb6cbb8e1b2e132d098eccfd33e12a680c7b9c
-              pullPolicy: IfNotPresent
-            command: [cp, /usr/local/bin/runitor, /tmp]
         containers:
           app:
             image:
@@ -42,7 +35,7 @@ spec:
               HC_API_URL: http://healthchecks.healthchecks:8000/ping
               CHECK_UUID: ${healthchecks_uuid}
             command:
-              - /tmp/runitor
+              - runitor
               - webos-dev-mode
               - extend
             securityContext:
@@ -57,6 +50,12 @@ spec:
             fsGroup: 65534
 
     persistence:
+      runitor:
+        type: image
+        image: runitor/runitor:v1.4.1-alpine@sha256:1b9d88825a51421b0e8c5ac9d7bb6cbb8e1b2e132d098eccfd33e12a680c7b9c
+        pullPolicy: IfNotPresent
+        globalMounts:
+          - path: /usr/local/bin/runitor
+            subPath: usr/local/bin/runitor
       tmp:
-        enabled: true
         type: emptyDir
