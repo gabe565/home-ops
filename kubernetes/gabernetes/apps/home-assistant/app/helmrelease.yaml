@@ -123,6 +123,12 @@ spec:
           code:
             app:
               - path: /tls
+      ca-bundle:
+        type: configMap
+        name: ca-bundle
+        globalMounts:
+          - path: /etc/ssl/certs/ca-certificates.crt
+            subPath: ca-certificates.crt
       tmp:
         enabled: true
         type: emptyDir
