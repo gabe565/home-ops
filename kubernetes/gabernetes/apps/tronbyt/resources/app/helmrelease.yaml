@@ -78,7 +78,7 @@ spec:
         controller: tronbyt
         ports:
           http:
-            port: 8000
+            port: 443
 
     persistence:
       data:
@@ -133,7 +133,7 @@ spec:
           gunicorn.conf.py: |
             from gunicorn.workers import base
 
-            bind = "0.0.0.0:8000"
+            bind = "0.0.0.0:443"
             certfile = "/tls/tls.crt"
             keyfile = "/tls/tls.key"
             workers = 2
