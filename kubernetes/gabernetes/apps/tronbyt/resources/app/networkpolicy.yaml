@@ -1,0 +1,33 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: egress-tronbyt
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/egress-tronbyt: "true"
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: tronbyt
+            app.kubernetes.io/name: tronbyt
+      toPorts:
+        - ports:
+            - port: "443"
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: tronbyt
+  namespace: tronbyt
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: tronbyt
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            policy.gabe565.com/egress-tronbyt: "true"
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
