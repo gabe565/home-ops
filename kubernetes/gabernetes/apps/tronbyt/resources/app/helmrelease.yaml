@@ -61,6 +61,7 @@ spec:
         pod:
           terminationGracePeriodSeconds: 1
           labels:
+            policy.gabe565.com/egress-home-assistant: "true"
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-nightscout: "true"
             policy.gabe565.com/egress-world: "true"
