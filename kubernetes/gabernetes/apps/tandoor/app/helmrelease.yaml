@@ -120,11 +120,13 @@ spec:
       static:
         enabled: true
         type: emptyDir
-        globalMounts:
-          - path: /opt/recipes/staticfiles
-            subPath: staticfiles
-          - path: /opt/recipes/cookbook/static/django_js_reverse
-            subPath: django_js_reverse
+        advancedMounts:
+          tandoor:
+            collectstatic:
+              - path: /opt/recipes/staticfiles
+            app:
+              - path: /opt/recipes/staticfiles
+                readOnly: true
       tls:
         type: secret
         name: internal-tls
