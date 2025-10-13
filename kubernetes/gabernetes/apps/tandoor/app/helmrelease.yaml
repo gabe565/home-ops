@@ -53,17 +53,19 @@ spec:
               S3_BUCKET_NAME: tandoor
               S3_REGION_NAME: us-central-1
 
-              OAUTH_ID: authentik
-              OAUTH_NAME: Authentik
-              OAUTH_SERVER_URL: https://${oauth_host}/application/o/tandoor-recipes/.well-known/openid-configuration
-              OAUTH_CLIENT_ID: ${oauth_client_id}
-              OAUTH_CLIENT_SECRET: ${oauth_client_secret}
               SOCIAL_PROVIDERS: allauth.socialaccount.providers.openid_connect
-              # language=json
-              SOCIALACCOUNT_PROVIDERS:
-                value: |-
-                  {"openid_connect":{"SERVERS":[{"id": "$(OAUTH_ID)","name": "$(OAUTH_NAME)","server_url": "$(OAUTH_SERVER_URL)","token_auth_method": "client_secret_basic","APP": {"client_id": "$(OAUTH_CLIENT_ID)","secret": "$(OAUTH_CLIENT_SECRET)"}}]}}
-                dependsOn: OAUTH_ID
+              # language=gotemplate
+              SOCIALACCOUNT_PROVIDERS: |-
+                {{- dict "openid_connect" (dict "SERVERS" (list (dict
+                  "id" "authentik"
+                  "name" "Authentik"
+                  "server_url" "https://${oauth_host}/application/o/tandoor-recipes/.well-known/openid-configuration"
+                  "token_auth_method" "client_secret_basic"
+                  "APP" (dict
+                    "client_id" "${oauth_client_id}"
+                    "secret" "${oauth_client_secret}"
+                  )
+                ))) | toJson -}}
             securityContext:
               allowPrivilegeEscalation: false
               capabilities: {drop: [ALL]}
