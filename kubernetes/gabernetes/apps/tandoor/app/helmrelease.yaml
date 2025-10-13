@@ -23,17 +23,18 @@ spec:
         annotations:
           secret.reloader.stakater.com/reload: internal-tls
         strategy: RollingUpdate
-        containers:
-          app:
+        initContainers:
+          collectstatic: &container
             image:
               repository: ghcr.io/tandoorrecipes/recipes
               tag: 2.3.2@sha256:650983bb4fb9f6941ad53c83b4cc94e4236d803c187034429c2eafe5e5ac098e
-
+            command: [python, manage.py, collectstatic, --noinput]
             env:
               TZ: America/Chicago
+              PATH: /opt/recipes/venv/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+              VIRTUAL_ENV: /opt/recipes/venv
+
               SECRET_KEY: ${secret_key}
-              GUNICORN_CMD_ARGS: --certfile=/tls/tls.crt --keyfile=/tls/tls.key
-              GUNICORN_WORKERS: "1"
               FRACTION_PREF_DEFAULT: "1"
               DEBUG: "0"
 
@@ -63,7 +64,26 @@ spec:
                 value: |-
                   {"openid_connect":{"SERVERS":[{"id": "$(OAUTH_ID)","name": "$(OAUTH_NAME)","server_url": "$(OAUTH_SERVER_URL)","token_auth_method": "client_secret_basic","APP": {"client_id": "$(OAUTH_CLIENT_ID)","secret": "$(OAUTH_CLIENT_SECRET)"}}]}}
                 dependsOn: OAUTH_ID
-
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities: {drop: [ALL]}
+              readOnlyRootFilesystem: true
+          migrate:
+            <<: *container
+            command: [python, manage.py, migrate]
+        containers:
+          app:
+            <<: *container
+            command:
+              - gunicorn
+              - --bind=0.0.0.0:8080
+              - --workers=1
+              - --threads=2
+              - --timeout=30
+              - --error-logfile=-
+              - --certfile=/tls/tls.crt
+              - --keyfile=/tls/tls.key
+              - recipes.wsgi
             probes:
               startup:
                 enabled: true
@@ -74,10 +94,7 @@ spec:
                 enabled: true
               readiness:
                 enabled: true
-            securityContext:
-              allowPrivilegeEscalation: false
-              capabilities: {drop: [ALL]}
-              readOnlyRootFilesystem: true
+
         pod:
           enableServiceLinks: false
           labels:
