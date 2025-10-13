@@ -113,6 +113,12 @@ spec:
         name: internal-tls
       tmp:
         type: emptyDir
+        medium: Memory
+        globalMounts:
+          - path: /tmp
+            subPath: tmp
+          - path: /run
+            subPath: run
 
     ingress:
       tandoor:
