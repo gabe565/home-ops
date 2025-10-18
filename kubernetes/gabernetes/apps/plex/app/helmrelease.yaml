@@ -28,6 +28,7 @@ spec:
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
+              PLEX_PURGE_CODECS: "true"
             resources:
               requests:
                 gpu.intel.com/i915: 1
