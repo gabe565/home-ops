@@ -47,6 +47,7 @@ spec:
               REDIS_URL:
                 dependsOn: REDIS_PASSWORD
                 value: redis://:$(REDIS_PASSWORD)@valkey:6379
+              SYSTEM_APPS_REPO: https://github.com/gabe565/tronbyt-apps.git
             probes:
               liveness: &probe
                 enabled: true
