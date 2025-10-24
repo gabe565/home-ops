@@ -22,6 +22,12 @@ spec:
       tronbyt:
         annotations:
           secret.reloader.stakater.com/reload: internal-tls,valkey
+        initContainers:
+          cp-libpixlet:
+            image:
+              repository: alpine
+              tag: latest
+            command: [cp, -a, /pixlet-img/lib/libpixlet.so, /libpixlet/libpixlet.so]
         containers:
           app:
             image:
@@ -97,6 +103,23 @@ spec:
         globalMounts:
           - path: /app/gunicorn.conf.py
             subPath: gunicorn.conf.py
+      pixlet-img:
+        type: image
+        image: ghcr.io/tronbyt/pixlet:0.46.0@sha256:db125ebbbc26d25e5b64b7a1429993989469dd249990d0f7814e049e4fa97c4f
+        advancedMounts:
+          tronbyt:
+            cp-libpixlet:
+              - path: /pixlet-img
+      libpixlet:
+        type: emptyDir
+        advancedMounts:
+          tronbyt:
+            cp-libpixlet:
+              - path: /libpixlet
+            app:
+              - path: /usr/lib/libpixlet.so
+                subPath: libpixlet.so
+                readOnly: true
       tls:
         type: secret
         name: internal-tls
