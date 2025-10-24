@@ -37,7 +37,7 @@ spec:
             env:
               TZ: America/Chicago
               PRODUCTION: "1"
-              SERVER_HOSTNAME: ${app_host}
+              SERVER_HOSTNAME_OR_IP: ${app_host}
               SERVER_PROTOCOL: https
               SERVER_PORT: "443"
               REDIS_PASSWORD:
