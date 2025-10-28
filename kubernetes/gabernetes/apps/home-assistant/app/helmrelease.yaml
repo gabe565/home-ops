@@ -30,6 +30,7 @@ spec:
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
+              REQUESTS_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
               HTTP_SSL_CERT: /tls/tls.crt
               HTTP_SSL_KEY: /tls/tls.key
               DATABASE_URL:
