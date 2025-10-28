@@ -26,14 +26,31 @@ spec:
           app:
             image:
               repository: ghcr.io/tronbyt/server
-              tag: 1.3.0@sha256:66a576f66d7e92ff321b715fb42111ceb2b01fc40bc16f623c144c1fdb058ef0
+              tag: main@sha256:3d76d6c377aab068fad3bd79b6142afb83d9c4bcb73a60e5d8fbcd2ecc4c358a
               pullPolicy: IfNotPresent
+            command:
+              - sh
+              - -c
+              # language=shell script
+              - |
+                set -euo pipefail
+
+                python3 -c 'from tronbyt_server.startup import run_once; run_once()'
+
+                exec uvicorn \
+                  --host=0.0.0.0 \
+                  --port=443 \
+                  --ssl-certfile=/tls/tls.crt \
+                  --ssl-keyfile=/tls/tls.key \
+                  --workers=2 \
+                  --log-level=info \
+                  --no-access-log \
+                  --forwarded-allow-ips='*' \
+                  tronbyt_server.main:app
             env:
               TZ: America/Chicago
               PRODUCTION: "1"
-              SERVER_HOSTNAME_OR_IP: ${app_host}
               SERVER_PROTOCOL: https
-              SERVER_PORT: "443"
               REDIS_PASSWORD:
                 secretKeyRef:
                   name: valkey
@@ -92,12 +109,6 @@ spec:
             subPath: data
           - path: /app/users
             subPath: users
-      gunicorn:
-        type: configMap
-        identifier: gunicorn
-        globalMounts:
-          - path: /app/gunicorn.conf.py
-            subPath: gunicorn.conf.py
       tls:
         type: secret
         name: internal-tls
@@ -127,29 +138,3 @@ spec:
           - secretName: ${certificate_name}
             hosts:
               - ${app_host}
-
-    configMaps:
-      gunicorn:
-        data:
-          # language=python
-          gunicorn.conf.py: |
-            from gunicorn.workers import base
-
-            bind = "0.0.0.0:443"
-            certfile = "/tls/tls.crt"
-            keyfile = "/tls/tls.key"
-            workers = 2
-            threads = 8
-            preload_app = True
-
-            # https://github.com/benoitc/gunicorn/issues/1391
-            def post_worker_init(worker: base.Worker) -> None:
-                import atexit
-                import importlib
-
-                _exit_function = getattr(
-                    importlib.import_module("multiprocessing.util"), "_exit_function", None
-                )
-                if _exit_function:
-                    atexit.unregister(_exit_function)
-                worker.log.info("worker post_worker_init done, (pid: {})".format(worker.pid))
