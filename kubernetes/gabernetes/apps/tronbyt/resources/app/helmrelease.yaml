@@ -26,31 +26,20 @@ spec:
           app:
             image:
               repository: ghcr.io/tronbyt/server
-              tag: main@sha256:3d76d6c377aab068fad3bd79b6142afb83d9c4bcb73a60e5d8fbcd2ecc4c358a
+              tag: 1.5.2@sha256:6da2848a08a028e5adbae2d0ea25efc50f8eebe7b003a170571477579837a046
               pullPolicy: IfNotPresent
             command:
-              - sh
-              - -c
-              # language=shell script
-              - |
-                set -euo pipefail
-
-                python3 -c 'from tronbyt_server.startup import run_once; run_once()'
-
-                exec uvicorn \
-                  --host=0.0.0.0 \
-                  --port=443 \
-                  --ssl-certfile=/tls/tls.crt \
-                  --ssl-keyfile=/tls/tls.key \
-                  --workers=2 \
-                  --log-level=info \
-                  --no-access-log \
-                  --forwarded-allow-ips='*' \
-                  tronbyt_server.main:app
+              - python3
+              - run.py
+              - --ssl-certfile=/tls/tls.crt
+              - --ssl-keyfile=/tls/tls.key
+              - --no-access-log
             env:
               TZ: America/Chicago
               PRODUCTION: "1"
               SERVER_PROTOCOL: https
+              TRONBYT_PORT: "443"
+              WEB_CONCURRENCY: "2"
               REDIS_PASSWORD:
                 secretKeyRef:
                   name: valkey
