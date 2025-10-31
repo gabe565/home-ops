@@ -113,17 +113,31 @@ spec:
 
     ingress:
       tronbyt:
-        annotations:
+        annotations: &annotations
           nginx.ingress.kubernetes.io/backend-protocol: HTTPS
           nginx.ingress.kubernetes.io/whitelist-source-range: "192.168.1.0/24,10.42.0.0/16"
         hosts:
           - host: ${app_host}
             paths:
               - path: /
-                service:
+                service: &service
                   identifier: tronbyt
                   port: http
-        tls:
+        tls: &tls
           - secretName: ${certificate_name}
             hosts:
               - ${app_host}
+      no-logs:
+        annotations:
+          <<: *annotations
+          nginx.ingress.kubernetes.io/use-regex: "true"
+          nginx.ingress.kubernetes.io/enable-access-log: "false"
+        hosts:
+          - host: ${app_host}
+            paths:
+              - path: /(.+)/currentapp
+                service: *service
+                pathType: ImplementationSpecific
+              - path: /app_preview
+                service: *service
+        tls: *tls
