@@ -41,11 +41,6 @@ spec:
             secretKeyRef:
               name: postgresql-app
               key: password
-        - name: AUTHENTIK_REDIS__PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: valkey
-              key: valkey-password
         - name: AUTHENTIK_POSTGRESQL__READ_REPLICAS__0__HOST
           value: postgresql-ro
         - name: AUTHENTIK_POSTGRESQL__READ_REPLICAS__0__NAME
@@ -81,9 +76,6 @@ spec:
         host: postgresql-rw
         name: authentik
         user: authentik
-
-      redis:
-        host: valkey
 
       email:
         host: ${email_host}
