@@ -5,4 +5,5 @@ metadata:
   namespace: nextcloud
 spec:
   interval: 1h
-  url: https://nextcloud.github.io/helm/
+  type: oci
+  url: oci://ghcr.io/nextcloud/helm
