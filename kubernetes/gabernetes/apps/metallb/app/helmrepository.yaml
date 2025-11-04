@@ -5,4 +5,5 @@ metadata:
   namespace: metallb-system
 spec:
   interval: 1h
-  url: https://metallb.github.io/metallb
+  type: oci
+  url: oci://quay.io/metallb/chart
