@@ -43,3 +43,8 @@ spec:
         serviceMonitor:
           enabled: true
           scrapeInterval: 1m
+
+    defaultBackend:
+      image:
+        repository: ghcr.io/tarampampam/error-pages
+        tag: 3.3.2@sha256:e7133e4faf97675c00ad9150c98ec1a867ae91ece5131a7eb218b868ce5a628d
