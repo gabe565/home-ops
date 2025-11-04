@@ -47,4 +47,4 @@ spec:
     defaultBackend:
       image:
         repository: ghcr.io/tarampampam/error-pages
-        tag: 3.3.2@sha256:e7133e4faf97675c00ad9150c98ec1a867ae91ece5131a7eb218b868ce5a628d
+        tag: 3.7.1@sha256:0ce7e3798b1180d74432c38f4edd3e5072c672926646d79770b7aa48eb3a2d2f
