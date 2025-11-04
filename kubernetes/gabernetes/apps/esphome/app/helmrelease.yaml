@@ -175,7 +175,7 @@ spec:
       code:
         enabled: true
         annotations:
-          nginx.ingress.kubernetes.io/whitelist-source-range: "192.168.1.0/24,10.42.0.0/16"
+          nginx.ingress.kubernetes.io/whitelist-source-range: "192.168.0.0/22,10.42.0.0/16"
         hosts:
           - host: ${code_url}
             paths:

@@ -55,7 +55,7 @@ spec:
             - port: "853"
             - port: "784"
     - fromCIDRSet:
-        - cidr: 192.168.1.0/24
+        - cidr: 192.168.0.0/22
       toPorts:
         - ports:
             - port: "53"

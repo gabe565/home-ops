@@ -16,7 +16,7 @@ spec:
     - toCIDRSet:
         - cidr: 0.0.0.0/0
           except:
-            - 192.168.1.0/24
+            - 192.168.0.0/22
     - toEndpoints:
         - matchLabels:
             io.kubernetes.pod.namespace: kube-system
