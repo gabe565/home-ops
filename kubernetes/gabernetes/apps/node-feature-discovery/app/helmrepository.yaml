@@ -5,4 +5,5 @@ metadata:
   namespace: node-feature-discovery
 spec:
   interval: 1h
-  url: https://kubernetes-sigs.github.io/node-feature-discovery/charts
+  type: oci
+  url: oci://registry.k8s.io/nfd/charts
