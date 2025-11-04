@@ -5,4 +5,5 @@ metadata:
   namespace: flux-system
 spec:
   interval: 1h
-  url: https://kubernetes.github.io/ingress-nginx
+  type: oci
+  url: oci://registry.k8s.io/ingress-nginx/charts
