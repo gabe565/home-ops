@@ -20,7 +20,7 @@ spec:
     server:
       image:
         repository: ghcr.io/gabe565/obico/web
-        tag: latest@sha256:83d62882b989ba938661265910944a5378aac76e9026f12afa84938ca3dbad3b
+        tag: latest@sha256:ddbd8c9c0ca34d39d8c177a4bdc4abddb3808776c3b99a58adb986aba3fb0ec0
       env:
         DJANGO_SECRET_KEY: ${django_secret_key}
         EMAIL_HOST: ${smtp_hostname}
