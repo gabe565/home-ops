@@ -26,7 +26,7 @@ spec:
           app:
             image:
               repository: ghcr.io/dgtlmoon/changedetection.io
-              tag: 0.50.39@sha256:f67668a25429725de212becbdb5d8d783d715b4c99b94da7222a6035ba9f74f6
+              tag: 0.51.1@sha256:3aa47c4ca4339a3331158e4aa75805267e1c07743615bdde89d2df08e984c11d
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
