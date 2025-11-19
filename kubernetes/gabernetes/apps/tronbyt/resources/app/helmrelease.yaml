@@ -30,7 +30,8 @@ spec:
               pullPolicy: IfNotPresent
             command:
               - python3
-              - run.py
+              - -m
+              - tronbyt_server.run
               - --ssl-certfile=/tls/tls.crt
               - --ssl-keyfile=/tls/tls.key
               - --no-access-log
