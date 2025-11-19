@@ -26,11 +26,12 @@ spec:
           app:
             image:
               repository: ghcr.io/tronbyt/server
-              tag: 1.5.4@sha256:0f99e5f0503280414e1243f8d045dc474ddc87875559525a20864fb66fc0a472
+              tag: 1.5.8@sha256:f6db729fa43c8bdb010248adb1ae4909dd6797dded30613bf1de2a8c39fd6a49
               pullPolicy: IfNotPresent
             command:
               - python3
-              - run.py
+              - -m
+              - tronbyt_server.run
               - --ssl-certfile=/tls/tls.crt
               - --ssl-keyfile=/tls/tls.key
               - --no-access-log
