@@ -130,6 +130,7 @@ spec:
       tmp:
         enabled: true
         type: emptyDir
+        medium: Memory
 
     service:
       immich:
