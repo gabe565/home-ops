@@ -32,7 +32,7 @@ spec:
           app:
             image:
               repository: ghcr.io/immich-app/immich-server
-              tag: v2.2.3
+              tag: v2.3.1
               pullPolicy: IfNotPresent
             env: &env
               TZ: America/Chicago
@@ -71,7 +71,7 @@ spec:
           app:
             image:
               repository: ghcr.io/immich-app/immich-server
-              tag: v2.2.3
+              tag: v2.3.1
               pullPolicy: IfNotPresent
             env:
               <<: *env
@@ -95,7 +95,7 @@ spec:
           app:
             image:
               repository: ghcr.io/immich-app/immich-machine-learning
-              tag: v2.2.3
+              tag: v2.3.1
               pullPolicy: IfNotPresent
             securityContext: *securityContext
         pod:
