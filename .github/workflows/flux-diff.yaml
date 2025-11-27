@@ -24,7 +24,7 @@ jobs:
         sources: [home-ops]
     steps:
       - name: Setup Flux CLI
-        uses: fluxcd/flux2/action@b6e76ca2534f76dcb8dd94fb057cdfa923c3b641 # v2.7.3
+        uses: fluxcd/flux2/action@8454b02a32e48d775b9f563cb51fdcb1787b5b93 # v2.7.5
 
       - id: resource
         env:
