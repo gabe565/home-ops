@@ -49,7 +49,7 @@ spec:
                   key: token
               BROWSER_WEBSOCKET_URL:
                 value: >-
-                  {{- $launch := dict "headless" "false" "stealth" "true" "args" (list "--window-size=1920,1080" "--force-color-profile=srgb") -}}
+                  {{- $launch := dict "headless" false  "stealth"  true  "args" (list "--window-size=1920,1080" "--force-color-profile=srgb") -}}
                   ws://browserless.browserless/chromium/playwright?token=$(BROWSER_TOKEN)&blockAds=true&launch={{ toJson $launch }}
                 dependsOn: BROWSER_TOKEN
               BROWSER_CONNECT_ONDEMAND: "true"
