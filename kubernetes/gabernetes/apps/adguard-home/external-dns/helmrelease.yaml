@@ -45,9 +45,11 @@ spec:
     policy: sync
     registry: noop
 
-    extraArgs:
-      - --webhook-provider-url=http://localhost:8888
-      - --ingress-class=nginx
+    env:
+      - name: EXTERNAL_DNS_WEBHOOK_PROVIDER_URL
+        value: http://localhost:8888
+      - name: EXTERNAL_DNS_INGRESS_CLASS
+        value: nginx
 
     podLabels:
       policy.gabe565.com/egress-adguard-api: "true"

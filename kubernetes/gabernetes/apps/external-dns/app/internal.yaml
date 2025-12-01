@@ -38,11 +38,6 @@ spec:
     interval: 1h
     triggerLoopOnEvent: true
     policy: sync
-    extraArgs:
-      - --txt-encrypt-enabled
-      # https://github.com/kubernetes-sigs/external-dns/issues/5010#issuecomment-2640511737
-      - --txt-prefix=extdns-%{record_type}.
-      - --ingress-class=nginx-internal
 
     txtOwnerId: gabernetes-internal
     env:
@@ -51,6 +46,13 @@ spec:
           secretKeyRef:
             name: cloudflare
             key: token
+      - name: EXTERNAL_DNS_INGRESS_CLASS
+        value: nginx-internal
+      - name: EXTERNAL_DNS_TXT_ENCRYPT_ENABLED
+        value: "true"
+      # https://github.com/kubernetes-sigs/external-dns/issues/5010#issuecomment-2640511737
+      - name: EXTERNAL_DNS_TXT_PREFIX
+        value: extdns-%{record_type}.
       - name: EXTERNAL_DNS_TXT_ENCRYPT_AES_KEY
         valueFrom:
           secretKeyRef:
