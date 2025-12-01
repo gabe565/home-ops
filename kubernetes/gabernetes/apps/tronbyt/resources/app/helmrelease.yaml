@@ -26,7 +26,7 @@ spec:
           app:
             image:
               repository: ghcr.io/tronbyt/server
-              tag: 1.6.2@sha256:a3c6c0eec311e7f0076a36a8dd8895025e1f28a71ce2373b620c8e75035a0df2
+              tag: 1.6.3@sha256:883b9fc30a3327c0c006d79d489e90c31290c9256491a2171564ad932ce0cef3
               pullPolicy: IfNotPresent
             command:
               - python3
