@@ -25,7 +25,7 @@ spec:
           bookstack:
             image:
               repository: ghcr.io/linuxserver/bookstack
-              tag: version-v25.11.4@sha256:f40d0fd5e11eaba3133e234612914c8d4c863338b91b3074513abcfab42560a8
+              tag: version-v25.11.4@sha256:cc2162f0bf8bfcecb4905ff8534193689be660558ab5eadac3299803db613b9b
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
