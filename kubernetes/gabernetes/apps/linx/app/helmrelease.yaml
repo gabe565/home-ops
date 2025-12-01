@@ -41,6 +41,7 @@ spec:
               LINX_CLEANUP_EVERY: 24h
               LINX_HEADER_REAL_IP: "true"
               LINX_S3_ENDPOINT: ${s3_endpoint}
+              LINX_S3_REGION: us-central-1
               LINX_S3_BUCKET: linx
             envFrom:
               - secretRef:
