@@ -149,6 +149,12 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td></td>
   </tr>
   <tr>
+    <td>envoy-gateway-system</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/envoy-gateway/app/helmrelease.yaml">envoy-gateway</a></td>
+    <td></td>
+  </tr>
+  <tr>
     <td>esphome</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/esphome/app/helmrelease.yaml">esphome</a></td>

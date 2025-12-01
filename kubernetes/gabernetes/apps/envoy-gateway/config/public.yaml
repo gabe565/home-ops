@@ -1,0 +1,51 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: envoy-public
+  namespace: envoy-gateway-system
+spec:
+  provider:
+    type: Kubernetes
+    kubernetes:
+      envoyService:
+        type: LoadBalancer
+        externalTrafficPolicy: Local
+        loadBalancerIP: 192.168.1.228
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: envoy-public
+  namespace: envoy-gateway-system
+spec:
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
+  parametersRef:
+    group: gateway.envoyproxy.io
+    kind: EnvoyProxy
+    namespace: envoy-gateway-system
+    name: envoy-public
+---
+## Deployed from my private repo to keep certificate names private.
+# apiVersion: gateway.networking.k8s.io/v1
+# kind: Gateway
+# metadata:
+#   name: envoy-public
+#   namespace: envoy-gateway-system
+# spec:
+#   gatewayClassName: envoy-public
+#   listeners:
+#     - name: http
+#       port: 80
+#       protocol: HTTP
+#       allowedRoutes:
+#         namespaces:
+#           from: Same
+#     - name: https
+#       port: 443
+#       protocol: HTTPS
+#       tls:
+#         mode: Terminate
+#         certificateRefs: []
+#       allowedRoutes:
+#         namespaces:
+#           from: All

@@ -1,0 +1,37 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: envoy-gateway
+  namespace: envoy-gateway-system
+spec:
+  chart:
+    spec:
+      chart: gateway-helm
+      version: v1.6.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: envoy-gateway-system
+        name: envoyproxy
+  interval: 1h
+  install:
+    crds: Create
+  upgrade:
+    crds: CreateReplace
+  driftDetection:
+    mode: enabled
+  values:
+    deployment:
+      pod:
+        labels:
+          policy.gabe565.com/egress-geoip: "true"
+          policy.gabe565.com/egress-kubeapi: "true"
+          policy.gabe565.com/egress-world-with-lan: "true"
+          policy.gabe565.com/ingress-nodes: "true"
+          policy.gabe565.com/ingress-prometheus: "true"
+          policy.gabe565.com/ingress-world: "true"
+    certgen:
+      job:
+        pod:
+          labels:
+            policy.gabe565.com/egress-kubeapi: "true"

@@ -1,0 +1,75 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: ingress-envoy-public
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/ingress-envoy-public: "true"
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: envoy-gateway-system
+            app.kubernetes.io/name: envoy
+            app.kubernetes.io/managed-by: envoy-gateway
+            app.kubernetes.io/component: proxy
+            gateway.envoyproxy.io/owning-gateway-name: envoy-public
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: ingress-envoy-public
+  namespace: envoy-gateway-system
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: envoy
+      app.kubernetes.io/managed-by: envoy-gateway
+      app.kubernetes.io/component: proxy
+      gateway.envoyproxy.io/owning-gateway-name: envoy-public
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            policy.gabe565.com/ingress-envoy-public: "true"
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
+---
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: egress-envoy-public
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/egress-envoy-public: "true"
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: envoy-gateway-system
+            app.kubernetes.io/name: envoy
+            app.kubernetes.io/managed-by: envoy-gateway
+            app.kubernetes.io/component: proxy
+            gateway.envoyproxy.io/owning-gateway-name: envoy-public
+    - toCIDRSet:
+        - cidr: 192.168.1.228/32
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: egress-envoy-public
+  namespace: envoy-gateway-system
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: envoy
+      app.kubernetes.io/managed-by: envoy-gateway
+      app.kubernetes.io/component: proxy
+      gateway.envoyproxy.io/owning-gateway-name: envoy-public
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            policy.gabe565.com/egress-envoy-public: "true"
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists

@@ -1,0 +1,31 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: app
+  namespace: envoy-gateway-system
+spec:
+  interval: 1h
+  targetNamespace: envoy-gateway-system
+  path: ./kubernetes/gabernetes/apps/envoy-gateway/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    namespace: flux-system
+    name: home-ops
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: config
+  namespace: envoy-gateway-system
+spec:
+  interval: 1h
+  targetNamespace: envoy-gateway-system
+  path: ./kubernetes/gabernetes/apps/envoy-gateway/config
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    namespace: flux-system
+    name: home-ops
+  dependsOn:
+    - name: app

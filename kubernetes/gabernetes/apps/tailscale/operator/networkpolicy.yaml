@@ -5,7 +5,7 @@ metadata:
 spec:
   endpointSelector:
     matchLabels:
-      policy.gabe565.com/ingress-nginx: "true"
+      policy.gabe565.com/ingress-tailscale: "true"
   ingress:
     - fromEndpoints:
         - matchLabels:

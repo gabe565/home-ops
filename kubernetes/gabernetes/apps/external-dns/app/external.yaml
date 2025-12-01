@@ -35,6 +35,7 @@ spec:
       name: cloudflare
     interval: 1h
     triggerLoopOnEvent: true
+    sources: [service, ingress, gateway-httproute]
     policy: sync
 
     txtOwnerId: gabernetes
@@ -46,6 +47,8 @@ spec:
             key: token
       - name: EXTERNAL_DNS_INGRESS_CLASS
         value: nginx
+      - name: EXTERNAL_DNS_GATEWAY_NAME
+        value: envoy-public
       - name: EXTERNAL_DNS_FORCE_DEFAULT_TARGETS
         value: "true"
       - name: EXTERNAL_DNS_DEFAULT_TARGETS

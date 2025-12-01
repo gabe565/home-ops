@@ -37,6 +37,7 @@ spec:
       name: cloudflare
     interval: 1h
     triggerLoopOnEvent: true
+    sources: [service, ingress, gateway-httproute]
     policy: sync
 
     txtOwnerId: gabernetes-internal
@@ -48,6 +49,8 @@ spec:
             key: token
       - name: EXTERNAL_DNS_INGRESS_CLASS
         value: nginx-internal
+      - name: EXTERNAL_DNS_GATEWAY_NAME
+        value: envoy-private
       - name: EXTERNAL_DNS_TXT_ENCRYPT_ENABLED
         value: "true"
       # https://github.com/kubernetes-sigs/external-dns/issues/5010#issuecomment-2640511737

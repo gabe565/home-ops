@@ -42,6 +42,7 @@ spec:
           readOnlyRootFilesystem: true
     interval: 1h
     triggerLoopOnEvent: true
+    sources: [service, ingress, gateway-httproute]
     policy: sync
     registry: noop
 
@@ -50,6 +51,8 @@ spec:
         value: http://localhost:8888
       - name: EXTERNAL_DNS_INGRESS_CLASS
         value: nginx
+      - name: EXTERNAL_DNS_GATEWAY_NAME
+        value: envoy-public
 
     podLabels:
       policy.gabe565.com/egress-adguard-api: "true"
