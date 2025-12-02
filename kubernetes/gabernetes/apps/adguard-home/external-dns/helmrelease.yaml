@@ -53,6 +53,10 @@ spec:
         value: nginx
       - name: EXTERNAL_DNS_GATEWAY_NAME
         value: envoy-public
+      - name: EXTERNAL_DNS_FORCE_DEFAULT_TARGETS
+        value: "true"
+      - name: EXTERNAL_DNS_DEFAULT_TARGETS
+        value: 192.168.1.220
 
     podLabels:
       policy.gabe565.com/egress-adguard-api: "true"
