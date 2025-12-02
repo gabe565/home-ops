@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - ../../../../templates/apps/ingress-nginx
   - helmrelease.yaml
+  - envoy-fallback.yaml
