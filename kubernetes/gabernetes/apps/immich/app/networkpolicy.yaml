@@ -11,7 +11,7 @@ spec:
         - matchLabels:
             io.kubernetes.pod.namespace: immich
             app.kubernetes.io/name: immich
-            app.kubernetes.io/component: server
+            app.kubernetes.io/controller: server
       toPorts:
         - ports:
             - port: "2283"
@@ -25,7 +25,7 @@ spec:
   endpointSelector:
     matchLabels:
       app.kubernetes.io/name: immich
-      app.kubernetes.io/component: server
+      app.kubernetes.io/controller: server
   ingress:
     - fromEndpoints:
         - matchLabels:
