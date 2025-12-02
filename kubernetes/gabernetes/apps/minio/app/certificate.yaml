@@ -19,3 +19,18 @@ spec:
   issuerRef:
     name: letsencrypt-dns01
     kind: ClusterIssuer
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: allow-envoy-gateway-tls
+  namespace: minio
+spec:
+  from:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      namespace: envoy-gateway-system
+  to:
+    - group: ""
+      kind: Secret
+      name: ${s3_certificate_name}
