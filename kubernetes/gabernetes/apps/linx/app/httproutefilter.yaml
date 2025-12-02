@@ -1,0 +1,14 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: HTTPRouteFilter
+metadata:
+  name: robots-disallow
+  namespace: linx
+spec:
+  directResponse:
+    contentType: text/plain
+    statusCode: 200
+    body:
+      type: Inline
+      inline: |
+        User-Agent: *
+        Disallow: /
