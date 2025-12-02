@@ -45,7 +45,7 @@ data:
       addHeaders:
         Referrer-Policy: same-origin, strict-origin-when-cross-origin
         X-Content-Type-Options: nosniff
-        X-Frame-Options: DENY
+        X-Frame-Options: SAMEORIGIN
 
       admissionWebhooks:
         labels:
