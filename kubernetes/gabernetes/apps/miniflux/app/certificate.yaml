@@ -5,19 +5,3 @@ metadata:
   namespace: miniflux
   annotations:
     reflector.v1.k8s.emberstack.com/reflects: cert-manager/${certificate_name}
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: internal-tls
-  namespace: miniflux
-spec:
-  secretName: internal-tls
-  dnsNames:
-    - ${app_url}
-    - miniflux.miniflux
-  duration: 8760h # 1 year
-  renewBefore: 720h # 30 days
-  issuerRef:
-    kind: ClusterIssuer
-    name: cooks

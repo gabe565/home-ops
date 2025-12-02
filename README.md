@@ -119,12 +119,6 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td></td>
   </tr>
   <tr>
-    <td>cert-manager</td>
-    <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/gabernetes/apps/cert-manager/trust-manager/helmrelease.yaml">trust-manager</a></td>
-    <td></td>
-  </tr>
-  <tr>
     <td>change-detection</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/change-detection/app/helmrelease.yaml">change-detection</a></td>

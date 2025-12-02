@@ -20,8 +20,6 @@ spec:
   values:
     controllers:
       trmnl:
-        annotations:
-          secret.reloader.stakater.com/reload: internal-tls
         strategy: RollingUpdate
         containers:
           trmnl:
@@ -34,12 +32,9 @@ spec:
                   name: trmnl-env
             env:
               TZ: America/Chicago
-              LISTEN_ADDRESS: ":443"
+              LISTEN_ADDRESS: ":80"
               IMAGE_URL: https://${trmnl_url}
-              TLS_CERT_PATH: /tls/tls.crt
-              TLS_KEY_PATH: /tls/tls.key
-              NIGHTSCOUT_URL: https://nightscout.nightscout:1337
-              NIGHTSCOUT_CA_CERT_PATH: /tls/ca.crt
+              NIGHTSCOUT_URL: http://nightscout.nightscout:1337
               REAL_IP_HEADER: "true"
               TIME_FORMAT: 15:04
             securityContext:
@@ -49,7 +44,7 @@ spec:
             probes:
               liveness: &probe
                 enabled: true
-                type: HTTPS
+                type: HTTP
                 path: /ping
               readiness: *probe
               startup:
@@ -67,23 +62,16 @@ spec:
             runAsGroup: 65534
             seccompProfile: {type: RuntimeDefault}
 
-    persistence:
-      tls:
-        type: secret
-        name: trmnl-internal-tls
-
     service:
       trmnl:
         controller: trmnl
         ports:
           http:
-            port: 443
+            port: 80
 
     ingress:
       trmnl:
         enabled: true
-        annotations:
-          nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
         hosts:
           - host: ${trmnl_url}
             paths:

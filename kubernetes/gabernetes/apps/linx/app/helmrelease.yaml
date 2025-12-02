@@ -22,7 +22,7 @@ spec:
       linx:
         strategy: RollingUpdate
         annotations:
-          secret.reloader.stakater.com/reload: envs,auth,internal-tls
+          secret.reloader.stakater.com/reload: envs,auth
         containers:
           app:
             image:
@@ -32,8 +32,6 @@ spec:
             env:
               GOMEMLIMIT: 1GiB
               LINX_SITE_URL: https://${app_url}
-              LINX_TLS_CERT: /tls/tls.crt
-              LINX_TLS_KEY: /tls/tls.key
               LINX_AUTH_FILE: /auth/auth
               LINX_MAX_EXPIRY: 744h
               LINX_MAX_SIZE: 4Gi
@@ -55,7 +53,7 @@ spec:
             probes:
               liveness: &probe
                 enabled: true
-                type: HTTPS
+                type: HTTP
                 path: /ping
               readiness: *probe
               startup:
@@ -92,15 +90,11 @@ spec:
         name: auth
       tmp:
         type: emptyDir
-      tls:
-        type: secret
-        name: internal-tls
 
     ingress:
       linx:
         enabled: true
         annotations:
-          nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
           nginx.ingress.kubernetes.io/proxy-body-size: "0"
           nginx.ingress.kubernetes.io/custom-http-errors: 403,500,501,502,503,504
         hosts:

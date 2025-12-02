@@ -20,8 +20,6 @@ spec:
   values:
     controllers:
       home-assistant:
-        annotations:
-          secret.reloader.stakater.com/reload: internal-tls
         containers:
           app:
             image:
@@ -30,9 +28,6 @@ spec:
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
-              REQUESTS_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
-              HTTP_SSL_CERT: /tls/tls.crt
-              HTTP_SSL_KEY: /tls/tls.key
               DATABASE_URL:
                 secretKeyRef:
                   name: postgresql-app
@@ -71,8 +66,6 @@ spec:
                       matchLabels:
                         app.kubernetes.io/name: home-assistant
       code:
-        annotations:
-          secret.reloader.stakater.com/reload: code-internal-tls
         containers:
           app:
             image:
@@ -84,8 +77,6 @@ spec:
               - --disable-update-check
               - --auth=none
               - --user-data-dir=/config/.vscode
-              - --cert=/tls/tls.crt
-              - --cert-key=/tls/tls.key
               - /config
             resources:
               requests:
@@ -109,28 +100,6 @@ spec:
         storageClass: longhorn-ssd
         accessMode: ReadWriteOnce
         size: 2Gi
-      home-assistant-tls:
-        enabled: true
-        type: secret
-        name: internal-tls
-        advancedMounts:
-          home-assistant:
-            app:
-              - path: /tls
-      code-tls:
-        enabled: true
-        type: secret
-        name: code-internal-tls
-        advancedMounts:
-          code:
-            app:
-              - path: /tls
-      ca-bundle:
-        type: configMap
-        name: ca-bundle
-        globalMounts:
-          - path: /etc/ssl/certs/ca-certificates.crt
-            subPath: ca-certificates.crt
       tmp:
         enabled: true
         type: emptyDir
@@ -169,7 +138,6 @@ spec:
       home-assistant:
         enabled: true
         annotations:
-          nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
           nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
         hosts:
           - host: ${app_url}
@@ -204,7 +172,6 @@ spec:
       code:
         enabled: true
         annotations:
-          nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
           nginx.ingress.kubernetes.io/whitelist-source-range: "192.168.0.0/22,10.42.0.0/16"
         hosts:
           - host: ${code_url}

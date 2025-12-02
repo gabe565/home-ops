@@ -14,14 +14,6 @@ metadata:
   annotations:
     reflector.v1.k8s.emberstack.com/reflects: cert-manager/${certificate_name}
 ---
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: ca-bundle
-  namespace: home-assistant
-  annotations:
-    reflector.v1.k8s.emberstack.com/reflects: cert-manager/ca-bundle
----
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -35,35 +27,3 @@ spec:
   issuerRef:
     kind: ClusterIssuer
     name: mqtt
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: internal-tls
-  namespace: home-assistant
-spec:
-  secretName: internal-tls
-  dnsNames:
-    - ${app_url}
-    - home-assistant.home-assistant
-  duration: 8760h # 1 year
-  renewBefore: 720h # 30 days
-  issuerRef:
-    kind: ClusterIssuer
-    name: cooks
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: code-internal-tls
-  namespace: home-assistant
-spec:
-  secretName: code-internal-tls
-  dnsNames:
-    - ${code_url}
-    - home-assistant-code.home-assistant
-  duration: 8760h # 1 year
-  renewBefore: 720h # 30 days
-  issuerRef:
-    kind: ClusterIssuer
-    name: cooks

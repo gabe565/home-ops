@@ -20,8 +20,6 @@ spec:
   values:
     controllers:
       tandoor:
-        annotations:
-          secret.reloader.stakater.com/reload: internal-tls
         strategy: RollingUpdate
         initContainers:
           collectstatic: &container
@@ -83,8 +81,6 @@ spec:
               - --threads=2
               - --timeout=30
               - --error-logfile=-
-              - --certfile=/tls/tls.crt
-              - --keyfile=/tls/tls.key
               - recipes.wsgi
             probes:
               startup:
@@ -129,17 +125,12 @@ spec:
             app:
               - path: /opt/recipes/staticfiles
                 readOnly: true
-      tls:
-        type: secret
-        name: internal-tls
       tmp:
         type: emptyDir
 
     ingress:
       tandoor:
         enabled: true
-        annotations:
-          nginx.ingress.kubernetes.io/backend-protocol: HTTPS
         hosts:
           - host: ${app_url}
             paths:

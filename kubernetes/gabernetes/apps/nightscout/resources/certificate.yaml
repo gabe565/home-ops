@@ -5,36 +5,3 @@ metadata:
   namespace: nightscout
   annotations:
     reflector.v1.k8s.emberstack.com/reflects: cert-manager/${certificate_name}
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: internal-tls
-  namespace: nightscout
-spec:
-  secretName: internal-tls
-  dnsNames:
-    - ${app_url}
-    - ${api_url}
-    - nightscout.nightscout
-  duration: 8760h # 1 year
-  renewBefore: 720h # 30 days
-  issuerRef:
-    kind: ClusterIssuer
-    name: cooks
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: trmnl-internal-tls
-  namespace: nightscout
-spec:
-  secretName: trmnl-internal-tls
-  dnsNames:
-    - ${trmnl_url}
-    - trmnl.nightscout
-  duration: 8760h # 1 year
-  renewBefore: 720h # 30 days
-  issuerRef:
-    kind: ClusterIssuer
-    name: cooks

@@ -21,7 +21,7 @@ spec:
     controllers:
       tronbyt:
         annotations:
-          secret.reloader.stakater.com/reload: internal-tls,valkey
+          secret.reloader.stakater.com/reload: valkey
         containers:
           app:
             image:
@@ -32,14 +32,12 @@ spec:
               - python3
               - -m
               - tronbyt_server.run
-              - --ssl-certfile=/tls/tls.crt
-              - --ssl-keyfile=/tls/tls.key
               - --no-access-log
             env:
               TZ: America/Chicago
               PRODUCTION: "1"
               SERVER_PROTOCOL: https
-              TRONBYT_PORT: "443"
+              TRONBYT_PORT: "80"
               WEB_CONCURRENCY: "2"
               REDIS_PASSWORD:
                 secretKeyRef:
@@ -52,7 +50,7 @@ spec:
             probes:
               liveness: &probe
                 enabled: true
-                type: HTTPS
+                type: HTTP
                 path: /health
                 spec:
                   failureThreshold: 6
@@ -87,7 +85,7 @@ spec:
         controller: tronbyt
         ports:
           http:
-            port: 443
+            port: 80
 
     persistence:
       data:
@@ -99,15 +97,6 @@ spec:
             subPath: data
           - path: /app/users
             subPath: users
-      tls:
-        type: secret
-        name: internal-tls
-      ca-bundle:
-        type: configMap
-        name: ca-bundle
-        globalMounts:
-          - path: /etc/ssl/certs/ca-certificates.crt
-            subPath: ca-certificates.crt
       tmp:
         type: emptyDir
         medium: Memory
@@ -115,7 +104,6 @@ spec:
     ingress:
       tronbyt:
         annotations: &annotations
-          nginx.ingress.kubernetes.io/backend-protocol: HTTPS
           nginx.ingress.kubernetes.io/whitelist-source-range: "192.168.0.0/22,10.42.0.0/16"
         hosts:
           - host: ${app_host}

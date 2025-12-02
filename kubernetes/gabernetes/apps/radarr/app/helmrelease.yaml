@@ -20,9 +20,6 @@ spec:
   values:
     controllers:
       radarr:
-        annotations:
-          configmap.reloader.stakater.com/reload: ca-bundle
-          secret.reloader.stakater.com/reload: internal-tls
         containers:
           app:
             image:
@@ -34,7 +31,7 @@ spec:
             probes:
               liveness: &probe
                 enabled: true
-                type: HTTPS
+                type: HTTP
                 path: /ping
               readiness: *probe
               startup:
@@ -69,9 +66,6 @@ spec:
         ports:
           http:
             port: 7878
-          https:
-            port: 6969
-            primary: true
 
     persistence:
       config:
@@ -85,15 +79,6 @@ spec:
         path: /volume1/media
         globalMounts:
           - path: /mnt/media
-      tls:
-        type: secret
-        name: internal-tls
-      ca-bundle:
-        type: configMap
-        name: ca-bundle
-        globalMounts:
-          - path: /etc/ssl/certs/ca-certificates.crt
-            subPath: ca-certificates.crt
       tmp:
         type: emptyDir
 
@@ -106,13 +91,12 @@ spec:
               - path: /
                 service:
                   identifier: radarr
-                  port: https
+                  port: http
         tls:
           - secretName: ${certificate_name}
             hosts:
               - ${app_url}
         annotations:
-          nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
           nginx.ingress.kubernetes.io/auth-url: |-
             http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
           nginx.ingress.kubernetes.io/auth-signin: |-

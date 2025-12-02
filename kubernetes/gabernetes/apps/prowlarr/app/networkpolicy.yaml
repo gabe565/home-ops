@@ -13,7 +13,6 @@ spec:
             app.kubernetes.io/name: prowlarr
       toPorts:
         - ports:
-            - port: "6969"
             - port: "9696"
 ---
 apiVersion: cilium.io/v2

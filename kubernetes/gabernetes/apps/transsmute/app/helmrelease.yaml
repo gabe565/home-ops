@@ -21,7 +21,7 @@ spec:
     controllers:
       transsmute:
         annotations:
-          secret.reloader.stakater.com/reload: transsmute-env,internal-tls
+          secret.reloader.stakater.com/reload: transsmute-env
         strategy: RollingUpdate
         containers:
           app:
@@ -31,15 +31,13 @@ spec:
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
-              TRANSSMUTE_TLS_CERT_PATH: /tls/tls.crt
-              TRANSSMUTE_TLS_KEY_PATH: /tls/tls.key
             envFrom:
               - secretRef:
                   name: transsmute-env
             probes:
               liveness: &probe
                 enabled: true
-                type: HTTPS
+                type: HTTP
                 path: /ping
               readiness: *probe
               startup:
@@ -54,11 +52,6 @@ spec:
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-nginx: "true"
 
-    persistence:
-      tls:
-        type: secret
-        name: internal-tls
-
     service:
       transsmute:
         controller: transsmute
@@ -69,8 +62,6 @@ spec:
     ingress:
       transsmute:
         enabled: true
-        annotations:
-          nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
         hosts:
           - host: ${app_url}
             paths:

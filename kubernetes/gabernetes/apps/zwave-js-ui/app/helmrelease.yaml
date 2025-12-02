@@ -20,8 +20,6 @@ spec:
   values:
     controllers:
       zwave-js-ui:
-        annotations:
-          secret.reloader.stakater.com/reload: internal-tls
         containers:
           app:
             image:
@@ -30,9 +28,7 @@ spec:
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
-              HTTPS: "true"
-              SSL_CERTIFICATE: /tls/tls.crt
-              SSL_KEY: /tls/tls.key
+              FORCE_DISABLE_SSL: "true"
               TRUST_PROXY: 10.42.0.0/16
             resources:
               requests:
@@ -46,7 +42,7 @@ spec:
                 spec:
                   httpGet: &httpGet
                     port: 8091
-                    scheme: HTTPS
+                    scheme: HTTP
                     path: /health
                     httpHeaders:
                       - name: Accept
@@ -86,9 +82,6 @@ spec:
       data:
         enabled: true
         type: emptyDir
-      tls:
-        type: secret
-        name: internal-tls
 
     service:
       zwave-js-ui:
@@ -104,7 +97,6 @@ spec:
       zwave-js-ui:
         enabled: true
         annotations:
-          nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
           nginx.ingress.kubernetes.io/auth-url: |-
             http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
           nginx.ingress.kubernetes.io/auth-signin: |-
