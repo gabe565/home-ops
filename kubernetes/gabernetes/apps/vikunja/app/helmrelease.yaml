@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.7.3/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.4.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.7.3
+      version: 4.4.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -59,7 +59,7 @@ spec:
             policy.gabe565.com/egress-nginx: "true"
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
-            policy.gabe565.com/ingress-nginx: "true"
+            policy.gabe565.com/ingress-envoy-public: "true"
           securityContext:
             runAsNonRoot: true
             runAsUser: 1000
@@ -76,36 +76,27 @@ spec:
 
     persistence:
       files:
-        enabled: true
+        suffix: files
         storageClass: longhorn-ssd
         accessMode: ReadWriteOnce
         size: 2Gi
+        retain: true
         globalMounts:
           - path: /app/vikunja/files
       config:
-        enabled: true
         type: secret
         name: vikunja-config
         globalMounts:
           - path: /etc/vikunja/config.yaml
             subPath: config.yaml
 
-    ingress:
+    route:
       vikunja:
-        enabled: true
-        annotations:
-          nginx.ingress.kubernetes.io/proxy-body-size: 20M
-        hosts:
-          - host: ${app_url}
-            paths:
-              - path: /
-                service:
-                  identifier: vikunja
-                  port: http
-        tls:
-          - secretName: ${certificate_name}
-            hosts:
-              - ${app_url}
+        parentRefs:
+          - namespace: envoy-gateway-system
+            name: envoy-public
+        hostnames:
+          - ${app_url}
 
     secrets:
       env:
