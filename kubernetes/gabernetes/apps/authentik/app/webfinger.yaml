@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.7.3/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.4.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.7.3
+      version: 4.4.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -46,6 +46,8 @@ spec:
                   failureThreshold: 30
                   periodSeconds: 5
         pod:
+          labels:
+            policy.gabe565.com/ingress-envoy-public: "true"
           securityContext:
             runAsNonRoot: true
             seccompProfile: {type: RuntimeDefault}
@@ -57,18 +59,17 @@ spec:
           http:
             port: 3000
 
-    ingress:
+    route:
       webfinger:
-        enabled: true
-        hosts:
-          - host: ${webfinger_host}
-            paths:
-              - path: /.well-known/webfinger
-                pathType: ImplementationSpecific
-                service:
-                  identifier: webfinger
-                  port: http
-        tls:
-          - secretName: ${certificate_name}
-            hosts:
-              - ${webfinger_host}
+        parentRefs:
+          - namespace: envoy-gateway-system
+            name: envoy-public
+        hostnames:
+          - ${webfinger_host}
+        rules:
+          - matches:
+              - path:
+                  type: PathPrefix
+                  value: /.well-known/webfinger
+            backendRefs:
+              - identifier: webfinger

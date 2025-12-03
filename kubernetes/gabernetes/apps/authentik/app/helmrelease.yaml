@@ -25,15 +25,16 @@ spec:
         secret.reloader.stakater.com/reload: authentik-s3-envs,authentik-geoip
 
       podLabels:
+        policy.gabe565.com/egress-geoip: "true"
         policy.gabe565.com/egress-kube-dns: "true"
         policy.gabe565.com/egress-kubeapi: "true"
         policy.gabe565.com/egress-namespace: "true"
         policy.gabe565.com/egress-world: "true"
-        policy.gabe565.com/ingress-prometheus: "true"
-        policy.gabe565.com/ingress-nginx: "true"
+        policy.gabe565.com/ingress-envoy-public: "true"
         policy.gabe565.com/ingress-namespace: "true"
         policy.gabe565.com/ingress-nginx-internal: "true"
-        policy.gabe565.com/egress-geoip: "true"
+        policy.gabe565.com/ingress-nginx: "true"
+        policy.gabe565.com/ingress-prometheus: "true"
 
       env:
         - name: AUTHENTIK_POSTGRESQL__PASSWORD
@@ -104,14 +105,14 @@ spec:
           mountPath: /tmp
 
     server:
-      ingress:
-        enabled: true
-        hosts:
-          - ${app_url}
-        tls:
-          - secretName: ${certificate_name}
-            hosts:
-              - ${app_url}
+      route:
+        main:
+          enabled: true
+          parentRefs:
+            - namespace: envoy-gateway-system
+              name: envoy-public
+          hostnames:
+            - ${app_url}
 
       volumes:
         - name: custom-assets
