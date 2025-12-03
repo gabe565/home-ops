@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.7.3/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.4.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.7.3
+      version: 4.4.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -61,10 +61,9 @@ spec:
 
     persistence:
       tmp:
-        enabled: true
         type: emptyDir
       data:
-        enabled: true
+        suffix: data
         storageClass: longhorn-ssd
         accessMode: ReadWriteOnce
         size: 2Gi
@@ -72,14 +71,12 @@ spec:
         globalMounts:
           - path: /var/lib/clickhouse
       logs:
-        enabled: true
         type: emptyDir
         globalMounts:
           - path: /var/log
       config:
-        enabled: true
         type: configMap
-        name: clickhouse-config
+        identifier: config
         globalMounts:
           - path: /etc/clickhouse-server/config.d/logging.xml
             subPath: config.xml

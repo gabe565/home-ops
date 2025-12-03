@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.7.3/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.4.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.7.3
+      version: 4.4.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -91,7 +91,7 @@ spec:
             policy.gabe565.com/egress-geoip: "true"
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
-            policy.gabe565.com/ingress-nginx: "true"
+            policy.gabe565.com/ingress-envoy-public: "true"
           securityContext:
             runAsNonRoot: true
             runAsUser: 1000
@@ -101,10 +101,8 @@ spec:
 
     persistence:
       tmp:
-        enabled: true
         type: emptyDir
       geoip:
-        enabled: true
         type: emptyDir
         globalMounts:
           - path: /usr/share/GeoIP
@@ -116,17 +114,10 @@ spec:
           http:
             port: 8000
 
-    ingress:
+    route:
       plausible:
-        enabled: true
-        hosts:
-          - host: ${app_host}
-            paths:
-              - path: /
-                service:
-                  identifier: plausible
-                  port: http
-        tls:
-          - secretName: ${certificate_name}
-            hosts:
-              - ${app_host}
+        parentRefs:
+          - namespace: envoy-gateway-system
+            name: envoy-public
+        hostnames:
+          - ${app_host}
