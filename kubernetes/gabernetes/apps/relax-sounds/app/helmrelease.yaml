@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.4.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -6,19 +7,19 @@ metadata:
 spec:
   chart:
     spec:
-      chart: relax-sounds
-      version: 1.1.0
+      chart: app-template
+      version: 4.4.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
         namespace: flux-system
-        name: gabe565
+        name: bjw-s
   interval: 1h
   driftDetection:
     mode: enabled
   values:
     controllers:
-      main:
+      relax-sounds:
         strategy: Recreate
         containers:
           main:
@@ -34,13 +35,27 @@ spec:
                 secretKeyRef:
                   name: valkey
                   key: valkey-password
+            securityContext:
+              readOnlyRootFilesystem: true
         pod:
           labels:
+            policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/ingress-nginx: "true"
             policy.gabe565.com/ingress-prometheus: "true"
+          securityContext:
+            runAsNonRoot: true
+            fsGroup: 1000
+
+    service:
+      relax-sounds:
+        ports:
+          http:
+            port: 80
+          metrics:
+            port: 9090
 
     ingress:
-      main:
+      relax-sounds:
         enabled: true
         annotations:
           nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
@@ -50,7 +65,8 @@ spec:
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: relax-sounds
+                  port: http
         tls:
           - secretName: ${certificate_name}
             hosts:
@@ -59,14 +75,21 @@ spec:
 
     persistence:
       data:
-        enabled: true
+        suffix: data
         storageClass: longhorn-ssd
         accessMode: ReadWriteOnce
         size: 8Gi
+        retain: true
       tmp:
         enabled: true
         type: emptyDir
 
     serviceMonitor:
-      main:
+      relax-sounds:
         enabled: true
+        endpoints:
+          - port: metrics
+            scheme: http
+            path: /metrics
+            interval: 1m
+            scrapeTimeout: 10s
