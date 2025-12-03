@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.7.3/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.4.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.7.3
+      version: 4.4.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -54,7 +54,7 @@ spec:
             policy.gabe565.com/egress-nodes: "true"
             policy.gabe565.com/egress-tronbyt: "true"
             policy.gabe565.com/egress-world-with-lan: "true"
-            policy.gabe565.com/ingress-nginx: "true"
+            policy.gabe565.com/ingress-envoy-public: "true"
             policy.gabe565.com/ingress-world: "true"
           affinity: &affinity
             podAffinity:
@@ -90,21 +90,19 @@ spec:
               runAsUser: 0
         pod:
           labels:
-            policy.gabe565.com/ingress-nginx: "true"
+            policy.gabe565.com/ingress-envoy-public: "true"
           affinity: *affinity
 
     persistence:
       config:
-        enabled: true
-        retain: true
+        suffix: config
         storageClass: longhorn-ssd
         accessMode: ReadWriteOnce
         size: 2Gi
+        retain: true
       tmp:
-        enabled: true
         type: emptyDir
       cache:
-        enabled: true
         type: emptyDir
         globalMounts:
           - path: /root/.cache
@@ -114,7 +112,6 @@ spec:
           - path: /run
             subPath: run
       code-config:
-        enabled: true
         type: emptyDir
         advancedMounts:
           code:
@@ -134,53 +131,49 @@ spec:
           http:
             port: 8080
 
-    ingress:
-      home-assistant:
-        enabled: true
-        annotations:
-          nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
-        hosts:
-          - host: ${app_url}
-            paths:
-              - path: /
-                service:
-                  identifier: home-assistant
-                  port: http
-        tls:
-          - secretName: ${certificate_name}
-            hosts:
-              - ${app_url}
-              - www.${app_url}
-      redirect:
-        enabled: true
-        annotations:
-          nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
-          nginx.ingress.kubernetes.io/temporal-redirect: https://${app_url}
-        hosts:
-          - host: ${old_app_url}
-            paths:
-              - path: /
-                pathType: Exact
-                service:
-                  identifier: home-assistant
-                  port: http
-        tls:
-          - secretName: ${old_certificate_name}
-            hosts:
-              - ${old_app_url}
-              - www.${old_app_url}
+    route:
+      app:
+        parentRefs: &parentRefs
+          - namespace: envoy-gateway-system
+            name: envoy-public
+        hostnames:
+          - ${app_url}
+        rules:
+          - backendRefs:
+              - identifier: home-assistant
+      www:
+        parentRefs: *parentRefs
+        hostnames:
+          - www.${app_url}
+        rules:
+          - filters:
+              - type: RequestRedirect
+                requestRedirect:
+                  statusCode: 301
+                  hostname: ${app_url}
       code:
-        enabled: true
-        annotations:
-          nginx.ingress.kubernetes.io/whitelist-source-range: "192.168.0.0/22,10.42.0.0/16"
-        hosts:
-          - host: ${code_url}
-            paths:
-              - path: /
-                service:
-                  identifier: code
-                  port: http
-        tls:
-          - secretName: ${certificate_name}
-            hosts:
-              - ${code_url}
+        parentRefs: *parentRefs
+        hostnames:
+          - ${code_url}
+        rules:
+          - backendRefs:
+              - identifier: code
+
+    rawResources:
+      code-allowlist:
+        apiVersion: gateway.envoyproxy.io/v1alpha1
+        kind: SecurityPolicy
+        spec:
+          spec:
+            targetRefs:
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}-code"
+            authorization:
+              defaultAction: Deny
+              rules:
+                - action: Allow
+                  principal:
+                    clientCIDRs:
+                      - 192.168.0.0/22
+                      - 10.42.0.0/16
