@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.7.3/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.4.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.7.3
+      version: 4.4.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -105,7 +105,7 @@ spec:
           labels:
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
-            policy.gabe565.com/ingress-nginx: "true"
+            policy.gabe565.com/ingress-envoy-public: "true"
             policy.gabe565.com/ingress-namespace: "true"
           securityContext:
             fsGroup: 2000
@@ -142,7 +142,6 @@ spec:
 
     persistence:
       tmp:
-        enabled: true
         type: emptyDir
         globalMounts:
           - path: /tmp
@@ -156,19 +155,13 @@ spec:
           - path: /mattermost/client/plugins
             subPath: client/plugins
 
-    ingress:
-      mattermost:
-        enabled: true
-        annotations:
-          nginx.ingress.kubernetes.io/proxy-body-size: 100M
-        hosts:
-          - host: ${app_url}
-            paths:
-              - path: /
-                service:
-                  identifier: mattermost
-                  port: http
-        tls:
-          - secretName: ${certificate_name}
-            hosts:
-              - ${app_url}
+    route:
+      app:
+        parentRefs:
+          - namespace: envoy-gateway-system
+            name: envoy-public
+        hostnames:
+          - ${app_url}
+        rules:
+          - backendRefs:
+              - identifier: mattermost
