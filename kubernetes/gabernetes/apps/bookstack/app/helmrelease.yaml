@@ -19,7 +19,7 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      bookstack:
         strategy: RollingUpdate
         containers:
           bookstack:
@@ -91,15 +91,24 @@ spec:
             subPath: run
 
     service:
-      main:
+      bookstack:
         ports:
           http:
             port: 80
 
     route:
-      main:
+      bookstack:
         parentRefs:
           - namespace: envoy-gateway-system
             name: envoy-public
         hostnames:
           - ${app_url}
+        rules:
+          - backendRefs:
+              - identifier: bookstack
+            filters:
+              - type: ResponseHeaderModifier
+                responseHeaderModifier:
+                  remove:
+                    - Server
+                    - X-Powered-By
