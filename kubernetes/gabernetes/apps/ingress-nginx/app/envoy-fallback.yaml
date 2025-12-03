@@ -8,11 +8,7 @@ spec:
     - namespace: envoy-gateway-system
       name: envoy-public
   rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /
-      filters:
+    - filters:
         - type: RequestHeaderModifier
           requestHeaderModifier:
             set:

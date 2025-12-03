@@ -108,11 +108,7 @@ spec:
           - ${s3_url}
           - "*.${s3_url}"
         rules:
-          - matches:
-              - path:
-                  type: PathPrefix
-                  value: /
-            backendRefs:
+          - backendRefs:
               - identifier: minio
                 port: 9000
           # Block metrics
@@ -131,11 +127,7 @@ spec:
         hostnames:
           - ${app_url}
         rules:
-          - matches:
-              - path:
-                  type: PathPrefix
-                  value: /
-            backendRefs:
+          - backendRefs:
               - identifier: minio
                 port: 9001
           # Robots

@@ -12,11 +12,7 @@ spec:
   hostnames:
     - ${app_url}
   rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /
-      backendRefs:
+    - backendRefs:
         - kind: Service
           name: gitea-http
           port: 3000

@@ -99,11 +99,7 @@ spec:
         hostnames:
           - ${app_url}
         rules:
-          - matches:
-              - path:
-                  type: PathPrefix
-                  value: /
-            backendRefs:
+          - backendRefs:
               - identifier: linx
           # Robots
           - matches:
