@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.2.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.4.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 4.2.0
+      version: 4.4.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -71,7 +71,7 @@ spec:
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-nightscout: "true"
             policy.gabe565.com/egress-world: "true"
-            policy.gabe565.com/ingress-nginx: "true"
+            policy.gabe565.com/ingress-envoy-public: "true"
           securityContext:
             runAsNonRoot: true
             runAsUser: 1000
@@ -101,32 +101,29 @@ spec:
         type: emptyDir
         medium: Memory
 
-    ingress:
+    route:
       tronbyt:
-        annotations: &annotations
-          nginx.ingress.kubernetes.io/whitelist-source-range: "192.168.0.0/22,10.42.0.0/16"
-        hosts:
-          - host: ${app_host}
-            paths:
-              - path: /
-                service: &service
-                  identifier: tronbyt
-                  port: http
-        tls: &tls
-          - secretName: ${certificate_name}
-            hosts:
-              - ${app_host}
-      no-logs:
-        annotations:
-          <<: *annotations
-          nginx.ingress.kubernetes.io/use-regex: "true"
-          nginx.ingress.kubernetes.io/enable-access-log: "false"
-        hosts:
-          - host: ${app_host}
-            paths:
-              - path: /(.+)/currentapp
-                service: *service
-                pathType: ImplementationSpecific
-              - path: /app_preview
-                service: *service
-        tls: *tls
+        parentRefs:
+          - namespace: envoy-gateway-system
+            name: envoy-public
+        hostnames:
+          - ${app_host}
+
+    rawResources:
+      allowlist:
+        apiVersion: gateway.envoyproxy.io/v1alpha1
+        kind: SecurityPolicy
+        spec:
+          spec:
+            targetRefs:
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}"
+            authorization:
+              defaultAction: Deny
+              rules:
+                - action: Allow
+                  principal:
+                    clientCIDRs:
+                      - 192.168.0.0/22
+                      - 10.42.0.0/16
