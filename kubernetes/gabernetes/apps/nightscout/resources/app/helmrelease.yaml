@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.4.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.5.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 4.4.0
+      version: 4.5.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -104,31 +104,32 @@ spec:
 
     route:
       nightscout:
-        parentRefs: &parentRefs
+        parentRefs:
           - namespace: envoy-gateway-system
             name: envoy-public
         hostnames:
           - ${app_url}
           - ${api_url}
         rules:
-          # Auth header
-          - matches:
+          - name: oidc
+            backendRefs: &backendRefs
+              - identifier: nightscout
+          - name: auth-header
+            matches:
               - headers:
                   - type: RegularExpression
                     name: API-Secret
                     value: ".{40}"
-            backendRefs:
-              - identifier: nightscout
-          # Auth param
-          - matches:
+            backendRefs: *backendRefs
+          - name: auth-param
+            matches:
               - queryParams:
                   - type: RegularExpression
                     name: token
                     value: ".+"
-            backendRefs:
-              - identifier: nightscout
-          # Service worker
-          - matches:
+            backendRefs: *backendRefs
+          - name: service-worker
+            matches:
               - path:
                   type: Exact
                   value: /sw.js
@@ -138,10 +139,6 @@ spec:
                   group: gateway.envoyproxy.io
                   kind: HTTPRouteFilter
                   name: nightscout-service-worker
-      oidc:
-        parentRefs: *parentRefs
-        hostnames:
-          - ${app_url}
 
     rawResources:
       auth:
@@ -152,7 +149,8 @@ spec:
             targetRefs:
               - group: gateway.networking.k8s.io
                 kind: HTTPRoute
-                name: "{{ .Release.Name }}-oidc"
+                name: "{{ .Release.Name }}"
+                sectionName: oidc
             oidc:
               provider:
                 issuer: https://${oidc_host}/application/o/nightscout/
@@ -179,7 +177,8 @@ spec:
             targetRefs:
               - group: gateway.networking.k8s.io
                 kind: HTTPRoute
-                name: "{{ .Release.Name }}-oidc"
+                name: "{{ .Release.Name }}"
+                sectionName: oidc
             lua:
               - type: Inline
                 # language=lua
