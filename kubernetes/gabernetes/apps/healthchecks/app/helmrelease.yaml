@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.7.3/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.4.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.7.3
+      version: 4.4.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -44,7 +44,7 @@ spec:
               DEFAULT_FROM_EMAIL: ${smtp_username}
               TELEGRAM_TOKEN: ${telegram_token}
               TELEGRAM_BOT_NAME: Healthchecks
-              REMOTE_USER_HEADER: HTTP_X_AUTHENTIK_EMAIL
+              REMOTE_USER_HEADER: HTTP_X_USER_EMAIL
               INTEGRATIONS_ALLOW_PRIVATE_IPS: "True"
 
               UWSGI_DISABLE_LOGGING: "1"
@@ -89,12 +89,11 @@ spec:
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-nginx: "true"
             policy.gabe565.com/egress-world: "true"
-            policy.gabe565.com/ingress-nginx: "true"
+            policy.gabe565.com/ingress-envoy-public: "true"
             policy.gabe565.com/ingress-prometheus: "true"
 
     persistence:
       static:
-        enabled: true
         type: configMap
         name: healthchecks-static
         globalMounts:
@@ -108,29 +107,67 @@ spec:
           http:
             port: 8000
 
-    ingress:
-      healthchecks:
-        enabled: true
-        annotations:
-          nginx.ingress.kubernetes.io/auth-url: |-
-            http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
-          nginx.ingress.kubernetes.io/auth-signin: |-
-            https://$host/outpost.goauthentik.io/start?rd=$scheme://$http_host$escaped_request_uri
-          nginx.ingress.kubernetes.io/auth-response-headers: |-
-            Set-Cookie,X-authentik-username,X-authentik-groups,X-authentik-email,X-authentik-name,X-authentik-uid
-          nginx.ingress.kubernetes.io/auth-snippet: |
-            proxy_set_header X-Forwarded-Host $http_host;
-        hosts:
-          - host: ${app_url}
-            paths:
-              - path: /
-                service:
-                  identifier: healthchecks
-                  port: http
-        tls:
-          - secretName: ${certificate_name}
-            hosts:
-              - ${app_url}
+    route:
+      private: &route
+        parentRefs:
+          - namespace: envoy-gateway-system
+            name: envoy-public
+        hostnames:
+          - ${app_url}
+      public:
+        <<: *route
+        rules:
+          - backendRefs:
+              - identifier: healthchecks
+            matches:
+              - path:
+                  type: PathPrefix
+                  value: /static/
+              - path:
+                  type: PathPrefix
+                  value: /ping/
+              - path:
+                  type: PathPrefix
+                  value: /api/
+              - path:
+                  type: PathPrefix
+                  value: /badge/
+              - path:
+                  type: PathPrefix
+                  value: /b/
+              - path:
+                  type: PathPrefix
+                  value: /integrations/telegram/bot/
+
+    rawResources:
+      auth:
+        apiVersion: gateway.envoyproxy.io/v1alpha1
+        kind: SecurityPolicy
+        spec:
+          spec:
+            targetRefs:
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}-private"
+            oidc:
+              provider:
+                issuer: https://${oidc_host}/application/o/healthchecks/
+              clientIDRef:
+                name: oidc
+              clientSecret:
+                name: oidc
+              scopes: [openid, email]
+              forwardAccessToken: true
+              logoutPath: /accounts/logout/
+            jwt:
+              optional: true
+              providers:
+                - name: extract-user-info
+                  remoteJWKS:
+                    uri: https://${oidc_host}/application/o/healthchecks/jwks/
+                  claimToHeaders:
+                    - claim: email
+                      header: X-User-Email
 
     serviceMonitor:
       healthchecks:
