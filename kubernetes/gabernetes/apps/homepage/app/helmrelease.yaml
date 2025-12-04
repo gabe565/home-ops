@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.4.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.5.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 4.4.0
+      version: 4.5.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -108,6 +108,16 @@ spec:
             name: envoy-public
         hostnames:
           - ${app_url}
+        rules:
+          - name: private
+            backendRefs: &backendRefs
+              - identifier: homepage
+          - name: public
+            matches:
+              - path:
+                  type: Exact
+                  value: /api/healthcheck
+            backendRefs: *backendRefs
       www:
         parentRefs: *parentRefs
         hostnames:
@@ -129,6 +139,7 @@ spec:
               - group: gateway.networking.k8s.io
                 kind: HTTPRoute
                 name: "{{ .Release.Name }}"
+                sectionName: private
             oidc:
               provider:
                 issuer: https://${oidc_host}/application/o/homepage/

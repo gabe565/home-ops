@@ -105,6 +105,9 @@ spec:
             matches:
               - path:
                   type: PathPrefix
+                  value: /healthcheck
+              - path:
+                  type: PathPrefix
                   value: /v1
             backendRefs:
               - identifier: miniflux
