@@ -169,11 +169,10 @@ spec:
               - group: gateway.networking.k8s.io
                 kind: HTTPRoute
                 name: "{{ .Release.Name }}-code"
-            authorization:
-              defaultAction: Deny
-              rules:
-                - action: Allow
-                  principal:
-                    clientCIDRs:
-                      - 192.168.0.0/22
-                      - 10.42.0.0/16
+            oidc:
+              provider:
+                issuer: https://${oidc_host}/application/o/change-detection/
+              clientIDRef:
+                name: oidc
+              clientSecret:
+                name: oidc
