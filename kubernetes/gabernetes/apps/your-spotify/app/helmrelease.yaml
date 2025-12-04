@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.7.3/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.4.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.7.3
+      version: 4.4.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -65,7 +65,7 @@ spec:
           labels:
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
-            policy.gabe565.com/ingress-nginx: "true"
+            policy.gabe565.com/ingress-envoy-public: "true"
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
@@ -124,10 +124,10 @@ spec:
 
     persistence:
       tmp:
-        enabled: true
         type: emptyDir
+        medium: Memory
+        sizeLimit: 128Mi
       client-build:
-        enabled: true
         type: emptyDir
         advancedMounts:
           client:
@@ -139,59 +139,19 @@ spec:
               - path: /build
                 readOnly: true
       nginx:
-        enabled: true
         type: configMap
-        name: your-spotify-nginx
+        identifier: nginx
         advancedMounts:
           client:
             client:
               - path: /etc/nginx/conf.d/default.conf
                 subPath: default.conf
 
-    ingress:
-      client:
-        enabled: true
-        annotations: &annotations
-          nginx.ingress.kubernetes.io/auth-url: |-
-            http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
-          nginx.ingress.kubernetes.io/auth-signin: |-
-            https://$host/outpost.goauthentik.io/start?rd=$scheme://$http_host$escaped_request_uri
-          nginx.ingress.kubernetes.io/auth-response-headers: Set-Cookie
-          nginx.ingress.kubernetes.io/auth-snippet: |
-            proxy_set_header X-Forwarded-Host $http_host;
-          nginx.ingress.kubernetes.io/satisfy: any
-          nginx.ingress.kubernetes.io/whitelist-source-range: 192.168.0.0/22
-        hosts:
-          - host: ${app_url}
-            paths:
-              - path: /
-                service:
-                  identifier: client
-                  port: http
-        tls: &tls
-          - secretName: ${certificate_name}
-            hosts:
-              - ${app_url}
-      server:
-        enabled: true
-        annotations:
-          <<: *annotations
-          nginx.ingress.kubernetes.io/use-regex: "true"
-          nginx.ingress.kubernetes.io/rewrite-target: /$2
-        hosts:
-          - host: ${app_url}
-            paths:
-              - path: /api(/|$)(.*)
-                pathType: ImplementationSpecific
-                service:
-                  identifier: server
-                  port: http
-        tls: *tls
-
     configMaps:
       nginx:
         enabled: true
         data:
+          # language=nginx configuration
           default.conf: |
             server {
               listen 3000;
@@ -201,3 +161,44 @@ spec:
                 try_files $uri /index.html;
               }
             }
+
+    route:
+      your-spotify:
+        parentRefs:
+          - namespace: envoy-gateway-system
+            name: envoy-public
+        hostnames:
+          - ${app_url}
+        rules:
+          - backendRefs:
+              - identifier: client
+          - matches:
+              - path:
+                  type: PathPrefix
+                  value: /api
+            filters:
+              - type: URLRewrite
+                urlRewrite:
+                  path:
+                    type: ReplacePrefixMatch
+                    replacePrefixMatch: /
+            backendRefs:
+              - identifier: server
+
+    rawResources:
+      auth:
+        apiVersion: gateway.envoyproxy.io/v1alpha1
+        kind: SecurityPolicy
+        spec:
+          spec:
+            targetRefs:
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}"
+            oidc:
+              provider:
+                issuer: https://${oidc_host}/application/o/your-spotify/
+              clientIDRef:
+                name: oidc
+              clientSecret:
+                name: oidc
