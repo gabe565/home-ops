@@ -39,12 +39,8 @@ spec:
               POLLING_SCHEDULER: entry_frequency
 
               CREATE_ADMIN: "0"
-              OAUTH2_PROVIDER: oidc
-              OAUTH2_CLIENT_ID: ${oauth2_client_id}
-              OAUTH2_CLIENT_SECRET: ${oauth2_client_secret}
-              OAUTH2_REDIRECT_URL: https://${app_url}/oauth2/oidc/callback
-              OAUTH2_OIDC_DISCOVERY_ENDPOINT: https://${auth_host}/application/o/miniflux/
-              OAUTH2_USER_CREATION: "1"
+              AUTH_PROXY_HEADER: X-User-Name
+              AUTH_PROXY_USER_CREATION: "1"
               DISABLE_LOCAL_AUTH: "true"
 
               METRICS_COLLECTOR: "1"
@@ -95,8 +91,8 @@ spec:
             port: 8080
 
     route:
-      miniflux:
-        parentRefs:
+      private:
+        parentRefs: &parentRefs
           - namespace: envoy-gateway-system
             name: envoy-public
         hostnames:
@@ -104,17 +100,46 @@ spec:
         rules:
           - backendRefs:
               - identifier: miniflux
-          # Block metrics
+      public:
+        parentRefs: *parentRefs
+        hostnames:
+          - ${app_url}
+        rules:
           - matches:
               - path:
-                  type: Exact
-                  value: /metrics
-            filters:
-              - type: ExtensionRef
-                extensionRef:
-                  group: gateway.envoyproxy.io
-                  kind: HTTPRouteFilter
-                  name: respond-403
+                  type: PathPrefix
+                  value: /v1
+            backendRefs:
+              - identifier: miniflux
+
+    rawResources:
+      auth:
+        apiVersion: gateway.envoyproxy.io/v1alpha1
+        kind: SecurityPolicy
+        spec:
+          spec:
+            targetRefs:
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}-private"
+            oidc:
+              provider:
+                issuer: https://${oidc_host}/application/o/miniflux/
+              clientIDRef:
+                name: oidc
+              clientSecret:
+                name: oidc
+              scopes: [openid, profile]
+              forwardAccessToken: true
+            jwt:
+              optional: true
+              providers:
+                - name: extract-user-info
+                  remoteJWKS:
+                    uri: https://${oidc_host}/application/o/miniflux/jwks/
+                  claimToHeaders:
+                    - claim: preferred_username
+                      header: X-User-Name
 
     serviceMonitor:
       main:
