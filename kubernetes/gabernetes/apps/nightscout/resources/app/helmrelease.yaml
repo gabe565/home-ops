@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.4.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -7,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 4.1.2
+      version: 4.4.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -86,7 +87,7 @@ spec:
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-home-assistant: "true"
             policy.gabe565.com/ingress-namespace: "true"
-            policy.gabe565.com/ingress-nginx: "true"
+            policy.gabe565.com/ingress-envoy-public: "true"
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
@@ -101,56 +102,105 @@ spec:
           http:
             port: 1337
 
-    ingress:
+    route:
       nightscout:
-        annotations:
-          nginx.ingress.kubernetes.io/auth-url: |-
-            http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
-          nginx.ingress.kubernetes.io/auth-signin: https://$host/outpost.goauthentik.io/start?rd=$scheme://$http_host$escaped_request_uri
-          nginx.ingress.kubernetes.io/auth-response-headers: Set-Cookie,X-Nightscout-Api-Key
-          nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Host $http_host;
-          nginx.ingress.kubernetes.io/configuration-snippet: |
-            access_by_lua_block {
-              local apiKey = ngx.var.authHeader1
-              if apiKey ~= nil then
-                local args = ngx.req.get_uri_args()
-                args.token = apiKey
-                ngx.req.set_uri_args(args)
-              end
-            }
-        hosts:
-          - host: ${app_url}
-            paths:
-              - path: /
-                service:
-                  identifier: nightscout
-        tls: &bg-tls
-          - secretName: ${certificate_name}
-            hosts:
-              - ${app_url}
-      api:
-        enabled: true
-        hosts:
-          - host: ${api_url}
-            paths:
-              - path: /
-                service:
-                  identifier: nightscout
-        tls:
-          - secretName: ${certificate_name}
-            hosts:
-              - ${api_url}
-      remove-sw:
-        enabled: true
-        annotations:
-          nginx.ingress.kubernetes.io/configuration-snippet: |
-            add_header Content-Type application/javascript;
-            return 200 "self.addEventListener('install', event => { event.waitUntil(self.skipWaiting()) })";
-        hosts:
-          - host: ${app_url}
-            paths:
-              - path: /sw.js
-                pathType: ImplementationSpecific
-                service:
-                  identifier: nightscout
-        tls: *bg-tls
+        parentRefs: &parentRefs
+          - namespace: envoy-gateway-system
+            name: envoy-public
+        hostnames:
+          - ${app_url}
+          - ${api_url}
+        rules:
+          # Auth header
+          - matches:
+              - headers:
+                  - type: RegularExpression
+                    name: API-Secret
+                    value: ".{40}"
+            backendRefs:
+              - identifier: nightscout
+          # Auth param
+          - matches:
+              - queryParams:
+                  - type: RegularExpression
+                    name: token
+                    value: ".+"
+            backendRefs:
+              - identifier: nightscout
+          # Service worker
+          - matches:
+              - path:
+                  type: Exact
+                  value: /sw.js
+            filters:
+              - type: ExtensionRef
+                extensionRef:
+                  group: gateway.envoyproxy.io
+                  kind: HTTPRouteFilter
+                  name: nightscout-service-worker
+      oidc:
+        parentRefs: *parentRefs
+        hostnames:
+          - ${app_url}
+
+    rawResources:
+      auth:
+        apiVersion: gateway.envoyproxy.io/v1alpha1
+        kind: SecurityPolicy
+        spec:
+          spec:
+            targetRefs:
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}-oidc"
+            oidc:
+              provider:
+                issuer: https://${oidc_host}/application/o/nightscout/
+              clientIDRef:
+                name: oidc
+              clientSecret:
+                name: oidc
+              scopes: [openid, ns_token]
+              forwardAccessToken: true
+            jwt:
+              optional: true
+              providers:
+                - name: extract-user-info
+                  remoteJWKS:
+                    uri: https://${oidc_host}/application/o/nightscout/jwks/
+                  claimToHeaders:
+                    - claim: ns_token
+                      header: API-Secret
+      ws-token-to-query:
+        apiVersion: gateway.envoyproxy.io/v1alpha1
+        kind: EnvoyExtensionPolicy
+        spec:
+          spec:
+            targetRefs:
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}-oidc"
+            lua:
+              - type: Inline
+                # language=lua
+                inline: |
+                  function envoy_on_request(handle)
+                      local path = handle:headers():get(":path")
+                      local secret = handle:headers():get("api-secret")
+                      if path and secret and not string.find(path, "token=") then
+                          local sep = string.find(path, "?") and "&" or "?"
+                          handle:headers():replace(":path", path .. sep .. "token=" .. secret)
+                      end
+                  end
+      service-worker:
+        apiVersion: gateway.envoyproxy.io/v1alpha1
+        kind: HTTPRouteFilter
+        spec:
+          spec:
+            directResponse:
+              contentType: application/javascript
+              statusCode: 200
+              body:
+                type: Inline
+                inline: |
+                  self.addEventListener('install', event => { event.waitUntil(self.skipWaiting()) });

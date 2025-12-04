@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.2.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.4.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 4.2.0
+      version: 4.4.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -69,16 +69,10 @@ spec:
           http:
             port: 80
 
-    ingress:
+    route:
       trmnl:
-        enabled: true
-        hosts:
-          - host: ${trmnl_url}
-            paths:
-              - path: /
-                service:
-                  identifier: trmnl
-        tls:
-          - secretName: ${certificate_name}
-            hosts:
-              - ${trmnl_url}
+        parentRefs:
+          - namespace: envoy-gateway-system
+            name: envoy-public
+        hostnames:
+          - ${trmnl_url}
