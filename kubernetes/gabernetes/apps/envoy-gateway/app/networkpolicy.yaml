@@ -44,3 +44,18 @@ spec:
     - fromEndpoints:
         - matchLabels:
             io.kubernetes.pod.namespace: tailscale
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: proxy-to-world
+  namespace: envoy-gateway-system
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/component: proxy
+      app.kubernetes.io/managed-by: envoy-gateway
+      app.kubernetes.io/name: envoy
+  egress:
+    - toEntities:
+        - world
