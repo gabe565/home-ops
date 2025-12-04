@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.7.3/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.4.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.7.3
+      version: 4.4.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -77,7 +77,7 @@ spec:
           labels:
             policy.gabe565.com/egress-adguard-dns: "true"
             policy.gabe565.com/egress-world-with-lan: "true"
-            policy.gabe565.com/ingress-nginx: "true"
+            policy.gabe565.com/ingress-envoy-public: "true"
       code:
         containers:
           app:
@@ -106,7 +106,7 @@ spec:
         pod:
           labels:
             policy.gabe565.com/egress-world: "true"
-            policy.gabe565.com/ingress-nginx: "true"
+            policy.gabe565.com/ingress-envoy-public: "true"
 
     service:
       esphome:
@@ -122,12 +122,11 @@ spec:
 
     persistence:
       config:
-        enabled: true
         type: nfs
         server: 192.168.1.240
         path: /volume1/software/ESPHome
       cache:
-        enabled: true
+        suffix: cache
         storageClass: longhorn-ssd
         accessMode: ReadWriteOnce
         size: 8Gi
@@ -141,7 +140,6 @@ spec:
               - path: /cache
                 subPath: code
       tmp:
-        enabled: true
         type: emptyDir
         globalMounts:
           - path: /nonexistent
@@ -149,41 +147,41 @@ spec:
           - path: /tmp
             subPath: tmp
 
-    ingress:
+    route:
       esphome:
-        enabled: true
-        annotations:
-          nginx.ingress.kubernetes.io/auth-url: |-
-            http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
-          nginx.ingress.kubernetes.io/auth-signin: |-
-            https://$host/outpost.goauthentik.io/start
-          nginx.ingress.kubernetes.io/auth-response-headers: |-
-            Set-Cookie,X-authentik-username,X-authentik-groups,X-authentik-email,X-authentik-name,X-authentik-uid
-          nginx.ingress.kubernetes.io/auth-snippet: |
-            proxy_set_header X-Forwarded-Host $http_host;
-        hosts:
-          - host: ${app_url}
-            paths:
-              - path: /
-                service:
-                  identifier: esphome
-                  port: http
-        tls:
-          - secretName: ${certificate_name}
-            hosts:
-              - ${app_url}
+        parentRefs: &parentRefs
+          - namespace: envoy-gateway-system
+            name: envoy-public
+        hostnames:
+          - ${app_url}
+        rules:
+          - backendRefs:
+              - identifier: esphome
       code:
-        enabled: true
-        annotations:
-          nginx.ingress.kubernetes.io/whitelist-source-range: "192.168.0.0/22,10.42.0.0/16"
-        hosts:
-          - host: ${code_url}
-            paths:
-              - path: /
-                service:
-                  identifier: code
-                  port: http
-        tls:
-          - secretName: ${certificate_name}
-            hosts:
-              - ${code_url}
+        parentRefs: *parentRefs
+        hostnames:
+          - ${code_url}
+        rules:
+          - backendRefs:
+              - identifier: code
+
+    rawResources:
+      auth:
+        apiVersion: gateway.envoyproxy.io/v1alpha1
+        kind: SecurityPolicy
+        spec:
+          spec:
+            targetRefs:
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}"
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}-code"
+            oidc:
+              provider:
+                issuer: https://${oidc_host}/application/o/esphome/
+              clientIDRef:
+                name: oidc
+              clientSecret:
+                name: oidc
