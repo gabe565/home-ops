@@ -26,7 +26,7 @@ spec:
         containers:
           app:
             image:
-              repository: louislam/uptime-kuma
+              repository: ghcr.io/louislam/uptime-kuma
               tag: 2.0.2-slim@sha256:60f3b7d1b55c3d5a9d941f7f91c3e7ac624dea53beb34538fe5546e3664a1e82
               pullPolicy: IfNotPresent
             command: [node, server/server.js]
