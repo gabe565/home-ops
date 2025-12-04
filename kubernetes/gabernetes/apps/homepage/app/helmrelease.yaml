@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.7.3/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.4.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.7.3
+      version: 4.4.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -24,6 +24,8 @@ spec:
           configmap.reloader.stakater.com/reload: homepage-config
           secret.reloader.stakater.com/reload: homepage-env
         strategy: RollingUpdate
+        serviceAccount:
+          identifier: default
         containers:
           app:
             image:
@@ -72,7 +74,7 @@ spec:
             policy.gabe565.com/egress-tautulli: "true"
             policy.gabe565.com/egress-uptime-kuma: "true"
             policy.gabe565.com/egress-world-with-lan: "true"
-            policy.gabe565.com/ingress-nginx: "true"
+            policy.gabe565.com/ingress-envoy-public: "true"
           securityContext:
             runAsNonRoot: true
             runAsUser: 65534
@@ -90,47 +92,54 @@ spec:
 
     persistence:
       config:
-        enabled: true
         type: configMap
         name: homepage-config
         globalMounts:
           - path: /app/config
       logs:
-        enabled: true
         type: emptyDir
         globalMounts:
           - path: /app/config/logs
 
-    ingress:
+    route:
       homepage:
-        enabled: true
-        annotations:
-          nginx.ingress.kubernetes.io/auth-url: |-
-            http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
-          nginx.ingress.kubernetes.io/auth-signin: |-
-            https://$host/outpost.goauthentik.io/start?rd=$scheme://$http_host$escaped_request_uri
-          nginx.ingress.kubernetes.io/auth-response-headers: |-
-            Set-Cookie,X-authentik-username,X-authentik-groups,X-authentik-email,X-authentik-name,X-authentik-uid
-          nginx.ingress.kubernetes.io/auth-snippet: |
-            proxy_set_header X-Forwarded-Host $http_host;
-          nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
-          nginx.ingress.kubernetes.io/satisfy: any
-          nginx.ingress.kubernetes.io/whitelist-source-range: 192.168.0.0/22
-        hosts:
-          - host: ${app_url}
-            paths:
-              - path: /
-                service:
-                  identifier: homepage
-                  port: http
-        tls:
-          - secretName: ${certificate_name}
-            hosts:
-              - ${app_url}
-              - www.${app_url}
+        parentRefs: &parentRefs
+          - namespace: envoy-gateway-system
+            name: envoy-public
+        hostnames:
+          - ${app_url}
+      www:
+        parentRefs: *parentRefs
+        hostnames:
+          - www.${app_url}
+        rules:
+          - filters:
+              - type: RequestRedirect
+                requestRedirect:
+                  statusCode: 301
+                  hostname: ${app_url}
+
+    rawResources:
+      auth:
+        apiVersion: gateway.envoyproxy.io/v1alpha1
+        kind: SecurityPolicy
+        spec:
+          spec:
+            targetRefs:
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}"
+            oidc:
+              provider:
+                issuer: https://${oidc_host}/application/o/homepage/
+              clientIDRef:
+                name: oidc
+              clientSecret:
+                name: oidc
 
     serviceAccount:
-      create: true
+      default:
+        enabled: true
 
     rbac:
       roles:
