@@ -46,6 +46,7 @@ spec:
               readOnlyRootFilesystem: true
         pod:
           labels:
+            policy.gabe565.com/egress-adguard-dns: "true"
             policy.gabe565.com/egress-nginx: "true"
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-nginx: "true"
