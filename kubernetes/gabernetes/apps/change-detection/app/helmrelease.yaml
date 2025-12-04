@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.2.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.4.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 4.2.0
+      version: 4.4.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -19,7 +19,7 @@ spec:
     mode: enabled
   values:
     controllers:
-      main:
+      change-detection:
         annotations:
           secret.reloader.stakater.com/reload: browserless
         containers:
@@ -61,15 +61,15 @@ spec:
             policy.gabe565.com/egress-browserless: "true"
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
-            policy.gabe565.com/ingress-nginx: "true"
+            policy.gabe565.com/ingress-envoy-public: "true"
           securityContext:
             runAsNonRoot: true
             seccompProfile: { type: RuntimeDefault }
           terminationGracePeriodSeconds: 1
 
     service:
-      main:
-        controller: main
+      change-detection:
+        controller: change-detection
         ports:
           http:
             port: 5000
@@ -86,25 +86,28 @@ spec:
       tmp:
         type: emptyDir
 
-    ingress:
-      main:
-        annotations:
-          nginx.ingress.kubernetes.io/auth-url: |-
-            http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
-          nginx.ingress.kubernetes.io/auth-signin: |-
-            https://$host/outpost.goauthentik.io/start?rd=$scheme://$http_host$escaped_request_uri
-          nginx.ingress.kubernetes.io/auth-response-headers: |-
-            Set-Cookie,X-authentik-username,X-authentik-groups,X-authentik-email,X-authentik-name,X-authentik-uid
-          nginx.ingress.kubernetes.io/auth-snippet: |
-            proxy_set_header X-Forwarded-Host $http_host;
-        hosts:
-          - host: ${app_url}
-            paths:
-              - path: /
-                service:
-                  identifier: main
-                  port: http
-        tls:
-          - secretName: ${certificate_name}
-            hosts:
-              - ${app_url}
+    route:
+      change-detection:
+        parentRefs:
+          - namespace: envoy-gateway-system
+            name: envoy-public
+        hostnames:
+          - ${app_url}
+
+    rawResources:
+      auth:
+        apiVersion: gateway.envoyproxy.io/v1alpha1
+        kind: SecurityPolicy
+        spec:
+          spec:
+            targetRefs:
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}"
+            oidc:
+              provider:
+                issuer: https://${oidc_host}/application/o/change-detection/
+              clientIDRef:
+                name: oidc
+              clientSecret:
+                name: oidc
