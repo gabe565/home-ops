@@ -1,0 +1,12 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: HTTPRouteFilter
+metadata:
+  name: respond-403
+  namespace: miniflux
+spec:
+  directResponse:
+    contentType: text/plain
+    statusCode: 403
+    body:
+      type: Inline
+      inline: Access Denied
