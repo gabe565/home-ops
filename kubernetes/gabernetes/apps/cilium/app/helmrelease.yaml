@@ -44,25 +44,10 @@ spec:
       ui:
         enabled: true
         replicas: 1
-        ingress:
-          enabled: true
-          annotations:
-            nginx.ingress.kubernetes.io/auth-url:
-              http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
-            nginx.ingress.kubernetes.io/auth-signin: https://$host/outpost.goauthentik.io/start
-            nginx.ingress.kubernetes.io/auth-response-headers: Set-Cookie
-            nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Host $http_host;
-            nginx.ingress.kubernetes.io/configuration-snippet: expires -1;
-          hosts:
-            - ${app_url}
-          tls:
-            - secretName: ${certificate_name}
-              hosts:
-                - ${app_url}
         podLabels:
           policy.gabe565.com/egress-nodes: "true"
           policy.gabe565.com/egress-namespace: "true"
-          policy.gabe565.com/ingress-nginx: "true"
+          policy.gabe565.com/ingress-envoy-public: "true"
 
       relay:
         enabled: true
