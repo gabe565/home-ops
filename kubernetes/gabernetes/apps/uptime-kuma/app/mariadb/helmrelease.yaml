@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.4.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: mariadb
+  namespace: uptime-kuma
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 4.4.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  valuesFrom:
+    - kind: ConfigMap
+      name: mariadb-defaults
+  values:
+    controllers:
+      mariadb:
+        containers:
+          mariadb:
+            image:
+              repository: mariadb
+              tag: 12.1.2@sha256:e1bcd6f85781f4a875abefb11c4166c1d79e4237c23de597bf0df81fec225b40
+            env:
+              MARIADB_DATABASE: uptime-kuma
+              MARIADB_USER: uptime-kuma
+
+    persistence:
+      data:
+        storageClass: longhorn-ssd
+        accessMode: ReadWriteOnce
+        size: 8Gi
+        retain: true
+
+    secrets:
+      mariadb:
+        stringData:
+          mariadb-root-password: ${mariadb_root_password}
+          mariadb-password: ${mariadb_password}
