@@ -158,7 +158,9 @@ spec:
                 name: oidc
               clientSecret:
                 name: oidc
-              scopes: [openid, ns_token]
+              scopes:
+                - openid
+                - nightscout:token
               forwardAccessToken: true
             jwt:
               optional: true
@@ -167,7 +169,7 @@ spec:
                   remoteJWKS:
                     uri: https://${oidc_host}/application/o/nightscout/jwks/
                   claimToHeaders:
-                    - claim: ns_token
+                    - claim: nightscout_token
                       header: API-Secret
       ws-token-to-query:
         apiVersion: gateway.envoyproxy.io/v1alpha1
