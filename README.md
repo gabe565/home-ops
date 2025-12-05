@@ -548,7 +548,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>uptime-kuma</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/uptime-kuma/app/helmrelease.yaml">uptime-kuma</a></td>
-    <td><a href="kubernetes/gabernetes/apps/uptime-kuma/borgmatic/helmrelease.yaml">borgmatic</a></td>
+    <td><a href="kubernetes/gabernetes/apps/uptime-kuma/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/uptime-kuma/app/mariadb/helmrelease.yaml">mariadb</a></td>
   </tr>
   <tr>
     <td>vaultwarden</td>

@@ -30,6 +30,15 @@ spec:
               tag: 2.0.2-slim@sha256:60f3b7d1b55c3d5a9d941f7f91c3e7ac624dea53beb34538fe5546e3664a1e82
               pullPolicy: IfNotPresent
             command: [node, server/server.js]
+            env:
+              UPTIME_KUMA_DB_TYPE: mariadb
+              UPTIME_KUMA_DB_HOSTNAME: mariadb
+              UPTIME_KUMA_DB_NAME: uptime-kuma
+              UPTIME_KUMA_DB_USERNAME: uptime-kuma
+              UPTIME_KUMA_DB_PASSWORD:
+                secretKeyRef:
+                  name: mariadb
+                  key: mariadb-password
             probes:
               startup:
                 enabled: true
@@ -47,6 +56,7 @@ spec:
         pod:
           labels:
             policy.gabe565.com/egress-adguard-dns: "true"
+            policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-nginx: "true"
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-envoy-public: "true"
@@ -58,11 +68,6 @@ spec:
             fsGroup: 65534
             fsGroupChangePolicy: OnRootMismatch
             seccompProfile: {type: RuntimeDefault}
-          dnsPolicy: None
-          dnsConfig:
-            nameservers:
-              - 1.1.1.1
-              - 1.0.0.1
 
     service:
       uptime-kuma:
