@@ -35,3 +35,7 @@ spec:
         pod:
           labels:
             policy.gabe565.com/egress-kubeapi: "true"
+    config:
+      envoyGateway:
+        extensionApis:
+          enableBackend: true
