@@ -1,0 +1,127 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.5.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: minecraft
+  namespace: minecraft
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 4.5.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      minecraft:
+        containers:
+          app:
+            image:
+              repository: ghcr.io/itzg/minecraft-server
+              tag: java21-alpine
+              pullPolicy: IfNotPresent
+            env:
+              TZ: America/Chicago
+              EULA: "TRUE"
+              TYPE: PAPER
+              VERSION: "1.21.10"
+              DIFFICULTY: normal
+              ENABLE_COMMAND_BLOCK: "true"
+              SNOOPER_ENABLED: "false"
+              PLUGINS: |
+                https://github.com/BlueMap-Minecraft/BlueMap/releases/download/v5.13/bluemap-5.13-paper.jar
+                https://github.com/DevCyntrix/death-chest/releases/download/v2.2.9/deathchest.jar
+                https://github.com/dmulloy2/ProtocolLib/releases/download/5.4.0/ProtocolLib.jar
+                https://github.com/hyperdefined/ToolStats/releases/download/1.9.10/toolstats-1.9.10.jar
+                https://github.com/oddlama/vane/releases/download/v1.20.0/vane-admin-1.20.0.jar
+                https://github.com/oddlama/vane/releases/download/v1.20.0/vane-bedtime-1.20.0.jar
+                https://github.com/oddlama/vane/releases/download/v1.20.0/vane-core-1.20.0.jar
+                https://github.com/oddlama/vane/releases/download/v1.20.0/vane-enchantments-1.20.0.jar
+                https://github.com/oddlama/vane/releases/download/v1.20.0/vane-permissions-1.20.0.jar
+                https://github.com/oddlama/vane/releases/download/v1.20.0/vane-portals-1.20.0.jar
+                https://github.com/oddlama/vane/releases/download/v1.20.0/vane-trifles-1.20.0.jar
+                https://hangarcdn.papermc.io/plugins/BeanFeed/TreeChopper/versions/1.4/PAPER/TreeChopper-1.4.jar
+            probes:
+              liveness: &probe
+                enabled: true
+                spec: &spec
+                  exec:
+                    command: [mc-health]
+              readiness: *probe
+              startup:
+                <<: *probe
+                spec:
+                  <<: *spec
+                  failureThreshold: 30
+                  periodSeconds: 5
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: [ALL]}
+        pod:
+          terminationGracePeriodSeconds: 300
+          tolerations:
+            - key: gabe565.com/gpu
+              operator: Equal
+              value: nvidia
+              effect: NoSchedule
+          nodeSelector:
+            gabe565.com/gpu: nvidia
+          labels:
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-envoy-public: "true"
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
+            fsGroup: 65534
+            fsGroupChangePolicy: OnRootMismatch
+            seccompProfile: {type: RuntimeDefault}
+
+    service:
+      minecraft:
+        controller: minecraft
+        ports:
+          minecraft:
+            primary: true
+            port: 25565
+          bluemap:
+            port: 8100
+
+    persistence:
+      data:
+        accessMode: ReadWriteOnce
+        storageClass: longhorn-ssd
+        size: 8Gi
+        retain: true
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+          - path: /data/plugins/spark/tmp
+            subPath: spark
+
+    route:
+      minecraft:
+        parentRefs: &parentRefs
+          - namespace: envoy-gateway-system
+            name: envoy-public
+        kind: TCPRoute
+        rules:
+          - backendRefs:
+              - identifier: minecraft
+                port: 25565
+      bluemap:
+        parentRefs: *parentRefs
+        hostnames:
+          - ${app_url}
+        rules:
+          - backendRefs:
+              - identifier: minecraft
+                port: 8100
