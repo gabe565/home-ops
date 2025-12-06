@@ -7,7 +7,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.7.3
+      version: 4.5.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -64,7 +64,7 @@ spec:
           labels:
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
-            policy.gabe565.com/ingress-nginx: "true"
+            policy.gabe565.com/ingress-envoy-public: "true"
             valkey-client: "true"
           securityContext:
             runAsNonRoot: true
@@ -83,7 +83,6 @@ spec:
 
     persistence:
       config:
-        enabled: true
         type: configMap
         name: searxng-config
         advancedMounts:
@@ -91,7 +90,6 @@ spec:
             config-yampl:
               - path: /config
       tmp:
-        enabled: true
         type: emptyDir
         globalMounts:
           - path: /tmp
@@ -99,28 +97,40 @@ spec:
           - path: /etc/searxng
             subPath: etc/searxng
 
-    ingress:
-      main:
-        enabled: true
-        annotations:
-          nginx.ingress.kubernetes.io/auth-url: |-
-            http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
-          nginx.ingress.kubernetes.io/auth-signin: |-
-            /outpost.goauthentik.io/start
-          nginx.ingress.kubernetes.io/auth-response-headers: |-
-            Set-Cookie,X-authentik-username,X-authentik-groups,X-authentik-email,X-authentik-name,X-authentik-uid
-          nginx.ingress.kubernetes.io/auth-snippet: |
-            proxy_set_header X-Forwarded-Host $http_host;
-          nginx.ingress.kubernetes.io/satisfy: any
-          nginx.ingress.kubernetes.io/whitelist-source-range: 192.168.0.0/22
-        hosts:
-          - host: ${app_url}
-            paths:
-              - path: /
-                service:
-                  identifier: searxng
-                  port: http
-        tls:
-          - secretName: ${certificate_name}
-            hosts:
-              - ${app_url}
+    route:
+      searxng:
+        parentRefs:
+          - namespace: envoy-gateway-system
+            name: envoy-public
+        hostnames:
+          - ${app_url}
+        rules:
+          - name: internal
+            matches:
+              - headers:
+                  - name: X-Envoy-External-Address
+                    type: RegularExpression
+                    value: '^192\.168\..*'
+            backendRefs: &backendRefs
+              - identifier: searxng
+          - name: public
+            backendRefs: *backendRefs
+
+    rawResources:
+      auth:
+        apiVersion: gateway.envoyproxy.io/v1alpha1
+        kind: SecurityPolicy
+        spec:
+          spec:
+            targetRefs:
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}"
+                sectionName: public
+            oidc:
+              provider:
+                issuer: https://${oidc_host}/application/o/searxng/
+              clientIDRef:
+                name: oidc
+              clientSecret:
+                name: oidc
