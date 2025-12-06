@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.7.3/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.5.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.7.3
+      version: 4.5.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -51,7 +51,7 @@ spec:
             policy.gabe565.com/egress-tautulli: "true"
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-authentik: "true"
-            policy.gabe565.com/ingress-nginx: "true"
+            policy.gabe565.com/ingress-envoy-public: "true"
           securityContext:
             runAsNonRoot: true
             fsGroup: 1000
@@ -66,14 +66,14 @@ spec:
 
     persistence:
       config:
-        enabled: true
+        suffix: config
         size: 100Mi
         storageClass: longhorn-ssd
         accessMode: ReadWriteOnce
+        retain: true
         globalMounts:
           - path: /app/config
       cache:
-        enabled: true
         type: emptyDir
         globalMounts:
           - path: /app/config/cache
@@ -81,20 +81,14 @@ spec:
           - path: /root/.npm
             subPath: npm
       tmp:
-        enabled: true
         type: emptyDir
+        medium: Memory
+        sizeLimit: 128Mi
 
-    ingress:
+    route:
       overseerr:
-        enabled: true
-        hosts:
-          - host: ${app_url}
-            paths:
-              - path: /
-                service:
-                  identifier: overseerr
-                  port: http
-        tls: &tls
-          - secretName: ${certificate_name}
-            hosts:
-              - ${app_url}
+        parentRefs:
+          - namespace: envoy-gateway-system
+            name: envoy-public
+        hostnames:
+          - ${app_url}
