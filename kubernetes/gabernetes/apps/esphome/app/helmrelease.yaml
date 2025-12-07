@@ -185,3 +185,4 @@ spec:
                 name: oidc
               clientSecret:
                 name: oidc
+              scopes: [openid, offline_access]

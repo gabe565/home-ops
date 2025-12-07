@@ -123,5 +123,6 @@ spec:
                 name: oidc
               clientSecret:
                 name: oidc
+              scopes: [openid, offline_access]
               redirectURL: "%REQ(x-forwarded-proto)%://%REQ(:authority)%/admin/oauth2/callback"
               logoutPath: /admin/oauth2/logout

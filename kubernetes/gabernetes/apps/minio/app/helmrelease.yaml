@@ -41,7 +41,7 @@ spec:
               MINIO_IDENTITY_OPENID_CONFIG_URL: https://${oidc_host}/application/o/minio/.well-known/openid-configuration
               MINIO_IDENTITY_OPENID_CLIENT_ID: ${oidc_client_id}
               MINIO_IDENTITY_OPENID_CLIENT_SECRET: ${oidc_client_secret}
-              MINIO_IDENTITY_OPENID_SCOPES: openid,profile,email,minio
+              MINIO_IDENTITY_OPENID_SCOPES: openid,profile,email,offline_access,minio
               MINIO_PROMETHEUS_JOB_ID: minio
               MINIO_PROMETHEUS_URL: http://kube-prometheus-stack-prometheus.prometheus:9090
               MINIO_PROMETHEUS_AUTH_TYPE: public

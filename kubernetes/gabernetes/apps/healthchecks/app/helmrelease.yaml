@@ -159,7 +159,7 @@ spec:
                 name: oidc
               clientSecret:
                 name: oidc
-              scopes: [openid, email]
+              scopes: [openid, offline_access, email]
               forwardAccessToken: true
               logoutPath: /accounts/logout/
             jwt:

@@ -160,6 +160,7 @@ spec:
                 name: oidc
               scopes:
                 - openid
+                - offline_access
                 - nightscout:token
               forwardAccessToken: true
             jwt:

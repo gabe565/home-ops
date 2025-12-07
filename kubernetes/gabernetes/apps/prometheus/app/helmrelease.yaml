@@ -48,10 +48,11 @@ spec:
         auth.generic_oauth:
           name: Authentik
           enabled: true
-          scopes: openid email profile
+          scopes: openid email profile offline_access
           auth_url: https://${oauth_host}/application/o/authorize/
           token_url: https://${oauth_host}/application/o/token/
           api_url: https://${oauth_host}/application/o/userinfo/
+          token_rotation_interval_minutes: "5"
           role_attribute_path: contains(groups[*], 'Grafana Admins') && 'Admin' || contains(groups[*], 'Grafana Editors') && 'Editor' || 'Viewer'
       env:
         GF_AUTH_GENERIC_OAUTH_CLIENT_ID: ${oauth_client_id}
