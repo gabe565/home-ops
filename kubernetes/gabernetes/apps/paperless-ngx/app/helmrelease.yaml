@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.7.3/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.5.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.7.3
+      version: 4.5.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -31,8 +31,8 @@ spec:
               PAPERLESS_TIME_ZONE: America/Chicago
               PAPERLESS_SECRET_KEY: ${secret_key}
               PAPERLESS_ENABLE_HTTP_REMOTE_USER: "true"
-              PAPERLESS_HTTP_REMOTE_USER_HEADER_NAME: HTTP_X_AUTHENTIK_USERNAME
-              PAPERLESS_LOGOUT_REDIRECT_URL: /outpost.goauthentik.io/sign_out
+              PAPERLESS_HTTP_REMOTE_USER_HEADER_NAME: HTTP_X_USER_NAME
+              PAPERLESS_LOGOUT_REDIRECT_URL: /oauth2/logout
               PAPERLESS_ALLOWED_HOSTS: "*"
 
               PAPERLESS_DBENGINE: postgresql
@@ -67,7 +67,7 @@ spec:
           labels:
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
-            policy.gabe565.com/ingress-nginx: "true"
+            policy.gabe565.com/ingress-envoy-public: "true"
 
     service:
       paperless-ngx:
@@ -78,7 +78,7 @@ spec:
 
     persistence:
       data:
-        enabled: true
+        suffix: data
         storageClass: longhorn-ssd
         accessMode: ReadWriteOnce
         size: 1Gi
@@ -86,28 +86,24 @@ spec:
         globalMounts:
           - path: /usr/src/paperless/data
       media:
-        enabled: true
         type: nfs
         server: 192.168.1.240
         path: /volume1/documents/paperless/media
         globalMounts:
           - path: /usr/src/paperless/media
       export:
-        enabled: true
         type: nfs
         server: 192.168.1.240
         path: /volume1/documents/paperless/export
         globalMounts:
           - path: /usr/src/paperless/export
       consume:
-        enabled: true
         type: nfs
         server: 192.168.1.240
         path: /volume1/documents/paperless/consume
         globalMounts:
           - path: /usr/src/paperless/consume
       tmp:
-        enabled: true
         type: emptyDir
         medium: Memory
         globalMounts:
@@ -116,27 +112,40 @@ spec:
           - path: /run
             subPath: run
 
-    ingress:
+    route:
       paperless-ngx:
-        enabled: true
-        annotations:
-          nginx.ingress.kubernetes.io/auth-url: |-
-            http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
-          nginx.ingress.kubernetes.io/auth-signin: |-
-            https://$host/outpost.goauthentik.io/start?rd=$scheme://$http_host$escaped_request_uri
-          nginx.ingress.kubernetes.io/auth-response-headers: |-
-            Set-Cookie,X-authentik-username,X-authentik-groups,X-authentik-email,X-authentik-name,X-authentik-uid
-          nginx.ingress.kubernetes.io/auth-snippet: |
-            proxy_set_header X-Forwarded-Host $http_host;
-          nginx.ingress.kubernetes.io/proxy-body-size: 64m
-        hosts:
-          - host: ${app_url}
-            paths:
-              - path: /
-                service:
-                  identifier: paperless-ngx
-                  port: http
-        tls:
-          - secretName: ${certificate_name}
-            hosts:
-              - ${app_url}
+        parentRefs:
+          - namespace: envoy-gateway-system
+            name: envoy-public
+        hostnames:
+          - ${app_url}
+
+    rawResources:
+      auth:
+        apiVersion: gateway.envoyproxy.io/v1alpha1
+        kind: SecurityPolicy
+        spec:
+          spec:
+            targetRefs:
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}"
+            oidc:
+              provider:
+                issuer: https://${oidc_host}/application/o/paperless-ngx/
+              clientIDRef:
+                name: oidc
+              clientSecret:
+                name: oidc
+              scopes: [openid, profile, offline_access]
+              forwardAccessToken: true
+              logoutPath: /oauth2/logout
+            jwt:
+              optional: true
+              providers:
+                - name: extract-user-info
+                  remoteJWKS:
+                    uri: https://${oidc_host}/application/o/paperless-ngx/jwks/
+                  claimToHeaders:
+                    - claim: preferred_username
+                      header: X-User-Name
