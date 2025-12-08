@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.7.3/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.5.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.7.3
+      version: 4.5.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -42,7 +42,7 @@ spec:
               readOnlyRootFilesystem: true
         pod:
           labels:
-            policy.gabe565.com/ingress-nginx: "true"
+            policy.gabe565.com/ingress-envoy-public: "true"
           securityContext:
             fsGroup: 1000
 
@@ -55,23 +55,35 @@ spec:
 
     persistence:
       data:
-        enabled: true
+        suffix: data
         storageClass: longhorn-ssd
         accessMode: ReadWriteOnce
         size: 256Mi
         retain: true
 
-    ingress:
+    route:
       matrimony:
-        enabled: true
-        hosts:
-          - host: ${app_url}
-            paths:
-              - path: /
-                service:
-                  identifier: matrimony
-                  port: http
-        tls:
-          - secretName: ${certificate_name}
-            hosts:
-              - ${app_url}
+        parentRefs:
+          - namespace: envoy-gateway-system
+            name: envoy-public
+        hostnames:
+          - ${app_url}
+
+    rawResources:
+      allowlist:
+        apiVersion: gateway.envoyproxy.io/v1alpha1
+        kind: SecurityPolicy
+        spec:
+          spec:
+            targetRefs:
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}"
+            authorization:
+              defaultAction: Deny
+              rules:
+                - action: Allow
+                  principal:
+                    clientCIDRs:
+                      - 192.168.0.0/22
+                      - 10.42.0.0/16
