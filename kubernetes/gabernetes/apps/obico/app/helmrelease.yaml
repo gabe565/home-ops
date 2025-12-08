@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.5.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -6,76 +7,174 @@ metadata:
 spec:
   chart:
     spec:
-      chart: obico
-      version: 0.6.0
+      chart: app-template
+      version: 4.5.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
         namespace: flux-system
-        name: gabe565
+        name: bjw-s
   interval: 1h
   driftDetection:
     mode: enabled
   values:
-    server:
-      image:
-        repository: ghcr.io/gabe565/obico/web
-        tag: latest@sha256:899465511c9c4e815152b96ed3b9c08ec983107ba2fb25319a809b657d8c231c
-      env:
-        DJANGO_SECRET_KEY: ${django_secret_key}
-        EMAIL_HOST: ${smtp_hostname}
-        EMAIL_HOST_USER: ${smtp_username}
-        EMAIL_HOST_PASSWORD: ${email_host_password}
-        DEFAULT_FROM_EMAIL: ${smtp_username}
-        EMAIL_PORT: '587'
-        EMAIL_USE_TLS: 'True'
-        TELEGRAM_BOT_TOKEN: ${telegram_bot_token}
-        REDIS_PASSWORD:
-          secretKeyRef:
-            name: valkey
-            key: valkey-password
-        REDIS_URL: redis://:$(REDIS_PASSWORD)@valkey:6379
+    controllers:
+      server:
+        initContainers:
+          collectstatic: &container
+            image:
+              repository: ghcr.io/gabe565/obico/web
+              tag: latest@sha256:899465511c9c4e815152b96ed3b9c08ec983107ba2fb25319a809b657d8c231c
+            command: [python, manage.py, collectstatic, --verbosity=2, --noinput, --link]
+            env:
+              DEBUG: "False"
+              WEBPACK_LOADER_ENABLED: "False"
+              SITE_USES_HTTPS: "True"
+              INTERNAL_MEDIA_HOST: http://obico-server:3334
+              ML_API_HOST: http://obico-ml-api:3333
+              DJANGO_SECRET_KEY: ${django_secret_key}
+              DATABASE_URL: sqlite:////data/db.sqlite3
+              EMAIL_HOST: ${smtp_hostname}
+              EMAIL_HOST_USER: ${smtp_username}
+              EMAIL_HOST_PASSWORD: ${email_host_password}
+              DEFAULT_FROM_EMAIL: ${smtp_username}
+              EMAIL_PORT: '587'
+              EMAIL_USE_TLS: 'True'
+              TELEGRAM_BOT_TOKEN: ${telegram_bot_token}
+              REDIS_PASSWORD:
+                secretKeyRef:
+                  name: valkey
+                  key: valkey-password
+              REDIS_URL: redis://:$(REDIS_PASSWORD)@valkey:6379
+          migrate:
+            <<: *container
+            command: [python, manage.py, migrate]
+        containers:
+          server:
+            <<: *container
+            command: [python, manage.py, runserver, --noreload, 0.0.0.0:3334]
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+          tasks:
+            <<: *container
+            command:
+              - celery
+              - --app=config
+              - worker
+              - --beat
+              - --loglevel=info
+              - --concurrency=2
+              - --queues=realtime,celery
+              - --schedule=/tmp/celerybeat-schedule
+        pod:
+          labels:
+            policy.gabe565.com/egress-namespace: "true"
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-nginx-internal: "true"
+            valkey-client: "true"
+          securityContext:
+            runAsUser: 65534
+            runAsGroup: 65534
+            fsGroup: 65534
+            fsGroupChangePolicy: OnRootMismatch
+      ml-api:
+        strategy: RollingUpdate
+        containers:
+          ml-api:
+            image:
+              repository: ghcr.io/gabe565/obico/ml-api
+              tag: latest@sha256:0a489959abddb99aa979b3886d3385a0de8aa3dd4580db760a7d33a98f1413b1
+            command: [gunicorn, --bind=0.0.0.0:3333, --workers=1, --access-logfile=-, wsgi]
+            env:
+              FLASK_APP: server.py
+              DEBUG: "True"
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+        pod:
+          labels:
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-namespage: "true"
+          securityContext:
+            runAsUser: 65534
+            runAsGroup: 65534
+            fsGroup: 65534
+            fsGroupChangePolicy: OnRootMismatch
 
-      podLabels:
-        policy.gabe565.com/egress-namespace: "true"
-        policy.gabe565.com/egress-world: "true"
-        policy.gabe565.com/ingress-nginx: "true"
-        valkey-client: "true"
+    persistence:
+      server-data:
+        storageClass: longhorn-ssd
+        accessMode: ReadWriteOnce
+        size: 512M
+        retain: true
+        advancedMounts:
+          server:
+            migrate:
+              - path: /data
+            server:
+              - path: /data
+            tasks:
+              - path: /data
+      server-media:
+        storageClass: nfs-client
+        accessMode: ReadWriteMany
+        size: 8Gi
+        retain: true
+        advancedMounts:
+          server:
+            server:
+              - path: /app/static_build/media
+            tasks:
+              - path: /app/static_build/media
+      static:
+        type: emptyDir
+        advancedMounts:
+          server:
+            collectstatic:
+              - path: /app/static_build
+            server:
+              - path: /app/static_build
 
-      persistence:
-        data:
-          enabled: true
-          storageClass: longhorn-ssd
-          accessMode: ReadWriteOnce
-          size: 512M
-        media:
-          enabled: true
-          storageClass: nfs-client
-          accessMode: ReadWriteMany
-          size: 8Gi
+    service:
+      server:
+        controller: server
+        ports:
+          http:
+            port: 3334
+      ml-api:
+        controller: ml-api
+        ports:
+          http:
+            port: 3333
 
-      ingress:
-        main:
-          enabled: true
-          ingressClassName: nginx-internal
-          annotations:
-            nginx.ingress.kubernetes.io/proxy-body-size: 64m
-          hosts:
-            - host: ${app_url}
-              paths:
-                - path: /
-          tls:
-            - secretName: ${certificate_name}
-              hosts:
-                - ${app_url}
-
-    ml-api:
-      image:
-        repository: ghcr.io/gabe565/obico/ml-api
-        tag: latest@sha256:0a489959abddb99aa979b3886d3385a0de8aa3dd4580db760a7d33a98f1413b1
-      podLabels:
-        policy.gabe565.com/egress-world: "true"
-        policy.gabe565.com/ingress-namespage: "true"
-
-    redis:
-      enabled: false
+    ingress:
+      server:
+        enabled: true
+        className: nginx-internal
+        annotations:
+          nginx.ingress.kubernetes.io/proxy-body-size: 64m
+        hosts:
+          - host: ${app_url}
+            paths:
+              - path: /
+                service:
+                  identifier: server
+        tls:
+          - secretName: ${certificate_name}
+            hosts:
+              - ${app_url}
