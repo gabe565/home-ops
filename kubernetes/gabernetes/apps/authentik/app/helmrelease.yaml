@@ -133,3 +133,11 @@ spec:
     worker:
       containerSecurityContext:
         readOnlyRootFilesystem: true
+
+      volumes:
+        - name: server-cert
+          secret:
+            secretName: ${certificate_name}
+      volumeMounts:
+        - name: server-cert
+          mountPath: /certs/${certificate_name}
