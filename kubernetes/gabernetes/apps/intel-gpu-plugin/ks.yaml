@@ -8,7 +8,7 @@ spec:
   interval: 1h
   url: https://github.com/intel/intel-device-plugins-for-kubernetes
   ref:
-    tag: v0.34.0
+    tag: v0.34.1
   # language=gitignore
   ignore: |
     # exclude all
