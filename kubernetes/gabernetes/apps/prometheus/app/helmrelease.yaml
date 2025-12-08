@@ -34,7 +34,7 @@ spec:
         policy.gabe565.com/egress-kubeapi: "true"
         policy.gabe565.com/egress-namespace: "true"
         policy.gabe565.com/egress-world: "true"
-        policy.gabe565.com/ingress-nginx: "true"
+        policy.gabe565.com/ingress-envoy-public: "true"
         policy.gabe565.com/ingress-namespace: "true"
       deploymentStrategy:
         type: Recreate
@@ -55,16 +55,16 @@ spec:
           token_rotation_interval_minutes: "5"
           role_attribute_path: contains(groups[*], 'Grafana Admins') && 'Admin' || contains(groups[*], 'Grafana Editors') && 'Editor' || 'Viewer'
       env:
-        GF_AUTH_GENERIC_OAUTH_CLIENT_ID: ${oauth_client_id}
-        GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET: ${oauth_client_secret}
-      ingress:
-        enabled: true
-        hosts:
-          - ${grafana_url}
-        tls:
-          - secretName: ${certificate_name}
-            hosts:
-              - ${grafana_url}
+        GF_AUTH_GENERIC_OAUTH_CLIENT_ID: ${grafana_oauth_client_id}
+        GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET: ${grafana_oauth_client_secret}
+      route:
+        main:
+          enabled: true
+          parentRefs:
+            - namespace: envoy-gateway-system
+              name: envoy-public
+          hostnames:
+            - ${grafana_url}
       persistence:
         type: pvc
         enabled: true
@@ -124,6 +124,7 @@ spec:
             policy.gabe565.com/egress-nodes: "true"
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-envoy-public: "true"
             policy.gabe565.com/ingress-namespace: "true"
         enableRemoteWriteReceiver: true
         podMonitorSelectorNilUsesHelmValues: false
@@ -161,27 +162,14 @@ spec:
               resources:
                 requests:
                   storage: 50Gi
-      ingress:
-        enabled: true
-        annotations:
-          nginx.ingress.kubernetes.io/auth-url: |-
-            http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
-          nginx.ingress.kubernetes.io/auth-signin: |-
-            https://$host/outpost.goauthentik.io/start?rd=$scheme://$http_host$escaped_request_uri
-          nginx.ingress.kubernetes.io/auth-response-headers: |-
-            Set-Cookie,X-authentik-username,X-authentik-groups,X-authentik-email,X-authentik-name,X-authentik-uid
-          nginx.ingress.kubernetes.io/auth-snippet: |
-            proxy_set_header X-Forwarded-Host $http_host;
-          nginx.ingress.kubernetes.io/client-body-buffer-size: 128k
-          nginx.ingress.kubernetes.io/enable-access-log: "false"
-          nginx.ingress.kubernetes.io/satisfy: any
-          nginx.ingress.kubernetes.io/whitelist-source-range: ${ingress_whitelist}
-        hosts:
-          - ${prometheus_url}
-        tls:
-          - secretName: ${certificate_name}
-            hosts:
-              - ${prometheus_url}
+      route:
+        main:
+          enabled: true
+          parentRefs:
+            - namespace: envoy-gateway-system
+              name: envoy-public
+          hostnames:
+            - ${prometheus_url}
     prometheusOperator:
       networkPolicy:
         enabled: true
