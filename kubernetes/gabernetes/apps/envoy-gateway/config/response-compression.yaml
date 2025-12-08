@@ -8,9 +8,6 @@ spec:
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: envoy-public
-    - group: gateway.networking.k8s.io
-      kind: Gateway
-      name: envoy-public
   compressor:
     - type: Brotli
       brotli: {}
