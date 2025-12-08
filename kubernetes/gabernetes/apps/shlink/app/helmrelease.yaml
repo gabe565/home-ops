@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.7.3/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.5.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.7.3
+      version: 4.5.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -19,8 +19,6 @@ spec:
     mode: enabled
   values:
     controllers:
-      shlink:
-        enabled: false
       api:
         strategy: RollingUpdate
         initContainers:
@@ -72,7 +70,7 @@ spec:
             policy.gabe565.com/egress-geoip: "true"
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
-            policy.gabe565.com/ingress-nginx: "true"
+            policy.gabe565.com/ingress-envoy-public: "true"
           terminationGracePeriodSeconds: 1
       frontend:
         strategy: RollingUpdate
@@ -86,12 +84,30 @@ spec:
               readOnlyRootFilesystem: true
         pod:
           labels:
-            policy.gabe565.com/ingress-nginx: "true"
+            policy.gabe565.com/ingress-envoy-public: "true"
+
+    persistence:
+      data:
+        type: emptyDir
+        advancedMounts:
+          api:
+            app:
+              - path: /etc/shlink/data
+      tmp:
+        type: emptyDir
+        medium: Memory
+        sizeLimit: 128Mi
+      geolite2:
+        type: emptyDir
+        advancedMounts:
+          api:
+            geoip:
+              - path: /geoip
+            app:
+              - path: /etc/shlink/vendor/shlinkio/shlink-ip-geolocation/src/GeoLite2
+                readOnly: true
 
     service:
-      shlink:
-        controller: shlink
-        enabled: false
       api:
         controller: api
         ports:
@@ -103,114 +119,112 @@ spec:
           http:
             port: 8080
 
-    persistence:
-      data:
-        enabled: true
-        type: emptyDir
-        advancedMounts:
-          api:
-            app:
-              - path: /etc/shlink/data
-      tmp:
-        enabled: true
-        type: emptyDir
-      geolite2:
-        enabled: true
-        type: emptyDir
-        advancedMounts:
-          api:
-            geoip:
-              - path: /geoip
-            app:
-              - path: /etc/shlink/vendor/shlinkio/shlink-ip-geolocation/src/GeoLite2
-                readOnly: true
-
-    ingress:
-      shlink:
-        enabled: true
-        hosts:
-          - host: ${app_url}
-            paths:
-              - path: /
-                service:
-                  identifier: api
-                  port: http
-        tls:
-          - secretName: ${certificate_name}
-            hosts:
-              - ${app_url}
+    route:
+      api:
+        parentRefs: &parentRefs
+          - namespace: envoy-gateway-system
+            name: envoy-public
+        hostnames:
+          - ${app_url}
+        rules:
+          - backendRefs:
+              - identifier: api
       frontend:
-        enabled: true
-        hosts:
-          - host: ${admin_url}
-            paths:
-              - path: /
-                service:
-                  identifier: frontend
-                  port: http
-        tls: &admin-tls
-          - secretName: ${certificate_name}
-            hosts:
-              - ${admin_url}
-      frontend-root:
-        enabled: true
-        annotations:
-          nginx.ingress.kubernetes.io/auth-url:
-            http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
-          nginx.ingress.kubernetes.io/auth-signin: https://$host/outpost.goauthentik.io/start?rd=$scheme://$http_host$escaped_request_uri
-          nginx.ingress.kubernetes.io/auth-response-headers: Set-Cookie
-          nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Host $http_host;
-        hosts:
-          - host: ${admin_url}
-            paths:
-              - path: /
-                pathType: Exact
-                service:
-                  identifier: frontend
-                  port: http
-        tls: *admin-tls
-      frontend-servers-json:
-        enabled: true
-        annotations:
-          nginx.ingress.kubernetes.io/auth-url:
-            http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
-          nginx.ingress.kubernetes.io/auth-signin: https://$host/outpost.goauthentik.io/start?rd=$scheme://$http_host$escaped_request_uri
-          nginx.ingress.kubernetes.io/auth-response-headers: Set-Cookie,X-Shlink-Api-Key
-          nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Host $http_host;
-          nginx.ingress.kubernetes.io/configuration-snippet: |
-            access_by_lua_block {
-              local apiKey = ngx.var.authHeader1
-              if apiKey == nil then
-                return ngx.exit(404)
-              else
-                local cjson = require "cjson"
-                ngx.say(cjson.encode({
-                  {name="${app_url}", url="https://${app_url}", apiKey=apiKey}
-                }))
-                return ngx.exit(200)
-              end
-            }
-        hosts:
-          - host: ${admin_url}
-            paths:
-              - path: /servers.json
-                pathType: ImplementationSpecific
-                service:
-                  identifier: frontend
-                  port: http
-        tls: *admin-tls
-      remove-sw:
-        enabled: true
-        annotations:
-          nginx.ingress.kubernetes.io/configuration-snippet: |
-            add_header Content-Type application/javascript;
-            return 200 "self.addEventListener('install', event => { event.waitUntil(self.skipWaiting()) })";
-        hosts:
-          - host: ${admin_url}
-            paths:
-              - path: /service-worker.js
-                pathType: ImplementationSpecific
-                service:
-                  identifier: frontend
-                  port: http
-        tls: *admin-tls
+        parentRefs: *parentRefs
+        hostnames:
+          - ${admin_url}
+        rules:
+          - name: private
+            backendRefs:
+              - identifier: frontend
+          - name: servers-json
+            matches:
+              - path:
+                  type: Exact
+                  value: /servers.json
+            backendRefs:
+              - identifier: frontend
+          - name: service-worker
+            matches:
+              - path:
+                  type: Exact
+                  value: /service-worker.js
+            filters:
+              - type: ExtensionRef
+                extensionRef:
+                  group: gateway.envoyproxy.io
+                  kind: HTTPRouteFilter
+                  name: shlink-service-worker
+
+    rawResources:
+      auth:
+        apiVersion: gateway.envoyproxy.io/v1alpha1
+        kind: SecurityPolicy
+        spec:
+          spec:
+            targetRefs:
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}-frontend"
+                sectionName: private
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}-frontend"
+                sectionName: servers-json
+            oidc:
+              provider:
+                issuer: https://${oidc_host}/application/o/shlink/
+              clientIDRef:
+                name: oidc
+              clientSecret:
+                name: oidc
+              scopes:
+                - openid
+                - offline_access
+                - shlink:token
+              forwardAccessToken: true
+            jwt:
+              optional: true
+              providers:
+                - name: extract-user-info
+                  remoteJWKS:
+                    uri: https://${oidc_host}/application/o/shlink/jwks/
+                  claimToHeaders:
+                    - claim: shlink_token
+                      header: X-Shlink-Token
+      servers-json:
+        apiVersion: gateway.envoyproxy.io/v1alpha1
+        kind: EnvoyExtensionPolicy
+        spec:
+          spec:
+            targetRefs:
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}-frontend"
+                sectionName: servers-json
+            lua:
+              - type: Inline
+                # language=lua
+                inline: |
+                  function envoy_on_request(handle)
+                    local api_key = handle:headers():get("x-shlink-token")
+                    if api_key then
+                       local json_body = '[{"name":"${app_url}", "url":"https://${app_url}", "apiKey":"' .. api_key .. '"}]'
+                       handle:respond(
+                          {[":status"] = "200", ["content-type"] = "application/json"},
+                          json_body
+                       )
+                    end
+                  end
+      service-worker:
+        apiVersion: gateway.envoyproxy.io/v1alpha1
+        kind: HTTPRouteFilter
+        spec:
+          spec:
+            directResponse:
+              contentType: application/javascript
+              statusCode: 200
+              body:
+                type: Inline
+                inline: |
+                  self.addEventListener('install', event => { event.waitUntil(self.skipWaiting()) });
