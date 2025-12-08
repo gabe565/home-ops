@@ -1,0 +1,37 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: longhorn
+  namespace: kube-system
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      namespace: envoy-gateway-system
+      name: envoy-public
+  hostnames:
+    - ${app_url}
+  rules:
+    - backendRefs:
+        - kind: Service
+          name: longhorn-frontend
+          port: 80
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: auth
+  namespace: kube-system
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: longhorn
+  oidc:
+    provider:
+      issuer: https://${oidc_host}/application/o/longhorn/
+    clientIDRef:
+      name: oidc
+    clientSecret:
+      name: oidc
+    scopes: [openid, offline_access]
