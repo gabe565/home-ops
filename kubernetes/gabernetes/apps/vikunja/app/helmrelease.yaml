@@ -66,6 +66,10 @@ spec:
             runAsGroup: 1000
             fsGroup: 1000
             fsGroupChangePolicy: OnRootMismatch
+          hostAliases:
+            - ip: 192.168.1.220
+              hostnames:
+                - ${oauth_host}
 
     service:
       vikunja:

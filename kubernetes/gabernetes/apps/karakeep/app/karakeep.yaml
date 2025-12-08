@@ -84,6 +84,10 @@ spec:
             fsGroupChangePolicy: OnRootMismatch
             runAsNonRoot: true
             seccompProfile: {type: RuntimeDefault}
+          hostAliases:
+            - ip: 192.168.1.220
+              hostnames:
+                - ${oauth_host}
 
     service:
       main:
