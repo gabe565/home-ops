@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.7.3/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.5.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.7.3
+      version: 4.5.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -71,6 +71,7 @@ spec:
                 <<: *probe
                 spec:
                   exec: *exec
+                  failureThreshold: 30
                   periodSeconds: 5
         containers:
           app:
@@ -98,8 +99,7 @@ spec:
               capabilities: {drop: [ALL]}
         pod:
           labels:
-            policy.gabe565.com/ingress-authentik: "true"
-            policy.gabe565.com/ingress-nginx: "true"
+            policy.gabe565.com/ingress-envoy-public: "true"
           securityContext:
             fsGroup: 65534
             fsGroupChangePolicy: OnRootMismatch
@@ -124,7 +124,7 @@ spec:
                   periodSeconds: 5
         pod:
           labels:
-            policy.gabe565.com/ingress-nginx: "true"
+            policy.gabe565.com/ingress-envoy-public: "true"
           securityContext:
             runAsNonRoot: true
             runAsUser: 101
@@ -133,16 +133,16 @@ spec:
 
     persistence:
       config:
-        enabled: true
-        retain: true
+        suffix: config
+        storageClass: longhorn-ssd
         accessMode: ReadWriteOnce
         size: 1Gi
+        retain: true
         advancedMounts:
           qbittorrent:
             app:
               - path: /config
       downloads:
-        enabled: true
         type: nfs
         server: 192.168.1.240
         path: /volume1/media/Downloads
@@ -151,7 +151,6 @@ spec:
             app:
               - path: /downloads
       tmp:
-        enabled: true
         type: emptyDir
         globalMounts:
           - path: /tmp
@@ -175,76 +174,78 @@ spec:
           http:
             port: 8080
 
-    ingress:
+    route:
       qbittorrent:
-        enabled: true
-        annotations: &annotations
-          nginx.ingress.kubernetes.io/auth-url:
-            http://ak-outpost-gabernetes.authentik.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
-          nginx.ingress.kubernetes.io/auth-signin: https://$host/outpost.goauthentik.io/start
-          nginx.ingress.kubernetes.io/auth-response-headers: Set-Cookie,Cookie
-          nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Host $http_host;
-          nginx.ingress.kubernetes.io/proxy-body-size: 16M
-          nginx.ingress.kubernetes.io/configuration-snippet: |
-            proxy_set_header Referer "";
-            proxy_set_header Accept-Encoding "";
-            more_set_headers "Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline' ${theme_park}; img-src 'self' ${theme_park} data:; script-src 'self' 'unsafe-inline'; object-src 'none'; form-action 'self'; frame-ancestors 'self'";
-            sub_filter '</head>' '<link rel="stylesheet" href="https://${theme_park}/css/base/qbittorrent/overseerr.css"></head>';
-        hosts:
-          - host: ${app_url}
-            paths:
-              - path: /
-                service:
-                  identifier: qbittorrent
-                  port: http
-        tls:
-          - secretName: ${certificate_name}
-            hosts:
-              - ${app_url}
+        parentRefs: &parentRefs
+          - namespace: envoy-gateway-system
+            name: envoy-public
+        hostnames:
+          - ${app_url}
+        rules:
+          - filters: &qbittorrentFilters
+              - type: RequestHeaderModifier
+                requestHeaderModifier:
+                  remove: [Referer]
+            backendRefs:
+              - identifier: qbittorrent
       vuetorrent:
-        enabled: true
-        annotations:
-          <<: *annotations
-          nginx.ingress.kubernetes.io/configuration-snippet: |
-            expires -1;
-        hosts:
-          - host: ${vuetorrent_url}
-            paths:
-              - path: /
-                service:
-                  identifier: vuetorrent
-                  port: http
-        tls: &vuetorrent-tls
-          - secretName: ${certificate_name}
-            hosts:
-              - ${vuetorrent_url}
-      vuetorrent-api:
-        enabled: true
-        annotations:
-          <<: *annotations
-          nginx.ingress.kubernetes.io/configuration-snippet: |
-            proxy_set_header Referer "";
-        hosts:
-          - host: ${vuetorrent_url}
-            paths:
-              - path: /api
-                pathType: ImplementationSpecific
-                service:
-                  identifier: qbittorrent
-                  port: http
-        tls: *vuetorrent-tls
-      vuetorrent-sw:
-        enabled: true
-        annotations:
-          nginx.ingress.kubernetes.io/configuration-snippet: |
-            add_header Content-Type application/javascript;
-            return 200 "self.addEventListener('install', event => { event.waitUntil(self.skipWaiting()) })";
-        hosts:
-          - host: ${vuetorrent_url}
-            paths:
-              - path: /sw.js
-                pathType: ImplementationSpecific
-                service:
-                  identifier: vuetorrent
-                  port: http
-        tls: *vuetorrent-tls
+        parentRefs: *parentRefs
+        hostnames:
+          - ${vuetorrent_url}
+        rules:
+          - name: vuetorrent
+            backendRefs:
+              - identifier: vuetorrent
+          - name: api
+            matches:
+              - path:
+                  type: PathPrefix
+                  value: /api
+            filters: *qbittorrentFilters
+            backendRefs:
+              - identifier: qbittorrent
+          - name: service-worker
+            matches:
+              - path:
+                  type: Exact
+                  value: /sw.js
+            filters:
+              - type: ExtensionRef
+                extensionRef:
+                  group: gateway.envoyproxy.io
+                  kind: HTTPRouteFilter
+                  name: qbittorrent-service-worker
+
+    rawResources:
+      auth:
+        apiVersion: gateway.envoyproxy.io/v1alpha1
+        kind: SecurityPolicy
+        spec:
+          spec:
+            targetRefs:
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}"
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}-vuetorrent"
+            oidc:
+              provider:
+                issuer: https://${oidc_host}/application/o/qbittorrent/
+              clientIDRef:
+                name: oidc
+              clientSecret:
+                name: oidc
+              scopes: [openid, offline_access]
+      service-worker:
+        apiVersion: gateway.envoyproxy.io/v1alpha1
+        kind: HTTPRouteFilter
+        spec:
+          spec:
+            directResponse:
+              contentType: application/javascript
+              statusCode: 200
+              body:
+                type: Inline
+                inline: |
+                  self.addEventListener('install', event => { event.waitUntil(self.skipWaiting()) });
