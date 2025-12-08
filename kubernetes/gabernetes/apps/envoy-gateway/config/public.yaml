@@ -7,6 +7,17 @@ spec:
   provider:
     type: Kubernetes
     kubernetes:
+      envoyDeployment:
+        patch:
+          type: StrategicMerge
+          value:
+            spec:
+              template:
+                spec:
+                  hostAliases:
+                    - ip: 192.168.1.220
+                      hostnames:
+                        - ${oidc_host}
       envoyService:
         type: LoadBalancer
         externalTrafficPolicy: Local
