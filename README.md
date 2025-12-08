@@ -237,18 +237,6 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><a href="kubernetes/gabernetes/apps/immich/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/immich/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/immich/valkey/helmrelease.yaml">valkey</a></td>
   </tr>
   <tr>
-    <td>ingress-nginx</td>
-    <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/gabernetes/apps/ingress-nginx/app/helmrelease.yaml">ingress-nginx</a></td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>ingress-nginx-internal</td>
-    <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/gabernetes/apps/ingress-nginx/internal/helmrelease.yaml">ingress-nginx-internal</a></td>
-    <td></td>
-  </tr>
-  <tr>
     <td>intel-gpu-plugin</td>
     <td><code>GitRepository</code></td>
     <td><a href="https://github.com/intel/intel-device-plugins-for-kubernetes">intel-gpu-plugin</a></td>

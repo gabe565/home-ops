@@ -42,15 +42,13 @@ spec:
           readOnlyRootFilesystem: true
     interval: 1h
     triggerLoopOnEvent: true
-    sources: [service, ingress, gateway-httproute]
+    sources: [service, gateway-httproute]
     policy: sync
     registry: noop
 
     env:
       - name: EXTERNAL_DNS_WEBHOOK_PROVIDER_URL
         value: http://localhost:8888
-      - name: EXTERNAL_DNS_INGRESS_CLASS
-        value: nginx
       - name: EXTERNAL_DNS_GATEWAY_NAME
         value: envoy-public
       - name: EXTERNAL_DNS_FORCE_DEFAULT_TARGETS

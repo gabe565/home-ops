@@ -9,9 +9,6 @@ spec:
     - fromEndpoints:
         - matchLabels:
             io.kubernetes.pod.namespace: home-assistant
-    - fromEndpoints:
-        - matchLabels:
-            io.kubernetes.pod.namespace: ingress-nginx
   egress:
     - toCIDRSet:
         - cidr: 0.0.0.0/0

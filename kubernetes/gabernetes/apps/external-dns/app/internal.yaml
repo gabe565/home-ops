@@ -37,7 +37,7 @@ spec:
       name: cloudflare
     interval: 1h
     triggerLoopOnEvent: true
-    sources: [service, ingress, gateway-httproute]
+    sources: [service, gateway-httproute]
     policy: sync
 
     txtOwnerId: gabernetes-internal
@@ -47,8 +47,6 @@ spec:
           secretKeyRef:
             name: cloudflare
             key: token
-      - name: EXTERNAL_DNS_INGRESS_CLASS
-        value: nginx-internal
       - name: EXTERNAL_DNS_GATEWAY_NAME
         value: envoy-private
       - name: EXTERNAL_DNS_TXT_ENCRYPT_ENABLED

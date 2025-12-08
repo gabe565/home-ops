@@ -73,7 +73,7 @@ spec:
         pod:
           labels:
             policy.gabe565.com/egress-browserless: "true"
-            policy.gabe565.com/egress-nginx: "true"
+            policy.gabe565.com/egress-envoy-public: "true"
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-envoy-public: "true"
