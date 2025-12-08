@@ -72,8 +72,8 @@ spec:
               capabilities: {drop: [ALL]}
         pod:
           labels:
+            policy.gabe565.com/egress-authentik: "true"
             policy.gabe565.com/egress-browserless: "true"
-            policy.gabe565.com/egress-envoy-public: "true"
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-envoy-public: "true"
@@ -85,7 +85,7 @@ spec:
             runAsNonRoot: true
             seccompProfile: {type: RuntimeDefault}
           hostAliases:
-            - ip: 192.168.1.220
+            - ip: 10.43.0.20
               hostnames:
                 - ${oauth_host}
 

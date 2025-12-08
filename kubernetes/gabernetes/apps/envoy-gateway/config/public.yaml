@@ -15,7 +15,7 @@ spec:
               template:
                 spec:
                   hostAliases:
-                    - ip: 192.168.1.220
+                    - ip: 10.43.0.20
                       hostnames:
                         - ${oidc_host}
       envoyService:

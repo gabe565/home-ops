@@ -66,7 +66,7 @@ spec:
           imagePullSecrets:
             - name: gitea
           labels:
-            policy.gabe565.com/egress-envoy-public: "true"
+            policy.gabe565.com/egress-authentik: "true"
             policy.gabe565.com/egress-prometheus: "true"
             policy.gabe565.com/ingress-envoy-public: "true"
             policy.gabe565.com/ingress-prometheus: "true"
@@ -76,7 +76,7 @@ spec:
             fsGroup: 1000
             fsGroupChangePolicy: OnRootMismatch
           hostAliases:
-            - ip: 192.168.1.220
+            - ip: 10.43.0.20
               hostnames:
                 - ${oidc_host}
 
