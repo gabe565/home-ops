@@ -78,7 +78,7 @@ spec:
           labels:
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
-            policy.gabe565.com/ingress-nginx-internal: "true"
+            policy.gabe565.com/ingress-envoy-public: "true"
             valkey-client: "true"
           securityContext:
             runAsUser: 65534
@@ -162,19 +162,32 @@ spec:
           http:
             port: 3333
 
-    ingress:
+    route:
       server:
-        enabled: true
-        className: nginx-internal
-        annotations:
-          nginx.ingress.kubernetes.io/proxy-body-size: 64m
-        hosts:
-          - host: ${app_url}
-            paths:
-              - path: /
-                service:
-                  identifier: server
-        tls:
-          - secretName: ${certificate_name}
-            hosts:
-              - ${app_url}
+        parentRefs:
+          - namespace: envoy-gateway-system
+            name: envoy-public
+        hostnames:
+          - ${app_url}
+        rules:
+          - backendRefs:
+              - identifier: server
+
+    rawResources:
+      allowlist:
+        apiVersion: gateway.envoyproxy.io/v1alpha1
+        kind: SecurityPolicy
+        spec:
+          spec:
+            targetRefs:
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}"
+            authorization:
+              defaultAction: Deny
+              rules:
+                - action: Allow
+                  principal:
+                    clientCIDRs:
+                      - 192.168.0.0/22
+                      - 10.42.0.0/16
