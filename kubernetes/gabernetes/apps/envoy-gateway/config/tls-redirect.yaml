@@ -7,8 +7,6 @@ spec:
   parentRefs:
     - name: envoy-public
       sectionName: http
-    - name: envoy-private
-      sectionName: http
   rules:
     - filters:
         - type: RequestRedirect

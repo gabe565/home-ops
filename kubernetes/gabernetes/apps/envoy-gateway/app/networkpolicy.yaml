@@ -49,23 +49,6 @@ spec:
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
-  name: tailscale-to-private
-  namespace: envoy-gateway-system
-spec:
-  endpointSelector:
-    matchLabels:
-      app.kubernetes.io/component: proxy
-      app.kubernetes.io/managed-by: envoy-gateway
-      app.kubernetes.io/name: envoy
-      gateway.envoyproxy.io/owning-gateway-name: envoy-private
-  ingress:
-    - fromEndpoints:
-        - matchLabels:
-            io.kubernetes.pod.namespace: tailscale
----
-apiVersion: cilium.io/v2
-kind: CiliumNetworkPolicy
-metadata:
   name: proxy-to-world
   namespace: envoy-gateway-system
 spec:

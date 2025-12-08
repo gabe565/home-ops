@@ -155,14 +155,10 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><a href="kubernetes/gabernetes/apps/esphome/borgmatic/helmrelease.yaml">borgmatic</a></td>
   </tr>
   <tr>
-    <td rowspan="2">external-dns</td>
+    <td>external-dns</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/external-dns/app/external.yaml">external-dns</a></td>
-    <td rowspan="2"></td>
-  </tr>
-  <tr>
-    <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/gabernetes/apps/external-dns/app/internal.yaml">internal-dns</a></td>
+    <td></td>
   </tr>
   <tr>
     <td rowspan="2">flux-system</td>

@@ -9,10 +9,6 @@ spec:
       kind: Gateway
       name: envoy-public
       sectionName: https
-    - group: gateway.networking.k8s.io
-      kind: Gateway
-      name: envoy-private
-      sectionName: https
   headers:
     lateResponseHeaders:
       set:
