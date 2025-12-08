@@ -24,6 +24,7 @@ spec:
     deployment:
       pod:
         labels:
+          policy.gabe565.com/egress-authentik: "true"
           policy.gabe565.com/egress-geoip: "true"
           policy.gabe565.com/egress-kubeapi: "true"
           policy.gabe565.com/egress-world-with-lan: "true"
@@ -39,3 +40,17 @@ spec:
       envoyGateway:
         extensionApis:
           enableBackend: true
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: Deployment
+              name: envoy-gateway
+            # language=yaml
+            patch: |
+              - op: add
+                path: /spec/template/spec/hostAliases
+                value:
+                  - ip: 10.43.0.20
+                    hostnames:
+                      - ${oidc_host}

@@ -12,6 +12,10 @@ spec:
     kind: GitRepository
     namespace: flux-system
     name: home-ops
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: substitutions
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
