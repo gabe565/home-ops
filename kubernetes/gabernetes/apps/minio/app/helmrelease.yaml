@@ -129,17 +129,12 @@ spec:
           - backendRefs:
               - identifier: minio
                 port: 9001
-          # Robots
-          - matches:
-              - path:
-                  type: Exact
-                  value: /robots.txt
             filters:
-              - type: ExtensionRef
-                extensionRef:
-                  group: gateway.envoyproxy.io
-                  kind: HTTPRouteFilter
-                  name: robots-disallow
+              - type: ResponseHeaderModifier
+                responseHeaderModifier:
+                  set:
+                    - name: X-Robots-Tag
+                      value: none
 
     serviceMonitor:
       main:
