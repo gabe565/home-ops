@@ -71,21 +71,11 @@ spec:
 
     route:
       relax-sounds:
-        parentRefs: &parentRefs
+        parentRefs:
           - namespace: envoy-gateway-system
             name: envoy-public
         hostnames:
           - ${app_url}
-      www:
-        parentRefs: *parentRefs
-        hostnames:
-          - www.${app_url}
-        rules:
-          - filters:
-              - type: RequestRedirect
-                requestRedirect:
-                  statusCode: 301
-                  hostname: ${app_url}
 
     serviceMonitor:
       relax-sounds:

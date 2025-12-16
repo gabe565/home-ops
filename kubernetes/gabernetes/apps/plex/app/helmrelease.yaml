@@ -99,7 +99,7 @@ spec:
 
     route:
       plex:
-        parentRefs: &parentRefs
+        parentRefs:
           - namespace: envoy-gateway-system
             name: envoy-public
         hostnames:
@@ -118,13 +118,3 @@ spec:
                   path:
                     type: ReplaceFullPath
                     replaceFullPath: /web/index.html
-      www:
-        parentRefs: *parentRefs
-        hostnames:
-          - www.${app_url}
-        rules:
-          - filters:
-              - type: RequestRedirect
-                requestRedirect:
-                  statusCode: 301
-                  hostname: ${app_url}

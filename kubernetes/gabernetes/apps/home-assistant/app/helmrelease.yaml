@@ -141,16 +141,6 @@ spec:
         rules:
           - backendRefs:
               - identifier: home-assistant
-      www:
-        parentRefs: *parentRefs
-        hostnames:
-          - www.${app_url}
-        rules:
-          - filters:
-              - type: RequestRedirect
-                requestRedirect:
-                  statusCode: 301
-                  hostname: ${app_url}
       code:
         parentRefs: *parentRefs
         hostnames:

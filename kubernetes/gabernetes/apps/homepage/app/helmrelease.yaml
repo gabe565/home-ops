@@ -103,7 +103,7 @@ spec:
 
     route:
       homepage:
-        parentRefs: &parentRefs
+        parentRefs:
           - namespace: envoy-gateway-system
             name: envoy-public
         hostnames:
@@ -118,16 +118,6 @@ spec:
                   type: Exact
                   value: /api/healthcheck
             backendRefs: *backendRefs
-      www:
-        parentRefs: *parentRefs
-        hostnames:
-          - www.${app_url}
-        rules:
-          - filters:
-              - type: RequestRedirect
-                requestRedirect:
-                  statusCode: 301
-                  hostname: ${app_url}
 
     rawResources:
       auth:
