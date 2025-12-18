@@ -522,7 +522,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td rowspan="2">tronbyt</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/tronbyt/resources/ics-calendar-tidbyt/helmrelease.yaml">ics-calendar-tidbyt</a></td>
-    <td rowspan="2"><a href="kubernetes/gabernetes/apps/tronbyt/resources/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/tronbyt/resources/valkey/helmrelease.yaml">valkey</a></td>
+    <td rowspan="2"><a href="kubernetes/gabernetes/apps/tronbyt/resources/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/tronbyt/resources/postgres/cluster.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/tronbyt/resources/valkey/helmrelease.yaml">valkey</a></td>
   </tr>
   <tr>
     <td><code>HelmRelease</code></td>

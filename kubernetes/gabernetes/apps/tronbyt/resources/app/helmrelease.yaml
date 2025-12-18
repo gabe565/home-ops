@@ -23,22 +23,29 @@ spec:
         annotations:
           secret.reloader.stakater.com/reload: valkey
         containers:
+          alpine:
+            image:
+              repository: alpine
+              tag: 3.23
+            command:
+              - sleep
+              - infinity
           app:
             image:
               repository: ghcr.io/tronbyt/server
-              tag: 1.6.4@sha256:3de309d0209ba997d4bd91f395bd99c25b4726c4480ab97d347549358d8fc9b4
+              tag: latest@sha256:cda0fdaf5552ef20fb1d9baba0e6b41ff0a1075782d9f737ad2d26ffa1e8176e
               pullPolicy: IfNotPresent
-            command:
-              - python3
-              - -m
-              - tronbyt_server.run
-              - --no-access-log
             env:
               TZ: America/Chicago
               PRODUCTION: "1"
               SERVER_PROTOCOL: https
               TRONBYT_PORT: "80"
+              LOG_LEVEL: warning
               WEB_CONCURRENCY: "2"
+              DB_DSN:
+                secretKeyRef:
+                  key: uri
+                  name: postgresql-app
               REDIS_PASSWORD:
                 secretKeyRef:
                   name: valkey
@@ -94,9 +101,6 @@ spec:
         retain: true
         globalMounts:
           - path: /app/data
-            subPath: data
-          - path: /app/users
-            subPath: users
       tmp:
         type: emptyDir
         medium: Memory
