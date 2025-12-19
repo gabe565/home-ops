@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.7.3/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.5.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.7.3
+      version: 4.5.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -21,6 +21,8 @@ spec:
     controllers:
       kube-vip:
         type: daemonset
+        serviceAccount:
+          identifier: default
         containers:
           app:
             image:
@@ -80,12 +82,12 @@ spec:
               operator: Exists
 
     serviceAccount:
-      create: true
+      default:
+        enabled: true
 
     rbac:
       roles:
         kube-vip:
-          enabled: true
           type: ClusterRole
           rules:
             - apiGroups: [""]
@@ -99,7 +101,6 @@ spec:
               verbs: [list, get, watch, update, create]
       bindings:
         kube-vip:
-          enabled: true
           type: ClusterRoleBinding
           roleRef:
             identifier: kube-vip
@@ -108,8 +109,7 @@ spec:
 
     service:
       metrics:
-        nameOverride: metrics
-        enabled: true
+        suffix: metrics
         controller: kube-vip
         ports:
           http:
@@ -117,7 +117,6 @@ spec:
 
     serviceMonitor:
       main:
-        enabled: true
         serviceName: kube-vip-metrics
         endpoints:
           - port: http
