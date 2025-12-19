@@ -138,7 +138,7 @@ spec:
             memory: 5Gi
         containers:
           - name: vpn
-            image: ghcr.io/tailscale/tailscale:v1.90.9
+            image: ghcr.io/tailscale/tailscale:v1.92.4
             env:
               - name: TS_HOSTNAME
                 value: prometheus
