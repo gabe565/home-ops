@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: ghcr.io/druggeri/nut_exporter
-              tag: 3.2.2@sha256:a203474e5b24eddf33b45013d9dd72c41769abeaad6a8cbf6316610a96dc5a95
+              tag: 3.2.3@sha256:a9e6c0100ebc0e8ec2c7a46de8af1366df8abd5d794f175b8ee6b2361819ee6e
               pullPolicy: IfNotPresent
             env:
               NUT_EXPORTER_VARIABLES: >-
