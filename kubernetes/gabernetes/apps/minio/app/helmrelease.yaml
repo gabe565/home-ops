@@ -87,6 +87,10 @@ spec:
         accessMode: ReadWriteMany
         size: 8Gi
         retain: true
+      certs:
+        type: emptyDir
+        globalMounts:
+          - path: /.minio/certs
 
     service:
       minio:
