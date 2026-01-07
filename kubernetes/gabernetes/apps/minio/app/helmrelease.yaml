@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: git.gabe565.com/mirror/minio
-              tag: release.2025-12-20t04-58-37z@sha256:74b1850117abd9f0131f9d8d39a46d27374be78c93009185dd28dc3cbac4ea2f
+              tag: release.2025-10-17t06-17-41z@sha256:aa53e9aa2a309e00e0fd114b2c385aeeeb0aa378aee57196cfb46ec0f70b4f92
               pullPolicy: IfNotPresent
             env:
               MINIO_ROOT_USER_FILE: /root-creds/username
