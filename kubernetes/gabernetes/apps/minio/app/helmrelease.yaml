@@ -28,6 +28,8 @@ spec:
               tag: release.2025-12-20t04-58-37z@sha256:74b1850117abd9f0131f9d8d39a46d27374be78c93009185dd28dc3cbac4ea2f
               pullPolicy: IfNotPresent
             env:
+              MINIO_ROOT_USER_FILE: /root-creds/username
+              MINIO_ROOT_PASSWORD_FILE: /root-creds/password
               MINIO_SITE_NAME: us-central-1
               MINIO_UPDATE: "off"
               MINIO_DOMAIN: ${s3_url}
@@ -91,6 +93,9 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /.minio/certs
+      root-creds:
+        type: secret
+        name: root-creds
 
     service:
       minio:
