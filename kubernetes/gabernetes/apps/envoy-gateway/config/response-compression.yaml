@@ -8,6 +8,9 @@ spec:
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: envoy-public
+  timeout:
+    http:
+      requestTimeout: 30s
   compressor:
     - type: Brotli
       brotli: {}
