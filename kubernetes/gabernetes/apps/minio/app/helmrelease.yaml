@@ -87,7 +87,7 @@ spec:
         suffix: data
         storageClass: longhorn-ssd
         accessMode: ReadWriteMany
-        size: 8Gi
+        size: 16Gi
         retain: true
       certs:
         type: emptyDir
