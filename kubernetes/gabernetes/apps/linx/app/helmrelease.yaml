@@ -107,3 +107,6 @@ spec:
                   set:
                     - name: X-Robots-Tag
                       value: none
+            timeouts:
+              request: 5m
+              backendRequest: 5m
