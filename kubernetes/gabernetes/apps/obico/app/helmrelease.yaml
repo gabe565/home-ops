@@ -91,7 +91,7 @@ spec:
           ml-api:
             image:
               repository: ghcr.io/gabe565/obico/ml-api
-              tag: latest@sha256:e6f9eb7494e00fb12a99d7c18303665c6defcb7b2b32445110fb0009e4081b90
+              tag: latest@sha256:662b9a06d91684b0c2809617b3bc6ca46f0599f6fc27e38b2a5ffe33fa2b5bae
             command: [gunicorn, --bind=0.0.0.0:3333, --workers=1, --access-logfile=-, wsgi]
             env:
               FLASK_APP: server.py
