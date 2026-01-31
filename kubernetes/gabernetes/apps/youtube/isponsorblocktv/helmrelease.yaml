@@ -24,7 +24,7 @@ spec:
           set-api-key:
             image:
               repository: ghcr.io/mikefarah/yq
-              tag: 4.50.1@sha256:4facc66fdcc785ec961ef7f2185f53f862f462eefe1d50c2eb311c2bb26823e3
+              tag: 4.52.1@sha256:c0f7a8a84f1dbfb7a19530683788dde8fc41227c7a2446a9d89d1e7eb9bad0a5
               pullPolicy: IfNotPresent
             args:
               - --inplace
