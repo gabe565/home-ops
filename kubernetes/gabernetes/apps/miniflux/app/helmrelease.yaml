@@ -40,6 +40,7 @@ spec:
 
               CREATE_ADMIN: "0"
               AUTH_PROXY_HEADER: X-User-Name
+              TRUSTED_REVERSE_PROXY_NETWORKS: 10.42.0.0/16
               AUTH_PROXY_USER_CREATION: "1"
               DISABLE_LOCAL_AUTH: "true"
 
