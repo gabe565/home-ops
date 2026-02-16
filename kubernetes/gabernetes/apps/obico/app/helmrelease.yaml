@@ -24,7 +24,7 @@ spec:
           collectstatic: &container
             image:
               repository: ghcr.io/gabe565/obico/web
-              tag: latest@sha256:a37822d61218a00737542c5d77317613b8e1a409847e3ff737c5ec09a8766718
+              tag: latest@sha256:d67a7053137482c02d541c48c724ae424a8f1bbe498c6213179cbc03f91eaee0
             command: [python, manage.py, collectstatic, --verbosity=2, --noinput, --link]
             env:
               DEBUG: "False"
