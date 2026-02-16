@@ -140,6 +140,14 @@ spec:
           - name: vpn
             image: ghcr.io/tailscale/tailscale:v1.94.2
             env:
+              - name: POD_NAME
+                valueFrom:
+                  fieldRef:
+                    fieldPath: metadata.name
+              - name: POD_UID
+                valueFrom:
+                  fieldRef:
+                    fieldPath: metadata.uid
               - name: TS_HOSTNAME
                 value: prometheus
               - name: TS_KUBE_SECRET
