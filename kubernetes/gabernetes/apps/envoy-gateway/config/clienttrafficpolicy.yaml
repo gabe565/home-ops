@@ -1,7 +1,7 @@
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: ClientTrafficPolicy
 metadata:
-  name: security-headers
+  name: default
   namespace: envoy-gateway-system
 spec:
   targetRefs:
