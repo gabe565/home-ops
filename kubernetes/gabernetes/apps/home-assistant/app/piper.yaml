@@ -24,7 +24,7 @@ spec:
           app:
             image:
               repository: rhasspy/wyoming-piper
-              tag: 2.1.2@sha256:54c511aa81d3b9f1e02216e30d08c948bd0b145f3eea1e7b0461c8c4645e2864
+              tag: 2.2.2@sha256:c874e4a04657ae3381332ee5d0c8c70a310dae6722892840f530ac0890b44eb3
               pullPolicy: IfNotPresent
             args:
               - --voice=en_GB-alba-medium
