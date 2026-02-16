@@ -28,7 +28,7 @@ spec:
               pullPolicy: IfNotPresent
             command: [./vikunja]
             env:
-              VIKUNJA_SERVICE_FRONTENDURL: https://${app_url}/
+              VIKUNJA_SERVICE_PUBLICURL: https://${app_url}/
               VIKUNJA_DEFAULTSETTINGS_TIMEZONE: America/Chicago
 
               VIKUNJA_DATABASE_TYPE: postgres
