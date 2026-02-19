@@ -48,6 +48,13 @@ spec:
                 https://github.com/oddlama/vane/releases/download/v1.20.0/vane-trifles-1.20.0.jar
                 https://hangarcdn.papermc.io/plugins/BeanFeed/TreeChopper/versions/1.4/PAPER/TreeChopper-1.4.jar
                 https://cdn.modrinth.com/data/IjY7seTG/versions/FC75foTg/DistantHorizonsSupport-0.12.0.jar
+            resources:
+              requests:
+                cpu: 500m
+                memory: 3Gi
+              limits:
+                cpu: "8"
+                memory: 10Gi
             probes:
               liveness: &probe
                 enabled: true
