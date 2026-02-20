@@ -27,14 +27,6 @@ spec:
               repository: ghcr.io/yooooomi/your_spotify_server
               tag: 1.17.0@sha256:6367c4a118ce966d2f37b626a0c3450daf10659b3dfb24620c6368c2ee3f731f
               pullPolicy: IfNotPresent
-            workingDir: /app/apps/server
-            command:
-              - sh
-              - -c
-              - |
-                set -eux
-                yarn migrate
-                exec yarn start
             env:
               TIMEZONE: America/Chicago
               API_ENDPOINT: https://${app_url}/api
