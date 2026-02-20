@@ -1,0 +1,19 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyPatchPolicy
+metadata:
+  name: headscale-upgrade
+  namespace: envoy-gateway-system
+spec:
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: Gateway
+    name: envoy-public
+  type: JSONPatch
+  jsonPatches:
+    - type: type.googleapis.com/envoy.config.listener.v3.Listener
+      name: envoy-gateway-system/envoy/https
+      operation:
+        op: add
+        path: /filter_chains/0/filters/0/typed_config/upgrade_configs/-
+        value:
+          upgrade_type: tailscale-control-protocol
