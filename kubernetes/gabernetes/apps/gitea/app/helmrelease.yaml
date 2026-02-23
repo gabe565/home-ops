@@ -72,6 +72,7 @@ spec:
           ENABLED: "true"
           PROTOCOL: smtp
           SMTP_ADDR: ${smtp_address}
+          SMTP_PORT: "587"
           USER: ${smtp_username}
           PASSWD: ${smtp_password}
           FROM: ${smtp_username}
