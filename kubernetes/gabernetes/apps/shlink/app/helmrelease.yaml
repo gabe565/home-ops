@@ -44,6 +44,7 @@ spec:
               DEFAULT_DOMAIN: ${app_url}
               SHORT_DOMAIN_HOST: ${app_url}
               SHORT_DOMAIN_SCHEMA: https
+              TRUSTED_PROXIES: 10.42.0.0/16
               VALIDATE_URLS: "true"
               ANONYMIZE_REMOTE_ADDR: "false"
               ENABLE_PERIODIC_VISIT_LOCATE: "true"
