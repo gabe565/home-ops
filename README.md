@@ -78,7 +78,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td rowspan="2">adguard-home</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/adguard-home/app/helmrelease.yaml">adguard-home</a></td>
-    <td rowspan="2"><a href="kubernetes/gabernetes/apps/adguard-home/borgmatic/helmrelease.yaml">borgmatic</a></td>
+    <td rowspan="2"><a href="kubernetes/gabernetes/apps/adguard-home/restic/helmrelease.yaml">restic</a></td>
   </tr>
   <tr>
     <td><code>HelmRelease</code></td>
