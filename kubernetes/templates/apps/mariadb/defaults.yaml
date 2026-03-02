@@ -88,7 +88,7 @@ data:
     configMaps:
       scripts:
         data:
-          # language=shell script
+          # language=sh
           liveness.sh: |
             #!/bin/sh
             password="${MARIADB_ROOT_PASSWORD:-}"
@@ -96,7 +96,7 @@ data:
                 password="$(cat "$MARIADB_ROOT_PASSWORD_FILE")"
             fi
             exec mariadb-admin status -b -uroot -p"$password"
-          # language=shell script
+          # language=sh
           readiness.sh: |
             #!/bin/sh
             password="${MARIADB_ROOT_PASSWORD:-}"

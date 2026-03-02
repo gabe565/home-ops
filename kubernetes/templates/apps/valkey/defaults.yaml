@@ -89,7 +89,7 @@ data:
             save ""
       scripts:
         data:
-          # language=shell script
+          # language=sh
           start.sh: |
             #!/bin/sh
             [ -f $VALKEY_PASSWORD_FILE ] && export VALKEY_PASSWORD="$(cat "$VALKEY_PASSWORD_FILE")"
@@ -99,13 +99,13 @@ data:
               --requirepass "$VALKEY_PASSWORD" \
               --primaryauth "$VALKEY_PASSWORD" \
               "$@" $VALKEY_EXTRA_FLAGS
-          # language=shell script
+          # language=sh
           ping.sh: |
             #!/bin/sh
             [ -f $VALKEY_PASSWORD_FILE ] && export VALKEY_PASSWORD="$(cat "$VALKEY_PASSWORD_FILE")"
             [ -n "$VALKEY_PASSWORD" ] && export REDISCLI_AUTH="$VALKEY_PASSWORD"
             exec valkey-cli -h localhost -p "$VALKEY_PORT" ping
-          # language=shell script
+          # language=sh
           liveness.sh: |
             #!/bin/sh
             response="$(/scripts/ping.sh)"
@@ -114,7 +114,7 @@ data:
               echo "$response"
               exit 1
             fi
-          # language=shell script
+          # language=sh
           readiness.sh: |
             #!/bin/sh
             response="$(/scripts/ping.sh)"
