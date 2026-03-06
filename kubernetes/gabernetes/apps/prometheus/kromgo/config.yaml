@@ -1,4 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/kashalls/kromgo/main/config.schema.json
+
+hideAll: false
+
 metrics:
   - name: cluster_node_count
     title: Nodes
