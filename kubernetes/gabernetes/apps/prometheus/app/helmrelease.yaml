@@ -154,6 +154,8 @@ spec:
                 value: tailscale-state
               - name: TS_AUTHKEY
                 value: ${vpn_auth_key}
+              - name: TS_AUTH_ONCE
+                value: "true"
             livenessProbe: &probe
               exec:
                 command: [tailscale, --socket=/tmp/tailscaled.sock, status]
