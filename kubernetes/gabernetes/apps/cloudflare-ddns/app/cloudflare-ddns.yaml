@@ -28,7 +28,7 @@ spec:
           app:
             image:
               repository: ghcr.io/gabe565/cloudflare-ddns
-              tag: 0.3.1@sha256:c1fcbf08d10af24d618ec4382d92c1ac911fcdf587348785a7d5f5ef40cbd985
+              tag: 0.3.2@sha256:25ec0d3c559018f5bb6abb9f14e025f9e6f7061eae702a865bfda673ec0e1924
               pullPolicy: IfNotPresent
             env:
               CF_API_TOKEN:
