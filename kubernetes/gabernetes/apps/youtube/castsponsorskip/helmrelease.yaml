@@ -25,7 +25,7 @@ spec:
             image:
               repository: ghcr.io/gabe565/castsponsorskip
               pullPolicy: IfNotPresent
-              tag: 0.8.1@sha256:5f7b4c6dd299c27e7edeaebba908d0794597680a26111e848dfc0c130169adcb
+              tag: 0.8.3@sha256:f556d274aab94c3140058e9f192396bc75e04d8e075769223c1edfc8c4f4daa4
             env:
               TZ: America/Chicago
               CSS_YOUTUBE_API_KEY:
