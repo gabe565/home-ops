@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.6.2/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -6,13 +7,13 @@ metadata:
 spec:
   chart:
     spec:
-      chart: castsponsorskip
-      version: 0.8.1
+      chart: app-template
+      version: 4.6.2
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
         namespace: flux-system
-        name: gabe565
+        name: bjw-s
   interval: 1h
   driftDetection:
     mode: enabled
@@ -21,6 +22,10 @@ spec:
       main:
         containers:
           main:
+            image:
+              repository: ghcr.io/gabe565/castsponsorskip
+              pullPolicy: IfNotPresent
+              tag: 0.8.1@sha256:5f7b4c6dd299c27e7edeaebba908d0794597680a26111e848dfc0c130169adcb
             env:
               TZ: America/Chicago
               CSS_YOUTUBE_API_KEY:
@@ -33,6 +38,8 @@ spec:
               readOnlyRootFilesystem: true
               capabilities: { drop: [ALL] }
         pod:
+          hostNetwork: true
+          dnsPolicy: ClusterFirstWithHostNet
           labels:
             policy.gabe565.com/egress-world-with-lan: "true"
           securityContext:
