@@ -513,6 +513,16 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><a href="kubernetes/gabernetes/apps/tautulli/borgmatic/helmrelease.yaml">borgmatic</a></td>
   </tr>
   <tr>
+    <td rowspan="2">tools</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/tools/resources/cyberchef/helmrelease.yaml">cyberchef</a></td>
+    <td rowspan="2"></td>
+  </tr>
+  <tr>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/tools/resources/it-tools/helmrelease.yaml">it-tools</a></td>
+  </tr>
+  <tr>
     <td>transsmute</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/transsmute/app/helmrelease.yaml">transsmute</a></td>

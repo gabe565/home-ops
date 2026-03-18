@@ -1,0 +1,115 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.6.2/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: it-tools
+  namespace: tools
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 4.6.2
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      main:
+        strategy: RollingUpdate
+        initContainers:
+          copy:
+            image:
+              repository: ghcr.io/corentinth/it-tools
+              tag: 2024.10.22-7ca5933@sha256:8b8128748339583ca951af03dfe02a9a4d7363f61a216226fc28030731a5a61f
+            command: ["cp", "-a", "/usr/share/nginx/html/.", "/html"]
+        containers:
+          app:
+            image:
+              repository: ghcr.io/nginx/nginx-unprivileged
+              tag: stable-alpine
+              pullPolicy: Always
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+            securityContext:
+              readOnlyRootFilesystem: true
+              allowPrivilegeEscalation: false
+              capabilities: { drop: [ALL] }
+        pod:
+          labels:
+            policy.gabe565.com/ingress-envoy-public: "true"
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 101
+            runAsGroup: 101
+            fsGroup: 101
+            fsGroupChangePolicy: OnRootMismatch
+            seccompProfile: { type: RuntimeDefault }
+
+    persistence:
+      nginx:
+        type: configMap
+        identifier: nginx
+        globalMounts:
+          - path: /etc/nginx/conf.d
+      html:
+        type: emptyDir
+        advancedMounts:
+          main:
+            copy:
+              - path: /html
+            app:
+              - path: /usr/share/nginx/html
+                readOnly: true
+      tmp:
+        type: emptyDir
+
+    service:
+      main:
+        ports:
+          http:
+            port: 8080
+
+    route:
+      main:
+        parentRefs:
+          - namespace: envoy-gateway-system
+            name: envoy-public
+        hostnames:
+          - ${it_tools_host}
+        rules:
+          - backendRefs:
+              - identifier: main
+            filters:
+              - type: ResponseHeaderModifier
+                responseHeaderModifier:
+                  set:
+                    - name: X-Robots-Tag
+                      value: none
+
+    configMaps:
+      nginx:
+        data:
+          default.conf: |
+            server {
+                listen 8080;
+                server_name localhost;
+
+                location / {
+                    root /usr/share/nginx/html;
+                    try_files $uri $uri/ /index.html;
+                }
+
+                error_page 500 502 503 504 /50x.html;
+                location = /50x.html {
+                    root /usr/share/nginx/html;
+                }
+            }
