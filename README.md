@@ -242,7 +242,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>karakeep</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/karakeep/app/karakeep.yaml">karakeep</a></td>
-    <td><a href="kubernetes/gabernetes/apps/karakeep/app/borgmatic.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/karakeep/app/meilisearch.yaml">meilisearch</a></td>
+    <td><a href="kubernetes/gabernetes/apps/karakeep/app/meilisearch.yaml">meilisearch</a>, <a href="kubernetes/gabernetes/apps/karakeep/app/restic/helmrelease.yaml">restic</a></td>
   </tr>
   <tr>
     <td>kromgo</td>

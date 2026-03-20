@@ -16,5 +16,3 @@ spec:
     substituteFrom:
       - kind: Secret
         name: substitutions
-      - kind: Secret
-        name: borgmatic-vars
