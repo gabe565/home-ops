@@ -230,7 +230,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>immich</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/immich/app/helmrelease.yaml">immich</a></td>
-    <td><a href="kubernetes/gabernetes/apps/immich/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/immich/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/immich/valkey/helmrelease.yaml">valkey</a></td>
+    <td><a href="kubernetes/gabernetes/apps/immich/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/immich/restic/helmrelease.yaml">restic</a>, <a href="kubernetes/gabernetes/apps/immich/valkey/helmrelease.yaml">valkey</a></td>
   </tr>
   <tr>
     <td>intel-gpu-plugin</td>
