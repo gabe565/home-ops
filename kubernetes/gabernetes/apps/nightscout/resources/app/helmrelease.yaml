@@ -103,31 +103,16 @@ spec:
             port: 1337
 
     route:
-      nightscout:
-        parentRefs:
+      oidc:
+        parentRefs: &parentRefs
           - namespace: envoy-gateway-system
             name: envoy-public
         hostnames:
           - ${app_url}
-          - ${api_url}
         rules:
           - name: oidc
             backendRefs: &backendRefs
               - identifier: nightscout
-          - name: auth-header
-            matches:
-              - headers:
-                  - type: RegularExpression
-                    name: API-Secret
-                    value: ".{40}"
-            backendRefs: *backendRefs
-          - name: auth-param
-            matches:
-              - queryParams:
-                  - type: RegularExpression
-                    name: token
-                    value: ".+"
-            backendRefs: *backendRefs
           - name: service-worker
             matches:
               - path:
@@ -139,6 +124,12 @@ spec:
                   group: gateway.envoyproxy.io
                   kind: HTTPRouteFilter
                   name: nightscout-service-worker
+      direct:
+        parentRefs: *parentRefs
+        hostnames:
+          - ${api_url}
+        rules:
+          - backendRefs: *backendRefs
 
     rawResources:
       auth:
@@ -149,7 +140,7 @@ spec:
             targetRefs:
               - group: gateway.networking.k8s.io
                 kind: HTTPRoute
-                name: "{{ .Release.Name }}"
+                name: "{{ .Release.Name }}-oidc"
                 sectionName: oidc
             oidc:
               provider:
@@ -179,7 +170,7 @@ spec:
             targetRefs:
               - group: gateway.networking.k8s.io
                 kind: HTTPRoute
-                name: "{{ .Release.Name }}"
+                name: "{{ .Release.Name }}-oidc"
                 sectionName: oidc
             lua:
               - type: Inline
