@@ -208,7 +208,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>healthchecks</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/healthchecks/app/helmrelease.yaml">healthchecks</a></td>
-    <td><a href="kubernetes/gabernetes/apps/healthchecks/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/healthchecks/postgresql.yaml">postgresql</a></td>
+    <td><a href="kubernetes/gabernetes/apps/healthchecks/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/healthchecks/restic/helmrelease.yaml">restic</a></td>
   </tr>
   <tr>
     <td rowspan="2">home-assistant</td>
