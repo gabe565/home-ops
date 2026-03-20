@@ -20,18 +20,14 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: borgmatic
+  name: restic
   namespace: esphome
 spec:
   interval: 1h
   targetNamespace: esphome
-  path: ./kubernetes/gabernetes/apps/esphome/borgmatic
+  path: ./kubernetes/gabernetes/apps/esphome/restic
   prune: true
   sourceRef:
     kind: GitRepository
     namespace: flux-system
     name: home-ops
-  postBuild:
-    substituteFrom:
-      - kind: Secret
-        name: borgmatic-vars
