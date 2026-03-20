@@ -9,6 +9,10 @@ spec:
       kind: Gateway
       name: envoy-public
       sectionName: https
+  clientIPDetection:
+    xForwardedFor:
+      trustedCIDRs:
+        - 10.42.0.0/16
   headers:
     lateResponseHeaders:
       remove:

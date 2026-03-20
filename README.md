@@ -245,6 +245,16 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><a href="kubernetes/gabernetes/apps/karakeep/app/borgmatic.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/karakeep/app/meilisearch.yaml">meilisearch</a></td>
   </tr>
   <tr>
+    <td rowspan="2">kgateway-system</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/kgateway/app/crds.yaml">crds</a></td>
+    <td rowspan="2"></td>
+  </tr>
+  <tr>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/kgateway/app/helmrelease.yaml">kgateway</a></td>
+  </tr>
+  <tr>
     <td>kromgo</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/prometheus/kromgo/helmrelease.yaml">kromgo</a></td>
