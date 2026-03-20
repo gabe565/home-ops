@@ -356,7 +356,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td rowspan="2">nightscout</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/nightscout/resources/app/helmrelease.yaml">nightscout</a></td>
-    <td rowspan="2"><a href="kubernetes/gabernetes/apps/nightscout/resources/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/nightscout/resources/mongodb/helmrelease.yaml">mongodb</a></td>
+    <td rowspan="2"><a href="kubernetes/gabernetes/apps/nightscout/resources/mongodb/helmrelease.yaml">mongodb</a>, <a href="kubernetes/gabernetes/apps/nightscout/resources/restic/helmrelease.yaml">restic</a></td>
   </tr>
   <tr>
     <td><code>HelmRelease</code></td>
