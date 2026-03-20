@@ -198,7 +198,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td rowspan="2">headscale</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/headscale/resources/headplane/helmrelease.yaml">headplane</a></td>
-    <td rowspan="2"><a href="kubernetes/gabernetes/apps/headscale/resources/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/headscale/resources/postgres/cluster.yaml">postgresql</a></td>
+    <td rowspan="2"><a href="kubernetes/gabernetes/apps/headscale/resources/postgres/cluster.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/headscale/resources/restic/helmrelease.yaml">restic</a></td>
   </tr>
   <tr>
     <td><code>HelmRelease</code></td>
