@@ -63,7 +63,7 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities: {drop: [ALL]}
+              capabilities: { drop: [ALL] }
             probes:
               liveness: &probe
                 enabled: true
@@ -93,7 +93,7 @@ spec:
             runAsGroup: 1000
             fsGroup: 1000
             fsGroupChangePolicy: OnRootMismatch
-            seccompProfile: {type: RuntimeDefault}
+            seccompProfile: { type: RuntimeDefault }
 
     service:
       nightscout:
@@ -164,7 +164,6 @@ spec:
                 - nightscout:token
               forwardAccessToken: true
             jwt:
-              optional: true
               providers:
                 - name: extract-user-info
                   remoteJWKS:

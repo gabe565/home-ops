@@ -185,7 +185,6 @@ spec:
                 - shlink:token
               forwardAccessToken: true
             jwt:
-              optional: true
               providers:
                 - name: extract-user-info
                   remoteJWKS:

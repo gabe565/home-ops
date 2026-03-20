@@ -141,7 +141,6 @@ spec:
               forwardAccessToken: true
               logoutPath: /oauth2/logout
             jwt:
-              optional: true
               providers:
                 - name: extract-user-info
                   remoteJWKS:
