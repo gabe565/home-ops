@@ -186,7 +186,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>gitea</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/gitea/app/helmrelease.yaml">gitea</a></td>
-    <td><a href="kubernetes/gabernetes/apps/gitea/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/gitea/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/gitea/valkey/helmrelease.yaml">valkey</a></td>
+    <td><a href="kubernetes/gabernetes/apps/gitea/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/gitea/restic/helmrelease.yaml">restic</a>, <a href="kubernetes/gabernetes/apps/gitea/valkey/helmrelease.yaml">valkey</a></td>
   </tr>
   <tr>
     <td>hammond</td>
