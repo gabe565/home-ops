@@ -548,7 +548,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>vaultwarden</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/vaultwarden/app/helmrelease.yaml">vaultwarden</a></td>
-    <td><a href="kubernetes/gabernetes/apps/vaultwarden/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/vaultwarden/postgresql.yaml">postgresql</a></td>
+    <td><a href="kubernetes/gabernetes/apps/vaultwarden/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/vaultwarden/restic/helmrelease.yaml">restic</a></td>
   </tr>
   <tr>
     <td>vikunja</td>
