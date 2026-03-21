@@ -1,30 +1,30 @@
 apiVersion: cilium.io/v2
 kind: CiliumClusterwideNetworkPolicy
 metadata:
-  name: ingress-overseerr
+  name: ingress-seerr
 spec:
   endpointSelector:
     matchLabels:
-      policy.gabe565.com/ingress-overseerr: "true"
+      policy.gabe565.com/ingress-seerr: "true"
   ingress:
     - fromEndpoints:
         - matchLabels:
-            io.kubernetes.pod.namespace: overseerr
-            app.kubernetes.io/name: overseerr
+            io.kubernetes.pod.namespace: seerr
+            app.kubernetes.io/name: seerr
 ---
 apiVersion: cilium.io/v2
 kind: CiliumClusterwideNetworkPolicy
 metadata:
-  name: egress-overseerr
+  name: egress-seerr
 spec:
   endpointSelector:
     matchLabels:
-      policy.gabe565.com/egress-overseerr: "true"
+      policy.gabe565.com/egress-seerr: "true"
   egress:
     - toEndpoints:
         - matchLabels:
-            io.kubernetes.pod.namespace: overseerr
-            app.kubernetes.io/name: overseerr
+            io.kubernetes.pod.namespace: seerr
+            app.kubernetes.io/name: seerr
       toPorts:
         - ports:
             - port: "5055"
@@ -32,23 +32,23 @@ spec:
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
-  name: overseerr
-  namespace: overseerr
+  name: seerr
+  namespace: seerr
 spec:
   endpointSelector:
     matchLabels:
-      app.kubernetes.io/name: overseerr
+      app.kubernetes.io/name: seerr
   egress:
     - toEndpoints:
         - matchLabels:
-            policy.gabe565.com/ingress-overseerr: "true"
+            policy.gabe565.com/ingress-seerr: "true"
           matchExpressions:
             - key: io.kubernetes.pod.namespace
               operator: Exists
   ingress:
     - fromEndpoints:
         - matchLabels:
-            policy.gabe565.com/egress-overseerr: "true"
+            policy.gabe565.com/egress-seerr: "true"
           matchExpressions:
             - key: io.kubernetes.pod.namespace
               operator: Exists

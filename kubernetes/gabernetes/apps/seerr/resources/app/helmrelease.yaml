@@ -2,8 +2,8 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: overseerr
-  namespace: overseerr
+  name: seerr
+  namespace: seerr
 spec:
   chart:
     spec:
@@ -19,12 +19,12 @@ spec:
     mode: enabled
   values:
     controllers:
-      overseerr:
+      seerr:
         containers:
           app:
             image:
-              repository: ghcr.io/sct/overseerr
-              tag: 1.35.0@sha256:6197516c9d7b58ccf113455e32aafb94df5d91995fe50e8c2cae6ba6c7c7b7de
+              repository: ghcr.io/seerr-team/seerr
+              tag: v3.1.0@sha256:b35ba0461c4a1033d117ac1e5968fd4cbe777899e4cbfbdeaf3d10a42a0eb7e9
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
@@ -44,7 +44,7 @@ spec:
               runAsUser: 1000
               runAsGroup: 1000
               allowPrivilegeEscalation: false
-              capabilities: {drop: [ALL]}
+              capabilities: { drop: [ALL] }
         pod:
           labels:
             policy.gabe565.com/egress-plex: "true"
@@ -58,8 +58,8 @@ spec:
             fsGroupChangePolicy: OnRootMismatch
 
     service:
-      overseerr:
-        controller: overseerr
+      seerr:
+        controller: seerr
         ports:
           http:
             port: 5055
@@ -86,7 +86,7 @@ spec:
         sizeLimit: 128Mi
 
     route:
-      overseerr:
+      seerr:
         parentRefs:
           - namespace: envoy-gateway-system
             name: envoy-public

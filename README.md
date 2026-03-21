@@ -387,12 +387,6 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><a href="kubernetes/gabernetes/apps/open-webui/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/open-webui/app/postgresql.yaml">postgresql</a></td>
   </tr>
   <tr>
-    <td>overseerr</td>
-    <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/gabernetes/apps/overseerr/app/helmrelease.yaml">overseerr</a></td>
-    <td><a href="kubernetes/gabernetes/apps/overseerr/restic/helmrelease.yaml">restic</a></td>
-  </tr>
-  <tr>
     <td>paperless-ngx</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/paperless-ngx/app/helmrelease.yaml">paperless-ngx</a></td>
@@ -469,6 +463,12 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/searxng/app/helmrelease.yaml">searxng</a></td>
     <td></td>
+  </tr>
+  <tr>
+    <td>seerr</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/seerr/resources/app/helmrelease.yaml">seerr</a></td>
+    <td><a href="kubernetes/gabernetes/apps/seerr/resources/restic/helmrelease.yaml">restic</a></td>
   </tr>
   <tr>
     <td>shlink</td>

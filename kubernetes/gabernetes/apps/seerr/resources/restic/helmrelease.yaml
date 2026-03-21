@@ -3,7 +3,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: restic
-  namespace: overseerr
+  namespace: seerr
 spec:
   chart:
     spec:
@@ -29,7 +29,7 @@ spec:
             - topologyKey: kubernetes.io/hostname
               labelSelector:
                 matchLabels:
-                  app.kubernetes.io/name: overseerr
+                  app.kubernetes.io/name: seerr
 
     controllers:
       restic:
@@ -43,7 +43,7 @@ spec:
             image:
               repository: ghcr.io/gabe565/restic
               tag: 0.18.1@sha256:51d9fabb5deacf9226a3214b8d4639b6f38468a3ea4aeaa53ebea6b01076c526
-            workingDir: /overseerr-config
+            workingDir: /seerr-config
             envFrom:
               - secretRef:
                   name: restic-b2
@@ -93,5 +93,5 @@ spec:
         storageClass: longhorn-ssd
         size: 1Gi
         accessMode: ReadWriteOnce
-      overseerr-config:
-        existingClaim: overseerr-config
+      seerr-config:
+        existingClaim: seerr-config

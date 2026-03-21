@@ -50,8 +50,8 @@ spec:
             policy.gabe565.com/egress-qbittorrent: "true"
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-envoy-public: "true"
-            policy.gabe565.com/ingress-overseerr: "true"
             policy.gabe565.com/ingress-prowlarr: "true"
+            policy.gabe565.com/ingress-seerr: "true"
           securityContext:
             runAsNonRoot: true
             runAsUser: 65534
