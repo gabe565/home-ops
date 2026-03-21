@@ -480,7 +480,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>sonarr</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/sonarr/app/helmrelease.yaml">sonarr</a></td>
-    <td><a href="kubernetes/gabernetes/apps/sonarr/borgmatic/helmrelease.yaml">borgmatic</a></td>
+    <td><a href="kubernetes/gabernetes/apps/sonarr/restic/helmrelease.yaml">restic</a></td>
   </tr>
   <tr>
     <td>stable-diffusion</td>
