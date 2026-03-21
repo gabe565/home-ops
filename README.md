@@ -408,7 +408,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>plex</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/plex/app/helmrelease.yaml">plex</a></td>
-    <td><a href="kubernetes/gabernetes/apps/plex/borgmatic/helmrelease.yaml">borgmatic</a></td>
+    <td><a href="kubernetes/gabernetes/apps/plex/restic/helmrelease.yaml">restic</a></td>
   </tr>
   <tr>
     <td rowspan="3">prometheus</td>
