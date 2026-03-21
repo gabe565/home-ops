@@ -390,7 +390,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>overseerr</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/overseerr/app/helmrelease.yaml">overseerr</a></td>
-    <td><a href="kubernetes/gabernetes/apps/overseerr/borgmatic/helmrelease.yaml">borgmatic</a></td>
+    <td><a href="kubernetes/gabernetes/apps/overseerr/restic/helmrelease.yaml">restic</a></td>
   </tr>
   <tr>
     <td>paperless-ngx</td>
