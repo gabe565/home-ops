@@ -320,7 +320,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>miniflux</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/miniflux/app/helmrelease.yaml">miniflux</a></td>
-    <td><a href="kubernetes/gabernetes/apps/miniflux/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/miniflux/postgresql.yaml">postgresql</a></td>
+    <td><a href="kubernetes/gabernetes/apps/miniflux/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/miniflux/restic/helmrelease.yaml">restic</a></td>
   </tr>
   <tr>
     <td>minio</td>
