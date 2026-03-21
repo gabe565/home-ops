@@ -302,7 +302,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>memos</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/memos/app/helmrelease.yaml">memos</a></td>
-    <td><a href="kubernetes/gabernetes/apps/memos/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/memos/postgresql.yaml">postgresql</a></td>
+    <td><a href="kubernetes/gabernetes/apps/memos/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/memos/restic/helmrelease.yaml">restic</a></td>
   </tr>
   <tr>
     <td>metallb-system</td>
