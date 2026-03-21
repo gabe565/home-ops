@@ -510,7 +510,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>tautulli</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/tautulli/app/helmrelease.yaml">tautulli</a></td>
-    <td><a href="kubernetes/gabernetes/apps/tautulli/borgmatic/helmrelease.yaml">borgmatic</a></td>
+    <td><a href="kubernetes/gabernetes/apps/tautulli/restic/helmrelease.yaml">restic</a></td>
   </tr>
   <tr>
     <td rowspan="2">tools</td>
