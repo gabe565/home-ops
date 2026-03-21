@@ -440,7 +440,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>radarr</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/radarr/app/helmrelease.yaml">radarr</a></td>
-    <td><a href="kubernetes/gabernetes/apps/radarr/borgmatic/helmrelease.yaml">borgmatic</a></td>
+    <td><a href="kubernetes/gabernetes/apps/radarr/restic/helmrelease.yaml">restic</a></td>
   </tr>
   <tr>
     <td>relax-sounds</td>
