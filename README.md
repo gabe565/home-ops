@@ -588,7 +588,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>zigbee2mqtt</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/zigbee2mqtt/app/helmrelease.yaml">zigbee2mqtt</a></td>
-    <td><a href="kubernetes/gabernetes/apps/zigbee2mqtt/borgmatic/helmrelease.yaml">borgmatic</a></td>
+    <td><a href="kubernetes/gabernetes/apps/zigbee2mqtt/restic/helmrelease.yaml">restic</a></td>
   </tr>
   <tr>
     <td>zwave-js-ui</td>
