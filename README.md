@@ -572,7 +572,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>your-spotify</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/your-spotify/app/helmrelease.yaml">your-spotify</a></td>
-    <td><a href="kubernetes/gabernetes/apps/your-spotify/app/borgmatic.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/your-spotify/app/mongodb/helmrelease.yaml">mongodb</a></td>
+    <td><a href="kubernetes/gabernetes/apps/your-spotify/app/mongodb/helmrelease.yaml">mongodb</a>, <a href="kubernetes/gabernetes/apps/your-spotify/app/restic/helmrelease.yaml">restic</a></td>
   </tr>
   <tr>
     <td rowspan="2">youtube</td>
