@@ -428,7 +428,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>prowlarr</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/prowlarr/app/helmrelease.yaml">prowlarr</a></td>
-    <td><a href="kubernetes/gabernetes/apps/prowlarr/borgmatic/helmrelease.yaml">borgmatic</a></td>
+    <td><a href="kubernetes/gabernetes/apps/prowlarr/restic/helmrelease.yaml">restic</a></td>
   </tr>
   <tr>
     <td>qbittorrent</td>
