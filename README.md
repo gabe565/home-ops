@@ -314,7 +314,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>minecraft</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/minecraft/resources/app/helmrelease.yaml">minecraft</a></td>
-    <td><a href="kubernetes/gabernetes/apps/minecraft/resources/borgmatic/helmrelease.yaml">borgmatic</a></td>
+    <td><a href="kubernetes/gabernetes/apps/minecraft/resources/restic/helmrelease.yaml">restic</a></td>
   </tr>
   <tr>
     <td>miniflux</td>

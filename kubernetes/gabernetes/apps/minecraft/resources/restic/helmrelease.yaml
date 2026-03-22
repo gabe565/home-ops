@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-4.6.2/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: restic
+  namespace: minecraft
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 4.6.2
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    defaultPodOptions:
+      labels:
+        policy.gabe565.com/egress-healthchecks: "true"
+        policy.gabe565.com/egress-namespace: "true"
+        policy.gabe565.com/egress-world: "true"
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: minecraft
+
+    controllers:
+      restic:
+        type: cronjob
+        cronjob:
+          schedule: 0 3 * * *
+          concurrencyPolicy: Replace
+          ttlSecondsAfterFinished: 3600
+        pod: &pod
+          tolerations:
+            - key: gabe565.com/gpu
+              operator: Equal
+              value: nvidia
+              effect: NoSchedule
+        containers:
+          restic: &container
+            image:
+              repository: ghcr.io/gabe565/restic
+              tag: 0.18.1@sha256:bd0fed3ab5e55f4267cc75c218f3dfa27e3edd490cddb6ec0a27fd2cd85927f8
+            workingDir: /minecraft
+            envFrom:
+              - secretRef:
+                  name: restic-b2
+              - secretRef:
+                  name: restic-envs
+            env:
+              TZ: America/Chicago
+              RESTIC_HOST:
+                fieldRef:
+                  fieldPath: metadata.namespace
+              HC_API_URL: http://healthchecks.healthchecks:8000/ping
+            command:
+              - runitor
+              - --
+              - sh
+              - -c
+              # language=sh
+              - |
+                exec > >(ts '%H:%M:%S') 2>&1
+                set -eu
+                restic backup --tag=files . \
+                  --exclude='*.jar' \
+                  --exclude='plugins/*.jar' \
+                  --exclude=.cache \
+                  --exclude=bluemap \
+                  --exclude=cache \
+                  --exclude=libraries \
+                  --exclude=logs \
+                  --exclude=versions
+                restic forget --prune --keep-daily=30 --keep-weekly=4 --keep-monthly=12 --keep-yearly=20
+                restic cache --cleanup
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+              limits:
+                cpu: 1000m
+                memory: 1Gi
+      init:
+        type: job
+        annotations:
+          helm.sh/hook: post-install
+          helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+        pod: *pod
+        containers:
+          init:
+            <<: *container
+            command: [sh, -c, "restic init || true"]
+
+    persistence:
+      cache:
+        storageClass: longhorn-ssd
+        size: 1Gi
+        accessMode: ReadWriteOnce
+      minecraft:
+        existingClaim: minecraft
