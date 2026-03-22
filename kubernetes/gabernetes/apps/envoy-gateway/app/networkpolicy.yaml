@@ -15,7 +15,7 @@ spec:
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
-  name: world-to-public
+  name: envoy-gateway-public
   namespace: envoy-gateway-system
 spec:
   endpointSelector:
@@ -27,36 +27,16 @@ spec:
   ingress:
     - fromEntities:
         - world
----
-apiVersion: cilium.io/v2
-kind: CiliumNetworkPolicy
-metadata:
-  name: public-to-services
-  namespace: envoy-gateway-system
-spec:
-  endpointSelector:
-    matchLabels:
-      app.kubernetes.io/component: proxy
-      app.kubernetes.io/managed-by: envoy-gateway
-      app.kubernetes.io/name: envoy
-      gateway.envoyproxy.io/owning-gateway-name: envoy-public
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kgateway-system
+            app.kubernetes.io/name: public
+            app.kubernetes.io/instance: public
+            app.kubernetes.io/component: proxy
   egress:
+    - toEntities:
+        - world
     - toEndpoints:
         - matchLabels:
             io.kubernetes.pod.namespace: longhorn-system
             app: longhorn-ui
----
-apiVersion: cilium.io/v2
-kind: CiliumNetworkPolicy
-metadata:
-  name: proxy-to-world
-  namespace: envoy-gateway-system
-spec:
-  endpointSelector:
-    matchLabels:
-      app.kubernetes.io/component: proxy
-      app.kubernetes.io/managed-by: envoy-gateway
-      app.kubernetes.io/name: envoy
-  egress:
-    - toEntities:
-        - world

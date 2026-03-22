@@ -20,8 +20,8 @@ spec:
                         - ${oidc_host}
       envoyService:
         type: LoadBalancer
+        loadBalancerIP: 192.168.1.224
         externalTrafficPolicy: Local
-        loadBalancerIP: 192.168.1.220
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: GatewayClass
