@@ -290,7 +290,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>matrimony</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/matrimony/app/helmrelease.yaml">matrimony</a></td>
-    <td><a href="kubernetes/gabernetes/apps/matrimony/borgmatic/helmrelease.yaml">borgmatic</a></td>
+    <td><a href="kubernetes/gabernetes/apps/matrimony/restic/helmrelease.yaml">restic</a></td>
   </tr>
   <tr>
     <td>mattermost</td>
