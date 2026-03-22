@@ -474,7 +474,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>shlink</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/shlink/app/helmrelease.yaml">shlink</a></td>
-    <td><a href="kubernetes/gabernetes/apps/shlink/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/shlink/postgresql.yaml">postgresql</a></td>
+    <td><a href="kubernetes/gabernetes/apps/shlink/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/shlink/restic/helmrelease.yaml">restic</a></td>
   </tr>
   <tr>
     <td>sonarr</td>
