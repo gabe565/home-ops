@@ -390,7 +390,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>paperless-ngx</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/paperless-ngx/app/helmrelease.yaml">paperless-ngx</a></td>
-    <td><a href="kubernetes/gabernetes/apps/paperless-ngx/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/paperless-ngx/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/paperless-ngx/valkey/helmrelease.yaml">valkey</a></td>
+    <td><a href="kubernetes/gabernetes/apps/paperless-ngx/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/paperless-ngx/restic/helmrelease.yaml">restic</a>, <a href="kubernetes/gabernetes/apps/paperless-ngx/valkey/helmrelease.yaml">valkey</a></td>
   </tr>
   <tr>
     <td>plausible</td>
