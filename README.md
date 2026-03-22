@@ -326,7 +326,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>minio</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/minio/app/helmrelease.yaml">minio</a></td>
-    <td><a href="kubernetes/gabernetes/apps/minio/borgmatic/helmrelease.yaml">borgmatic</a></td>
+    <td><a href="kubernetes/gabernetes/apps/minio/restic/helmrelease.yaml">restic</a></td>
   </tr>
   <tr>
     <td>monica</td>
