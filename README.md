@@ -384,7 +384,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>open-webui</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/open-webui/app/helmrelease.yaml">open-webui</a></td>
-    <td><a href="kubernetes/gabernetes/apps/open-webui/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/open-webui/app/postgresql.yaml">postgresql</a></td>
+    <td><a href="kubernetes/gabernetes/apps/open-webui/app/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/open-webui/restic/helmrelease.yaml">restic</a></td>
   </tr>
   <tr>
     <td>paperless-ngx</td>
