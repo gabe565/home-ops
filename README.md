@@ -504,7 +504,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>tandoor</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/tandoor/app/helmrelease.yaml">tandoor</a></td>
-    <td><a href="kubernetes/gabernetes/apps/tandoor/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/tandoor/postgresql.yaml">postgresql</a></td>
+    <td><a href="kubernetes/gabernetes/apps/tandoor/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/tandoor/restic/helmrelease.yaml">restic</a></td>
   </tr>
   <tr>
     <td>tautulli</td>
