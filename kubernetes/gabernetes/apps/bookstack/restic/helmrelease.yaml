@@ -46,7 +46,7 @@ spec:
           restic: &container
             image:
               repository: ghcr.io/gabe565/restic
-              tag: 0.18.1@sha256:51d9fabb5deacf9226a3214b8d4639b6f38468a3ea4aeaa53ebea6b01076c526
+              tag: 0.18.1@sha256:bd0fed3ab5e55f4267cc75c218f3dfa27e3edd490cddb6ec0a27fd2cd85927f8
             envFrom:
               - secretRef:
                   name: restic-b2
@@ -69,7 +69,7 @@ spec:
               # language=sh
               - |
                 exec > >(ts '%H:%M:%S') 2>&1
-                set -eux
+                set -eu
                 restic backup --tag=db --stdin-from-command -- backup-mariadb.sh
                 restic forget --prune --keep-daily=90 --keep-weekly=24 --keep-monthly=24 --keep-yearly=20
                 restic cache --cleanup
