@@ -554,7 +554,7 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td>vikunja</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/vikunja/app/helmrelease.yaml">vikunja</a></td>
-    <td><a href="kubernetes/gabernetes/apps/vikunja/borgmatic/helmrelease.yaml">borgmatic</a>, <a href="kubernetes/gabernetes/apps/vikunja/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/vikunja/valkey/helmrelease.yaml">valkey</a></td>
+    <td><a href="kubernetes/gabernetes/apps/vikunja/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/vikunja/restic/helmrelease.yaml">restic</a>, <a href="kubernetes/gabernetes/apps/vikunja/valkey/helmrelease.yaml">valkey</a></td>
   </tr>
   <tr>
     <td>watch-your-lan</td>
