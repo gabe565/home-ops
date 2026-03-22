@@ -24,7 +24,7 @@ spec:
           app:
             image:
               repository: vikunja/vikunja
-              tag: 1.1.0@sha256:84b56920e2860c67cb889bce0e0950aa529e42838b45bdf81eb2422178e90cc7
+              tag: 2.2.0@sha256:fefda8ba71c3b06cc7f53f93ee14ebf1ad155a535e572b8dc702a46d789fc6d1
               pullPolicy: IfNotPresent
             command: [./vikunja]
             env:
