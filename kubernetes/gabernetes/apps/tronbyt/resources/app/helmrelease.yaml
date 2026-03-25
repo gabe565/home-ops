@@ -42,6 +42,7 @@ spec:
               TRONBYT_PORT: "80"
               LOG_LEVEL: warning
               WEB_CONCURRENCY: "2"
+              ENABLE_PPROF: "true"
               DB_DSN:
                 secretKeyRef:
                   key: uri
