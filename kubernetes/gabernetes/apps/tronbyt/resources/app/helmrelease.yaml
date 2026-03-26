@@ -80,6 +80,7 @@ spec:
             policy.gabe565.com/egress-nightscout: "true"
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-envoy-public: "true"
+            policy.gabe565.com/ingress-prometheus: "true"
           securityContext:
             runAsNonRoot: true
             runAsUser: 1000
@@ -132,3 +133,13 @@ spec:
                     clientCIDRs:
                       - 192.168.0.0/22
                       - 10.42.0.0/16
+
+    serviceMonitor:
+      tronbyt:
+        enabled: true
+        endpoints:
+          - port: http
+            scheme: http
+            path: /metrics
+            interval: 1m
+            scrapeTimeout: 10s
