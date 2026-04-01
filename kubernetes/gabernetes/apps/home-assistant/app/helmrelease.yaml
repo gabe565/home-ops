@@ -24,7 +24,7 @@ spec:
           app:
             image:
               repository: ghcr.io/home-assistant/home-assistant
-              tag: 2026.3.3@sha256:4c1d99af9fcb666263fff855edc2d1116066faa259f66e6768cee518c8ce3b06
+              tag: 2026.4.0@sha256:7fbf6a5e006e889d7799476ad7646bd18e9dc73e8a4ccd9326b41798de6bb3bf
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
