@@ -32,6 +32,7 @@ spec:
               PATH: /opt/recipes/venv/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
               VIRTUAL_ENV: /opt/recipes/venv
 
+              ALLOWED_HOSTS: "*"
               SECRET_KEY: ${secret_key}
               FRACTION_PREF_DEFAULT: "1"
               DEBUG: "0"
