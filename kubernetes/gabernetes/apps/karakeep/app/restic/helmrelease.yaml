@@ -64,8 +64,8 @@ spec:
               - |
                 exec > >(ts '%H:%M:%S') 2>&1
                 set -eu
-                restic backup --tag=db --stdin-from-command -- backup-sqlite.sh db.db
-                restic backup --tag=queue --stdin-from-command -- backup-sqlite.sh queue.db
+                restic backup --tag=db --stdin-from-command -- dumpdb sqlite db.db
+                restic backup --tag=queue --stdin-from-command -- dumpdb sqlite queue.db
                 restic backup --tag=files --exclude 'db.db*' --exclude 'queue.db*' .
                 restic forget --prune --keep-daily=90 --keep-weekly=24 --keep-monthly=24 --keep-yearly=20
                 restic cache --cleanup

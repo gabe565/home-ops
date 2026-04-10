@@ -64,8 +64,8 @@ spec:
               - |
                 exec > >(ts '%H:%M:%S') 2>&1
                 set -eu
-                restic backup --tag=library --stdin-from-command -- backup-sqlite.sh 'Plug-in Support/Databases/com.plexapp.plugins.library.db'
-                restic backup --tag=blobs --stdin-from-command -- backup-sqlite.sh 'Plug-in Support/Databases/com.plexapp.plugins.library.blobs.db'
+                restic backup --tag=library --stdin-from-command -- dumpdb sqlite 'Plug-in Support/Databases/com.plexapp.plugins.library.db'
+                restic backup --tag=blobs --stdin-from-command -- dumpdb sqlite 'Plug-in Support/Databases/com.plexapp.plugins.library.blobs.db'
                 restic backup --tag=files Metadata Media 'Plug-in Support' Preferences.xml \
                   --exclude='Plug-in Support/Databases/*.db*' \
                   --exclude='Plug-in Support/Caches'

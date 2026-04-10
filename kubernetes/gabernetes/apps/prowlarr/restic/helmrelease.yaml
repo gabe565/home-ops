@@ -64,7 +64,7 @@ spec:
               - |
                 exec > >(ts '%H:%M:%S') 2>&1
                 set -eu
-                restic backup --tag=db --stdin-from-command -- backup-sqlite.sh prowlarr.db
+                restic backup --tag=db --stdin-from-command -- dumpdb sqlite prowlarr.db
                 restic backup --tag=files . \
                   --exclude=Backups \
                   --exclude=MediaCover \

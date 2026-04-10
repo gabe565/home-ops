@@ -64,7 +64,7 @@ spec:
               - |
                 exec > >(ts '%H:%M:%S') 2>&1
                 set -eu
-                restic backup --tag=db --stdin-from-command -- backup-cnpg.sh
+                restic backup --tag=db --stdin-from-command -- dumpdb cnpg
                 restic backup --tag=files --exclude=log .
                 restic forget --prune --keep-daily=90 --keep-weekly=24 --keep-monthly=24 --keep-yearly=20
                 restic cache --cleanup

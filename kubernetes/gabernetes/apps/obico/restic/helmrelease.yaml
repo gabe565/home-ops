@@ -65,7 +65,7 @@ spec:
               - |
                 exec > >(ts '%H:%M:%S') 2>&1
                 set -eu
-                restic backup --tag=db --stdin-from-command -- backup-sqlite.sh db.sqlite3
+                restic backup --tag=db --stdin-from-command -- dumpdb sqlite db.sqlite3
                 restic forget --prune --keep-daily=90 --keep-weekly=24 --keep-monthly=24 --keep-yearly=20
                 restic cache --cleanup
             resources:
