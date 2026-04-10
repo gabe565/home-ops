@@ -42,7 +42,7 @@ spec:
           restic: &container
             image:
               repository: ghcr.io/gabe565/restic
-              tag: 0.18.1@sha256:bd0fed3ab5e55f4267cc75c218f3dfa27e3edd490cddb6ec0a27fd2cd85927f8
+              tag: 0.18.1@sha256:e8843cddf2dd2ecd21f02a195b1067e3eebe8cf2d71daf9905702fc6d7de14d0
             workingDir: /karakeep-data
             envFrom:
               - secretRef:
