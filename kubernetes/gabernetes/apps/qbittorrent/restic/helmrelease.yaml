@@ -42,7 +42,7 @@ spec:
           restic: &container
             image:
               repository: ghcr.io/gabe565/restic
-              tag: 0.18.1@sha256:e8843cddf2dd2ecd21f02a195b1067e3eebe8cf2d71daf9905702fc6d7de14d0
+              tag: 0.18.1@sha256:83aa39ac345c10cbf69ef6da8c9d1d976c7d13817bc65d086f6cbb9caae29633
             workingDir: /qbittorrent-config
             envFrom:
               - secretRef:

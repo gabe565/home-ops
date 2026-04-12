@@ -46,7 +46,7 @@ spec:
           restic: &container
             image:
               repository: ghcr.io/gabe565/restic
-              tag: 0.18.1@sha256:e8843cddf2dd2ecd21f02a195b1067e3eebe8cf2d71daf9905702fc6d7de14d0
+              tag: 0.18.1@sha256:83aa39ac345c10cbf69ef6da8c9d1d976c7d13817bc65d086f6cbb9caae29633
             envFrom:
               - secretRef:
                   name: restic-b2
@@ -59,8 +59,8 @@ spec:
                   fieldPath: metadata.namespace
               HC_API_URL: http://healthchecks.healthchecks:8000/ping
               DB_HOST: mongodb
-              DB_NAME: nightscout
-              DB_USER: nightscout
+              DB_DATABASE: nightscout
+              DB_USERNAME: nightscout
             command:
               - runitor
               - --
@@ -70,7 +70,7 @@ spec:
               - |
                 exec > >(ts '%H:%M:%S') 2>&1
                 set -eu
-                restic backup --tag=db --stdin-from-command -- backup-mongodb.sh
+                restic backup --tag=db --stdin-from-command -- dumpdb mongodb
                 restic forget --prune --keep-daily=90 --keep-weekly=24 --keep-monthly=24 --keep-yearly=20
                 restic cache --cleanup
             resources:
