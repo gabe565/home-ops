@@ -42,7 +42,7 @@ spec:
           restic: &container
             image:
               repository: ghcr.io/gabe565/restic
-              tag: 0.18.1@sha256:b71c72d1ed372e802c40486699351a32ced0b0d0577819947e4d1de3a325310c
+              tag: 0.18.1@sha256:b180e93c31a1656bb2e66e1401ab507f8c461122b65a8bd4ca0a5b6f51d5e888
             workingDir: /minio-data
             envFrom:
               - secretRef:
