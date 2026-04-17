@@ -27,7 +27,7 @@ spec:
           mongodb:
             image:
               repository: mongo
-              tag: 8.2.6@sha256:4a73a96a9a161bd3a220c22be5d989065567543c952f2a17ff764075171629ca
+              tag: 8.2.7@sha256:7abfba0d07c9330373f8173981ea4d09cd8a82cdf0e86ccaf7008848d1d24f62
             env:
               MONGO_INITDB_DATABASE: nightscout
               MONGODB_EXTRA_USERNAMES: nightscout
