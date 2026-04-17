@@ -21,12 +21,6 @@ spec:
     controllers:
       main:
         strategy: RollingUpdate
-        initContainers:
-          copy:
-            image:
-              repository: ghcr.io/corentinth/it-tools
-              tag: 2024.10.22-7ca5933@sha256:8b8128748339583ca951af03dfe02a9a4d7363f61a216226fc28030731a5a61f
-            command: ["cp", "-a", "/usr/share/nginx/html/.", "/html"]
         containers:
           app:
             image:
@@ -60,15 +54,12 @@ spec:
         identifier: nginx
         globalMounts:
           - path: /etc/nginx/conf.d
-      html:
-        type: emptyDir
-        advancedMounts:
-          main:
-            copy:
-              - path: /html
-            app:
-              - path: /usr/share/nginx/html
-                readOnly: true
+      it-tools:
+        type: image
+        image: ghcr.io/corentinth/it-tools:2024.10.22-7ca5933@sha256:8b8128748339583ca951af03dfe02a9a4d7363f61a216226fc28030731a5a61f
+        globalMounts:
+          - path: /usr/share/nginx/html
+            subPath: usr/share/nginx/html
       tmp:
         type: emptyDir
 
