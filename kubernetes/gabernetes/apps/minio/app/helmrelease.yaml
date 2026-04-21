@@ -24,8 +24,8 @@ spec:
         containers:
           app:
             image:
-              repository: git.gabe565.com/mirror/minio
-              tag: release.2026-02-07t07-43-34z@sha256:a4af18a3fca9acb98373760f6a16c605310af4d658bb0bb9d6038e627e062f11
+              repository: quay.io/minio/aistor/minio
+              tag: RELEASE.2026-02-07T07-43-34Z@sha256:33cf8200d428a9b334867c2f873a68a5ceffeb6930753f91bbb1eb188ea1ef43
               pullPolicy: IfNotPresent
             env:
               MINIO_ROOT_USER_FILE: /root-creds/username
@@ -89,6 +89,12 @@ spec:
         accessMode: ReadWriteMany
         size: 16Gi
         retain: true
+      license:
+        type: secret
+        name: license
+        globalMounts:
+          - path: /minio.license
+            subPath: minio.license
       certs:
         type: emptyDir
         globalMounts:

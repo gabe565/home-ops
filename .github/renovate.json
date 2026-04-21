@@ -80,7 +80,7 @@
     },
     {
       "matchDatasources": ["docker"],
-      "matchPackageNames": ["git.gabe565.com/mirror/minio"],
+      "matchPackageNames": ["quay.io/minio/aistor/minio"],
       "versioning": "regex:(?i)^RELEASE\\.(?<major>\\d+)-(?<minor>\\d+)-(?<patch>\\d+)T.*Z$"
     },
     {
