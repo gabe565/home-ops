@@ -25,7 +25,7 @@ spec:
           copy:
             image: &image
               repository: monica
-              tag: 4.1.2-fpm-alpine@sha256:5f1b0e2866f10ea527ac55ad19369b527be7d574ac261fc2376efda0058fdd4f
+              tag: 4.1.2-fpm-alpine@sha256:a77f39c8db96d73d143f672d5157387506544f712acfaa173ed4593e324c1e7b
               pullPolicy: IfNotPresent
             command:
               - cp
