@@ -28,6 +28,7 @@ spec:
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
+              HOME: /nonexistent
               GLOBAL_LOG_LEVEL: WARNING
               WEBUI_SECRET_KEY: ${secret_key}
               CORS_ALLOW_ORIGIN: https://${app_url}
@@ -102,6 +103,11 @@ spec:
         type: emptyDir
         medium: Memory
         sizeLimit: 128Mi
+        globalMounts:
+          - path: /tmp
+            subPath: tmp
+          - path: /nonexistent
+            subPath: nonexistent
 
     route:
       open-webui:
