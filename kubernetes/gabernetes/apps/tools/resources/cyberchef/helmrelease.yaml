@@ -51,7 +51,7 @@ spec:
     persistence:
       cyberchef:
         type: image
-        image: ghcr.io/gchq/cyberchef:10.23.0@sha256:9f9205cfc20368bd9a4152f7708a9e7626525d8f4eadb1a25e5079708c5c4304
+        image: ghcr.io/gchq/cyberchef:11.0.0@sha256:45082a0ac41d6beeea2daeb192d8b20c66520362854542f4fe340aab37635f66
         globalMounts:
           - path: /usr/share/nginx/html
             subPath: usr/share/nginx/html
