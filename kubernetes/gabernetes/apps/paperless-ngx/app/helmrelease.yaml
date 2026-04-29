@@ -138,7 +138,6 @@ spec:
                 clientSecretRef:
                   name: oidc
               scopes: [openid, profile, offline_access]
-              forwardAccessToken: true
               logoutPath: /oauth2/logout
               jwt:
                 idToken:
