@@ -1,0 +1,18 @@
+apiVersion: gateway.kgateway.dev/v1alpha1
+kind: TrafficPolicy
+metadata:
+  name: ws-token-to-query
+  namespace: nightscout
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: nightscout-oidc
+      sectionName: oidc
+  transformation:
+    request:
+      body:
+        parseAs: AsString
+      set:
+        - name: :path
+          value: '{{ header(":path") }}{% if "?" in header(":path") %}&{% else %}?{% endif %}token={{ header("api-secret") }}'

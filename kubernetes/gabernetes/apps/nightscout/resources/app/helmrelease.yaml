@@ -105,8 +105,8 @@ spec:
     route:
       oidc:
         parentRefs: &parentRefs
-          - namespace: envoy-gateway-system
-            name: envoy-public
+          - namespace: kgateway-system
+            name: public
         hostnames:
           - ${app_url}
         rules:
@@ -121,8 +121,8 @@ spec:
             filters:
               - type: ExtensionRef
                 extensionRef:
-                  group: gateway.envoyproxy.io
-                  kind: HTTPRouteFilter
+                  group: gateway.kgateway.dev
+                  kind: DirectResponse
                   name: nightscout-service-worker
       direct:
         parentRefs: *parentRefs
@@ -132,39 +132,32 @@ spec:
           - backendRefs: *backendRefs
 
     rawResources:
-      auth:
-        apiVersion: gateway.envoyproxy.io/v1alpha1
-        kind: SecurityPolicy
+      auth-ext:
+        apiVersion: gateway.kgateway.dev/v1alpha1
+        kind: GatewayExtension
         spec:
           spec:
-            targetRefs:
-              - group: gateway.networking.k8s.io
-                kind: HTTPRoute
-                name: "{{ .Release.Name }}-oidc"
-                sectionName: oidc
-            oidc:
-              provider:
-                issuer: https://${oidc_host}/application/o/nightscout/
-              clientIDRef:
-                name: oidc
-              clientSecret:
-                name: oidc
-              scopes:
-                - openid
-                - offline_access
-                - nightscout:token
+            type: OAuth2
+            oauth2:
+              backendRef:
+                name: authentik-server
+                namespace: authentik
+                port: 80
+              issuerURI: https://${oidc_host}/application/o/nightscout/
+              credentials:
+                clientID: ${oidc_client_id}
+                clientSecretRef:
+                  name: oidc
+              scopes: [openid, offline_access, nightscout:token]
               forwardAccessToken: true
-            jwt:
-              providers:
-                - name: extract-user-info
-                  remoteJWKS:
-                    uri: https://${oidc_host}/application/o/nightscout/jwks/
-                  claimToHeaders:
-                    - claim: nightscout_token
+              jwt:
+                idToken:
+                  claimsToHeaders:
+                    - name: nightscout_token
                       header: API-Secret
-      ws-token-to-query:
-        apiVersion: gateway.envoyproxy.io/v1alpha1
-        kind: EnvoyExtensionPolicy
+      auth:
+        apiVersion: gateway.kgateway.dev/v1alpha1
+        kind: TrafficPolicy
         spec:
           spec:
             targetRefs:
@@ -172,27 +165,16 @@ spec:
                 kind: HTTPRoute
                 name: "{{ .Release.Name }}-oidc"
                 sectionName: oidc
-            lua:
-              - type: Inline
-                # language=lua
-                inline: |
-                  function envoy_on_request(handle)
-                      local path = handle:headers():get(":path")
-                      local secret = handle:headers():get("api-secret")
-                      if path and secret and not string.find(path, "token=") then
-                          local sep = string.find(path, "?") and "&" or "?"
-                          handle:headers():replace(":path", path .. sep .. "token=" .. secret)
-                      end
-                  end
+            oauth2:
+              extensionRef:
+                name: "{{ .Release.Name }}-auth-ext"
       service-worker:
-        apiVersion: gateway.envoyproxy.io/v1alpha1
-        kind: HTTPRouteFilter
+        apiVersion: gateway.kgateway.dev/v1alpha1
+        kind: DirectResponse
         spec:
           spec:
-            directResponse:
+            status: 200
+            bodyFormat:
               contentType: application/javascript
-              statusCode: 200
-              body:
-                type: Inline
-                inline: |
-                  self.addEventListener('install', event => { event.waitUntil(self.skipWaiting()) });
+              # language=javascript
+              text: self.addEventListener('install', event => { event.waitUntil(self.skipWaiting()) });
