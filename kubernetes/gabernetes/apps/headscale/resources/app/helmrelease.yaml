@@ -116,8 +116,8 @@ spec:
     route:
       headscale:
         parentRefs:
-          - namespace: envoy-gateway-system
-            name: envoy-public
+          - namespace: kgateway-system
+            name: public
         hostnames:
           - ${app_url}
         rules:
@@ -130,22 +130,20 @@ spec:
             filters:
               - type: ExtensionRef
                 extensionRef:
-                  group: gateway.envoyproxy.io
-                  kind: HTTPRouteFilter
+                  group: gateway.kgateway.dev
+                  kind: DirectResponse
                   name: headscale
 
     rawResources:
-      respond-403:
-        apiVersion: gateway.envoyproxy.io/v1alpha1
-        kind: HTTPRouteFilter
+      access-denied:
+        apiVersion: gateway.kgateway.dev/v1alpha1
+        kind: DirectResponse
         spec:
           spec:
-            directResponse:
+            status: 403
+            bodyFormat:
               contentType: text/plain
-              statusCode: 403
-              body:
-                type: Inline
-                inline: Access Denied
+              text: Access Denied
 
     secrets:
       config:
