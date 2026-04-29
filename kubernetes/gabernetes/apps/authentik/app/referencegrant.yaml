@@ -1,0 +1,113 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: allow-oidc-backend
+  namespace: authentik
+spec:
+  from:
+    - group: gateway.kgateway.dev
+      kind: GatewayExtension
+      namespace: adguard-home
+    - group: gateway.kgateway.dev
+      kind: GatewayExtension
+      namespace: change-detection
+    - group: gateway.kgateway.dev
+      kind: GatewayExtension
+      namespace: esphome
+    - group: gateway.kgateway.dev
+      kind: GatewayExtension
+      namespace: hammond
+    - group: gateway.kgateway.dev
+      kind: GatewayExtension
+      namespace: healthchecks
+    - group: gateway.kgateway.dev
+      kind: GatewayExtension
+      namespace: home-assistant
+    - group: gateway.kgateway.dev
+      kind: GatewayExtension
+      namespace: homepage
+    - group: gateway.kgateway.dev
+      kind: GatewayExtension
+      namespace: kube-system
+    - group: gateway.kgateway.dev
+      kind: GatewayExtension
+      namespace: lidarr
+    - group: gateway.kgateway.dev
+      kind: GatewayExtension
+      namespace: longhorn-system
+    - group: gateway.kgateway.dev
+      kind: GatewayExtension
+      namespace: miniflux
+    - group: gateway.kgateway.dev
+      kind: GatewayExtension
+      namespace: monica
+    - group: gateway.kgateway.dev
+      kind: GatewayExtension
+      namespace: nightscout
+    - group: gateway.kgateway.dev
+      kind: GatewayExtension
+      namespace: paperless-ngx
+    - group: gateway.kgateway.dev
+      kind: GatewayExtension
+      namespace: prometheus
+    - group: gateway.kgateway.dev
+      kind: GatewayExtension
+      namespace: prowlarr
+  to:
+    - group: ""
+      kind: Service
+      name: authentik-server
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: allow-oidc-backend-2
+  namespace: authentik
+spec:
+  from:
+    - group: gateway.kgateway.dev
+      kind: GatewayExtension
+      namespace: qbittorrent
+    - group: gateway.kgateway.dev
+      kind: GatewayExtension
+      namespace: radarr
+    - group: gateway.kgateway.dev
+      kind: GatewayExtension
+      namespace: scanservjs
+    - group: gateway.kgateway.dev
+      kind: GatewayExtension
+      namespace: searxng
+    - group: gateway.kgateway.dev
+      kind: GatewayExtension
+      namespace: shlink
+    - group: gateway.kgateway.dev
+      kind: GatewayExtension
+      namespace: sonarr
+    - group: gateway.kgateway.dev
+      kind: GatewayExtension
+      namespace: stable-diffusion
+    - group: gateway.kgateway.dev
+      kind: GatewayExtension
+      namespace: tautulli
+    - group: gateway.kgateway.dev
+      kind: GatewayExtension
+      namespace: uptime-kuma
+    - group: gateway.kgateway.dev
+      kind: GatewayExtension
+      namespace: vaultwarden
+    - group: gateway.kgateway.dev
+      kind: GatewayExtension
+      namespace: watch-your-lan
+    - group: gateway.kgateway.dev
+      kind: GatewayExtension
+      namespace: your-spotify
+    - group: gateway.kgateway.dev
+      kind: GatewayExtension
+      namespace: zigbee2mqtt
+    - group: gateway.kgateway.dev
+      kind: GatewayExtension
+      namespace: zwave-js-ui
+  to:
+    - group: ""
+      kind: Service
+      name: authentik-server
