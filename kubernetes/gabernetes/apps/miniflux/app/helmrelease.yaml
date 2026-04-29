@@ -130,7 +130,6 @@ spec:
                 clientSecretRef:
                   name: oidc
               scopes: [openid, offline_access, profile]
-              forwardAccessToken: true
               jwt:
                 idToken:
                   claimsToHeaders:

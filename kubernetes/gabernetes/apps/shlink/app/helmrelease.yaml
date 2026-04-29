@@ -179,7 +179,6 @@ spec:
                 clientSecretRef:
                   name: oidc
               scopes: [openid, offline_access, shlink:token]
-              forwardAccessToken: true
               jwt:
                 idToken:
                   claimsToHeaders:
