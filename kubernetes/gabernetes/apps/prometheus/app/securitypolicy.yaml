@@ -1,18 +1,32 @@
-apiVersion: gateway.envoyproxy.io/v1alpha1
-kind: SecurityPolicy
+apiVersion: gateway.kgateway.dev/v1alpha1
+kind: GatewayExtension
 metadata:
   name: prometheus-auth
-  namespace: kube-system
+  namespace: prometheus
+spec:
+  type: OAuth2
+  oauth2:
+    backendRef:
+      name: authentik-server
+      namespace: authentik
+      port: 80
+    issuerURI: https://${oauth_host}/application/o/prometheus/
+    credentials:
+      clientID: ${oidc_client_id}
+      clientSecretRef:
+        name: prometheus-oidc
+    scopes: [openid, offline_access]
+---
+apiVersion: gateway.kgateway.dev/v1alpha1
+kind: TrafficPolicy
+metadata:
+  name: prometheus-auth
+  namespace: prometheus
 spec:
   targetRefs:
     - group: gateway.networking.k8s.io
       kind: HTTPRoute
       name: kube-prometheus-stack-prometheus
-  oidc:
-    provider:
-      issuer: https://${oauth_host}/application/o/prometheus/
-    clientIDRef:
-      name: prometheus-oidc
-    clientSecret:
-      name: prometheus-oidc
-    scopes: [openid, offline_access]
+  oauth2:
+    extensionRef:
+      name: prometheus-auth
