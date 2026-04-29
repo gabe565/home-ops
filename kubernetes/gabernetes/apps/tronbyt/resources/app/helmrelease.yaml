@@ -110,29 +110,28 @@ spec:
     route:
       tronbyt:
         parentRefs:
-          - namespace: envoy-gateway-system
-            name: envoy-public
+          - namespace: kgateway-system
+            name: public
         hostnames:
           - ${app_host}
 
     rawResources:
       allowlist:
-        apiVersion: gateway.envoyproxy.io/v1alpha1
-        kind: SecurityPolicy
+        apiVersion: gateway.kgateway.dev/v1alpha1
+        kind: TrafficPolicy
         spec:
           spec:
             targetRefs:
               - group: gateway.networking.k8s.io
                 kind: HTTPRoute
                 name: "{{ .Release.Name }}"
-            authorization:
-              defaultAction: Deny
+            acl:
+              defaultAction: deny
               rules:
-                - action: Allow
-                  principal:
-                    clientCIDRs:
-                      - 192.168.0.0/22
-                      - 10.42.0.0/16
+                - action: allow
+                  cidrs:
+                    - 192.168.0.0/22
+                    - 10.42.0.0/16
 
     serviceMonitor:
       tronbyt:
