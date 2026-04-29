@@ -116,8 +116,8 @@ spec:
     route:
       s3:
         parentRefs: &parentRefs
-          - namespace: envoy-gateway-system
-            name: envoy-public
+          - namespace: kgateway-system
+            name: public
         hostnames:
           - ${s3_url}
           - "*.${s3_url}"
@@ -133,9 +133,9 @@ spec:
             filters:
               - type: ExtensionRef
                 extensionRef:
-                  group: gateway.envoyproxy.io
-                  kind: HTTPRouteFilter
-                  name: respond-403
+                  group: gateway.kgateway.dev
+                  kind: DirectResponse
+                  name: "{{ .Release.Name }}-access-denied"
       admin:
         parentRefs: *parentRefs
         hostnames:
@@ -152,15 +152,15 @@ spec:
                       value: none
 
     rawResources:
-      no-compression:
-        apiVersion: gateway.envoyproxy.io/v1alpha1
-        kind: BackendTrafficPolicy
+      access-denied:
+        apiVersion: gateway.kgateway.dev/v1alpha1
+        kind: DirectResponse
         spec:
           spec:
-            targetRefs:
-              - group: gateway.networking.k8s.io
-                kind: HTTPRoute
-                name: "{{ .Release.Name }}-s3"
+            status: 403
+            bodyFormat:
+              contentType: text/plain
+              text: Access Denied
 
     serviceMonitor:
       main:
