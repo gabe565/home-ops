@@ -79,7 +79,7 @@ spec:
     route:
       kromgo:
         parentRefs:
-          - namespace: envoy-gateway-system
-            name: envoy-public
+          - namespace: kgateway-system
+            name: public
         hostnames:
           - kromgo.gabe565.com

@@ -72,8 +72,8 @@ spec:
     route:
       main:
         parentRefs:
-          - namespace: envoy-gateway-system
-            name: envoy-public
+          - namespace: kgateway-system
+            name: public
         hostnames:
           - ${it_tools_host}
         rules:
