@@ -27,7 +27,7 @@ spec:
 #   gatewayClassName: kgateway
 #   addresses:
 #     - type: IPAddress
-#       value: 192.168.1.224
+#       value: 192.168.1.220
 #   infrastructure:
 #     parametersRef:
 #       group: gateway.kgateway.dev
