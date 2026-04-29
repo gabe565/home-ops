@@ -79,8 +79,8 @@ spec:
     route:
       updates:
         parentRefs: &parentRefs
-          - namespace: envoy-gateway-system
-            name: envoy-public
+          - namespace: kgateway-system
+            name: public
         hostnames:
           - ${updates_url}
         rules:
@@ -96,8 +96,8 @@ spec:
 
     rawResources:
       allowlist:
-        apiVersion: gateway.envoyproxy.io/v1alpha1
-        kind: SecurityPolicy
+        apiVersion: gateway.kgateway.dev/v1alpha1
+        kind: TrafficPolicy
         spec:
           spec:
             targetRefs:
@@ -107,12 +107,11 @@ spec:
               - group: gateway.networking.k8s.io
                 kind: HTTPRoute
                 name: "{{ .Release.Name }}-download"
-            authorization:
-              defaultAction: Deny
+            acl:
+              defaultAction: deny
               rules:
-                - action: Allow
-                  principal:
-                    clientCIDRs:
-                      - 192.168.0.0/22
-                      - 10.42.0.0/16
-                      - ${vps_ip}/32
+                - action: allow
+                  cidrs:
+                    - 192.168.0.0/22
+                    - 10.42.0.0/16
+                    - ${vps_ip}/32
