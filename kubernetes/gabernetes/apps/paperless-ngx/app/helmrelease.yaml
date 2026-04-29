@@ -115,36 +115,45 @@ spec:
     route:
       paperless-ngx:
         parentRefs:
-          - namespace: envoy-gateway-system
-            name: envoy-public
+          - namespace: kgateway-system
+            name: public
         hostnames:
           - ${app_url}
 
     rawResources:
+      auth-ext:
+        apiVersion: gateway.kgateway.dev/v1alpha1
+        kind: GatewayExtension
+        spec:
+          spec:
+            type: OAuth2
+            oauth2:
+              backendRef:
+                name: authentik-server
+                namespace: authentik
+                port: 80
+              issuerURI: https://${oidc_host}/application/o/paperless-ngx/
+              credentials:
+                clientID: ${oidc_client_id}
+                clientSecretRef:
+                  name: oidc
+              scopes: [openid, profile, offline_access]
+              forwardAccessToken: true
+              logoutPath: /oauth2/logout
+              jwt:
+                idToken:
+                  claimsToHeaders:
+                    - name: preferred_username
+                      header: X-User-Name
       auth:
-        apiVersion: gateway.envoyproxy.io/v1alpha1
-        kind: SecurityPolicy
+        apiVersion: gateway.kgateway.dev/v1alpha1
+        kind: TrafficPolicy
         spec:
           spec:
             targetRefs:
               - group: gateway.networking.k8s.io
                 kind: HTTPRoute
                 name: "{{ .Release.Name }}"
-            oidc:
-              provider:
-                issuer: https://${oidc_host}/application/o/paperless-ngx/
-              clientIDRef:
-                name: oidc
-              clientSecret:
-                name: oidc
-              scopes: [openid, profile, offline_access]
-              forwardAccessToken: true
-              logoutPath: /oauth2/logout
-            jwt:
-              providers:
-                - name: extract-user-info
-                  remoteJWKS:
-                    uri: https://${oidc_host}/application/o/paperless-ngx/jwks/
-                  claimToHeaders:
-                    - claim: preferred_username
-                      header: X-User-Name
+            oauth2:
+              extensionRef:
+                name: "{{ .Release.Name }}-auth-ext"
