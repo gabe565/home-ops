@@ -1,0 +1,39 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: app
+  namespace: kgateway-system
+spec:
+  interval: 1h
+  targetNamespace: kgateway-system
+  path: ./kubernetes/gabernetes/apps/kgateway/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    namespace: flux-system
+    name: home-ops
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: substitutions
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: config
+  namespace: kgateway-system
+spec:
+  interval: 1h
+  targetNamespace: kgateway-system
+  path: ./kubernetes/gabernetes/apps/kgateway/config
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    namespace: flux-system
+    name: home-ops
+  dependsOn:
+    - name: app
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: substitutions

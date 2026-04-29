@@ -1,0 +1,75 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: same-namespace
+  namespace: kgateway-system
+spec:
+  endpointSelector: {}
+  ingress:
+    - fromEndpoints:
+        - {}
+  egress:
+    - toEndpoints:
+        - {}
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: kgateway-controller
+  namespace: kgateway-system
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: kgateway
+      app.kubernetes.io/instance: kgateway
+      app.kubernetes.io/component: controller
+  egress:
+    - toEntities:
+        - host
+        - remote-node
+      toPorts:
+        - ports:
+            - port: "6443"
+    - toEntities:
+        - kube-apiserver
+      toPorts:
+        - ports:
+            - port: "443"
+            - port: "6443"
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: authentik
+            app.kubernetes.io/name: authentik
+      toPorts:
+        - ports:
+            - port: "9000"
+            - port: "9443"
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: public
+  namespace: kgateway-system
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: public
+      app.kubernetes.io/instance: public
+      app.kubernetes.io/component: proxy
+  ingress:
+    - fromEntities:
+        - world
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: envoy-gateway-system
+            app.kubernetes.io/component: proxy
+            app.kubernetes.io/managed-by: envoy-gateway
+            app.kubernetes.io/name: envoy
+            gateway.envoyproxy.io/owning-gateway-name: envoy-public
+  egress:
+    - toEntities:
+        - world
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: longhorn-system
+            app: longhorn-ui
