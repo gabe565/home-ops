@@ -104,17 +104,6 @@ spec:
             name: public
         hostnames:
           - ${app_url}
-        rules:
-          - name: internal
-            matches:
-              - headers:
-                  - name: X-Envoy-External-Address
-                    type: RegularExpression
-                    value: '^192\.168\..*'
-            backendRefs: &backendRefs
-              - identifier: searxng
-          - name: public
-            backendRefs: *backendRefs
 
     rawResources:
       auth-ext:
@@ -143,7 +132,6 @@ spec:
               - group: gateway.networking.k8s.io
                 kind: HTTPRoute
                 name: "{{ .Release.Name }}"
-                sectionName: public
             oauth2:
               extensionRef:
                 name: "{{ .Release.Name }}-auth-ext"
