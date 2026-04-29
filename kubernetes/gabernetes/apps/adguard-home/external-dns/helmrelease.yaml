@@ -49,8 +49,6 @@ spec:
     env:
       - name: EXTERNAL_DNS_WEBHOOK_PROVIDER_URL
         value: http://localhost:8888
-      - name: EXTERNAL_DNS_GATEWAY_NAME
-        value: envoy-public
 
     podLabels:
       policy.gabe565.com/egress-adguard-api: "true"

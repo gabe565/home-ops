@@ -1,0 +1,51 @@
+apiVersion: gateway.kgateway.dev/v1alpha1
+kind: GatewayParameters
+metadata:
+  name: public
+  namespace: kgateway-system
+spec:
+  kube:
+    service:
+      type: LoadBalancer
+      externalTrafficPolicy: Local
+    deploymentOverlay:
+      spec:
+        template:
+          spec:
+            hostAliases:
+              - ip: 10.43.0.20
+                hostnames:
+                  - ${oidc_host}
+---
+## Deployed from my private repo to keep certificate names private.
+# apiVersion: gateway.networking.k8s.io/v1
+# kind: Gateway
+# metadata:
+#   name: public
+#   namespace: kgateway-system
+# spec:
+#   gatewayClassName: kgateway
+#   addresses:
+#     - type: IPAddress
+#       value: 192.168.1.224
+#   infrastructure:
+#     parametersRef:
+#       group: gateway.kgateway.dev
+#       kind: GatewayParameters
+#       name: public
+#   listeners:
+#     - name: http
+#       port: 80
+#       protocol: HTTP
+#       allowedRoutes:
+#         namespaces:
+#           from: Same
+#     - name: https
+#       port: 443
+#       protocol: HTTPS
+#       tls:
+#         mode: Terminate
+#         certificateRefs: []
+#       allowedRoutes:
+#         namespaces:
+#           from: All
