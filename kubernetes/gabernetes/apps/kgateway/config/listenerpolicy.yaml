@@ -13,6 +13,7 @@ spec:
       upgradeConfig:
         enabledUpgrades:
           - websocket
+          - tailscale-control-protocol
       accessLog:
         - fileSink:
             path: /dev/stdout
