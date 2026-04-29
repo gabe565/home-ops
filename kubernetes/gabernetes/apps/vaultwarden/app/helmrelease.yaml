@@ -89,8 +89,8 @@ spec:
     route:
       vaultwarden:
         parentRefs:
-          - namespace: envoy-gateway-system
-            name: envoy-public
+          - namespace: kgateway-system
+            name: public
         hostnames:
           - ${app_url}
         rules:
@@ -106,9 +106,28 @@ spec:
               - identifier: vaultwarden
 
     rawResources:
+      admin-auth-ext:
+        apiVersion: gateway.kgateway.dev/v1alpha1
+        kind: GatewayExtension
+        spec:
+          spec:
+            type: OAuth2
+            oauth2:
+              backendRef:
+                name: authentik-server
+                namespace: authentik
+                port: 80
+              issuerURI: https://${oidc_host}/application/o/vaultwarden-admin/
+              credentials:
+                clientID: ${oidc_client_id}
+                clientSecretRef:
+                  name: oidc
+              scopes: [openid, offline_access]
+              logoutPath: /admin/oauth2/logout
+              redirectURI: "%REQ(x-forwarded-proto)%://%REQ(:authority)%/admin/oauth2/redirect"
       admin-auth:
-        apiVersion: gateway.envoyproxy.io/v1alpha1
-        kind: SecurityPolicy
+        apiVersion: gateway.kgateway.dev/v1alpha1
+        kind: TrafficPolicy
         spec:
           spec:
             targetRefs:
@@ -116,13 +135,6 @@ spec:
                 kind: HTTPRoute
                 name: "{{ .Release.Name }}"
                 sectionName: admin
-            oidc:
-              provider:
-                issuer: https://${oidc_host}/application/o/vaultwarden-admin/
-              clientIDRef:
-                name: oidc
-              clientSecret:
-                name: oidc
-              scopes: [openid, offline_access]
-              redirectURL: "%REQ(x-forwarded-proto)%://%REQ(:authority)%/admin/oauth2/callback"
-              logoutPath: /admin/oauth2/logout
+            oauth2:
+              extensionRef:
+                name: "{{ .Release.Name }}-admin-auth-ext"
