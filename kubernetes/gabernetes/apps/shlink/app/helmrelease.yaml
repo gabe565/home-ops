@@ -123,8 +123,8 @@ spec:
     route:
       api:
         parentRefs: &parentRefs
-          - namespace: envoy-gateway-system
-            name: envoy-public
+          - namespace: kgateway-system
+            name: public
         hostnames:
           - ${app_url}
         rules:
@@ -143,8 +143,12 @@ spec:
               - path:
                   type: Exact
                   value: /servers.json
-            backendRefs:
-              - identifier: frontend
+            filters:
+              - type: ExtensionRef
+                extensionRef:
+                  group: gateway.kgateway.dev
+                  kind: DirectResponse
+                  name: shlink-servers-json
           - name: service-worker
             matches:
               - path:
@@ -153,14 +157,37 @@ spec:
             filters:
               - type: ExtensionRef
                 extensionRef:
-                  group: gateway.envoyproxy.io
-                  kind: HTTPRouteFilter
+                  group: gateway.kgateway.dev
+                  kind: DirectResponse
                   name: shlink-service-worker
 
     rawResources:
+      auth-ext:
+        apiVersion: gateway.kgateway.dev/v1alpha1
+        kind: GatewayExtension
+        spec:
+          spec:
+            type: OAuth2
+            oauth2:
+              backendRef:
+                name: authentik-server
+                namespace: authentik
+                port: 80
+              issuerURI: https://${oidc_host}/application/o/shlink/
+              credentials:
+                clientID: ${oidc_client_id}
+                clientSecretRef:
+                  name: oidc
+              scopes: [openid, offline_access, shlink:token]
+              forwardAccessToken: true
+              jwt:
+                idToken:
+                  claimsToHeaders:
+                    - name: shlink_token
+                      header: X-Shlink-Token
       auth:
-        apiVersion: gateway.envoyproxy.io/v1alpha1
-        kind: SecurityPolicy
+        apiVersion: gateway.kgateway.dev/v1alpha1
+        kind: TrafficPolicy
         spec:
           spec:
             targetRefs:
@@ -172,59 +199,26 @@ spec:
                 kind: HTTPRoute
                 name: "{{ .Release.Name }}-frontend"
                 sectionName: servers-json
-            oidc:
-              provider:
-                issuer: https://${oidc_host}/application/o/shlink/
-              clientIDRef:
-                name: oidc
-              clientSecret:
-                name: oidc
-              scopes:
-                - openid
-                - offline_access
-                - shlink:token
-              forwardAccessToken: true
-            jwt:
-              providers:
-                - name: extract-user-info
-                  remoteJWKS:
-                    uri: https://${oidc_host}/application/o/shlink/jwks/
-                  claimToHeaders:
-                    - claim: shlink_token
-                      header: X-Shlink-Token
+            oauth2:
+              extensionRef:
+                name: "{{ .Release.Name }}-auth-ext"
       servers-json:
-        apiVersion: gateway.envoyproxy.io/v1alpha1
-        kind: EnvoyExtensionPolicy
+        apiVersion: gateway.kgateway.dev/v1alpha1
+        kind: DirectResponse
         spec:
           spec:
-            targetRefs:
-              - group: gateway.networking.k8s.io
-                kind: HTTPRoute
-                name: "{{ .Release.Name }}-frontend"
-                sectionName: servers-json
-            lua:
-              - type: Inline
-                # language=lua
-                inline: |
-                  function envoy_on_request(handle)
-                    local api_key = handle:headers():get("x-shlink-token")
-                    if api_key then
-                       local json_body = '[{"name":"${app_url}", "url":"https://${app_url}", "apiKey":"' .. api_key .. '"}]'
-                       handle:respond(
-                          {[":status"] = "200", ["content-type"] = "application/json"},
-                          json_body
-                       )
-                    end
-                  end
+            status: 200
+            bodyFormat:
+              contentType: application/json
+              # language=json
+              text: '[{"name":"${app_url}", "url":"https://${app_url}", "apiKey":"%REQ(x-shlink-token)%"}]'
       service-worker:
-        apiVersion: gateway.envoyproxy.io/v1alpha1
-        kind: HTTPRouteFilter
+        apiVersion: gateway.kgateway.dev/v1alpha1
+        kind: DirectResponse
         spec:
           spec:
-            directResponse:
+            status: 200
+            bodyFormat:
               contentType: application/javascript
-              statusCode: 200
-              body:
-                type: Inline
-                inline: |
-                  self.addEventListener('install', event => { event.waitUntil(self.skipWaiting()) });
+              # language=javascript
+              text: self.addEventListener('install', event => { event.waitUntil(self.skipWaiting()) });
