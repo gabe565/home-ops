@@ -72,7 +72,7 @@ spec:
     route:
       trmnl:
         parentRefs:
-          - namespace: envoy-gateway-system
-            name: envoy-public
+          - namespace: kgateway-system
+            name: public
         hostnames:
           - ${trmnl_url}

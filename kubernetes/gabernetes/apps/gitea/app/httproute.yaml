@@ -7,8 +7,8 @@ spec:
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      namespace: envoy-gateway-system
-      name: envoy-public
+      namespace: kgateway-system
+      name: public
   hostnames:
     - ${app_url}
   rules:

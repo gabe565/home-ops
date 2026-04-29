@@ -62,8 +62,8 @@ spec:
     route:
       transsmute:
         parentRefs:
-          - namespace: envoy-gateway-system
-            name: envoy-public
+          - namespace: kgateway-system
+            name: public
         hostnames:
           - ${app_url}
         rules:
