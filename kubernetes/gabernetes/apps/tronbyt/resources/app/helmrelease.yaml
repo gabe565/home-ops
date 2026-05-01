@@ -33,7 +33,7 @@ spec:
           app:
             image:
               repository: ghcr.io/tronbyt/server
-              tag: latest@sha256:4add38255e3314a4bd21a843fe04c6f5b254f4e081dc478926d268fb8f2f8fec
+              tag: latest@sha256:ab12f208ff8946554a693e022544088165ccb62daa59a8155823ae42128f8f01
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
