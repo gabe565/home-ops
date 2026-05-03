@@ -27,7 +27,7 @@ spec:
           app:
             image:
               repository: ghcr.io/louislam/uptime-kuma
-              tag: 2.2.1-slim@sha256:059b49d6473904f2c8cba97582fd37cf4433c069816146e544afe7a7f3687f93
+              tag: 2.3.2-slim@sha256:0a878f1e0cef1b884fb3c2c1b9d83ac64d204c7086d1568781a0e25f9167ad81
               pullPolicy: IfNotPresent
             command: [node, server/server.js]
             env:
