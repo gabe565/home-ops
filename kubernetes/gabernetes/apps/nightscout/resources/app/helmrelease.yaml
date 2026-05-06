@@ -24,7 +24,7 @@ spec:
           app:
             image:
               repository: ghcr.io/gabe565/nightscout
-              tag: 15.0.6-websocket@sha256:acdaaadd91122ce16c770d35cdf02708081bab46b9a78709592435da7b65ab02
+              tag: 15.0.7-websocket@sha256:c10d66f58ae83d338a42fa885cc86e137b7cdb058fcf19514b5aa8a1d7f3b803
               pullPolicy: IfNotPresent
             env:
               HOSTNAME: "::"
