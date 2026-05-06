@@ -27,7 +27,7 @@ spec:
           mongodb:
             image:
               repository: mongo
-              tag: 8.2.7@sha256:7abfba0d07c9330373f8173981ea4d09cd8a82cdf0e86ccaf7008848d1d24f62
+              tag: 8.3.1@sha256:ce32a4b67580c982e2020b07d4ffafdbd9ce474088434294d89c6bd9257f7788
             env:
               MONGO_INITDB_DATABASE: your-spotify
               MONGODB_EXTRA_USERNAMES: your-spotify
