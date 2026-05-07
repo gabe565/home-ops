@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 4.6.2
+      version: 5.0.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -89,9 +89,9 @@ spec:
 
     rawResources:
       auth-ext:
-        apiVersion: gateway.kgateway.dev/v1alpha1
-        kind: GatewayExtension
-        spec:
+        manifest:
+          apiVersion: gateway.kgateway.dev/v1alpha1
+          kind: GatewayExtension
           spec:
             type: OAuth2
             oauth2:
@@ -106,9 +106,9 @@ spec:
                   name: oidc
               scopes: [openid, offline_access]
       auth:
-        apiVersion: gateway.kgateway.dev/v1alpha1
-        kind: TrafficPolicy
-        spec:
+        manifest:
+          apiVersion: gateway.kgateway.dev/v1alpha1
+          kind: TrafficPolicy
           spec:
             targetRefs:
               - group: gateway.networking.k8s.io
