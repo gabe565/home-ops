@@ -74,6 +74,7 @@ spec:
                   - matchExpressions:
                       - key: node-role.kubernetes.io/control-plane
                         operator: Exists
+          automountServiceAccountToken: true
           hostNetwork: true
           tolerations:
             - effect: NoSchedule
