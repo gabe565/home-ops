@@ -107,9 +107,9 @@ spec:
 
     rawResources:
       admin-auth-ext:
-        apiVersion: gateway.kgateway.dev/v1alpha1
-        kind: GatewayExtension
-        spec:
+        manifest:
+          apiVersion: gateway.kgateway.dev/v1alpha1
+          kind: GatewayExtension
           spec:
             type: OAuth2
             oauth2:
@@ -126,9 +126,9 @@ spec:
               logoutPath: /admin/oauth2/logout
               redirectURI: "%REQ(x-forwarded-proto)%://%REQ(:authority)%/admin/oauth2/redirect"
       admin-auth:
-        apiVersion: gateway.kgateway.dev/v1alpha1
-        kind: TrafficPolicy
-        spec:
+        manifest:
+          apiVersion: gateway.kgateway.dev/v1alpha1
+          kind: TrafficPolicy
           spec:
             targetRefs:
               - group: gateway.networking.k8s.io

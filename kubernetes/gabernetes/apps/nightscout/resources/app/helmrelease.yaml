@@ -133,9 +133,9 @@ spec:
 
     rawResources:
       auth-ext:
-        apiVersion: gateway.kgateway.dev/v1alpha1
-        kind: GatewayExtension
-        spec:
+        manifest:
+          apiVersion: gateway.kgateway.dev/v1alpha1
+          kind: GatewayExtension
           spec:
             type: OAuth2
             oauth2:
@@ -155,9 +155,9 @@ spec:
                     - name: nightscout_token
                       header: API-Secret
       auth:
-        apiVersion: gateway.kgateway.dev/v1alpha1
-        kind: TrafficPolicy
-        spec:
+        manifest:
+          apiVersion: gateway.kgateway.dev/v1alpha1
+          kind: TrafficPolicy
           spec:
             targetRefs:
               - group: gateway.networking.k8s.io
@@ -168,9 +168,9 @@ spec:
               extensionRef:
                 name: "{{ .Release.Name }}-auth-ext"
       service-worker:
-        apiVersion: gateway.kgateway.dev/v1alpha1
-        kind: DirectResponse
-        spec:
+        manifest:
+          apiVersion: gateway.kgateway.dev/v1alpha1
+          kind: DirectResponse
           spec:
             status: 200
             bodyFormat:

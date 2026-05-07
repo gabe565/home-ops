@@ -136,9 +136,9 @@ spec:
 
     rawResources:
       access-denied:
-        apiVersion: gateway.kgateway.dev/v1alpha1
-        kind: DirectResponse
-        spec:
+        manifest:
+          apiVersion: gateway.kgateway.dev/v1alpha1
+          kind: DirectResponse
           spec:
             status: 403
             bodyFormat:

@@ -117,9 +117,9 @@ spec:
 
     rawResources:
       allowlist:
-        apiVersion: gateway.kgateway.dev/v1alpha1
-        kind: TrafficPolicy
-        spec:
+        manifest:
+          apiVersion: gateway.kgateway.dev/v1alpha1
+          kind: TrafficPolicy
           spec:
             targetRefs:
               - group: gateway.networking.k8s.io
