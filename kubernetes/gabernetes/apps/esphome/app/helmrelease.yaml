@@ -72,7 +72,7 @@ spec:
           terminationGracePeriodSeconds: 1
           dnsConfig:
             nameservers:
-              - 192.168.1.221
+              - 10.43.0.11
           dnsPolicy: None
           labels:
             policy.gabe565.com/egress-adguard-dns: "true"
