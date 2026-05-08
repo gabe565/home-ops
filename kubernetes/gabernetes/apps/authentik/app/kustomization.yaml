@@ -9,9 +9,3 @@ resources:
   - oidc-rbac.yaml
   - webfinger.yaml
   - referencegrant.yaml
-configMapGenerator:
-  - name: authentik-custom-assets
-    options:
-      disableNameSuffixHash: true
-    files:
-      - assets/custom.css

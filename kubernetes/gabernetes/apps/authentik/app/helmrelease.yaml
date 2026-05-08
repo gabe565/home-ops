@@ -21,7 +21,6 @@ spec:
       priorityClassName: system-cluster-critical
 
       deploymentAnnotations:
-        configmap.reloader.stakater.com/reload: authentik-custom-assets
         secret.reloader.stakater.com/reload: authentik-s3-envs,authentik-geoip
 
       podLabels:
@@ -114,15 +113,6 @@ spec:
               name: public
           hostnames:
             - ${app_url}
-
-      volumes:
-        - name: custom-assets
-          configMap:
-            name: authentik-custom-assets
-      volumeMounts:
-        - name: custom-assets
-          mountPath: /web/dist/custom.css
-          subPath: custom.css
 
       containerSecurityContext:
         readOnlyRootFilesystem: true
