@@ -42,7 +42,7 @@ spec:
           restic: &container
             image:
               repository: ghcr.io/gabe565/restic
-              tag: 0.18.1@sha256:2c06ee4953f1523db261e1d6d11a1081687f49b272874151d0e7eb8ae5d11ba6
+              tag: 0.18.1@sha256:fe3af7244998e0531b096d3f5dd3aeaf0538bf26ddc5649fd79323cb025a75e8
             workingDir: /vaultwarden-data
             envFrom:
               - secretRef:
