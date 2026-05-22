@@ -7,7 +7,7 @@ spec:
   chart:
     spec:
       chart: kgateway
-      version: v2.3.0-beta.7
+      version: v2.3.1
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
