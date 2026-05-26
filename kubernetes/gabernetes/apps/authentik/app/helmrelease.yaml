@@ -7,7 +7,7 @@ spec:
   chart:
     spec:
       chart: authentik
-      version: 2026.2.2
+      version: 2026.5.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
