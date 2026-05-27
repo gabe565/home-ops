@@ -42,7 +42,7 @@ spec:
           restic: &container
             image:
               repository: ghcr.io/gabe565/restic
-              tag: 0.18.1@sha256:2c06ee4953f1523db261e1d6d11a1081687f49b272874151d0e7eb8ae5d11ba6
+              tag: 0.18.1@sha256:f28c41f8c7e18d172b51899cb2cd66c1dca9a100e091825fc094e48a038980b5
             workingDir: /open-webui-data
             envFrom:
               - secretRef:
