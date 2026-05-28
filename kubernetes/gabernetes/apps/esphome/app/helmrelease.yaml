@@ -83,7 +83,7 @@ spec:
           app:
             image:
               repository: ghcr.io/coder/code-server
-              tag: 4.116.0@sha256:4671fcaba60044478bc8238ad630cd53e19294de29012e6e2069411273f02415
+              tag: 4.121.0@sha256:ea5f42d99998e2ba44297eca9b8a38a101e718ef54caaa41d649f6c6f1c8c71e
               pullPolicy: IfNotPresent
             args:
               - --disable-telemetry
