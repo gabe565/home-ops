@@ -43,7 +43,7 @@ spec:
           restic: &container
             image:
               repository: ghcr.io/gabe565/restic
-              tag: 0.18.1@sha256:f28c41f8c7e18d172b51899cb2cd66c1dca9a100e091825fc094e48a038980b5
+              tag: 0.18.1@sha256:83fd2a25fdc5ab311de6bbf9a6b4f158d3c30744c419045aaf5406834ad715cc
             workingDir: /data-adguard-home-0
             envFrom:
               - secretRef:
