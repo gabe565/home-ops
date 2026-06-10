@@ -42,7 +42,7 @@ spec:
           restic: &container
             image:
               repository: ghcr.io/gabe565/restic
-              tag: 0.18.1@sha256:f28c41f8c7e18d172b51899cb2cd66c1dca9a100e091825fc094e48a038980b5
+              tag: 0.19.0@sha256:d261eee5cb956a41ff1247b1582813001312c84d00a1e2163cffd21917f247cb
             workingDir: /plex-config/Library/Application Support/Plex Media Server
             envFrom:
               - secretRef:
