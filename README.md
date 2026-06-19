@@ -239,10 +239,14 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><a href="kubernetes/gabernetes/apps/karakeep/app/meilisearch.yaml">meilisearch</a>, <a href="kubernetes/gabernetes/apps/karakeep/app/restic/helmrelease.yaml">restic</a></td>
   </tr>
   <tr>
-    <td rowspan="2">kgateway-system</td>
+    <td rowspan="3">kgateway-system</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/kgateway/app/crds.yaml">crds</a></td>
-    <td rowspan="2"></td>
+    <td rowspan="3"></td>
+  </tr>
+  <tr>
+    <td><code>GitRepository</code></td>
+    <td><a href="https://github.com/kubernetes-sigs/gateway-api">gateway-api</a></td>
   </tr>
   <tr>
     <td><code>HelmRelease</code></td>
