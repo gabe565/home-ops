@@ -34,7 +34,7 @@ spec:
   chart:
     spec:
       chart: kgateway-crds
-      version: 2.3.3
+      version: 2.3.4
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
