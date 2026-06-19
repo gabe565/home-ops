@@ -48,6 +48,8 @@ spec:
 
               HEADSCALE_EPHEMERAL_NODE_INACTIVITY_TIMEOUT: "30m"
 
+              HEADSCALE_TRUSTED_PROXIES: 10.42.0.0/16
+
               HEADSCALE_DNS_NAMESERVERS_GLOBAL: "1.1.1.1 1.0.0.1"
               HEADSCALE_DNS_MAGIC_DNS: "true"
               HEADSCALE_DNS_BASE_DOMAIN: ${base_domain}
