@@ -23,19 +23,11 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/esphome/esphome
-              tag: 2026.5.3@sha256:c1a2a042e351ed07d7e8e703f3b51dec9f836921cdfc867a5fd5472bad36b9fb
+              repository: ghcr.io/home-operations/esphome
+              tag: 2026.5.3@sha256:81c652e7bd103dd7ba95ed8ca1185d0a5f209ec6eed3e8f44615e5c24b96a328
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
-              # From https://github.com/ptr727/ESPHome-NonRoot
-              PLATFORMIO_CORE_DIR: /cache/pio
-              # ESPHome "build_path" option, default is "/config/.esphome/build/[project]"
-              ESPHOME_BUILD_PATH: /cache/build
-              # ESPHome "data_dir" option, default is "/config/.esphome"
-              ESPHOME_DATA_DIR: /cache/data
-              # Set pip cache directory, default is "~/.cache/pip"
-              PIP_CACHE_DIR: /cache/pip
             probes:
               startup:
                 enabled: true
@@ -66,6 +58,8 @@ spec:
             runAsNonRoot: true
             runAsUser: 65534
             runAsGroup: 65534
+            fsGroup: 65534
+            fsGroupChangePolicy: OnRootMismatch
             seccompProfile: { type: RuntimeDefault }
 
     service:
@@ -87,6 +81,7 @@ spec:
         size: 8Gi
       tmp:
         type: emptyDir
+        medium: Memory
 
     route:
       esphome:
