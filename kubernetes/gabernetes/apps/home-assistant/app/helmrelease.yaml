@@ -56,42 +56,6 @@ spec:
             policy.gabe565.com/egress-world-with-lan: "true"
             policy.gabe565.com/ingress-envoy-public: "true"
             policy.gabe565.com/ingress-world: "true"
-          affinity: &affinity
-            podAffinity:
-              preferredDuringSchedulingIgnoredDuringExecution:
-                - weight: 100
-                  podAffinityTerm:
-                    topologyKey: kubernetes.io/hostname
-                    labelSelector:
-                      matchLabels:
-                        app.kubernetes.io/name: home-assistant
-      code:
-        containers:
-          app:
-            image:
-              repository: ghcr.io/coder/code-server
-              tag: 4.124.2@sha256:726c75e330d99c9e6545ff1208042ccc3d97465cf24cdb48b304d111a43cd441
-              pullPolicy: IfNotPresent
-            args:
-              - --disable-telemetry
-              - --disable-update-check
-              - --auth=none
-              - --user-data-dir=/config/.vscode
-              - /config
-            resources:
-              requests:
-                cpu: 0m
-                memory: 50Mi
-              limits:
-                cpu: 500m
-                memory: 500Mi
-            securityContext:
-              readOnlyRootFilesystem: true
-              runAsUser: 0
-        pod:
-          labels:
-            policy.gabe565.com/ingress-envoy-public: "true"
-          affinity: *affinity
 
     persistence:
       config:
@@ -111,12 +75,6 @@ spec:
             subPath: root/.local
           - path: /run
             subPath: run
-      code-config:
-        type: emptyDir
-        advancedMounts:
-          code:
-            app:
-              - path: /root/.config
 
     service:
       home-assistant:
@@ -125,15 +83,10 @@ spec:
         ports:
           http:
             port: 8123
-      code:
-        controller: code
-        ports:
-          http:
-            port: 8080
 
     route:
       app:
-        parentRefs: &parentRefs
+        parentRefs:
           - namespace: kgateway-system
             name: public
         hostnames:
@@ -141,41 +94,3 @@ spec:
         rules:
           - backendRefs:
               - identifier: home-assistant
-      code:
-        parentRefs: *parentRefs
-        hostnames:
-          - ${code_url}
-        rules:
-          - backendRefs:
-              - identifier: code
-
-    rawResources:
-      code-allowlist-ext:
-        manifest:
-          apiVersion: gateway.kgateway.dev/v1alpha1
-          kind: GatewayExtension
-          spec:
-            type: OAuth2
-            oauth2:
-              backendRef:
-                name: authentik-server
-                namespace: authentik
-                port: 80
-              issuerURI: https://${oidc_host}/application/o/change-detection/
-              credentials:
-                clientID: ${oidc_client_id}
-                clientSecretRef:
-                  name: oidc
-              scopes: [openid, offline_access]
-      code-allowlist:
-        manifest:
-          apiVersion: gateway.kgateway.dev/v1alpha1
-          kind: TrafficPolicy
-          spec:
-            targetRefs:
-              - group: gateway.networking.k8s.io
-                kind: HTTPRoute
-                name: "{{ .Release.Name }}-code"
-            oauth2:
-              extensionRef:
-                name: "{{ .Release.Name }}-code-allowlist-ext"
