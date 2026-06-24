@@ -32,10 +32,9 @@
       "customType": "regex",
       "fileMatch": ["cni-plugins\\.yaml$"],
       "matchStrings": [
-        "version: (?<currentValue>.+)"
+        "image: (?<depName>.+?)\\s+version: (?<currentValue>.+)"
       ],
-      "depNameTemplate": "containernetworking/plugins",
-      "datasourceTemplate": "github-releases"
+      "datasourceTemplate": "docker"
     },
     {
       "customType": "regex",
