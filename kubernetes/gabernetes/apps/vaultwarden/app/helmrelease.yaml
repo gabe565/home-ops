@@ -39,6 +39,17 @@ spec:
               PUSH_ENABLED: "true"
               PUSH_INSTALLATION_ID: ${push_installation_id}
               PUSH_INSTALLATION_KEY: ${push_installation_key}
+              SSO_ENABLED: "true"
+              SSO_AUTHORITY: https://${oidc_host}/application/o/vaultwarden/
+              SSO_SCOPES: openid profile email offline_access
+              SSO_CLIENT_ID:
+                secretKeyRef:
+                  name: oidc
+                  key: client-id
+              SSO_CLIENT_SECRET:
+                secretKeyRef:
+                  name: oidc
+                  key: client-secret
               ORG_ATTACHMENT_LIMIT: "1000000" # 1GB
               USER_ATTACHMENT_LIMIT: "1000000" # 1GB
               USER_SEND_LIMIT: "1000000" # 1GB
@@ -60,6 +71,7 @@ spec:
         pod:
           priorityClassName: system-cluster-critical
           labels:
+            policy.gabe565.com/egress-authentik: "true"
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-envoy-public: "true"
@@ -70,6 +82,10 @@ spec:
             fsGroup: 65534
             fsGroupChangePolicy: OnRootMismatch
             seccompProfile: {type: RuntimeDefault}
+          hostAliases:
+            - ip: 10.43.0.20
+              hostnames:
+                - ${oidc_host}
 
     service:
       vaultwarden:
