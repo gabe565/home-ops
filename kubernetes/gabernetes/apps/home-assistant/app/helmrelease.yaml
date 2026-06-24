@@ -23,8 +23,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/home-assistant/home-assistant
-              tag: 2026.6.3@sha256:aed891b8f801072302815b4b0fab5adb714182967e9d2e2d4a2be558241c73ad
+              repository: ghcr.io/home-operations/home-assistant
+              tag: 2026.6.3@sha256:82db7a297c96a0288559c5f2849878168c14a06557edc114084d874268c92a9a
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
@@ -44,6 +44,8 @@ spec:
                 enabled: true
             securityContext:
               readOnlyRootFilesystem: true
+              allowPrivilegeEscalation: false
+              capabilities: { drop: [ALL] }
         pod:
           annotations:
             k8s.v1.cni.cncf.io/networks: ipvlan
@@ -56,6 +58,13 @@ spec:
             policy.gabe565.com/egress-world-with-lan: "true"
             policy.gabe565.com/ingress-envoy-public: "true"
             policy.gabe565.com/ingress-world: "true"
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
+            fsGroup: 65534
+            fsGroupChangePolicy: OnRootMismatch
+            seccompProfile: { type: RuntimeDefault }
 
     persistence:
       config:
@@ -66,15 +75,7 @@ spec:
         retain: true
       tmp:
         type: emptyDir
-      cache:
-        type: emptyDir
-        globalMounts:
-          - path: /root/.cache
-            subPath: root/.cache
-          - path: /root/.local
-            subPath: root/.local
-          - path: /run
-            subPath: run
+        medium: Memory
 
     service:
       home-assistant:
