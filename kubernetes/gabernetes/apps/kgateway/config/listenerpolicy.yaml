@@ -1,4 +1,19 @@
 apiVersion: gateway.kgateway.dev/v1alpha1
+kind: HTTPListenerPolicy
+metadata:
+  name: default
+  namespace: kgateway-system
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: public
+  earlyRequestHeaderModifier:
+    set:
+      - name: X-Real-IP
+        value: '%DOWNSTREAM_REMOTE_ADDRESS_WITHOUT_PORT%'
+---
+apiVersion: gateway.kgateway.dev/v1alpha1
 kind: ListenerPolicy
 metadata:
   name: default
