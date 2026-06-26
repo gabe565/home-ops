@@ -1,0 +1,9 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: kgateway
+  namespace: kgateway-system
+spec:
+  interval: 1h
+  type: oci
+  url: oci://cr.kgateway.dev/kgateway-dev/charts

@@ -659,10 +659,18 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><a href="https://github.com/gabe565/home-ops-private">home-ops-private</a></td>
   </tr>
   <tr>
-    <td>ingress-nginx</td>
+    <td rowspan="3">kgateway-system</td>
     <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/tennant/apps/ingress-nginx/app/helmrelease.yaml">ingress-nginx</a></td>
-    <td></td>
+    <td><a href="kubernetes/tennant/apps/kgateway/app/crds.yaml">crds</a></td>
+    <td rowspan="3"></td>
+  </tr>
+  <tr>
+    <td><code>GitRepository</code></td>
+    <td><a href="https://github.com/kubernetes-sigs/gateway-api">gateway-api</a></td>
+  </tr>
+  <tr>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/tennant/apps/kgateway/app/helmrelease.yaml">kgateway</a></td>
   </tr>
   <tr>
     <td>portfolio</td>

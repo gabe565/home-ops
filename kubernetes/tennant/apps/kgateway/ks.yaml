@@ -2,11 +2,11 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: app
-  namespace: cert-manager
+  namespace: kgateway-system
 spec:
   interval: 1h
-  targetNamespace: cert-manager
-  path: ./kubernetes/templates/apps/cert-manager/app
+  targetNamespace: kgateway-system
+  path: ./kubernetes/tennant/apps/kgateway/app
   prune: true
   sourceRef:
     kind: GitRepository
@@ -16,12 +16,12 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: issuers
-  namespace: cert-manager
+  name: config
+  namespace: kgateway-system
 spec:
   interval: 1h
-  targetNamespace: cert-manager
-  path: ./kubernetes/tennant/apps/cert-manager/issuers
+  targetNamespace: kgateway-system
+  path: ./kubernetes/tennant/apps/kgateway/config
   prune: true
   sourceRef:
     kind: GitRepository
@@ -29,7 +29,3 @@ spec:
     name: home-ops
   dependsOn:
     - name: app
-  postBuild:
-    substituteFrom:
-      - kind: Secret
-        name: issuer-vars

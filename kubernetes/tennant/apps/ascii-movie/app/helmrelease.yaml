@@ -36,50 +36,6 @@ spec:
         cpu: 1
         memory: 1Gi
 
-    ingress:
-      main:
-        enabled: true
-        annotations:
-          nginx.ingress.kubernetes.io/temporal-redirect: https://github.com/gabe565/ascii-movie
-        hosts:
-          - host: starwarstel.net
-            paths: &paths
-              - path: /
-          - host: "*.starwarstel.net"
-            paths: *paths
-          - host: asciitel.net
-            paths: *paths
-          - host: "*.asciitel.net"
-            paths: *paths
-          - host: movie.gabe565.com
-            paths: *paths
-        tls: &tls
-          - secretName: starwarstel.net-tls
-            hosts:
-              - starwarstel.net
-              - "*.starwarstel.net"
-          - secretName: asciitel.net-tls
-            hosts:
-              - asciitel.net
-              - "*.asciitel.net"
-          - secretName: gabe565.com-tls
-            hosts:
-              - movie.gabe565.com
-      health:
-        enabled: true
-        hosts:
-          - host: starwarstel.net
-            paths: &paths
-              - path: /health
-                service:
-                  name: ascii-movie-api
-                  port: 1977
-            pathType: Exact
-          - host: asciitel.net
-            paths: *paths
-            pathType: Exact
-        tls: *tls
-
     securityContext:
       readOnlyRootFilesystem: true
       allowPrivilegeEscalation: false
