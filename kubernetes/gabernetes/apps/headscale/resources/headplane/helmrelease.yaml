@@ -26,7 +26,7 @@ spec:
           app:
             image:
               repository: ghcr.io/tale/headplane
-              tag: 0.6.3@sha256:9476cc5adb12314b34d66c8d8d0d58a4ba0de72fdadfa9f35e4367dfe7295e67
+              tag: 0.7.0@sha256:7bd6523a14567a43eb4ffa1e95e3d95456b8539c9d081757df3f228b9e836fb5
             probes:
               liveness: &probe
                 enabled: true
