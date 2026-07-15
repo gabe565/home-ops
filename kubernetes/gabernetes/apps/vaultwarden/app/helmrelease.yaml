@@ -107,6 +107,8 @@ spec:
         parentRefs:
           - namespace: kgateway-system
             name: public
+          - namespace: envoy-gateway-system
+            name: public
         hostnames:
           - ${app_url}
         rules:
@@ -122,6 +124,26 @@ spec:
               - identifier: vaultwarden
 
     rawResources:
+      auth-envoy:
+        manifest:
+          apiVersion: gateway.envoyproxy.io/v1alpha1
+          kind: SecurityPolicy
+          spec:
+            targetRefs:
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}"
+                sectionName: admin
+            oidc:
+              provider:
+                issuer: https://${oidc_host}/application/o/vaultwarden/
+              clientIDRef:
+                name: oidc
+              clientSecret:
+                name: oidc
+              scopes: [openid, offline_access]
+              redirectURL: "%REQ(x-forwarded-proto)%://%REQ(:authority)%/admin/oauth2/redirect"
+              logoutPath: /admin/oauth2/logout
       admin-auth-ext:
         manifest:
           apiVersion: gateway.kgateway.dev/v1alpha1
@@ -133,7 +155,7 @@ spec:
                 name: authentik-server
                 namespace: authentik
                 port: 80
-              issuerURI: https://${oidc_host}/application/o/vaultwarden-admin/
+              issuerURI: https://${oidc_host}/application/o/vaultwarden/
               credentials:
                 clientID: ${oidc_client_id}
                 clientSecretRef:

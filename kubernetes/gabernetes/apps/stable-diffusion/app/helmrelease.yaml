@@ -93,10 +93,29 @@ spec:
         parentRefs:
           - namespace: kgateway-system
             name: public
+          - namespace: envoy-gateway-system
+            name: public
         hostnames:
           - ${app_url}
 
     rawResources:
+      auth-envoy:
+        manifest:
+          apiVersion: gateway.envoyproxy.io/v1alpha1
+          kind: SecurityPolicy
+          spec:
+            targetRefs:
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}"
+            oidc:
+              provider:
+                issuer: https://${oidc_host}/application/o/stable-diffusion/
+              clientIDRef:
+                name: oidc
+              clientSecret:
+                name: oidc
+              scopes: [openid, offline_access]
       auth-ext:
         manifest:
           apiVersion: gateway.kgateway.dev/v1alpha1

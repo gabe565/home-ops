@@ -1,0 +1,57 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: envoy-gateway
+  namespace: envoy-gateway-system
+spec:
+  chart:
+    spec:
+      chart: gateway-helm
+      version: 1.8.2
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: envoy-gateway-system
+        name: envoyproxy
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    # CRDs are managed outside this chart: Gateway API CRDs by kgateway (standard channel),
+    # and envoy-gateway's own CRDs by the Flux Kustomization in crds.yaml.
+    crds:
+      enabled: false
+    deployment:
+      pod:
+        labels:
+          policy.gabe565.com/egress-authentik: "true"
+          policy.gabe565.com/egress-geoip: "true"
+          policy.gabe565.com/egress-kubeapi: "true"
+          policy.gabe565.com/egress-world-with-lan: "true"
+          policy.gabe565.com/ingress-nodes: "true"
+          policy.gabe565.com/ingress-prometheus: "true"
+          policy.gabe565.com/ingress-world: "true"
+    certgen:
+      job:
+        pod:
+          labels:
+            policy.gabe565.com/egress-kubeapi: "true"
+    config:
+      envoyGateway:
+        extensionApis:
+          enableBackend: true
+          enableEnvoyPatchPolicy: true
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: Deployment
+              name: envoy-gateway
+            # language=yaml
+            patch: |
+              - op: add
+                path: /spec/template/spec/hostAliases
+                value:
+                  - ip: 10.43.0.20
+                    hostnames:
+                      - ${oidc_host}

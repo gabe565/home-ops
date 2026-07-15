@@ -16,3 +16,27 @@ spec:
       set:
         - name: :path
           value: '{{ header(":path") }}{% if "?" in header(":path") %}&{% else %}?{% endif %}token={{ header("api-secret") }}'
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyExtensionPolicy
+metadata:
+  name: ws-token-to-query
+  namespace: nightscout
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: nightscout-oidc
+      sectionName: oidc
+  lua:
+    - type: Inline
+      # language=lua
+      inline: |
+        function envoy_on_request(handle)
+            local path = handle:headers():get(":path")
+            local secret = handle:headers():get("api-secret")
+            if path and secret and not string.find(path, "token=") then
+                local sep = string.find(path, "?") and "&" or "?"
+                handle:headers():replace(":path", path .. sep .. "token=" .. secret)
+            end
+        end
