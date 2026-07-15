@@ -9,6 +9,10 @@ spec:
       kind: Gateway
       namespace: kgateway-system
       name: public
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      namespace: envoy-gateway-system
+      name: public
   hostnames:
     - ${app_url}
   rules:
@@ -49,3 +53,22 @@ spec:
   oauth2:
     extensionRef:
       name: auth
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: auth
+  namespace: longhorn-system
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: longhorn
+  oidc:
+    provider:
+      issuer: https://${oidc_host}/application/o/longhorn/
+    clientIDRef:
+      name: oidc
+    clientSecret:
+      name: oidc
+    scopes: [openid, offline_access]

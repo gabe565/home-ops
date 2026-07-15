@@ -1,0 +1,20 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: BackendTrafficPolicy
+metadata:
+  name: default
+  namespace: envoy-gateway-system
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: public
+  timeout:
+    http:
+      requestTimeout: 30s
+  compressor:
+    - type: Brotli
+      brotli: {}
+    - type: Gzip
+      gzip: {}
+    - type: Zstd
+      zstd: {}

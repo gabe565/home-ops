@@ -118,6 +118,8 @@ spec:
         parentRefs: &parentRefs
           - namespace: kgateway-system
             name: public
+          - namespace: envoy-gateway-system
+            name: public
         hostnames:
           - ${s3_url}
           - "*.${s3_url}"
