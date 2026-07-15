@@ -117,10 +117,38 @@ spec:
         parentRefs:
           - namespace: kgateway-system
             name: public
+          - namespace: envoy-gateway-system
+            name: public
         hostnames:
           - ${app_url}
 
     rawResources:
+      auth-envoy:
+        manifest:
+          apiVersion: gateway.envoyproxy.io/v1alpha1
+          kind: SecurityPolicy
+          spec:
+            targetRefs:
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}"
+            oidc:
+              provider:
+                issuer: https://${oidc_host}/application/o/paperless-ngx/
+              clientIDRef:
+                name: oidc
+              clientSecret:
+                name: oidc
+              scopes: [openid, profile, offline_access]
+              logoutPath: /oauth2/logout
+            jwt:
+              providers:
+                - name: extract-user-info
+                  remoteJWKS:
+                    uri: https://${oidc_host}/application/o/paperless-ngx/jwks/
+                  claimToHeaders:
+                    - claim: preferred_username
+                      header: X-User-Name
       auth-ext:
         manifest:
           apiVersion: gateway.kgateway.dev/v1alpha1

@@ -125,6 +125,8 @@ spec:
         parentRefs: &parentRefs
           - namespace: kgateway-system
             name: public
+          - namespace: envoy-gateway-system
+            name: public
         hostnames:
           - ${app_url}
         rules:
@@ -162,6 +164,36 @@ spec:
                   name: shlink-service-worker
 
     rawResources:
+      auth-envoy:
+        manifest:
+          apiVersion: gateway.envoyproxy.io/v1alpha1
+          kind: SecurityPolicy
+          spec:
+            targetRefs:
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}-frontend"
+                sectionName: private
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}-frontend"
+                sectionName: servers-json
+            oidc:
+              provider:
+                issuer: https://${oidc_host}/application/o/shlink/
+              clientIDRef:
+                name: oidc
+              clientSecret:
+                name: oidc
+              scopes: [openid, offline_access, shlink:token]
+            jwt:
+              providers:
+                - name: extract-user-info
+                  remoteJWKS:
+                    uri: https://${oidc_host}/application/o/shlink/jwks/
+                  claimToHeaders:
+                    - claim: shlink_token
+                      header: X-Shlink-Token
       auth-ext:
         manifest:
           apiVersion: gateway.kgateway.dev/v1alpha1

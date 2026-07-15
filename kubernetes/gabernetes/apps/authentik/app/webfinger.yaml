@@ -64,6 +64,8 @@ spec:
         parentRefs:
           - namespace: kgateway-system
             name: public
+          - namespace: envoy-gateway-system
+            name: public
         hostnames:
           - ${webfinger_host}
         rules:

@@ -99,6 +99,8 @@ spec:
         parentRefs:
           - namespace: kgateway-system
             name: public
+          - namespace: envoy-gateway-system
+            name: public
         hostnames:
           - ${app_url}
 

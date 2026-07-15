@@ -111,6 +111,8 @@ spec:
         parentRefs:
           - namespace: kgateway-system
             name: public
+          - namespace: envoy-gateway-system
+            name: public
         hostnames:
           - ${app_url}
         rules:
@@ -141,6 +143,33 @@ spec:
               - identifier: healthchecks
 
     rawResources:
+      auth-envoy:
+        manifest:
+          apiVersion: gateway.envoyproxy.io/v1alpha1
+          kind: SecurityPolicy
+          spec:
+            targetRefs:
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}"
+                sectionName: private
+            oidc:
+              provider:
+                issuer: https://${oidc_host}/application/o/healthchecks/
+              clientIDRef:
+                name: oidc
+              clientSecret:
+                name: oidc
+              scopes: [openid, offline_access, email]
+              logoutPath: /accounts/logout/
+            jwt:
+              providers:
+                - name: extract-user-info
+                  remoteJWKS:
+                    uri: https://${oidc_host}/application/o/healthchecks/jwks/
+                  claimToHeaders:
+                    - claim: email
+                      header: X-User-Email
       auth-ext:
         manifest:
           apiVersion: gateway.kgateway.dev/v1alpha1
