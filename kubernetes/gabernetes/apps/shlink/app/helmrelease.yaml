@@ -123,8 +123,6 @@ spec:
     route:
       api:
         parentRefs: &parentRefs
-          - namespace: kgateway-system
-            name: public
           - namespace: envoy-gateway-system
             name: public
         hostnames:
@@ -148,8 +146,8 @@ spec:
             filters:
               - type: ExtensionRef
                 extensionRef:
-                  group: gateway.kgateway.dev
-                  kind: DirectResponse
+                  group: gateway.envoyproxy.io
+                  kind: HTTPRouteFilter
                   name: shlink-servers-json
           - name: service-worker
             matches:
@@ -159,12 +157,12 @@ spec:
             filters:
               - type: ExtensionRef
                 extensionRef:
-                  group: gateway.kgateway.dev
-                  kind: DirectResponse
+                  group: gateway.envoyproxy.io
+                  kind: HTTPRouteFilter
                   name: shlink-service-worker
 
     rawResources:
-      auth-envoy:
+      auth:
         manifest:
           apiVersion: gateway.envoyproxy.io/v1alpha1
           kind: SecurityPolicy
@@ -197,62 +195,27 @@ spec:
                   claimToHeaders:
                     - claim: shlink_token
                       header: X-Shlink-Token
-      auth-ext:
-        manifest:
-          apiVersion: gateway.kgateway.dev/v1alpha1
-          kind: GatewayExtension
-          spec:
-            type: OAuth2
-            oauth2:
-              backendRef:
-                name: authentik-server
-                namespace: authentik
-                port: 80
-              issuerURI: https://${oidc_host}/application/o/shlink/
-              credentials:
-                clientID: ${oidc_client_id}
-                clientSecretRef:
-                  name: oidc
-              scopes: [openid, offline_access, shlink:token]
-              jwt:
-                idToken:
-                  claimsToHeaders:
-                    - name: shlink_token
-                      header: X-Shlink-Token
-      auth:
-        manifest:
-          apiVersion: gateway.kgateway.dev/v1alpha1
-          kind: TrafficPolicy
-          spec:
-            targetRefs:
-              - group: gateway.networking.k8s.io
-                kind: HTTPRoute
-                name: "{{ .Release.Name }}-frontend"
-                sectionName: private
-              - group: gateway.networking.k8s.io
-                kind: HTTPRoute
-                name: "{{ .Release.Name }}-frontend"
-                sectionName: servers-json
-            oauth2:
-              extensionRef:
-                name: "{{ .Release.Name }}-auth-ext"
       servers-json:
         manifest:
-          apiVersion: gateway.kgateway.dev/v1alpha1
-          kind: DirectResponse
+          apiVersion: gateway.envoyproxy.io/v1alpha1
+          kind: HTTPRouteFilter
           spec:
-            status: 200
-            bodyFormat:
+            directResponse:
+              statusCode: 200
               contentType: application/json
-              # language=json
-              text: '[{"name":"${app_url}", "url":"https://${app_url}", "apiKey":"%REQ(x-shlink-token)%"}]'
+              body:
+                type: Inline
+                # language=json
+                inline: '[{"name":"${app_url}", "url":"https://${app_url}", "apiKey":"%REQ(x-shlink-token)%"}]'
       service-worker:
         manifest:
-          apiVersion: gateway.kgateway.dev/v1alpha1
-          kind: DirectResponse
+          apiVersion: gateway.envoyproxy.io/v1alpha1
+          kind: HTTPRouteFilter
           spec:
-            status: 200
-            bodyFormat:
+            directResponse:
+              statusCode: 200
               contentType: application/javascript
-              # language=javascript
-              text: self.addEventListener('install', event => { event.waitUntil(self.skipWaiting()) });
+              body:
+                type: Inline
+                # language=javascript
+                inline: self.addEventListener('install', event => { event.waitUntil(self.skipWaiting()) });

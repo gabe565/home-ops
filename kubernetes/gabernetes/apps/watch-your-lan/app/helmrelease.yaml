@@ -70,15 +70,13 @@ spec:
     route:
       watch-your-lan:
         parentRefs:
-          - namespace: kgateway-system
-            name: public
           - namespace: envoy-gateway-system
             name: public
         hostnames:
           - ${app_url}
 
     rawResources:
-      auth-envoy:
+      auth:
         manifest:
           apiVersion: gateway.envoyproxy.io/v1alpha1
           kind: SecurityPolicy
@@ -97,35 +95,6 @@ spec:
               clientSecret:
                 name: oidc
               scopes: [openid, offline_access]
-      auth-ext:
-        manifest:
-          apiVersion: gateway.kgateway.dev/v1alpha1
-          kind: GatewayExtension
-          spec:
-            type: OAuth2
-            oauth2:
-              backendRef:
-                name: authentik-server
-                namespace: authentik
-                port: 80
-              issuerURI: https://${oidc_host}/application/o/watch-your-lan/
-              credentials:
-                clientID: ${oidc_client_id}
-                clientSecretRef:
-                  name: oidc
-              scopes: [openid, offline_access]
-      auth:
-        manifest:
-          apiVersion: gateway.kgateway.dev/v1alpha1
-          kind: TrafficPolicy
-          spec:
-            targetRefs:
-              - group: gateway.networking.k8s.io
-                kind: HTTPRoute
-                name: "{{ .Release.Name }}"
-            oauth2:
-              extensionRef:
-                name: "{{ .Release.Name }}-auth-ext"
 
     serviceMonitor:
       main:

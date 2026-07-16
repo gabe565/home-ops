@@ -158,8 +158,6 @@ spec:
     route:
       app:
         parentRefs:
-          - namespace: kgateway-system
-            name: public
           - namespace: envoy-gateway-system
             name: public
         hostnames:

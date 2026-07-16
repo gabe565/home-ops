@@ -116,8 +116,6 @@ spec:
     route:
       s3:
         parentRefs: &parentRefs
-          - namespace: kgateway-system
-            name: public
           - namespace: envoy-gateway-system
             name: public
         hostnames:
@@ -135,9 +133,9 @@ spec:
             filters:
               - type: ExtensionRef
                 extensionRef:
-                  group: gateway.kgateway.dev
-                  kind: DirectResponse
-                  name: "{{ .Release.Name }}-access-denied"
+                  group: gateway.envoyproxy.io
+                  kind: HTTPRouteFilter
+                  name: minio-access-denied
       admin:
         parentRefs: *parentRefs
         hostnames:
@@ -155,14 +153,17 @@ spec:
 
     rawResources:
       access-denied:
+        suffix: access-denied
         manifest:
-          apiVersion: gateway.kgateway.dev/v1alpha1
-          kind: DirectResponse
+          apiVersion: gateway.envoyproxy.io/v1alpha1
+          kind: HTTPRouteFilter
           spec:
-            status: 403
-            bodyFormat:
+            directResponse:
+              statusCode: 403
               contentType: text/plain
-              text: Access Denied
+              body:
+                type: Inline
+                inline: Access Denied
 
     serviceMonitor:
       main:

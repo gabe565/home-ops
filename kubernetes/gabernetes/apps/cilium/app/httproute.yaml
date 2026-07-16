@@ -7,10 +7,6 @@ spec:
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      namespace: kgateway-system
-      name: public
-    - group: gateway.networking.k8s.io
-      kind: Gateway
       namespace: envoy-gateway-system
       name: public
   hostnames:
@@ -20,39 +16,6 @@ spec:
         - kind: Service
           name: hubble-ui
           port: 80
----
-apiVersion: gateway.kgateway.dev/v1alpha1
-kind: GatewayExtension
-metadata:
-  name: hubble-ui
-  namespace: kube-system
-spec:
-  type: OAuth2
-  oauth2:
-    backendRef:
-      name: authentik-server
-      namespace: authentik
-      port: 80
-    issuerURI: https://${oidc_host}/application/o/cilium-hubble/
-    credentials:
-      clientID: ${oidc_client_id}
-      clientSecretRef:
-        name: oidc
-    scopes: [openid, offline_access]
----
-apiVersion: gateway.kgateway.dev/v1alpha1
-kind: TrafficPolicy
-metadata:
-  name: hubble-ui
-  namespace: kube-system
-spec:
-  targetRefs:
-    - group: gateway.networking.k8s.io
-      kind: HTTPRoute
-      name: hubble-ui
-  oauth2:
-    extensionRef:
-      name: hubble-ui
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: SecurityPolicy

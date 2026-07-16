@@ -109,8 +109,6 @@ spec:
     route:
       healthchecks:
         parentRefs:
-          - namespace: kgateway-system
-            name: public
           - namespace: envoy-gateway-system
             name: public
         hostnames:
@@ -143,7 +141,7 @@ spec:
               - identifier: healthchecks
 
     rawResources:
-      auth-envoy:
+      auth:
         manifest:
           apiVersion: gateway.envoyproxy.io/v1alpha1
           kind: SecurityPolicy
@@ -174,42 +172,6 @@ spec:
                   claimToHeaders:
                     - claim: email
                       header: X-User-Email
-      auth-ext:
-        manifest:
-          apiVersion: gateway.kgateway.dev/v1alpha1
-          kind: GatewayExtension
-          spec:
-            type: OAuth2
-            oauth2:
-              backendRef:
-                name: authentik-server
-                namespace: authentik
-                port: 80
-              issuerURI: https://${oidc_host}/application/o/healthchecks/
-              credentials:
-                clientID: ${oidc_client_id}
-                clientSecretRef:
-                  name: oidc
-              scopes: [openid, offline_access, email]
-              logoutPath: /accounts/logout/
-              jwt:
-                idToken:
-                  claimsToHeaders:
-                    - name: email
-                      header: X-User-Email
-      auth:
-        manifest:
-          apiVersion: gateway.kgateway.dev/v1alpha1
-          kind: TrafficPolicy
-          spec:
-            targetRefs:
-              - group: gateway.networking.k8s.io
-                kind: HTTPRoute
-                name: "{{ .Release.Name }}"
-                sectionName: private
-            oauth2:
-              extensionRef:
-                name: "{{ .Release.Name }}-auth-ext"
 
     serviceMonitor:
       healthchecks:

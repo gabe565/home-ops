@@ -64,8 +64,6 @@ spec:
     route:
       matrimony:
         parentRefs:
-          - namespace: kgateway-system
-            name: public
           - namespace: envoy-gateway-system
             name: public
         hostnames:
@@ -74,17 +72,18 @@ spec:
     rawResources:
       allowlist:
         manifest:
-          apiVersion: gateway.kgateway.dev/v1alpha1
-          kind: TrafficPolicy
+          apiVersion: gateway.envoyproxy.io/v1alpha1
+          kind: SecurityPolicy
           spec:
             targetRefs:
               - group: gateway.networking.k8s.io
                 kind: HTTPRoute
                 name: "{{ .Release.Name }}"
-            acl:
-              defaultAction: deny
+            authorization:
+              defaultAction: Deny
               rules:
-                - action: allow
-                  cidrs:
-                    - 192.168.0.0/22
-                    - 10.42.0.0/16
+                - action: Allow
+                  principal:
+                    clientCIDRs:
+                      - 192.168.0.0/22
+                      - 10.42.0.0/16
