@@ -137,6 +137,9 @@ spec:
             oidc:
               provider:
                 issuer: https://${oidc_host}/application/o/vaultwarden/
+                authorizationEndpoint: https://${oidc_host}/application/o/authorize/
+                tokenEndpoint: https://${oidc_host}/application/o/token/
+                endSessionEndpoint: https://${oidc_host}/application/o/vaultwarden/end-session/
               clientIDRef:
                 name: oidc
               clientSecret:
