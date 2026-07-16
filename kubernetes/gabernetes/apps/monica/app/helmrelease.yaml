@@ -167,6 +167,8 @@ spec:
             oidc:
               provider:
                 issuer: https://${oidc_host}/application/o/monica/
+                authorizationEndpoint: https://${oidc_host}/application/o/authorize/
+                tokenEndpoint: https://${oidc_host}/application/o/token/
               clientIDRef:
                 name: oidc
               clientSecret:

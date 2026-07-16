@@ -44,6 +44,8 @@ spec:
   oidc:
     provider:
       issuer: https://${oauth_host}/application/o/prometheus/
+      authorizationEndpoint: https://${oauth_host}/application/o/authorize/
+      tokenEndpoint: https://${oauth_host}/application/o/token/
     clientIDRef:
       name: prometheus-oidc
     clientSecret:
