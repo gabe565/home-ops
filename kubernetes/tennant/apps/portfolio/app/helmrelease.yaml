@@ -70,7 +70,7 @@ spec:
         annotations:
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
         parentRefs:
-          - namespace: kgateway-system
+          - namespace: envoy-gateway-system
             name: public
         hostnames:
           - ${app_url}

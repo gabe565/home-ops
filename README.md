@@ -635,6 +635,12 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td></td>
   </tr>
   <tr>
+    <td>envoy-gateway-system</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/tennant/apps/envoy-gateway/app/helmrelease.yaml">envoy-gateway</a></td>
+    <td></td>
+  </tr>
+  <tr>
     <td>external-dns</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/tennant/apps/external-dns/app/helmrelease.yaml">external-dns</a></td>
@@ -649,20 +655,6 @@ This Git repository contains the following directories under [Kubernetes](./kube
   <tr>
     <td><code>GitRepository</code></td>
     <td><a href="https://github.com/gabe565/home-ops-private">home-ops-private</a></td>
-  </tr>
-  <tr>
-    <td rowspan="3">kgateway-system</td>
-    <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/tennant/apps/kgateway/app/crds.yaml">crds</a></td>
-    <td rowspan="3"></td>
-  </tr>
-  <tr>
-    <td><code>GitRepository</code></td>
-    <td><a href="https://github.com/kubernetes-sigs/gateway-api">gateway-api</a></td>
-  </tr>
-  <tr>
-    <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/tennant/apps/kgateway/app/helmrelease.yaml">kgateway</a></td>
   </tr>
   <tr>
     <td>portfolio</td>

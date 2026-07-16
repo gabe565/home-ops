@@ -7,7 +7,7 @@ spec:
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      namespace: kgateway-system
+      namespace: envoy-gateway-system
       name: public
   hostnames:
     - starwarstel.net
@@ -31,7 +31,7 @@ spec:
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      namespace: kgateway-system
+      namespace: envoy-gateway-system
       name: public
   hostnames:
     - starwarstel.net
