@@ -16,11 +16,11 @@ spec:
   interval: 1h
   driftDetection:
     mode: enabled
+  install:
+    crds: Create
+  upgrade:
+    crds: CreateReplace
   values:
-    # CRDs are managed outside this chart: Gateway API CRDs by kgateway (standard channel),
-    # and envoy-gateway's own CRDs by the Flux Kustomization in crds.yaml.
-    crds:
-      enabled: false
     deployment:
       pod:
         labels:

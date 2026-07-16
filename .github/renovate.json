@@ -142,11 +142,6 @@
       "matchDatasources": ["docker", "helm"],
       "matchPackageNames": ["ghcr.io/tailscale/tailscale", "tailscale-operator"],
       "groupName": "tailscale"
-    },
-    {
-      "matchDatasources": ["docker"],
-      "matchPackageNames": ["cr.kgateway.dev/kgateway-dev/charts/kgateway*"],
-      "groupName": "kgateway"
     }
   ]
 }

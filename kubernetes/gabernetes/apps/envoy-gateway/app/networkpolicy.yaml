@@ -27,12 +27,6 @@ spec:
   ingress:
     - fromEntities:
         - world
-    - fromEndpoints:
-        - matchLabels:
-            io.kubernetes.pod.namespace: kgateway-system
-            app.kubernetes.io/name: public
-            app.kubernetes.io/instance: public
-            app.kubernetes.io/component: proxy
   egress:
     - toEntities:
         - world
@@ -40,9 +34,3 @@ spec:
         - matchLabels:
             io.kubernetes.pod.namespace: longhorn-system
             app: longhorn-ui
-    - toEndpoints:
-        - matchLabels:
-            io.kubernetes.pod.namespace: kgateway-system
-            app.kubernetes.io/name: public
-            app.kubernetes.io/instance: public
-            app.kubernetes.io/component: proxy
