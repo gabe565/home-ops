@@ -177,8 +177,6 @@ spec:
     route:
       qbittorrent:
         parentRefs: &parentRefs
-          - namespace: kgateway-system
-            name: public
           - namespace: envoy-gateway-system
             name: public
         hostnames:
@@ -214,12 +212,12 @@ spec:
             filters:
               - type: ExtensionRef
                 extensionRef:
-                  group: gateway.kgateway.dev
-                  kind: DirectResponse
+                  group: gateway.envoyproxy.io
+                  kind: HTTPRouteFilter
                   name: qbittorrent-service-worker
 
     rawResources:
-      auth-envoy:
+      auth:
         manifest:
           apiVersion: gateway.envoyproxy.io/v1alpha1
           kind: SecurityPolicy
@@ -241,46 +239,15 @@ spec:
               clientSecret:
                 name: oidc
               scopes: [openid, offline_access]
-      auth-ext:
-        manifest:
-          apiVersion: gateway.kgateway.dev/v1alpha1
-          kind: GatewayExtension
-          spec:
-            type: OAuth2
-            oauth2:
-              backendRef:
-                name: authentik-server
-                namespace: authentik
-                port: 80
-              issuerURI: https://${oidc_host}/application/o/qbittorrent/
-              credentials:
-                clientID: ${oidc_client_id}
-                clientSecretRef:
-                  name: oidc
-              scopes: [openid, offline_access]
-      auth:
-        manifest:
-          apiVersion: gateway.kgateway.dev/v1alpha1
-          kind: TrafficPolicy
-          spec:
-            targetRefs:
-              - group: gateway.networking.k8s.io
-                kind: HTTPRoute
-                name: "{{ .Release.Name }}"
-              - group: gateway.networking.k8s.io
-                kind: HTTPRoute
-                name: "{{ .Release.Name }}-vuetorrent"
-            oauth2:
-              extensionRef:
-                name: "{{ .Release.Name }}-auth-ext"
-
       service-worker:
         manifest:
-          apiVersion: gateway.kgateway.dev/v1alpha1
-          kind: DirectResponse
+          apiVersion: gateway.envoyproxy.io/v1alpha1
+          kind: HTTPRouteFilter
           spec:
-            status: 200
-            bodyFormat:
+            directResponse:
+              statusCode: 200
               contentType: application/javascript
-              # language=javascript
-              text: self.addEventListener('install', event => { event.waitUntil(self.skipWaiting()) });
+              body:
+                type: Inline
+                # language=javascript
+                inline: self.addEventListener('install', event => { event.waitUntil(self.skipWaiting()) });
