@@ -42,7 +42,7 @@ spec:
           restic: &container
             image:
               repository: ghcr.io/gabe565/restic
-              tag: 0.19.0@sha256:d261eee5cb956a41ff1247b1582813001312c84d00a1e2163cffd21917f247cb
+              tag: 0.19.1@sha256:04a99c97c6d088a853808d2cb376c63257ac610bb1f5a3387c2eceb7762c0809
             workingDir: /relax-sounds-data
             envFrom:
               - secretRef:
