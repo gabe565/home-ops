@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: ghcr.io/miniflux/miniflux
-              tag: 2.3.1@sha256:42f14382a035e9d9bbc33910ca53f72d47177f75c3c638d2c5a85adf5582d538
+              tag: 2.3.3@sha256:49d7b60987616387c306a8023087b31f2c9b7b21288b523026cb04058e8b6dbb
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
