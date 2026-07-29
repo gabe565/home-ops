@@ -42,7 +42,7 @@ spec:
           restic: &container
             image:
               repository: ghcr.io/gabe565/restic
-              tag: 0.19.0@sha256:d261eee5cb956a41ff1247b1582813001312c84d00a1e2163cffd21917f247cb
+              tag: 0.19.0@sha256:2fc472e462a7c6e4a6c7d52547d04b2bd8a7f8bae8be162a410ea520a7dbb8a6
             workingDir: /gitea-shared-storage
             envFrom:
               - secretRef:
