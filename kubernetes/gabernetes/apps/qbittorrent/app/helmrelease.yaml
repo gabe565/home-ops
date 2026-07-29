@@ -77,7 +77,7 @@ spec:
           app:
             image:
               repository: ghcr.io/home-operations/qbittorrent
-              tag: 5.2.2@sha256:58e7ef6ed77f369c484b3066652c9e2e3d2c87bd44fce9883455565145fbd8eb
+              tag: 5.2.3@sha256:4fcf15b7f265c2c8d7bc2a7e13240a07e0593c326f3cf3b5b9bb69eec5b79299
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
