@@ -1,0 +1,81 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-5.0.1/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: unduckified
+  namespace: tools
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 5.0.1
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      main:
+        strategy: RollingUpdate
+        containers:
+          app:
+            image:
+              repository: ghcr.io/gabe565/unduckified
+              tag: 0.4.0@sha256:7eeff15f90e8b8c6a3c30116f2b361e0ab9d34f78d06dd2ef18329c7ec51b070
+              pullPolicy: IfNotPresent
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+            securityContext:
+              readOnlyRootFilesystem: true
+              allowPrivilegeEscalation: false
+              capabilities: { drop: [ALL] }
+        pod:
+          labels:
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-envoy-public: "true"
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            fsGroupChangePolicy: OnRootMismatch
+            seccompProfile: { type: RuntimeDefault }
+
+    persistence:
+      run:
+        type: emptyDir
+        medium: Memory
+      tmp:
+        type: emptyDir
+        medium: Memory
+
+    service:
+      main:
+        ports:
+          http:
+            port: 8080
+
+    route:
+      main:
+        parentRefs:
+          - namespace: envoy-gateway-system
+            name: public
+        hostnames:
+          - ${unduckified_host}
+        rules:
+          - backendRefs:
+              - identifier: main
+            filters:
+              - type: ResponseHeaderModifier
+                responseHeaderModifier:
+                  set:
+                    - name: X-Robots-Tag
+                      value: none

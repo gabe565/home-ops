@@ -507,14 +507,18 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><a href="kubernetes/gabernetes/apps/tautulli/restic/helmrelease.yaml">restic</a></td>
   </tr>
   <tr>
-    <td rowspan="2">tools</td>
+    <td rowspan="3">tools</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/tools/resources/cyberchef/helmrelease.yaml">cyberchef</a></td>
-    <td rowspan="2"></td>
+    <td rowspan="3"></td>
   </tr>
   <tr>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/tools/resources/it-tools/helmrelease.yaml">it-tools</a></td>
+  </tr>
+  <tr>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/tools/resources/unduckified/helmrelease.yaml">unduckified</a></td>
   </tr>
   <tr>
     <td>transsmute</td>
