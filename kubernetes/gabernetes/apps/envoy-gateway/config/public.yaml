@@ -8,6 +8,49 @@ spec:
     type: Kubernetes
     kubernetes:
       envoyDeployment:
+        initContainers:
+          - name: geoip
+            image: ghcr.io/maxmind/geoipupdate:v8.0.0@sha256:51e70dd6f16cd3e4d845ac02d09940b10772a75b9d741427d235a78570923c1d
+            restartPolicy: Always
+            env:
+              - name: GEOIPUPDATE_HOST
+                value: http://geoip-updates.geoip
+              - name: GEOIPUPDATE_FREQUENCY
+                value: "8"
+              - name: GEOIPUPDATE_PRESERVE_FILE_TIMES
+                value: "1"
+              - name: GEOIPUPDATE_EDITION_IDS
+                value: GeoLite2-Country
+              - name: GEOIPUPDATE_ACCOUNT_ID
+                value: "1"
+              - name: GEOIPUPDATE_LICENSE_KEY
+                value: stub
+            securityContext:
+              readOnlyRootFilesystem: true
+            startupProbe:
+              exec:
+                command: [ls, /usr/share/GeoIP/GeoLite2-Country.mmdb]
+              periodSeconds: 5
+              failureThreshold: 30
+            volumeMounts:
+              - name: geoip
+                mountPath: /usr/share/GeoIP
+              - name: geoip-tmp
+                mountPath: /tmp
+        pod:
+          labels:
+            policy.gabe565.com/egress-geoip: "true"
+          volumes:
+            - name: geoip
+              emptyDir: {}
+            - name: geoip-tmp
+              emptyDir:
+                medium: Memory
+        container:
+          volumeMounts:
+            - name: geoip
+              mountPath: /usr/share/GeoIP
+              readOnly: true
         patch:
           type: StrategicMerge
           value:
@@ -22,6 +65,13 @@ spec:
         type: LoadBalancer
         loadBalancerIP: 192.168.1.220
         externalTrafficPolicy: Local
+  geoIP:
+    provider:
+      type: MaxMind
+      maxMind:
+        countryDbSource:
+          local:
+            path: /usr/share/GeoIP/GeoLite2-Country.mmdb
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: GatewayClass
