@@ -112,3 +112,17 @@ spec:
                   remove:
                     - Server
                     - X-Powered-By
+
+    rawResources:
+      no-geoblock:
+        suffix: no-geoblock
+        manifest:
+          apiVersion: gateway.envoyproxy.io/v1alpha1
+          kind: SecurityPolicy
+          spec:
+            targetRefs:
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}"
+            authorization:
+              defaultAction: Allow

@@ -10,9 +10,7 @@ spec:
       name: public
       sectionName: https
   clientIPDetection:
-    xForwardedFor:
-      trustedCIDRs:
-        - 10.42.0.0/16
+    directSourceIP: {}
   headers:
     earlyRequestHeaders:
       set:
