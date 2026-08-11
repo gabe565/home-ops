@@ -7,4 +7,5 @@ resources:
   - helmrelease.yaml
   - pvc.yaml
   - oidc-rbac.yaml
+  - securitypolicy.yaml
   - webfinger.yaml

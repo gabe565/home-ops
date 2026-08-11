@@ -23,6 +23,7 @@ metadata:
   name: auth
   namespace: longhorn-system
 spec:
+  mergeType: StrategicMerge
   targetRefs:
     - group: gateway.networking.k8s.io
       kind: HTTPRoute

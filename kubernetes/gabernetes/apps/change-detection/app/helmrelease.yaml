@@ -100,6 +100,7 @@ spec:
           apiVersion: gateway.envoyproxy.io/v1alpha1
           kind: SecurityPolicy
           spec:
+            mergeType: StrategicMerge
             targetRefs:
               - group: gateway.networking.k8s.io
                 kind: HTTPRoute
