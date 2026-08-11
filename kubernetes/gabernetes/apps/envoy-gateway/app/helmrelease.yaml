@@ -7,7 +7,7 @@ spec:
   chart:
     spec:
       chart: gateway-helm
-      version: 1.8.3
+      version: 1.9.0-rc.1
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -41,6 +41,7 @@ spec:
         extensionApis:
           enableBackend: true
           enableEnvoyPatchPolicy: true
+          enableLua: true
   postRenderers:
     - kustomize:
         patches:

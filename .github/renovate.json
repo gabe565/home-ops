@@ -142,6 +142,11 @@
       "matchDatasources": ["docker", "helm"],
       "matchPackageNames": ["ghcr.io/tailscale/tailscale", "tailscale-operator"],
       "groupName": "tailscale"
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchDepNames": ["gateway-helm"],
+      "ignoreUnstable": false
     }
   ]
 }
