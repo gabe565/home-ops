@@ -11,7 +11,7 @@ spec:
         - matchLabels:
             io.kubernetes.pod.namespace: shlink
             app.kubernetes.io/name: shlink
-            app.kubernetes.io/component: api
+            app.kubernetes.io/controller: api
       toPorts:
         - ports:
             - port: "8080"
@@ -25,7 +25,7 @@ spec:
   endpointSelector:
     matchLabels:
       app.kubernetes.io/name: shlink
-      app.kubernetes.io/component: api
+      app.kubernetes.io/controller: api
   ingress:
     - fromEndpoints:
         - matchLabels:

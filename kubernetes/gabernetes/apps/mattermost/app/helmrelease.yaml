@@ -119,7 +119,7 @@ spec:
                     labelSelector:
                       matchLabels:
                         app.kubernetes.io/name: mattermost
-                        app.kubernetes.io/component: mattermost
+                        app.kubernetes.io/controller: mattermost
 
     service:
       mattermost:

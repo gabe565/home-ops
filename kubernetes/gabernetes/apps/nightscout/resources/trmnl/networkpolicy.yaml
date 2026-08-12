@@ -9,7 +9,7 @@ spec:
   egress:
     - toEndpoints:
         - matchLabels:
-            io.kubernetes.pod.namespace: trmnl
+            io.kubernetes.pod.namespace: nightscout
             app.kubernetes.io/name: trmnl
       toPorts:
         - ports:
@@ -19,7 +19,7 @@ apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
   name: trmnl
-  namespace: trmnl
+  namespace: nightscout
 spec:
   endpointSelector:
     matchLabels:
