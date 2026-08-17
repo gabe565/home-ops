@@ -71,7 +71,7 @@ spec:
             fsGroupChangePolicy: OnRootMismatch
             seccompProfile: {type: RuntimeDefault}
           labels:
-            policy.gabe565.com/egress-authentik: "true"
+            policy.gabe565.com/egress-envoy-public: "true"
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-envoy-public: "true"

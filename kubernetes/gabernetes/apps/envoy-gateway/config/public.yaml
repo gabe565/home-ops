@@ -39,6 +39,7 @@ spec:
                 mountPath: /tmp
         pod:
           labels:
+            policy.gabe565.com/egress-envoy-public: "true"
             policy.gabe565.com/egress-geoip: "true"
           volumes:
             - name: geoip
@@ -65,6 +66,11 @@ spec:
         type: LoadBalancer
         loadBalancerIP: 192.168.1.220
         externalTrafficPolicy: Local
+        patch:
+          type: StrategicMerge
+          value:
+            spec:
+              clusterIP: 10.43.0.20
   geoIP:
     provider:
       type: MaxMind

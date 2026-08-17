@@ -68,7 +68,7 @@ spec:
           imagePullSecrets:
             - name: gitea
           labels:
-            policy.gabe565.com/egress-authentik: "true"
+            policy.gabe565.com/egress-envoy-public: "true"
             policy.gabe565.com/egress-prometheus: "true"
             policy.gabe565.com/ingress-envoy-public: "true"
             policy.gabe565.com/ingress-prometheus: "true"

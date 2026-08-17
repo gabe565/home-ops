@@ -102,9 +102,6 @@ spec:
           mountPath: /tmp
 
     server:
-      service:
-        clusterIP: 10.43.0.20
-
       route:
         main:
           enabled: true
