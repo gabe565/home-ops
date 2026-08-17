@@ -73,11 +73,16 @@ spec:
               readOnlyRootFilesystem: true
         pod:
           labels:
+            policy.gabe565.com/egress-envoy-public: "true"
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-envoy-public: "true"
           securityContext:
             seccompProfile: {type: RuntimeDefault}
+          hostAliases:
+            - ip: 10.43.0.20
+              hostnames:
+                - ${authentik_host}
 
     persistence:
       config:

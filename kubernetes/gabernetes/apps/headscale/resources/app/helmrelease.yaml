@@ -54,7 +54,7 @@ spec:
               HEADSCALE_DNS_MAGIC_DNS: "true"
               HEADSCALE_DNS_BASE_DOMAIN: ${base_domain}
 
-              HEADSCALE_OIDC_ISSUER: ${oidc_issuer}
+              HEADSCALE_OIDC_ISSUER: https://${oidc_host}/application/o/headscale/
               HEADSCALE_OIDC_CLIENT_ID: ${oidc_client_id}
               HEADSCALE_OIDC_CLIENT_SECRET: ${oidc_client_secret}
               HEADSCALE_OIDC_PKCE_ENABLED: "true"
@@ -86,11 +86,16 @@ spec:
         pod:
           terminationGracePeriodSeconds: 3
           labels:
+            policy.gabe565.com/egress-envoy-public: "true"
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-envoy-public: "true"
             policy.gabe565.com/ingress-namespace: "true"
             policy.gabe565.com/ingress-prometheus: "true"
+          hostAliases:
+            - ip: 10.43.0.20
+              hostnames:
+                - ${oidc_host}
 
     service:
       headscale:
