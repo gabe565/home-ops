@@ -12,6 +12,9 @@ data:
         type: statefulset
         containers:
           mongodb:
+            args:
+              - --quiet
+              - --setParameter=enableDetailedConnectionHealthMetricLogLines=false
             env:
               MONGO_INITDB_ROOT_USERNAME: root
               MONGO_INITDB_ROOT_PASSWORD_FILE: /secret/mongodb-root-password
