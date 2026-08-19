@@ -1,0 +1,59 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: alloy
+  namespace: prometheus
+spec:
+  chart:
+    spec:
+      chart: alloy
+      version: 1.11.1
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: grafana
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    crds:
+      create: false
+
+    alloy:
+      configMap:
+        create: false
+        name: alloy-config
+        key: config.alloy
+      enableReporting: false
+      storagePath: /var/lib/alloy
+      mounts:
+        varlog: true
+        extra:
+          - name: data
+            mountPath: /var/lib/alloy
+      resources:
+        requests:
+          cpu: 25m
+          memory: 128Mi
+        limits:
+          memory: 512Mi
+
+    controller:
+      type: daemonset
+      extraAnnotations:
+        configmap.reloader.stakater.com/reload: alloy-config
+      podLabels:
+        policy.gabe565.com/egress-kubeapi: "true"
+        policy.gabe565.com/egress-namespace: "true"
+        policy.gabe565.com/ingress-namespace: "true"
+        policy.gabe565.com/ingress-prometheus: "true"
+      volumes:
+        extra:
+          - name: data
+            hostPath:
+              path: /var/lib/alloy
+              type: DirectoryOrCreate
+
+    serviceMonitor:
+      enabled: true

@@ -399,10 +399,18 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><a href="kubernetes/gabernetes/apps/plex/restic/helmrelease.yaml">restic</a></td>
   </tr>
   <tr>
-    <td rowspan="3">prometheus</td>
+    <td rowspan="5">prometheus</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/prometheus/alloy/helmrelease.yaml">alloy</a></td>
+    <td rowspan="5"><a href="kubernetes/gabernetes/apps/prometheus/restic/helmrelease.yaml">restic</a></td>
+  </tr>
+  <tr>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/prometheus/app/helmrelease.yaml">kube-prometheus-stack</a></td>
-    <td rowspan="3"><a href="kubernetes/gabernetes/apps/prometheus/restic/helmrelease.yaml">restic</a></td>
+  </tr>
+  <tr>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/prometheus/loki/helmrelease.yaml">loki</a></td>
   </tr>
   <tr>
     <td><code>HelmRelease</code></td>

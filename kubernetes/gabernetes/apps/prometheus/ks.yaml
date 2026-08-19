@@ -20,6 +20,38 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
+  name: loki
+  namespace: prometheus
+spec:
+  interval: 1h
+  targetNamespace: prometheus
+  path: ./kubernetes/gabernetes/apps/prometheus/loki
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    namespace: flux-system
+    name: home-ops
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: alloy
+  namespace: prometheus
+spec:
+  interval: 1h
+  targetNamespace: prometheus
+  path: ./kubernetes/gabernetes/apps/prometheus/alloy
+  prune: true
+  dependsOn:
+    - name: loki
+  sourceRef:
+    kind: GitRepository
+    namespace: flux-system
+    name: home-ops
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
   name: kromgo
   namespace: prometheus
 spec:

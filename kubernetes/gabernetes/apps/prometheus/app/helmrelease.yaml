@@ -69,6 +69,15 @@ spec:
               name: public
           hostnames:
             - ${grafana_url}
+      additionalDataSources:
+        - name: Loki
+          type: loki
+          uid: loki
+          access: proxy
+          url: http://loki:3100
+          jsonData:
+            timeout: 300
+            maxLines: 1000
       persistence:
         type: pvc
         enabled: true
