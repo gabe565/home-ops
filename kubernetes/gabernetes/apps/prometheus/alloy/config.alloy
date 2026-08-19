@@ -139,3 +139,26 @@ loki.write "default" {
     url = "http://loki:3100/loki/api/v1/push"
   }
 }
+
+// Envoy Gateway ships access logs over OTLP/gRPC
+otelcol.receiver.otlp "envoy" {
+  grpc {
+    endpoint = "0.0.0.0:4317"
+  }
+
+  output {
+    logs = [otelcol.processor.batch.default.input]
+  }
+}
+
+otelcol.processor.batch "default" {
+  output {
+    logs = [otelcol.exporter.otlphttp.loki.input]
+  }
+}
+
+otelcol.exporter.otlphttp "loki" {
+  client {
+    endpoint = "http://loki:3100/otlp"
+  }
+}
