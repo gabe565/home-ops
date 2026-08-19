@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: quay.io/minio/aistor/minio
-              tag: RELEASE.2026-07-24T16-43-31Z@sha256:17527b97a9e92dcc32b641dc161e4beb1eaf9a9198018c1489923c981f4af2ef
+              tag: RELEASE.2026-08-07T18-34-35Z@sha256:d1eb0f79ced75d6c024fc6a2ab6a7b3629ff54c798d967d9c6f89951237480a7
               pullPolicy: IfNotPresent
             env:
               MINIO_ROOT_USER_FILE: /root-creds/username
