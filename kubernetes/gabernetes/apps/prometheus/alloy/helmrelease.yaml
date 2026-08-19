@@ -26,6 +26,12 @@ spec:
         name: alloy-config
         key: config.alloy
       enableReporting: false
+      extraPorts:
+        - name: otlp-grpc
+          port: 4317
+          targetPort: 4317
+          protocol: TCP
+          appProtocol: h2c
       storagePath: /var/lib/alloy
       mounts:
         varlog: true

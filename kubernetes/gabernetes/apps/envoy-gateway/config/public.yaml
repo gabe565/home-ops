@@ -41,6 +41,7 @@ spec:
           labels:
             policy.gabe565.com/egress-envoy-public: "true"
             policy.gabe565.com/egress-geoip: "true"
+            policy.gabe565.com/egress-namespace: "true"
           volumes:
             - name: geoip
               emptyDir: {}
@@ -78,6 +79,55 @@ spec:
         countryDbSource:
           local:
             path: /usr/share/GeoIP/GeoLite2-Country.mmdb
+  telemetry:
+    accessLog:
+      settings:
+        - format:
+            type: JSON
+            json:
+              # Request
+              method: "%REQ(:METHOD)%"
+              path: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
+              protocol: "%PROTOCOL%"
+              authority: "%REQ(:AUTHORITY)%"
+              user_agent: "%REQ(USER-AGENT)%"
+              request_id: "%REQ(X-REQUEST-ID)%"
+              client_ip: "%DOWNSTREAM_REMOTE_ADDRESS_WITHOUT_PORT%"
+              route_name: "%ROUTE_NAME%"
+              # Response
+              response_code: "%RESPONSE_CODE%"
+              response_flags: "%RESPONSE_FLAGS%"
+              response_code_details: "%RESPONSE_CODE_DETAILS%"
+              connection_termination_details: "%CONNECTION_TERMINATION_DETAILS%"
+              upstream_transport_failure_reason: "%UPSTREAM_TRANSPORT_FAILURE_REASON%"
+              bytes_received: "%BYTES_RECEIVED%"
+              bytes_sent: "%BYTES_SENT%"
+              duration: "%DURATION%"
+              upstream_host: "%UPSTREAM_HOST%"
+              upstream_cluster: "%UPSTREAM_CLUSTER%"
+          sinks:
+            - type: OpenTelemetry
+              openTelemetry:
+                backendRefs:
+                  - group: gateway.envoyproxy.io
+                    kind: Backend
+                    name: alloy-otlp
+                resourceAttributes:
+                  service.name: envoy-gateway
+                  k8s.cluster.name: gabernetes
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: Backend
+metadata:
+  name: alloy-otlp
+  namespace: envoy-gateway-system
+spec:
+  appProtocols:
+    - gateway.envoyproxy.io/h2c
+  endpoints:
+    - fqdn:
+        hostname: alloy.prometheus.svc.cluster.local
+        port: 4317
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: GatewayClass
