@@ -8,9 +8,13 @@ spec:
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: public
-      sectionName: https
   clientIPDetection:
     directSourceIP: {}
+  timeout:
+    http:
+      requestHeadersReceivedTimeout: 15s
+    tcp:
+      tlsHandshakeTimeout: 15s
   headers:
     earlyRequestHeaders:
       set:
