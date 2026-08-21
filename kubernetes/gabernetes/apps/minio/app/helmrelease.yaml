@@ -164,6 +164,16 @@ spec:
               body:
                 type: Inline
                 inline: Access Denied
+      no-compression:
+        suffix: no-compression
+        manifest:
+          apiVersion: gateway.envoyproxy.io/v1alpha1
+          kind: BackendTrafficPolicy
+          spec:
+            targetRefs:
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}-s3"
       no-geoblock:
         suffix: no-geoblock
         manifest:
