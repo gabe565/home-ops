@@ -4,6 +4,7 @@ metadata:
   name: public
   namespace: envoy-gateway-system
 spec:
+  mergeBackends: {}
   provider:
     type: Kubernetes
     kubernetes:
