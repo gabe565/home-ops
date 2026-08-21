@@ -125,6 +125,8 @@ spec:
                 name: "{{ .Release.Name }}"
                 sectionName: private
             oidc:
+              cookieConfig:
+                sameSite: Lax
               provider:
                 issuer: https://${oidc_host}/application/o/miniflux/
                 authorizationEndpoint: https://${oidc_host}/application/o/authorize/

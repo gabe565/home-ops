@@ -178,6 +178,8 @@ spec:
                 name: "{{ .Release.Name }}-frontend"
                 sectionName: servers-json
             oidc:
+              cookieConfig:
+                sameSite: Lax
               provider:
                 issuer: https://${oidc_host}/application/o/shlink/
                 authorizationEndpoint: https://${oidc_host}/application/o/authorize/

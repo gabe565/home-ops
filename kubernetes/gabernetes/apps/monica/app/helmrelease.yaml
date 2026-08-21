@@ -164,6 +164,8 @@ spec:
                 kind: HTTPRoute
                 name: "{{ .Release.Name }}"
             oidc:
+              cookieConfig:
+                sameSite: Lax
               provider:
                 issuer: https://${oidc_host}/application/o/monica/
                 authorizationEndpoint: https://${oidc_host}/application/o/authorize/

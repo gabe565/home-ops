@@ -10,6 +10,8 @@ spec:
       kind: HTTPRoute
       name: kube-prometheus-stack-prometheus
   oidc:
+    cookieConfig:
+      sameSite: Lax
     provider:
       issuer: https://${oauth_host}/application/o/prometheus/
       authorizationEndpoint: https://${oauth_host}/application/o/authorize/

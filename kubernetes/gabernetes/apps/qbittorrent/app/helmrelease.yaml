@@ -231,6 +231,8 @@ spec:
                 kind: HTTPRoute
                 name: "{{ .Release.Name }}-vuetorrent"
             oidc:
+              cookieConfig:
+                sameSite: Lax
               provider:
                 issuer: https://${oidc_host}/application/o/qbittorrent/
                 authorizationEndpoint: https://${oidc_host}/application/o/authorize/

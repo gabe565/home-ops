@@ -106,6 +106,8 @@ spec:
                 kind: HTTPRoute
                 name: "{{ .Release.Name }}"
             oidc:
+              cookieConfig:
+                sameSite: Lax
               provider:
                 issuer: https://${oidc_host}/application/o/esphome/
                 authorizationEndpoint: https://${oidc_host}/application/o/authorize/

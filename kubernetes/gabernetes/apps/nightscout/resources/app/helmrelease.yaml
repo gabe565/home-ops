@@ -144,6 +144,8 @@ spec:
                 name: "{{ .Release.Name }}-oidc"
                 sectionName: oidc
             oidc:
+              cookieConfig:
+                sameSite: Lax
               provider:
                 issuer: https://${oidc_host}/application/o/nightscout/
                 authorizationEndpoint: https://${oidc_host}/application/o/authorize/
