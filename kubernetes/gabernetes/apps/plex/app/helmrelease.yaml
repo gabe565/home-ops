@@ -118,3 +118,20 @@ spec:
                   path:
                     type: ReplaceFullPath
                     replaceFullPath: /web/index.html
+
+    rawResources:
+      stream-timeouts:
+        suffix: stream-timeouts
+        manifest:
+          apiVersion: gateway.envoyproxy.io/v1alpha1
+          kind: BackendTrafficPolicy
+          spec:
+            mergeType: StrategicMerge
+            targetRefs:
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: plex
+            timeout:
+              http:
+                requestTimeout: 0s
+                streamIdleTimeout: 4m
