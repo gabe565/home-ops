@@ -6,11 +6,11 @@
 
 _... managed with Flux and Renovate, and GitHub Actions_ :robot:
 
-[![Node Count](https://kromgo.gabe565.com/cluster_node_count?format=badge)](https://github.com/kashalls/kromgo/)&nbsp;&nbsp;
-[![Pod Count](https://kromgo.gabe565.com/cluster_pod_count?format=badge)](https://github.com/kashalls/kromgo/)&nbsp;&nbsp;
-[![CPU Usage](https://kromgo.gabe565.com/cluster_cpu_usage?format=badge)](https://github.com/kashalls/kromgo/)&nbsp;&nbsp;
-[![Memory Usage](https://kromgo.gabe565.com/cluster_memory_usage?format=badge)](https://github.com/kashalls/kromgo/)&nbsp;&nbsp;
-[![Power Usage](https://kromgo.gabe565.com/cluster_power_usage?format=badge)](https://github.com/kashalls/kromgo/)
+[![Node Count](https://kromgo.gabe565.com/badges/cluster_node_count)](https://github.com/home-operations/kromgo/)&nbsp;&nbsp;
+[![Pod Count](https://kromgo.gabe565.com/badges/cluster_pod_count)](https://github.com/home-operations/kromgo/)&nbsp;&nbsp;
+[![CPU Usage](https://kromgo.gabe565.com/badges/cluster_cpu_usage)](https://github.com/home-operations/kromgo/)&nbsp;&nbsp;
+[![Memory Usage](https://kromgo.gabe565.com/badges/cluster_memory_usage)](https://github.com/home-operations/kromgo/)&nbsp;&nbsp;
+[![Power Usage](https://kromgo.gabe565.com/badges/cluster_power_usage)](https://github.com/home-operations/kromgo/)
 
 </div>
 
