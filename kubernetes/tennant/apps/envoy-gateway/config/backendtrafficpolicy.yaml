@@ -11,3 +11,10 @@ spec:
   timeout:
     http:
       requestTimeout: 30s
+  compressor:
+    - type: Brotli
+      brotli: {}
+    - type: Gzip
+      gzip: {}
+    - type: Zstd
+      zstd: {}
