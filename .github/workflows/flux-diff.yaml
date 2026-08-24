@@ -16,64 +16,56 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-    strategy:
-      fail-fast: false
-      matrix:
-        resource: [HelmRelease, Kustomization]
-        cluster: [gabernetes, tennant]
-        sources: [home-ops]
     steps:
-      - name: Setup Flux CLI
-        uses: fluxcd/flux2/action@16602fa989daa99762f1c6d1186ae2ad1c735815 # v2.9.3
-
-      - id: resource
-        env:
-          RESOURCE: ${{ matrix.resource }}
-        run: echo "resource=${RESOURCE@L}" >> $GITHUB_OUTPUT
-
-      - uses: allenporter/flux-local/action/diff@92d3a538c009c3fec120fbf50f6ef33b3e0a569c # 8.4.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          path: kubernetes/${{ matrix.cluster }}
-          resource: ${{ steps.resource.outputs.resource }}
-          strip-attrs: helm.sh/chart,checksum/config,app.kubernetes.io/version,chart
-          sources: ${{ matrix.sources }}
-          live-branch: ${{ github.event.pull_request.base.sha }}
+          fetch-depth: 0
+
+      - uses: home-operations/flate/action@797c483c107913d3f7757b7d3e1f6bc9179fe43d # v0.6.0
+        with:
+          base: ${{ github.event.pull_request.base.sha }}
+          cache: true
 
       - name: Generate Diff
         id: diff
         run: |
-          cat diff.patch
-          echo "diff<<EOF" >> $GITHUB_OUTPUT
-          cat diff.patch >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-          echo "added=$(grep -c '^+[^+]' diff.patch)" >> $GITHUB_OUTPUT
-          echo "removed=$(grep -c '^-[^-]' diff.patch)" >> $GITHUB_OUTPUT
+          flate diff all \
+            --path . \
+            --allow-missing-secrets \
+            --no-progress \
+            -o github | tee diff.patch
+
+          {
+            echo "added=$(grep -c '^+[^+]' diff.patch || true)"
+            echo "removed=$(grep -c '^-[^-]' diff.patch || true)"
+          } >> "$GITHUB_OUTPUT"
+
+          if [[ $(wc -c < diff.patch) -gt 60000 ]]; then
+            head -c 60000 diff.patch > diff.trunc
+            printf '\n... diff truncated, see the workflow log for the full output.\n' >> diff.trunc
+            mv diff.trunc diff.patch
+          fi
+
+          {
+            echo "diff<<FLATE_DIFF_EOF"
+            cat diff.patch
+            echo "FLATE_DIFF_EOF"
+          } >> "$GITHUB_OUTPUT"
 
       - if: ${{ steps.diff.outputs.diff != '' || failure() }}
         name: Add comment
         uses: mshick/add-pr-comment@ec328af66588ab8f77cdeb2c264f14aba45bbf59 # v3.12.0
         with:
-          message-id: ${{ github.event.pull_request.number }}/${{ matrix.cluster }}/${{ steps.resource.outputs.resource }}
+          message-id: ${{ github.event.pull_request.number }}/flux-diff
           message-failure: |
-            ## ${{ matrix.resource }} Diff
-
-            <table>
-              <tr>
-                <td><b>Cluster</b></td>
-                <td><code>${{ matrix.cluster }}</code></td>
-              </tr>
-            </table>
+            ## Flux Diff
 
             > [!CAUTION]
             > Failed to create diff. [View log.](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
           message: |
-            ## ${{ matrix.resource }} Diff
+            ## Flux Diff
 
             <table>
-              <tr>
-                <td><b>Cluster</b></td>
-                <td><code>${{ matrix.cluster }}</code></td>
-              </tr>
               <tr>
                 <td><b>Changes</b></td>
                 <td><picture><img alt="+${{ steps.diff.outputs.added }} −${{ steps.diff.outputs.removed }}" src="https://img.shields.io/badge/%2B${{ steps.diff.outputs.added }}-%E2%88%92${{ steps.diff.outputs.removed }}-red?labelColor=brightgreen"></picture></td>
