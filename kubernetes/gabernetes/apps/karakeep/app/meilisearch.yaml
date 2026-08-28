@@ -21,7 +21,7 @@ spec:
       - tini
       - --
       - /bin/meilisearch
-      - --experimental-dumpless-upgrade
+      - --upgrade-db
     environment:
       MEILI_ENV: production
       MEILI_LOG_LEVEL: WARN
