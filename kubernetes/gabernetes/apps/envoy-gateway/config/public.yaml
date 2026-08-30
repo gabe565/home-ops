@@ -115,6 +115,14 @@ spec:
                 resourceAttributes:
                   service.name: envoy-gateway
                   k8s.cluster.name: gabernetes
+        - format:
+            type: Text
+            text: |
+              [%START_TIME%] %REQ(:AUTHORITY)% %DOWNSTREAM_REMOTE_ADDRESS_WITHOUT_PORT% "%REQ(:METHOD)% %REQ(X-ENVOY-ORIGINAL-PATH?:PATH)% %PROTOCOL%" %RESPONSE_CODE% %RESPONSE_FLAGS% %DURATION%ms %BYTES_RECEIVED%/%BYTES_SENT% %UPSTREAM_HOST% "%REQ(REFERER)%" "%REQ(USER-AGENT)%"
+          sinks:
+            - type: File
+              file:
+                path: /dev/stdout
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: Backend

@@ -132,6 +132,13 @@ loki.process "pods" {
   stage.label_drop {
     values = ["filename"]
   }
+
+  // Access logs already arrive via OTLP; operational logs go to stderr.
+  stage.match {
+    selector            = "{namespace=\"envoy-gateway-system\", container=\"envoy\", stream=\"stdout\"}"
+    action              = "drop"
+    drop_counter_reason = "envoy_accesslog_duplicate"
+  }
 }
 
 loki.write "default" {
