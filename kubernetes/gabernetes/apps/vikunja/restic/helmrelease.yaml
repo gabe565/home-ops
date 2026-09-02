@@ -42,7 +42,7 @@ spec:
           restic: &container
             image:
               repository: ghcr.io/gabe565/restic
-              tag: 0.19.1@sha256:f874a85b6eb57a50d3946571a34611d39b5f5e0da7e61c691c47a3fea317a234
+              tag: 0.19.1@sha256:a86e5e6ce960f6e494fc843061d62268f89551516fc8cc78099b1c0ee0a0a005
             workingDir: /vikunja-files
             envFrom:
               - secretRef:
