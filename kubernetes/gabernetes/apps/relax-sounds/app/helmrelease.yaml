@@ -29,12 +29,6 @@ spec:
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
-              RELAX_VALKEY_ENABLED: "true"
-              RELAX_VALKEY_HOST: valkey
-              RELAX_VALKEY_PASSWORD:
-                secretKeyRef:
-                  name: valkey
-                  key: valkey-password
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
