@@ -11,6 +11,7 @@ spec:
     parameters:
       max_connections: "200"
       archive_timeout: "0"
+      checkpoint_timeout: 30min
   bootstrap:
     initdb:
       database: authentik

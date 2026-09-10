@@ -23,6 +23,7 @@ spec:
   postgresql:
     parameters:
       archive_timeout: "0"
+      checkpoint_timeout: 30min
   primaryLease:
     leaseDurationSeconds: 60
     renewDeadlineSeconds: 40
