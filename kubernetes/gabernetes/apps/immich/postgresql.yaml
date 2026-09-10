@@ -21,6 +21,8 @@ spec:
   postgresql:
     shared_preload_libraries:
       - vchord.so
+    parameters:
+      archive_timeout: "0"
   storage:
     storageClass: local-path
     size: 8Gi
@@ -30,3 +32,7 @@ spec:
       cpu: 10m
   smartShutdownTimeout: 1
   stopDelay: 300
+  primaryLease:
+    leaseDurationSeconds: 60
+    renewDeadlineSeconds: 40
+    retryPeriodSeconds: 10

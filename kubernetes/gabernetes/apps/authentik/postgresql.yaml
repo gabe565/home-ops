@@ -10,6 +10,7 @@ spec:
   postgresql:
     parameters:
       max_connections: "200"
+      archive_timeout: "0"
   bootstrap:
     initdb:
       database: authentik
@@ -23,3 +24,7 @@ spec:
       cpu: 20m
   smartShutdownTimeout: 1
   stopDelay: 300
+  primaryLease:
+    leaseDurationSeconds: 60
+    renewDeadlineSeconds: 40
+    retryPeriodSeconds: 10

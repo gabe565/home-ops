@@ -20,3 +20,10 @@ spec:
       cpu: 20m
   smartShutdownTimeout: 1
   stopDelay: 300
+  postgresql:
+    parameters:
+      archive_timeout: "0"
+  primaryLease:
+    leaseDurationSeconds: 60
+    renewDeadlineSeconds: 40
+    retryPeriodSeconds: 10
