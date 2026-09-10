@@ -43,9 +43,9 @@ spec:
               svc_leasename: plndr-svcs-lock
               vip_leaderelection: "true"
               vip_leasename: plndr-cp-lock
-              vip_leaseduration: "5"
-              vip_renewdeadline: "3"
-              vip_retryperiod: "1"
+              vip_leaseduration: "60"
+              vip_renewdeadline: "40"
+              vip_retryperiod: "10"
               address: 192.168.1.230
               prometheus_server: :2112
             securityContext:
