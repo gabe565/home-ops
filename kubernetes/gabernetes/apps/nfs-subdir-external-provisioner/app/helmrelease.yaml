@@ -23,3 +23,5 @@ spec:
       path: /volume1/gabernetes
     labels:
       policy.gabe565.com/egress-kubeapi: "true"
+    leaderElection:
+      enabled: false
