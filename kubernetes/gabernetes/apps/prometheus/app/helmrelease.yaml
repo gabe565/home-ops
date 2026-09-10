@@ -84,6 +84,11 @@ spec:
         accessModes: [ReadWriteOnce]
         size: 10Gi
     defaultRules:
+      rules:
+        kubeApiserverAvailability: false
+        kubeApiserverBurnrate: false
+        kubeApiserverHistogram: false
+        kubeApiserverSlos: false
       disabled:
         KubeControllerManagerDown: true
         KubeProxyDown: true
@@ -204,3 +209,9 @@ spec:
     kube-state-metrics:
       customLabels:
         policy.gabe565.com/egress-kubeapi: "true"
+    kubeApiServer:
+      serviceMonitor:
+        metricRelabelings:
+          - action: drop
+            sourceLabels: [__name__]
+            regex: (apiserver_request_duration_seconds|etcd_request_duration_seconds|apiserver_request_body_size_bytes|apiserver_request_sli_duration_seconds|apiserver_watch_list_duration_seconds|apiserver_watch_cache_read_wait_seconds|apiserver_response_sizes|apiserver_watch_events_sizes)_bucket
