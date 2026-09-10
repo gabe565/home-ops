@@ -4,7 +4,7 @@ metadata:
   name: postgresql
   namespace: immich
 spec:
-  instances: 3
+  instances: 2
   imageName: ghcr.io/tensorchord/cloudnative-vectorchord:17.5-0.3.0
   enableSuperuserAccess: true
   bootstrap:
