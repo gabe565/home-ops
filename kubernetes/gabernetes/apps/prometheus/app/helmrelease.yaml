@@ -215,3 +215,11 @@ spec:
           - action: drop
             sourceLabels: [__name__]
             regex: (apiserver_request_duration_seconds|etcd_request_duration_seconds|apiserver_request_body_size_bytes|apiserver_request_sli_duration_seconds|apiserver_watch_list_duration_seconds|apiserver_watch_cache_read_wait_seconds|apiserver_response_sizes|apiserver_watch_events_sizes)_bucket
+    kubelet:
+      serviceMonitor:
+        # k3s serves the apiserver/etcd client registry on the kubelet port too; those are
+        # already scraped (and filtered) by the apiserver job, so drop the duplicates here.
+        metricRelabelings:
+          - action: drop
+            sourceLabels: [__name__]
+            regex: (apiserver|etcd)_.*
