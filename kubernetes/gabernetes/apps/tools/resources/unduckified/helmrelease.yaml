@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: ghcr.io/gabe565/unduckified
-              tag: 0.4.0@sha256:b6f197b7920f606f6217e138edc5c2694efa3930a6d8ad36b2bb98b348e1ca2d
+              tag: 0.4.0@sha256:a57d007393a4a85d03e6420f4f9d38968cf79c06d1c1f154ed8147a21a1cb634
               pullPolicy: IfNotPresent
             probes:
               startup:
