@@ -56,9 +56,14 @@ spec:
           emptyDir: {}
         - name: tmp
           emptyDir: {}
+        - name: geoip-db
+          emptyDir: {}
       volumeMounts:
         - name: public
           mountPath: /media/public
+        - name: geoip-db
+          mountPath: /geoip
+          readOnly: true
 
     authentik:
       # This sends anonymous usage-data, stack traces on errors and
@@ -88,23 +93,46 @@ spec:
 
       log_level: warning
 
+    # The chart's built-in geoip sidecar is a plain container, so the server can
+    # boot before the first download finishes. authentik only retries loading the
+    # MMDB if it was loaded once, so a lost race leaves geoip broken until the
+    # next restart. Run geoipupdate as a native sidecar with a startup probe
+    # instead, so the app containers wait for the City database to exist.
     geoip:
-      enabled: true
-      image:
-        repository: ghcr.io/maxmind/geoipupdate
-        tag: v8.0.0@sha256:51e70dd6f16cd3e4d845ac02d09940b10772a75b9d741427d235a78570923c1d
-      accountId: "1"
-      licenseKey: stub
-      env:
-        - name: GEOIPUPDATE_HOST
-          value: http://geoip-updates.geoip
-      containerSecurityContext:
-        readOnlyRootFilesystem: true
-      volumeMounts:
-        - name: tmp
-          mountPath: /tmp
+      enabled: false
 
     server:
+      initContainers:
+        - &geoip
+          name: geoip
+          image: ghcr.io/maxmind/geoipupdate:v8.0.0@sha256:51e70dd6f16cd3e4d845ac02d09940b10772a75b9d741427d235a78570923c1d
+          restartPolicy: Always
+          env:
+            - name: GEOIPUPDATE_HOST
+              value: http://geoip-updates.geoip
+            - name: GEOIPUPDATE_FREQUENCY
+              value: "8"
+            - name: GEOIPUPDATE_PRESERVE_FILE_TIMES
+              value: "1"
+            - name: GEOIPUPDATE_EDITION_IDS
+              value: GeoLite2-City GeoLite2-ASN
+            - name: GEOIPUPDATE_ACCOUNT_ID
+              value: "1"
+            - name: GEOIPUPDATE_LICENSE_KEY
+              value: stub
+          securityContext:
+            readOnlyRootFilesystem: true
+          startupProbe:
+            exec:
+              command: [ls, /usr/share/GeoIP/GeoLite2-City.mmdb, /usr/share/GeoIP/GeoLite2-ASN.mmdb]
+            periodSeconds: 5
+            failureThreshold: 60
+          volumeMounts:
+            - name: geoip-db
+              mountPath: /usr/share/GeoIP
+            - name: tmp
+              mountPath: /tmp
+
       route:
         main:
           enabled: true
@@ -124,6 +152,9 @@ spec:
           interval: 1m
 
     worker:
+      initContainers:
+        - *geoip
+
       containerSecurityContext:
         readOnlyRootFilesystem: true
 
