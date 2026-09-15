@@ -68,6 +68,9 @@ spec:
       disable_update_check: true
       disable_startup_analytics: true
 
+      listen:
+        trusted_proxy_cidrs: 10.42.0.0/16
+
       secret_key: ${authentik_secret_key}
 
       postgresql:
