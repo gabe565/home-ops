@@ -41,7 +41,7 @@
       "fileMatch": ["\\.yaml$"],
       "matchStrings": [
         "DOCKER_MODS: ['\"]?(?<depName>.+):(?<currentValue>.+)['\"]?",
-        "imageName: ['\"]?(?<depName>.+?):(?<currentValue>.+)['\"]?"
+        "imageName: ['\"]?(?<depName>.+?):(?<currentValue>[^@\\s'\"]+)(?:@(?<currentDigest>sha256:[a-f0-9]+))?['\"]?"
       ],
       "datasourceTemplate": "docker"
     },
