@@ -5,7 +5,7 @@ metadata:
   namespace: healthchecks
 spec:
   instances: 2
-  imageName: ghcr.io/cloudnative-pg/postgresql:17.5-minimal-bookworm@sha256:a0915ad91a8963004dcb6972d529b2ea6665ccc2f5f40a016b1a7b4306b7eb1f
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.5-minimal-bookworm@sha256:17697898a5150b9cb32061e3ac46776c7c912edf7b0775c6afd83ba098eaf734
   enableSuperuserAccess: true
   bootstrap:
     initdb:
