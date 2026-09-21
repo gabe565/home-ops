@@ -5,7 +5,7 @@ metadata:
   namespace: shlink
 spec:
   instances: 2
-  imageName: ghcr.io/cloudnative-pg/postgresql:17.5-minimal-bookworm@sha256:a0915ad91a8963004dcb6972d529b2ea6665ccc2f5f40a016b1a7b4306b7eb1f
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.11-minimal-bookworm@sha256:c50c1966e00b485533dae5d410837d0f5026265cbbee0e18ad7346702e78384f
   enableSuperuserAccess: true
   bootstrap:
     initdb:
