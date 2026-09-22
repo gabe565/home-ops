@@ -5,7 +5,7 @@ metadata:
   namespace: plausible
 spec:
   instances: 2
-  imageName: ghcr.io/cloudnative-pg/postgresql:17.11-minimal-bookworm@sha256:c50c1966e00b485533dae5d410837d0f5026265cbbee0e18ad7346702e78384f
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.11-minimal-trixie@sha256:cfc42005357630d2c0bfca095c93a6abe44884486acb0de2e5e511a087b7eb15
   enableSuperuserAccess: true
   bootstrap:
     initdb:
