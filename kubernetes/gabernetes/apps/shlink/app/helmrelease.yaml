@@ -25,7 +25,7 @@ spec:
           geoip:
             image: &image
               repository: ghcr.io/shlinkio/shlink
-              tag: 5.1.6-roadrunner@sha256:481df475533b907d5d4650bc9f62ee7fdf5c9e3a7cf3284c3c216d4b07fb4ca2
+              tag: 5.1.7-roadrunner@sha256:d2369f27aca6b59925672200811cf45e8453415b544627908e45891f021a32cc
               pullPolicy: IfNotPresent
             command:
               - sh
