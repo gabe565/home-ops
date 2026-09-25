@@ -12,7 +12,7 @@ concurrency:
 jobs:
   flux-diff:
     name: Flux Diff
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     permissions:
       contents: read
       pull-requests: write
@@ -83,7 +83,7 @@ jobs:
   # Summarize matrix https://github.community/t/status-check-for-a-matrix-jobs/127354/7
   flux-diff-success:
     name: Flux Diff Successful
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs: [flux-diff]
     permissions: {}
     if: ${{ always() }}
