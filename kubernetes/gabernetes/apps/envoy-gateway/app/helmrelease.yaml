@@ -24,9 +24,7 @@ spec:
     deployment:
       pod:
         labels:
-          policy.gabe565.com/egress-geoip: "true"
           policy.gabe565.com/egress-kubeapi: "true"
-          policy.gabe565.com/egress-world-with-lan: "true"
           policy.gabe565.com/ingress-nodes: "true"
           policy.gabe565.com/ingress-prometheus: "true"
     certgen:
