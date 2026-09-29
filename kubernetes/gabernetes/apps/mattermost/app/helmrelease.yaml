@@ -53,7 +53,7 @@ spec:
               MM_EMAILSETTINGS_ENABLESMTPAUTH: "true"
               MM_EMAILSETTINGS_SMTPUSERNAME: ${smtp_from}
               MM_EMAILSETTINGS_SMTPPASSWORD: ${smtp_password}
-              MM_EMAILSETTINGS_FEEDBACKNAME: ${app_name}
+              MM_EMAILSETTINGS_FEEDBACKNAME: ${smtp_name}
               MM_EMAILSETTINGS_FEEDBACKEMAIL: ${smtp_from}
               MM_EMAILSETTINGS_REPLYTOADDRESS: ${smtp_from}
               MM_SUPPORTSETTINGS_SUPPORTEMAIL: ${smtp_from}
