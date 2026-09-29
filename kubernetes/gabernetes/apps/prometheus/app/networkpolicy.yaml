@@ -50,6 +50,13 @@ spec:
       toPorts:
         - ports:
             - port: "9153"
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: longhorn-system
+            app: longhorn-manager
+      toPorts:
+        - ports:
+            - port: "9500"
     - toCIDRSet:
         - cidr: 192.168.1.1/32
         - cidr: 192.168.1.240/32
