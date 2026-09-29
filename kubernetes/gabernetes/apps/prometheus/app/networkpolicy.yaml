@@ -43,6 +43,13 @@ spec:
           matchExpressions:
             - key: io.kubernetes.pod.namespace
               operator: Exists
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "9153"
     - toCIDRSet:
         - cidr: 192.168.1.1/32
         - cidr: 192.168.1.240/32
