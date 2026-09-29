@@ -34,3 +34,8 @@ spec:
   ingress:
     - fromEndpoints:
         - {}
+  egress:
+    - toEndpoints:
+        - matchExpressions:
+            - key: cnpg.io/cluster
+              operator: Exists
