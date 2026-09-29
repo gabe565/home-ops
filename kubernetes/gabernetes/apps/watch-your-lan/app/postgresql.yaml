@@ -5,7 +5,7 @@ metadata:
   namespace: watch-your-lan
 spec:
   instances: 2
-  imageName: ghcr.io/cloudnative-pg/postgresql:17.11-minimal-trixie@sha256:d78e771decf39071aa8bfb96684e8b7e6e5f3c6e00a945404249756db2c6c712
+  imageName: ghcr.io/cloudnative-pg/postgresql:18.6-minimal-trixie@sha256:4467d4cf7e502fbc29800b75d755ede477a765b25a506a58a0842a57a4bf42c9
   enableSuperuserAccess: true
   bootstrap:
     initdb:
