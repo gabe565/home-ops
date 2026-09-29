@@ -29,8 +29,6 @@ spec:
         - host
         - remote-node
     - fromEndpoints:
-        - {}
-    - fromEndpoints:
         - matchLabels:
             io.kubernetes.pod.namespace: cnpg-system
             app.kubernetes.io/name: cloudnative-pg
