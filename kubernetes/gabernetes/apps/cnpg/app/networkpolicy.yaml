@@ -27,7 +27,6 @@ spec:
   ingress:
     - fromEntities:
         - host
-        - remote-node
     - fromEndpoints:
         - matchLabels:
             io.kubernetes.pod.namespace: cnpg-system
