@@ -109,7 +109,7 @@ spec:
         pod:
           labels:
             policy.gabe565.com/egress-world: "true"
-            policy.gabe565.com/ingress-namespage: "true"
+            policy.gabe565.com/ingress-namespace: "true"
           securityContext:
             runAsUser: 65534
             runAsGroup: 65534
