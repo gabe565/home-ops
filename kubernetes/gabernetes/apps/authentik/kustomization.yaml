@@ -5,3 +5,5 @@ resources:
   - networkpolicy.yaml
   - postgresql.yaml
   - ks.yaml
+components:
+  - ../../../templates/components/namespace-policies

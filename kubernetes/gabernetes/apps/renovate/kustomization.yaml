@@ -4,3 +4,5 @@ resources:
   - namespace.yaml
   - ks.yaml
   - postgresql.yaml
+components:
+  - ../../../templates/components/namespace-policies

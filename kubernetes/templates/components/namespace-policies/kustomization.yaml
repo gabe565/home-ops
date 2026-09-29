@@ -1,0 +1,30 @@
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+resources:
+  - networkpolicy.yaml
+replacements:
+  - source:
+      kind: Namespace
+      fieldPath: metadata.name
+    targets:
+      - select:
+          kind: CiliumNetworkPolicy
+          name: ingress-namespace
+        fieldPaths:
+          - metadata.namespace
+        options:
+          create: true
+      - select:
+          kind: CiliumNetworkPolicy
+          name: egress-namespace
+        fieldPaths:
+          - metadata.namespace
+        options:
+          create: true
+      - select:
+          kind: CiliumNetworkPolicy
+          name: cnpg-namespace
+        fieldPaths:
+          - metadata.namespace
+        options:
+          create: true

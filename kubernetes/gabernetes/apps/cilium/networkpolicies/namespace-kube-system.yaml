@@ -1,0 +1,25 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: ingress-namespace
+  namespace: kube-system
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/ingress-namespace: "true"
+  ingress:
+    - fromEndpoints:
+        - {}
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: egress-namespace
+  namespace: kube-system
+spec:
+  endpointSelector:
+    matchLabels:
+      policy.gabe565.com/egress-namespace: "true"
+  egress:
+    - toEndpoints:
+        - {}

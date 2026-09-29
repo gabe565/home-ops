@@ -3,3 +3,5 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - ks.yaml
+components:
+  - ../../../templates/components/namespace-policies
