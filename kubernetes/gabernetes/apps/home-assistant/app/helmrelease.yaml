@@ -50,6 +50,7 @@ spec:
           annotations:
             k8s.v1.cni.cncf.io/networks: ipvlan
           labels:
+            policy.gabe565.com/egress-adguard-api: "true"
             policy.gabe565.com/egress-mosquitto: "true"
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-nightscout: "true"
