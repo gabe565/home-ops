@@ -29,7 +29,6 @@ spec:
           policy.gabe565.com/egress-world-with-lan: "true"
           policy.gabe565.com/ingress-nodes: "true"
           policy.gabe565.com/ingress-prometheus: "true"
-          policy.gabe565.com/ingress-world: "true"
     certgen:
       job:
         pod:
