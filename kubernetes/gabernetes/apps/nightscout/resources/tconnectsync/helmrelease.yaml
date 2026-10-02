@@ -27,7 +27,7 @@ spec:
           tconnectsync:
             image:
               repository: ghcr.io/jwoglom/tconnectsync/tconnectsync
-              tag: v3.0.0@sha256:b922b340ffa899830e21754cf720200fa0f4fcd008df272a69c8bb5d5c9f87bb
+              tag: v3.0.3@sha256:5d18cbfb171878f7ffb49911da9cbb6dabc2bdeb5063d43cfe88949bef013b96
               pullPolicy: IfNotPresent
             args: ["--auto-update"]
             envFrom:
