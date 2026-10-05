@@ -5,7 +5,7 @@ metadata:
   namespace: vaultwarden
 spec:
   instances: 2
-  imageName: ghcr.io/cloudnative-pg/postgresql:17.11-minimal-trixie@sha256:d78e771decf39071aa8bfb96684e8b7e6e5f3c6e00a945404249756db2c6c712
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.11-minimal-trixie@sha256:ca2c3bb893d185fe4e5d0401a010454bd87dcb67c53003c38fd828804928f5d9
   enableSuperuserAccess: true
   bootstrap:
     initdb:
