@@ -8,6 +8,9 @@ spec:
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: public
+  http2:
+    initialStreamWindowSize: 1Mi
+    initialConnectionWindowSize: 4Mi
   clientIPDetection:
     directSourceIP: {}
   timeout:
