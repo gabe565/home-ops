@@ -119,8 +119,7 @@ spec:
                     - X-Powered-By
 
     rawResources:
-      no-geoblock:
-        suffix: no-geoblock
+      allowlist:
         manifest:
           apiVersion: gateway.envoyproxy.io/v1alpha1
           kind: SecurityPolicy
@@ -130,4 +129,10 @@ spec:
                 kind: HTTPRoute
                 name: "{{ .Release.Name }}"
             authorization:
-              defaultAction: Allow
+              defaultAction: Deny
+              rules:
+                - action: Allow
+                  principal:
+                    clientCIDRs:
+                      - 192.168.0.0/22
+                      - 10.42.0.0/16

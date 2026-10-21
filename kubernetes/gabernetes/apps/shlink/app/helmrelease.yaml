@@ -198,8 +198,8 @@ spec:
                   claimToHeaders:
                     - claim: shlink_token
                       header: X-Shlink-Token
-      no-geoblock:
-        suffix: no-geoblock
+      allowlist:
+        suffix: allowlist
         manifest:
           apiVersion: gateway.envoyproxy.io/v1alpha1
           kind: SecurityPolicy
@@ -209,7 +209,13 @@ spec:
                 kind: HTTPRoute
                 name: "{{ .Release.Name }}-api"
             authorization:
-              defaultAction: Allow
+              defaultAction: Deny
+              rules:
+                - action: Allow
+                  principal:
+                    clientCIDRs:
+                      - 192.168.0.0/22
+                      - 10.42.0.0/16
       servers-json:
         manifest:
           apiVersion: gateway.envoyproxy.io/v1alpha1
