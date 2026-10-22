@@ -33,6 +33,7 @@ spec:
               TZ: America/Chicago
               TIME_FORMAT: "24"
               INSECURE_USE_HTTP: "true"
+              TRUST_PROXY: 10.42.0.0/16
               API_SECRET: ${api_secret}
               AUTH_DEFAULT_ROLES: denied
 
