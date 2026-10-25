@@ -39,15 +39,9 @@ spec:
               OPENAI_API_KEY: ${openai_api_key}
               ENABLE_LITELLM: "false"
               ENABLE_LOGIN_FORM: "false"
-              ENABLE_PASSWORD_AUTH: "false"
-              OAUTH_PROVIDER_NAME: Authentik
-              OPENID_PROVIDER_URL: https://${oauth_host}/application/o/open-webui/.well-known/openid-configuration
-              OAUTH_CLIENT_ID: ${oauth_client_id}
-              OAUTH_CLIENT_SECRET: ${oauth_client_secret}
-              OAUTH_SCOPES: openid email profile offline_access
-              OPENID_REDIRECT_URI: https://${app_url}/oauth/oidc/callback
-              ENABLE_OAUTH_SIGNUP: "true"
-              OAUTH_MERGE_ACCOUNTS_BY_EMAIL: "true"
+              WEBUI_AUTH_TRUSTED_EMAIL_HEADER: X-User-Email
+              WEBUI_AUTH_TRUSTED_NAME_HEADER: X-User-Name
+              WEBUI_AUTH_SIGNOUT_REDIRECT_URL: /oauth2/logout
             probes:
               liveness: &probe
                 enabled: true
@@ -71,14 +65,9 @@ spec:
             fsGroupChangePolicy: OnRootMismatch
             seccompProfile: {type: RuntimeDefault}
           labels:
-            policy.gabe565.com/egress-envoy-public: "true"
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-envoy-public: "true"
-          hostAliases:
-            - ip: 10.43.0.20
-              hostnames:
-                - ${oauth_host}
 
     service:
       open-webui:
@@ -116,3 +105,47 @@ spec:
             name: public
         hostnames:
           - ${app_url}
+        rules:
+          - filters:
+              - type: RequestHeaderModifier
+                requestHeaderModifier:
+                  remove: [Authorization]
+            backendRefs:
+              - identifier: open-webui
+
+    rawResources:
+      auth:
+        manifest:
+          apiVersion: gateway.envoyproxy.io/v1alpha1
+          kind: SecurityPolicy
+          spec:
+            mergeType: StrategicMerge
+            targetRefs:
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}"
+            oidc:
+              cookieConfig:
+                sameSite: Lax
+              provider:
+                issuer: https://${oidc_host}/application/o/open-webui/
+                authorizationEndpoint: https://${oidc_host}/application/o/authorize/
+                tokenEndpoint: https://${oidc_host}/application/o/token/
+                endSessionEndpoint: https://${oidc_host}/application/o/open-webui/end-session/
+              clientIDRef:
+                name: oidc
+              clientSecret:
+                name: oidc
+              scopes: [openid, offline_access, email, profile]
+              logoutPath: /oauth2/logout
+              forwardAccessToken: true
+            jwt:
+              providers:
+                - name: extract-user-info
+                  remoteJWKS:
+                    uri: https://${oidc_host}/application/o/open-webui/jwks/
+                  claimToHeaders:
+                    - claim: email
+                      header: X-User-Email
+                    - claim: name
+                      header: X-User-Name
