@@ -43,6 +43,7 @@ spec:
               TRUSTED_REVERSE_PROXY_NETWORKS: 10.42.0.0/16
               AUTH_PROXY_USER_CREATION: "1"
               DISABLE_LOCAL_AUTH: "true"
+              FETCHER_ALLOW_PRIVATE_FEED_PROXY: "1"
 
               METRICS_COLLECTOR: "1"
               METRICS_ALLOWED_NETWORKS: 0.0.0.0/0
