@@ -52,19 +52,7 @@ spec:
               S3_BUCKET_NAME: tandoor
               S3_REGION_NAME: us-central-1
 
-              SOCIAL_PROVIDERS: allauth.socialaccount.providers.openid_connect
-              # language=gotemplate
-              SOCIALACCOUNT_PROVIDERS: |-
-                {{- dict "openid_connect" (dict "SERVERS" (list (dict
-                  "id" "authentik"
-                  "name" "Authentik"
-                  "server_url" "https://${oauth_host}/application/o/tandoor-recipes/.well-known/openid-configuration"
-                  "token_auth_method" "client_secret_basic"
-                  "APP" (dict
-                    "client_id" "${oauth_client_id}"
-                    "secret" "${oauth_client_secret}"
-                  )
-                ))) | toJson -}}
+              REMOTE_USER_AUTH: "1"
             securityContext:
               allowPrivilegeEscalation: false
               capabilities: {drop: [ALL]}
@@ -97,7 +85,6 @@ spec:
         pod:
           enableServiceLinks: false
           labels:
-            policy.gabe565.com/egress-envoy-public: "true"
             policy.gabe565.com/egress-namespace: "true"
             policy.gabe565.com/egress-world: "true"
             policy.gabe565.com/ingress-envoy-public: "true"
@@ -108,10 +95,6 @@ spec:
             fsGroup: 65534
             fsGroupChangePolicy: OnRootMismatch
             seccompProfile: {type: RuntimeDefault}
-          hostAliases:
-            - ip: 10.43.0.20
-              hostnames:
-                - ${oauth_host}
 
     service:
       tandoor:
@@ -140,17 +123,38 @@ spec:
             name: public
         hostnames:
           - ${app_url}
-        rules:
-          - backendRefs:
-              - identifier: tandoor
-          - matches:
-              - path:
-                  type: PathPrefix
-                  value: /accounts/login
-            filters:
-              - type: RequestRedirect
-                requestRedirect:
-                  statusCode: 302
-                  path:
-                    type: ReplaceFullPath
-                    replaceFullPath: /accounts/oidc/authentik/login/?process=login&next=/
+
+    rawResources:
+      auth:
+        manifest:
+          apiVersion: gateway.envoyproxy.io/v1alpha1
+          kind: SecurityPolicy
+          spec:
+            mergeType: StrategicMerge
+            targetRefs:
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}"
+            oidc:
+              cookieConfig:
+                sameSite: Lax
+              provider:
+                issuer: https://${oidc_host}/application/o/tandoor-recipes/
+                authorizationEndpoint: https://${oidc_host}/application/o/authorize/
+                tokenEndpoint: https://${oidc_host}/application/o/token/
+                endSessionEndpoint: https://${oidc_host}/application/o/tandoor-recipes/end-session/
+              clientIDRef:
+                name: oidc
+              clientSecret:
+                name: oidc
+              scopes: [openid, offline_access, profile]
+              logoutPath: /accounts/logout/
+              forwardAccessToken: true
+            jwt:
+              providers:
+                - name: extract-user-info
+                  remoteJWKS:
+                    uri: https://${oidc_host}/application/o/tandoor-recipes/jwks/
+                  claimToHeaders:
+                    - claim: preferred_username
+                      header: Remote-User
