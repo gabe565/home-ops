@@ -1,0 +1,26 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyPatchPolicy
+metadata:
+  name: client-ip-headers
+  namespace: envoy-gateway-system
+spec:
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: Gateway
+    name: public
+  type: JSONPatch
+  jsonPatches:
+    - type: type.googleapis.com/envoy.config.route.v3.RouteConfiguration
+      name: envoy-gateway-system/public/https
+      operation:
+        op: add
+        path: /request_headers_to_add
+        value:
+          - header:
+              key: X-Real-IP
+              value: '%DOWNSTREAM_REMOTE_ADDRESS_WITHOUT_PORT%'
+            append_action: OVERWRITE_IF_EXISTS_OR_ADD
+          - header:
+              key: X-Forwarded-For
+              value: '%DOWNSTREAM_REMOTE_ADDRESS_WITHOUT_PORT%'
+            append_action: OVERWRITE_IF_EXISTS_OR_ADD

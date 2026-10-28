@@ -43,10 +43,6 @@ spec:
     tcp:
       tlsHandshakeTimeout: 15s
   headers:
-    earlyRequestHeaders:
-      set:
-        - name: X-Real-IP
-          value: '%DOWNSTREAM_REMOTE_ADDRESS_WITHOUT_PORT%'
     lateResponseHeaders:
       remove:
         - Server
