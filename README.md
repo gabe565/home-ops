@@ -97,14 +97,10 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td></td>
   </tr>
   <tr>
-    <td rowspan="2">authentik</td>
+    <td>authentik</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/authentik/app/helmrelease.yaml">authentik</a></td>
-    <td rowspan="2"><a href="kubernetes/gabernetes/apps/authentik/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/authentik/restic/helmrelease.yaml">restic</a></td>
-  </tr>
-  <tr>
-    <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/gabernetes/apps/authentik/app/webfinger.yaml">webfinger</a></td>
+    <td><a href="kubernetes/gabernetes/apps/authentik/postgresql.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/authentik/restic/helmrelease.yaml">restic</a></td>
   </tr>
   <tr>
     <td>bookstack</td>

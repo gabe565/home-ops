@@ -102,9 +102,31 @@ spec:
             name: public
         hostnames:
           - ${app_url}
+      webfinger:
+        parentRefs:
+          - namespace: envoy-gateway-system
+            name: public
+        hostnames:
+          - ${webfinger_host}
+        rules:
+          - matches:
+              - path:
+                  type: Exact
+                  value: /.well-known/webfinger
+                queryParams:
+                  - type: RegularExpression
+                    name: resource
+                    value: '([^"\\%]|%3[Aa]|%40)+'
+            filters:
+              - type: ExtensionRef
+                extensionRef:
+                  group: gateway.envoyproxy.io
+                  kind: HTTPRouteFilter
+                  name: pocket-id-webfinger
 
     rawResources:
       no-geoblock:
+        suffix: no-geoblock
         manifest:
           apiVersion: gateway.envoyproxy.io/v1alpha1
           kind: SecurityPolicy
@@ -113,8 +135,24 @@ spec:
               - group: gateway.networking.k8s.io
                 kind: HTTPRoute
                 name: "{{ .Release.Name }}"
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}-webfinger"
             authorization:
               defaultAction: Allow
+      webfinger:
+        suffix: webfinger
+        manifest:
+          apiVersion: gateway.envoyproxy.io/v1alpha1
+          kind: HTTPRouteFilter
+          spec:
+            directResponse:
+              statusCode: 200
+              contentType: application/jrd+json
+              body:
+                type: Inline
+                # language=json
+                inline: '{"subject":"%QUERY_PARAM(resource)%","links":[{"rel":"http://openid.net/specs/connect/1.0/issuer","href":"https://${app_url}"}]}'
 
     serviceMonitor:
       pocket-id:

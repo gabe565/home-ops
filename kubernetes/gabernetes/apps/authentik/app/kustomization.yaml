@@ -7,4 +7,3 @@ resources:
   - helmrelease.yaml
   - pvc.yaml
   - securitypolicy.yaml
-  - webfinger.yaml
