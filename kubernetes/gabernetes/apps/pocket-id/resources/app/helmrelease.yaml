@@ -1,0 +1,114 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-5.2.1/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: pocket-id
+  namespace: pocket-id
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 5.2.1
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    controllers:
+      pocket-id:
+        annotations:
+          secret.reloader.stakater.com/reload: pocket-id-env,postgresql-app
+        strategy: Recreate
+        containers:
+          app:
+            image:
+              repository: ghcr.io/pocket-id/pocket-id
+              tag: v2.19.1-distroless@sha256:d035c9c229304cfd25f97a79b2da00bde9cf942abbd70430d452a95420e2836b
+              pullPolicy: IfNotPresent
+            envFrom:
+              - secretRef:
+                  name: pocket-id-env
+            env:
+              TZ: America/Chicago
+              APP_URL: https://${app_url}
+              TRUST_PROXY: 10.42.0.0/16
+              DB_CONNECTION_STRING:
+                secretKeyRef:
+                  name: postgresql-app
+                  key: uri
+              FILE_BACKEND: database
+              GEOLITE_DB_URL: http://geoip-download.geoip/app/geoip_download?edition_id=GeoLite2-City&license_key=stub&suffix=tar.gz
+              LOG_JSON: "true"
+              OTEL_METRICS_EXPORTER: prometheus
+              OTEL_EXPORTER_PROMETHEUS_HOST: 0.0.0.0
+            probes:
+              liveness: &probe
+                enabled: true
+                type: HTTP
+                path: /healthz
+              readiness: *probe
+              startup:
+                <<: *probe
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: [ALL]}
+        pod:
+          labels:
+            policy.gabe565.com/egress-geoip: "true"
+            policy.gabe565.com/egress-namespace: "true"
+            policy.gabe565.com/egress-world: "true"
+            policy.gabe565.com/ingress-envoy-public: "true"
+            policy.gabe565.com/ingress-prometheus: "true"
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            runAsGroup: 65532
+            fsGroup: 65532
+            fsGroupChangePolicy: OnRootMismatch
+            seccompProfile: {type: RuntimeDefault}
+
+    service:
+      pocket-id:
+        controller: pocket-id
+        ports:
+          http:
+            port: 1411
+            primary: true
+          metrics:
+            port: 9464
+
+    persistence:
+      data:
+        type: emptyDir
+        medium: Memory
+        globalMounts:
+          - path: /app/data
+      tmp:
+        type: emptyDir
+        medium: Memory
+
+    route:
+      pocket-id:
+        parentRefs:
+          - namespace: envoy-gateway-system
+            name: public
+        hostnames:
+          - ${app_url}
+
+    serviceMonitor:
+      pocket-id:
+        enabled: true
+        endpoints:
+          - port: metrics
+            scheme: http
+            path: /metrics
+            interval: 1m
+            scrapeTimeout: 10s

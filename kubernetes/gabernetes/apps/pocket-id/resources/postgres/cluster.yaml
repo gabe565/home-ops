@@ -1,0 +1,29 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgresql
+  namespace: pocket-id
+spec:
+  instances: 2
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.11-minimal-trixie@sha256:d78e771decf39071aa8bfb96684e8b7e6e5f3c6e00a945404249756db2c6c712
+  enableSuperuserAccess: true
+  bootstrap:
+    initdb:
+      database: pocket-id
+      owner: pocket-id
+  storage:
+    storageClass: local-path
+    size: 2Gi
+  resources:
+    requests:
+      memory: 20Mi
+      cpu: 10m
+  smartShutdownTimeout: 1
+  stopDelay: 300
+  postgresql:
+    parameters:
+      archive_timeout: "0"
+  primaryLease:
+    leaseDurationSeconds: 60
+    renewDeadlineSeconds: 40
+    retryPeriodSeconds: 10

@@ -403,6 +403,12 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><a href="kubernetes/gabernetes/apps/plex/restic/helmrelease.yaml">restic</a></td>
   </tr>
   <tr>
+    <td>pocket-id</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/pocket-id/resources/app/helmrelease.yaml">pocket-id</a></td>
+    <td><a href="kubernetes/gabernetes/apps/pocket-id/resources/postgres/cluster.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/pocket-id/resources/restic/helmrelease.yaml">restic</a></td>
+  </tr>
+  <tr>
     <td rowspan="5">prometheus</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/prometheus/alloy/helmrelease.yaml">alloy</a></td>
