@@ -58,6 +58,7 @@ spec:
           token_url: https://${oauth_host}/api/oidc/token
           api_url: https://${oauth_host}/api/oidc/userinfo
           token_rotation_interval_minutes: "5"
+          use_pkce: true
           role_attribute_path: contains(groups[*], 'admin') && 'Admin' || 'Viewer'
       env:
         GF_AUTH_GENERIC_OAUTH_CLIENT_ID: ${grafana_oauth_client_id}
