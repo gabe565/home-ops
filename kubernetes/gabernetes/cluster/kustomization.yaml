@@ -5,4 +5,5 @@ resources:
   - config/cluster.yaml
   - apps.yaml
   - apps-private.yaml
+  - oidc-rbac.yaml
   - ../../templates/flux/repositories/helm
