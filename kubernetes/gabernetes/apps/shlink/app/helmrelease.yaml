@@ -135,20 +135,8 @@ spec:
         hostnames:
           - ${admin_url}
         rules:
-          - name: private
-            backendRefs:
+          - backendRefs:
               - identifier: frontend
-          - name: servers-json
-            matches:
-              - path:
-                  type: Exact
-                  value: /servers.json
-            filters:
-              - type: ExtensionRef
-                extensionRef:
-                  group: gateway.envoyproxy.io
-                  kind: HTTPRouteFilter
-                  name: shlink-servers-json
           - name: service-worker
             matches:
               - path:
@@ -162,42 +150,6 @@ spec:
                   name: shlink-service-worker
 
     rawResources:
-      auth:
-        manifest:
-          apiVersion: gateway.envoyproxy.io/v1alpha1
-          kind: SecurityPolicy
-          spec:
-            mergeType: StrategicMerge
-            targetRefs:
-              - group: gateway.networking.k8s.io
-                kind: HTTPRoute
-                name: "{{ .Release.Name }}-frontend"
-                sectionName: private
-              - group: gateway.networking.k8s.io
-                kind: HTTPRoute
-                name: "{{ .Release.Name }}-frontend"
-                sectionName: servers-json
-            oidc:
-              cookieConfig:
-                sameSite: Lax
-              provider:
-                issuer: https://${oidc_host}/application/o/shlink/
-                authorizationEndpoint: https://${oidc_host}/application/o/authorize/
-                tokenEndpoint: https://${oidc_host}/application/o/token/
-              clientIDRef:
-                name: oidc
-              clientSecret:
-                name: oidc
-              scopes: [openid, offline_access, shlink:token]
-              forwardAccessToken: true
-            jwt:
-              providers:
-                - name: extract-user-info
-                  remoteJWKS:
-                    uri: https://${oidc_host}/application/o/shlink/jwks/
-                  claimToHeaders:
-                    - claim: shlink_token
-                      header: X-Shlink-Token
       no-geoblock:
         suffix: no-geoblock
         manifest:
@@ -210,18 +162,6 @@ spec:
                 name: "{{ .Release.Name }}-api"
             authorization:
               defaultAction: Allow
-      servers-json:
-        manifest:
-          apiVersion: gateway.envoyproxy.io/v1alpha1
-          kind: HTTPRouteFilter
-          spec:
-            directResponse:
-              statusCode: 200
-              contentType: application/json
-              body:
-                type: Inline
-                # language=json
-                inline: '[{"name":"${app_url}", "url":"https://${app_url}", "apiKey":"%REQ(x-shlink-token)%"}]'
       service-worker:
         manifest:
           apiVersion: gateway.envoyproxy.io/v1alpha1
