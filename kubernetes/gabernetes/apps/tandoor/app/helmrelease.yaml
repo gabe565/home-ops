@@ -139,22 +139,23 @@ spec:
               cookieConfig:
                 sameSite: Lax
               provider:
-                issuer: https://${oidc_host}/application/o/tandoor-recipes/
-                authorizationEndpoint: https://${oidc_host}/application/o/authorize/
-                tokenEndpoint: https://${oidc_host}/application/o/token/
-                endSessionEndpoint: https://${oidc_host}/application/o/tandoor-recipes/end-session/
+                issuer: https://${oidc_host}
+                authorizationEndpoint: https://${oidc_host}/authorize
+                tokenEndpoint: https://${oidc_host}/api/oidc/token
+                endSessionEndpoint: https://${oidc_host}/api/oidc/end-session
               clientIDRef:
                 name: oidc
               clientSecret:
                 name: oidc
               scopes: [openid, offline_access, profile]
               logoutPath: /accounts/logout/
-              forwardAccessToken: true
+              forwardIDToken:
+                header: Authorization
             jwt:
               providers:
                 - name: extract-user-info
                   remoteJWKS:
-                    uri: https://${oidc_host}/application/o/tandoor-recipes/jwks/
+                    uri: https://${oidc_host}/.well-known/jwks.json
                   claimToHeaders:
                     - claim: preferred_username
                       header: Remote-User
