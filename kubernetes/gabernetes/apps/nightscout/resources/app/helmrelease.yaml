@@ -114,6 +114,28 @@ spec:
           - name: oidc
             backendRefs: &backendRefs
               - identifier: nightscout
+          - name: with-token
+            matches:
+              - path:
+                  type: Exact
+                  value: /
+                queryParams:
+                  - type: RegularExpression
+                    name: token
+                    value: .+
+            backendRefs: *backendRefs
+          - name: viewer-token
+            matches:
+              - path:
+                  type: Exact
+                  value: /
+            filters:
+              - type: RequestRedirect
+                requestRedirect:
+                  statusCode: 302
+                  path:
+                    type: ReplaceFullPath
+                    replaceFullPath: /?token=${viewer_token}
           - name: service-worker
             matches:
               - path:
@@ -144,27 +166,26 @@ spec:
                 kind: HTTPRoute
                 name: "{{ .Release.Name }}-oidc"
                 sectionName: oidc
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}-oidc"
+                sectionName: with-token
+              - group: gateway.networking.k8s.io
+                kind: HTTPRoute
+                name: "{{ .Release.Name }}-oidc"
+                sectionName: viewer-token
             oidc:
               cookieConfig:
                 sameSite: Lax
               provider:
-                issuer: https://${oidc_host}/application/o/nightscout/
-                authorizationEndpoint: https://${oidc_host}/application/o/authorize/
-                tokenEndpoint: https://${oidc_host}/application/o/token/
+                issuer: https://${oidc_host}
+                authorizationEndpoint: https://${oidc_host}/authorize
+                tokenEndpoint: https://${oidc_host}/api/oidc/token
               clientIDRef:
                 name: oidc
               clientSecret:
                 name: oidc
-              scopes: [openid, offline_access, nightscout:token]
-              forwardAccessToken: true
-            jwt:
-              providers:
-                - name: extract-user-info
-                  remoteJWKS:
-                    uri: https://${oidc_host}/application/o/nightscout/jwks/
-                  claimToHeaders:
-                    - claim: nightscout_token
-                      header: API-Secret
+              scopes: [openid, offline_access]
       service-worker:
         manifest:
           apiVersion: gateway.envoyproxy.io/v1alpha1
