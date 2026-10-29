@@ -121,10 +121,10 @@ spec:
               cookieConfig:
                 sameSite: Lax
               provider:
-                issuer: https://${oidc_host}/application/o/vaultwarden/
-                authorizationEndpoint: https://${oidc_host}/application/o/authorize/
-                tokenEndpoint: https://${oidc_host}/application/o/token/
-                endSessionEndpoint: https://${oidc_host}/application/o/vaultwarden/end-session/
+                issuer: https://${oidc_host}
+                authorizationEndpoint: https://${oidc_host}/authorize
+                tokenEndpoint: https://${oidc_host}/api/oidc/token
+                endSessionEndpoint: https://${oidc_host}/api/oidc/end-session
               clientIDRef:
                 name: oidc
               clientSecret:

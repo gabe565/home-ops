@@ -129,20 +129,21 @@ spec:
               cookieConfig:
                 sameSite: Lax
               provider:
-                issuer: https://${oidc_host}/application/o/miniflux/
-                authorizationEndpoint: https://${oidc_host}/application/o/authorize/
-                tokenEndpoint: https://${oidc_host}/application/o/token/
+                issuer: https://${oidc_host}
+                authorizationEndpoint: https://${oidc_host}/authorize
+                tokenEndpoint: https://${oidc_host}/api/oidc/token
               clientIDRef:
                 name: oidc
               clientSecret:
                 name: oidc
               scopes: [openid, offline_access, profile]
-              forwardAccessToken: true
+              forwardIDToken:
+                header: Authorization
             jwt:
               providers:
                 - name: extract-user-info
                   remoteJWKS:
-                    uri: https://${oidc_host}/application/o/miniflux/jwks/
+                    uri: https://${oidc_host}/.well-known/jwks.json
                   claimToHeaders:
                     - claim: preferred_username
                       header: X-User-Name

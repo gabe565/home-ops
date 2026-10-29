@@ -32,9 +32,9 @@ spec:
     cookieConfig:
       sameSite: Lax
     provider:
-      issuer: https://${oidc_host}/application/o/longhorn/
-      authorizationEndpoint: https://${oidc_host}/application/o/authorize/
-      tokenEndpoint: https://${oidc_host}/application/o/token/
+      issuer: https://${oidc_host}
+      authorizationEndpoint: https://${oidc_host}/authorize
+      tokenEndpoint: https://${oidc_host}/api/oidc/token
     clientIDRef:
       name: oidc
     clientSecret:

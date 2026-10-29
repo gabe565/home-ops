@@ -135,22 +135,23 @@ spec:
               cookieConfig:
                 sameSite: Lax
               provider:
-                issuer: https://${oidc_host}/application/o/paperless-ngx/
-                authorizationEndpoint: https://${oidc_host}/application/o/authorize/
-                tokenEndpoint: https://${oidc_host}/application/o/token/
-                endSessionEndpoint: https://${oidc_host}/application/o/paperless-ngx/end-session/
+                issuer: https://${oidc_host}
+                authorizationEndpoint: https://${oidc_host}/authorize
+                tokenEndpoint: https://${oidc_host}/api/oidc/token
+                endSessionEndpoint: https://${oidc_host}/api/oidc/end-session
               clientIDRef:
                 name: oidc
               clientSecret:
                 name: oidc
               scopes: [openid, profile, offline_access]
               logoutPath: /oauth2/logout
-              forwardAccessToken: true
+              forwardIDToken:
+                header: Authorization
             jwt:
               providers:
                 - name: extract-user-info
                   remoteJWKS:
-                    uri: https://${oidc_host}/application/o/paperless-ngx/jwks/
+                    uri: https://${oidc_host}/.well-known/jwks.json
                   claimToHeaders:
                     - claim: preferred_username
                       header: X-User-Name
