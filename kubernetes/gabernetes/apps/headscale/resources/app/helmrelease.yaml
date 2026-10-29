@@ -54,7 +54,7 @@ spec:
               HEADSCALE_DNS_MAGIC_DNS: "true"
               HEADSCALE_DNS_BASE_DOMAIN: ${base_domain}
 
-              HEADSCALE_OIDC_ISSUER: https://${oidc_host}/application/o/headscale/
+              HEADSCALE_OIDC_ISSUER: https://${oidc_host}
               HEADSCALE_OIDC_CLIENT_ID: ${oidc_client_id}
               HEADSCALE_OIDC_CLIENT_SECRET: ${oidc_client_secret}
               HEADSCALE_OIDC_PKCE_ENABLED: "true"
