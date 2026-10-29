@@ -49,14 +49,22 @@ spec:
               STORAGE_URL: https://bookstack.${s3_url}
 
               LOG_FAILED_LOGIN_MESSAGE: Failed login for %u
-              AUTH_METHOD: saml2
+              AUTH_METHOD: oidc
               AUTH_AUTO_INITIATE: "true"
-              SAML2_NAME: Authentik
-              SAML2_EMAIL_ATTRIBUTE: email
-              SAML2_EXTERNAL_ID_ATTRIBUTE: http://schemas.goauthentik.io/2021/02/saml/username
-              SAML2_DISPLAY_NAME_ATTRIBUTES: Name
-              SAML2_IDP_ENTITYID: https://${authentik_host}/api/v3/providers/saml/2/metadata/?download
-              SAML2_AUTOLOAD_METADATA: "true"
+              OIDC_NAME: Pocket ID
+              OIDC_DISPLAY_NAME_CLAIMS: name
+              OIDC_EXTERNAL_ID_CLAIM: preferred_username
+              OIDC_CLIENT_ID:
+                secretKeyRef:
+                  name: oidc
+                  key: client-id
+              OIDC_CLIENT_SECRET:
+                secretKeyRef:
+                  name: oidc
+                  key: client-secret
+              OIDC_ISSUER: https://${oidc_host}
+              OIDC_ISSUER_DISCOVER: "true"
+              OIDC_END_SESSION_ENDPOINT: "true"
             probes:
               liveness: &probe
                 enabled: true
@@ -82,7 +90,7 @@ spec:
           hostAliases:
             - ip: 10.43.0.20
               hostnames:
-                - ${authentik_host}
+                - ${oidc_host}
 
     persistence:
       config:

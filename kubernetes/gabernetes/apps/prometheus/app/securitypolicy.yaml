@@ -13,9 +13,9 @@ spec:
     cookieConfig:
       sameSite: Lax
     provider:
-      issuer: https://${oauth_host}/application/o/prometheus/
-      authorizationEndpoint: https://${oauth_host}/application/o/authorize/
-      tokenEndpoint: https://${oauth_host}/application/o/token/
+      issuer: https://${oauth_host}
+      authorizationEndpoint: https://${oauth_host}/authorize
+      tokenEndpoint: https://${oauth_host}/api/oidc/token
     clientIDRef:
       name: prometheus-oidc
     clientSecret:

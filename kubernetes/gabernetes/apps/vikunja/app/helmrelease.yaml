@@ -115,8 +115,10 @@ spec:
                 enabled: true
                 redirecturl: https://${app_url}/auth/openid/
                 providers:
-                  - name: Authentik
-                    authurl: https://${oauth_host}/application/o/vikunja/
-                    logouturl: https://${oauth_host}/application/o/vikunja/end-session/
+                  pocketid:
+                    name: Pocket ID
+                    authurl: https://${oauth_host}
+                    logouturl: https://${oauth_host}/api/oidc/end-session
                     clientid: ${oauth_client_id}
                     clientsecret: ${oauth_client_secret}
+                    emailfallback: true

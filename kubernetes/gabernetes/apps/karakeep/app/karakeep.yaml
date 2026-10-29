@@ -55,7 +55,8 @@ spec:
               BROWSER_CONNECT_ONDEMAND: "true"
               CRAWLER_DOWNLOAD_BANNER_IMAGE: "true"
               DISABLE_PASSWORD_AUTH: "true"
-              OAUTH_PROVIDER_NAME: Authentik
+              OAUTH_PROVIDER_NAME: Pocket ID
+              OAUTH_ALLOW_DANGEROUS_EMAIL_ACCOUNT_LINKING: "true"
             probes:
               startup:
                 enabled: true

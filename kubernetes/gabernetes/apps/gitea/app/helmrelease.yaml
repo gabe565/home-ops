@@ -79,6 +79,8 @@ spec:
         oauth2_client:
           OPENID_CONNECT_SCOPES: email profile
           ENABLE_AUTO_REGISTRATION: "true"
+          ACCOUNT_LINKING: auto
+          USERNAME: preferred_username
           JWT_SECRET: ${oauth2_jwt_secret}
         ui:
           SHOW_USER_EMAIL: "false"
