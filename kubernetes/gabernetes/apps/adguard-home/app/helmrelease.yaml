@@ -164,6 +164,12 @@ spec:
         rules:
           - backendRefs:
               - identifier: origin
+            filters: &credential
+              - type: ExtensionRef
+                extensionRef:
+                  group: gateway.envoyproxy.io
+                  kind: HTTPRouteFilter
+                  name: adguard-home-credential
       replica:
         parentRefs: *parentRefs
         hostnames:
@@ -171,9 +177,11 @@ spec:
         rules:
           - backendRefs:
               - identifier: replica
+            filters: *credential
 
     rawResources:
       auth:
+        suffix: auth
         manifest:
           apiVersion: gateway.envoyproxy.io/v1alpha1
           kind: SecurityPolicy
@@ -198,3 +206,14 @@ spec:
               clientSecret:
                 name: oidc
               scopes: [openid, offline_access]
+      credential:
+        suffix: credential
+        manifest:
+          apiVersion: gateway.envoyproxy.io/v1alpha1
+          kind: HTTPRouteFilter
+          spec:
+            credentialInjection:
+              overwrite: true
+              credential:
+                valueRef:
+                  name: credential
