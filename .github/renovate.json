@@ -94,6 +94,11 @@
       "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)(?:-beta-?(?<build>\\d+)?)?$"
     },
     {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["healthchecks/healthchecks"],
+      "versioning": "regex:^v(?<major>\\d+)\\.(?<minor>\\d+)(?:\\.(?<patch>\\d+))?$"
+    },
+    {
       "matchDatasources": ["github-tags"],
       "matchPackageNames": ["bjw-s/helm-charts"],
       "versioning": "regex:^(?<compatibility>.+)-(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
