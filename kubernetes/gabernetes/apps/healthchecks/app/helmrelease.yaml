@@ -92,6 +92,10 @@ spec:
             policy.gabe565.com/ingress-prometheus: "true"
 
     persistence:
+      tmp:
+        type: emptyDir
+        medium: Memory
+        sizeLimit: 128Mi
       static:
         type: configMap
         name: healthchecks-static
