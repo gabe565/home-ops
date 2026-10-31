@@ -15,6 +15,7 @@ data:
             env:
               MARIADB_ROOT_PASSWORD_FILE: /secret/mariadb-root-password
               MARIADB_PASSWORD_FILE: /secret/mariadb-password
+              MARIADB_AUTO_UPGRADE: "1"
             resources:
               requests:
                 cpu: 100m
