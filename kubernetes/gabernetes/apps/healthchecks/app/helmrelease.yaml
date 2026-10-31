@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: healthchecks/healthchecks
-              tag: v4.4@sha256:aa08a61b0dcfd83f1332eab195d5cec1b595ae076eb8388cadf8a3d597114f9b
+              tag: v5.0.3@sha256:5eb96eb72dc63ac24743f1c0fc4469931155329e05c9781a0809320de0ae479c
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
@@ -47,8 +47,8 @@ spec:
               REMOTE_USER_HEADER: HTTP_X_USER_EMAIL
               INTEGRATIONS_ALLOW_PRIVATE_IPS: "True"
 
-              UWSGI_DISABLE_LOGGING: "1"
-              UWSGI_PROCESSES: "1"
+              GUNICORN_DISABLE_LOGGING: "1"
+              GUNICORN_WORKERS: "1"
 
               DB: postgres
               DB_HOST: postgresql-rw
@@ -92,6 +92,10 @@ spec:
             policy.gabe565.com/ingress-prometheus: "true"
 
     persistence:
+      tmp:
+        type: emptyDir
+        medium: Memory
+        sizeLimit: 128Mi
       static:
         type: configMap
         name: healthchecks-static
