@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 5.2.1
+      version: 5.3.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
@@ -42,10 +42,8 @@ spec:
             probes:
               startup:
                 enabled: true
-                custom: true
+                command: [ls, /usr/share/GeoIP/GeoLite2-City.mmdb]
                 spec:
-                  exec:
-                    command: [ls, /usr/share/GeoIP/GeoLite2-City.mmdb]
                   periodSeconds: 5
         containers:
           app:
