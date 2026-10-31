@@ -491,12 +491,6 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><a href="kubernetes/gabernetes/apps/sonarr/restic/helmrelease.yaml">restic</a></td>
   </tr>
   <tr>
-    <td>stable-diffusion</td>
-    <td><code>HelmRelease</code></td>
-    <td><a href="kubernetes/gabernetes/apps/stable-diffusion/app/helmrelease.yaml">stable-diffusion-webui</a></td>
-    <td></td>
-  </tr>
-  <tr>
     <td>system-upgrade</td>
     <td><code>GitRepository</code></td>
     <td><a href="https://github.com/rancher/system-upgrade-controller">system-upgrade-controller</a></td>
