@@ -42,10 +42,8 @@ spec:
             probes:
               startup:
                 enabled: true
-                custom: true
+                command: [ls, /usr/share/GeoIP/GeoLite2-City.mmdb]
                 spec:
-                  exec:
-                    command: [ls, /usr/share/GeoIP/GeoLite2-City.mmdb]
                   periodSeconds: 5
         containers:
           app:

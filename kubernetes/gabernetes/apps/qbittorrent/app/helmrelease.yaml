@@ -62,15 +62,12 @@ spec:
             probes:
               liveness: &probe
                 enabled: true
-                custom: true
+                command: [/gluetun-entrypoint, healthcheck]
                 spec:
-                  exec: &exec
-                    command: [/gluetun-entrypoint, healthcheck]
                   periodSeconds: 60
               startup:
                 <<: *probe
                 spec:
-                  exec: *exec
                   failureThreshold: 30
                   periodSeconds: 5
         containers:

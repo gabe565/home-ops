@@ -29,22 +29,14 @@ data:
             probes:
               liveness:
                 enabled: true
-                custom: true
-                spec:
-                  exec:
-                    command: [/scripts/liveness.sh]
+                command: [/scripts/liveness.sh]
               readiness:
                 enabled: true
-                custom: true
-                spec:
-                  exec:
-                    command: [/scripts/readiness.sh]
+                command: [/scripts/readiness.sh]
               startup:
                 enabled: true
-                custom: true
+                command: [/scripts/liveness.sh]
                 spec:
-                  exec:
-                    command: [/scripts/liveness.sh]
                   failureThreshold: 60
                   periodSeconds: 5
         pod:
