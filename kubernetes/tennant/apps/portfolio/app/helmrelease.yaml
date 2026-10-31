@@ -68,7 +68,7 @@ spec:
     route:
       portfolio:
         annotations:
-          external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
+          external-dns.kubernetes.io/cloudflare-proxied: "true"
         parentRefs:
           - namespace: envoy-gateway-system
             name: public
