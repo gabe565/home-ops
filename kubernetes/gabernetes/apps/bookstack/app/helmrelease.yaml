@@ -102,6 +102,8 @@ spec:
             subPath: tmp
           - path: /run
             subPath: run
+          - path: /app/www/bootstrap/cache
+            subPath: bootstrap-cache
 
     service:
       bookstack:
