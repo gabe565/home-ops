@@ -62,6 +62,8 @@ spec:
     persistence:
       tmp:
         type: emptyDir
+        medium: Memory
+        sizeLimit: 128Mi
       data:
         suffix: data
         storageClass: longhorn-ssd

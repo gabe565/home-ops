@@ -61,3 +61,5 @@ spec:
     persistence:
       tmp:
         type: emptyDir
+        medium: Memory
+        sizeLimit: 512Mi

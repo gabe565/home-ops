@@ -112,14 +112,18 @@ spec:
               - path: /etc/nginx/conf.d
       tmp:
         type: emptyDir
+        medium: Memory
+        sizeLimit: 128Mi
+        globalMounts:
+          - path: /tmp
+      www:
+        type: emptyDir
         advancedMounts:
           monica:
             copy:
               - path: /public
                 subPath: public
             monica:
-              - path: /tmp
-                subPath: tmp
               - path: /var/www/html/public
                 subPath: public
               - path: /var/www/html/storage
@@ -127,8 +131,6 @@ spec:
               - path: /var/www/html/bootstrap/cache
                 subPath: cache
             nginx:
-              - path: /tmp
-                subPath: tmp
               - path: /var/www/html/public
                 subPath: public
               - path: /var/www/html/storage

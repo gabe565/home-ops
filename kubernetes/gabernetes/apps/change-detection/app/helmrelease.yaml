@@ -85,6 +85,8 @@ spec:
           - path: /datastore
       tmp:
         type: emptyDir
+        medium: Memory
+        sizeLimit: 128Mi
 
     route:
       change-detection:

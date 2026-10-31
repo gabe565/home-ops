@@ -149,6 +149,8 @@ spec:
               - path: /downloads
       tmp:
         type: emptyDir
+        medium: Memory
+        sizeLimit: 128Mi
         globalMounts:
           - path: /tmp
         advancedMounts:

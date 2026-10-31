@@ -54,6 +54,8 @@ spec:
       tmp:
         enabled: true
         type: emptyDir
+        medium: Memory
+        sizeLimit: 128Mi
 
     service:
       relax-sounds:

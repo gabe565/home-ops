@@ -91,6 +91,8 @@ spec:
               - path: /config
       tmp:
         type: emptyDir
+        medium: Memory
+        sizeLimit: 128Mi
         globalMounts:
           - path: /tmp
             subPath: tmp

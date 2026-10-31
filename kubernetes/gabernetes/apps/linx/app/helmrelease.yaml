@@ -90,6 +90,8 @@ spec:
         name: auth
       tmp:
         type: emptyDir
+        medium: Memory
+        sizeLimit: 128Mi
 
     route:
       linx:

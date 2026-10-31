@@ -40,7 +40,9 @@ spec:
                 path: /spec/template/spec/volumes
                 value:
                   - name: tmp
-                    emptyDir: {}
+                    emptyDir:
+                      medium: Memory
+                      sizeLimit: 128Mi
               - op: add
                 path: /spec/template/spec/containers/0/volumeMounts
                 value:

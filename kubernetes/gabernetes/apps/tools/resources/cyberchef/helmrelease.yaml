@@ -57,6 +57,8 @@ spec:
             subPath: usr/share/nginx/html
       tmp:
         type: emptyDir
+        medium: Memory
+        sizeLimit: 128Mi
 
     service:
       main:

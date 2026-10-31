@@ -82,6 +82,8 @@ spec:
           - path: /mnt/media
       tmp:
         type: emptyDir
+        medium: Memory
+        sizeLimit: 128Mi
 
     route:
       radarr:
