@@ -83,7 +83,7 @@ spec:
           app:
             image:
               repository: ghcr.io/bakito/adguardhome-sync
-              tag: alpine-v0.9.5@sha256:92c339766f0e48b5212cb9e656e1432242efdd3ff58a0c2842d0ea7aabbb5bc5
+              tag: alpine-v0.9.6@sha256:b3fb407bde1e0de4dcd468c1f2711f97d0858f22bf8339c00dab5b04f51181e4
               pullPolicy: IfNotPresent
             args: [run]
             env:
