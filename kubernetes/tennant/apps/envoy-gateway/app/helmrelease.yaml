@@ -7,7 +7,7 @@ spec:
   chart:
     spec:
       chart: gateway-helm
-      version: 1.9.3
+      version: 1.10.0
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
