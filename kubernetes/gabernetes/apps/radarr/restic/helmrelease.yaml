@@ -42,7 +42,7 @@ spec:
           restic: &container
             image:
               repository: ghcr.io/gabe565/restic
-              tag: 0.19.1@sha256:ba933e1e1b2cee079fb3a96421c6e8553e161b636766eca1115d212d9d6445b3
+              tag: 0.19.1@sha256:0f4ccbbe64df8230695397b89b6b95c839f82f16f8aa937a1cfd97dc455d0e0e
             workingDir: /radarr-config
             envFrom:
               - secretRef:
