@@ -1,0 +1,61 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgresql
+  namespace: nocturne
+spec:
+  instances: 2
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.11-minimal-trixie@sha256:7c680fc840a9ea6bd04399f1aeea06bb3180df3f0969f18833925b6df3d7dc87
+  enableSuperuserAccess: true
+  bootstrap:
+    initdb:
+      database: nocturne
+      owner: nocturne_migrator
+      secret:
+        name: postgres-migrator
+      postInitApplicationSQL:
+        - CREATE ROLE nocturne_app LOGIN NOSUPERUSER NOBYPASSRLS NOCREATEDB NOCREATEROLE
+        - CREATE ROLE nocturne_web LOGIN NOSUPERUSER NOBYPASSRLS NOCREATEDB NOCREATEROLE
+        - ALTER SCHEMA public OWNER TO nocturne_migrator
+        - GRANT CONNECT ON DATABASE nocturne TO nocturne_app
+        - GRANT USAGE ON SCHEMA public TO nocturne_app
+        - GRANT CONNECT ON DATABASE nocturne TO nocturne_web
+        - GRANT USAGE, CREATE ON SCHEMA public TO nocturne_web
+        - ALTER DEFAULT PRIVILEGES FOR ROLE nocturne_migrator IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO nocturne_app
+        - ALTER DEFAULT PRIVILEGES FOR ROLE nocturne_migrator IN SCHEMA public GRANT USAGE, SELECT ON SEQUENCES TO nocturne_app
+  managed:
+    roles:
+      - name: nocturne_app
+        ensure: present
+        login: true
+        superuser: false
+        bypassrls: false
+        createdb: false
+        createrole: false
+        passwordSecret:
+          name: postgres-app
+      - name: nocturne_web
+        ensure: present
+        login: true
+        superuser: false
+        bypassrls: false
+        createdb: false
+        createrole: false
+        passwordSecret:
+          name: postgres-web
+  storage:
+    storageClass: local-path
+    size: 8Gi
+  resources:
+    requests:
+      memory: 50Mi
+      cpu: 20m
+  smartShutdownTimeout: 1
+  stopDelay: 300
+  postgresql:
+    parameters:
+      archive_timeout: "0"
+  primaryLease:
+    leaseDurationSeconds: 60
+    renewDeadlineSeconds: 40
+    retryPeriodSeconds: 10

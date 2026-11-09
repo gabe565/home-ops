@@ -1,0 +1,187 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/app-template-5.3.0/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: nocturne
+  namespace: nocturne
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 5.3.0
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: flux-system
+        name: bjw-s
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    defaultPodOptions:
+      labels:
+        policy.gabe565.com/egress-namespace: "true"
+        policy.gabe565.com/egress-nightscout: "true"
+        policy.gabe565.com/egress-world: "true"
+        policy.gabe565.com/ingress-envoy-public: "true"
+        policy.gabe565.com/ingress-namespace: "true"
+
+    controllers:
+      api:
+        annotations:
+          secret.reloader.stakater.com/reload: nocturne-env,postgres-app,postgres-migrator
+        containers:
+          api:
+            image:
+              repository: ghcr.io/nightscout/nocturne/nocturne-api
+              tag: 0.3.0@sha256:1b8b753c0782d69c3585fc815aa902cd35d4495cb954ce1e885bac7f3960cd97
+              pullPolicy: IfNotPresent
+            envFrom:
+              - secretRef:
+                  name: nocturne-env
+            env:
+              TZ: America/Chicago
+              BASE_DOMAIN: ${app_url}
+              WEB_URL: http://nocturne-web:8000
+              Logging__LogLevel__Default: Warning
+              Logging__LogLevel__Nocturne: Warning
+              Logging__LogLevel__Microsoft.Hosting.Lifetime: Warning
+              Logging__LogLevel__Microsoft.Extensions.Hosting: Warning
+              Oidc__Providers__0__Name: Pocket ID
+              Oidc__Providers__0__IssuerUrl: https://${oidc_host}
+              Oidc__Providers__0__Icon: https://${oidc_host}/api/application-images/logo?light=false
+              Oidc__Providers__0__Scopes__0: openid
+              Oidc__Providers__0__Scopes__1: profile
+              Oidc__Providers__0__Scopes__2: email
+              Oidc__Providers__0__DefaultRoles__0: readable
+              APP_PASSWORD:
+                secretKeyRef:
+                  name: postgres-app
+                  key: password
+              MIGRATOR_PASSWORD:
+                secretKeyRef:
+                  name: postgres-migrator
+                  key: password
+              ConnectionStrings__nocturne-postgres:
+                value: Host=postgresql-rw;Port=5432;Database=nocturne;Username=nocturne_app;Password=$(APP_PASSWORD)
+                dependsOn: APP_PASSWORD
+              ConnectionStrings__nocturne-postgres-migrator:
+                value: Host=postgresql-rw;Port=5432;Database=nocturne;Username=nocturne_migrator;Password=$(MIGRATOR_PASSWORD)
+                dependsOn: MIGRATOR_PASSWORD
+            probes:
+              liveness: &apiProbe
+                enabled: true
+                type: HTTP
+                path: /alive
+              readiness:
+                <<: *apiProbe
+                path: /health
+              startup:
+                <<: *apiProbe
+                spec:
+                  failureThreshold: 60
+                  periodSeconds: 5
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: [ALL]}
+        pod:
+          securityContext:
+            runAsUser: 1654
+            runAsGroup: 1654
+            fsGroup: 1654
+            fsGroupChangePolicy: OnRootMismatch
+            runAsNonRoot: true
+            seccompProfile: {type: RuntimeDefault}
+
+      web:
+        annotations:
+          secret.reloader.stakater.com/reload: nocturne-env,postgres-web
+        containers:
+          web:
+            image:
+              repository: ghcr.io/nightscout/nocturne/nocturne-web
+              tag: 0.3.0@sha256:9892f18a671f42fc12f6b3191080724ccfce06d3336a14f1a2a325bc0bc7609b
+              pullPolicy: IfNotPresent
+            envFrom:
+              - secretRef:
+                  name: nocturne-env
+            env:
+              TZ: America/Chicago
+              PORT: "8000"
+              BASE_DOMAIN: ${app_url}
+              NOCTURNE_API_URL: http://nocturne-api:8080
+              PROTOCOL_HEADER: x-forwarded-proto
+              WEB_PASSWORD:
+                secretKeyRef:
+                  name: postgres-web
+                  key: password
+              NOCTURNE_POSTGRES_URI:
+                value: postgresql://nocturne_web:$(WEB_PASSWORD)@postgresql-rw:5432/nocturne
+                dependsOn: WEB_PASSWORD
+            probes:
+              liveness: &webProbe
+                enabled: true
+                type: HTTP
+                path: /health
+              readiness: *webProbe
+              startup:
+                <<: *webProbe
+                spec:
+                  failureThreshold: 60
+                  periodSeconds: 5
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: [ALL]}
+        pod:
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            fsGroupChangePolicy: OnRootMismatch
+            runAsNonRoot: true
+            seccompProfile: {type: RuntimeDefault}
+
+    service:
+      api:
+        controller: api
+        ports:
+          http:
+            port: 8080
+      web:
+        controller: web
+        ports:
+          http:
+            port: 8000
+
+    persistence:
+      tmp:
+        type: emptyDir
+        medium: Memory
+
+    route:
+      app:
+        parentRefs:
+          - namespace: envoy-gateway-system
+            name: public
+        hostnames:
+          - ${app_url}
+        rules:
+          - name: api
+            matches:
+              - path: {type: PathPrefix, value: /api/auth/oidc}
+              - path: {type: PathPrefix, value: /api/auth/platform-access}
+              - path: {type: PathPrefix, value: /api/oauth}
+              - path: {type: PathPrefix, value: /api/v4/dev-only}
+              - path: {type: PathPrefix, value: /openapi}
+              - path: {type: PathPrefix, value: /scalar}
+              - path: {type: PathPrefix, value: /.well-known}
+              - path: {type: Exact, value: /pebble}
+            backendRefs:
+              - identifier: api
+          - name: web
+            backendRefs:
+              - identifier: web
+            timeouts:
+              request: 0s

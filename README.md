@@ -345,6 +345,12 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><a href="kubernetes/gabernetes/apps/nightscout/resources/trmnl/helmrelease.yaml">trmnl</a></td>
   </tr>
   <tr>
+    <td>nocturne</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/nocturne/resources/app/helmrelease.yaml">nocturne</a></td>
+    <td><a href="kubernetes/gabernetes/apps/nocturne/resources/postgres/cluster.yaml">postgresql</a></td>
+  </tr>
+  <tr>
     <td>node-feature-discovery</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/node-feature-discovery/app/helmrelease.yaml">node-feature-discovery</a></td>
