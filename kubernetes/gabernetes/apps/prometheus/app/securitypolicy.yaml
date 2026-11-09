@@ -21,3 +21,36 @@ spec:
     clientSecret:
       name: prometheus-oidc
     scopes: [openid, offline_access]
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: grafana-auth
+  namespace: prometheus
+spec:
+  mergeType: StrategicMerge
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: kube-prometheus-stack-grafana
+  oidc:
+    cookieConfig:
+      sameSite: Lax
+    provider:
+      issuer: https://${oauth_host}
+      authorizationEndpoint: https://${oauth_host}/authorize
+      tokenEndpoint: https://${oauth_host}/api/oidc/token
+      endSessionEndpoint: https://${oauth_host}/api/oidc/end-session
+    clientIDRef:
+      name: grafana-oidc
+    clientSecret:
+      name: grafana-oidc
+    scopes: [openid, offline_access, email, profile, groups]
+    forwardIDToken:
+      header: Authorization
+    logoutPath: /oauth2/logout
+    denyRedirect:
+      headers:
+        - name: X-Grafana-Org-Id
+          type: RegularExpression
+          value: .+
