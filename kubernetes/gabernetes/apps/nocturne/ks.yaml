@@ -1,0 +1,18 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: resources
+  namespace: nocturne
+spec:
+  interval: 1h
+  targetNamespace: nocturne
+  path: ./kubernetes/gabernetes/apps/nocturne/resources
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    namespace: flux-system
+    name: home-ops
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: vars
