@@ -91,6 +91,12 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td></td>
   </tr>
   <tr>
+    <td>anchor</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/anchor/resources/app/helmrelease.yaml">anchor</a></td>
+    <td><a href="kubernetes/gabernetes/apps/anchor/resources/postgres/cluster.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/anchor/resources/restic/helmrelease.yaml">restic</a></td>
+  </tr>
+  <tr>
     <td>ascii-movie</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/ascii-movie/app/helmrelease.yaml">ascii-movie</a></td>

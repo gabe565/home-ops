@@ -1,0 +1,29 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgresql
+  namespace: anchor
+spec:
+  instances: 2
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.11-minimal-trixie@sha256:87f97b9a922e469b91faaaa36ced7c2092cf890efd3622f29095d252b70b9718
+  enableSuperuserAccess: true
+  bootstrap:
+    initdb:
+      database: anchor
+      owner: anchor
+  storage:
+    storageClass: local-path
+    size: 8Gi
+  resources:
+    requests:
+      memory: 20Mi
+      cpu: 10m
+  smartShutdownTimeout: 1
+  stopDelay: 300
+  postgresql:
+    parameters:
+      archive_timeout: "0"
+  primaryLease:
+    leaseDurationSeconds: 60
+    renewDeadlineSeconds: 40
+    retryPeriodSeconds: 10
