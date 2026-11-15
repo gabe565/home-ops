@@ -101,7 +101,7 @@ spec:
           web:
             image:
               repository: ghcr.io/nightscout/nocturne/nocturne-web
-              tag: 0.3.0@sha256:9892f18a671f42fc12f6b3191080724ccfce06d3336a14f1a2a325bc0bc7609b
+              tag: 0.3.2@sha256:0f0dd9ea90d372c3459866843270fa7356c5d4203f811a7071ce8280a11c27a5
               pullPolicy: IfNotPresent
             envFrom:
               - secretRef:
