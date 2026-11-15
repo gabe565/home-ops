@@ -34,7 +34,7 @@ spec:
           api:
             image:
               repository: ghcr.io/nightscout/nocturne/nocturne-api
-              tag: 0.3.0@sha256:1b8b753c0782d69c3585fc815aa902cd35d4495cb954ce1e885bac7f3960cd97
+              tag: 0.3.2@sha256:c8a6a83f7e23edfca5611f92bddd970177bac0b099186c84eb1a8254b6ac2cc8
               pullPolicy: IfNotPresent
             envFrom:
               - secretRef:
