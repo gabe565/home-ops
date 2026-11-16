@@ -95,6 +95,8 @@ spec:
           ENABLED: "true"
         service:
           DISABLE_REGISTRATION: "true"
+          ENABLE_INTERNAL_SIGNIN: "false"
+          ENABLE_BASIC_AUTHENTICATION: "false"
         indexer:
           REPO_INDEXER_ENABLED: "true"
         actions:
