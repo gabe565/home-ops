@@ -5,7 +5,7 @@ metadata:
   namespace: memos
 spec:
   instances: 2
-  imageName: ghcr.io/cloudnative-pg/postgresql:17.11-minimal-trixie@sha256:87f97b9a922e469b91faaaa36ced7c2092cf890efd3622f29095d252b70b9718
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.11-minimal-trixie@sha256:eb06deb9dab3706c9dc8dce4b24677f0b55a8887918cd26d2a3cc59b2c12c3ee
   enableSuperuserAccess: true
   bootstrap:
     initdb:
