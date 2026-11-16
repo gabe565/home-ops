@@ -68,6 +68,9 @@ spec:
           DISABLE_SSH: "true"
           OFFLINE_MODE: "false"
           START_SSH_SERVER: "false"
+        repository:
+          ENABLE_PUSH_CREATE_USER: "true"
+          ENABLE_PUSH_CREATE_ORG: "true"
         database:
           DB_TYPE: postgres
           HOST: postgresql-rw:5432
