@@ -1,0 +1,163 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: forgejo
+  namespace: forgejo
+spec:
+  chart:
+    spec:
+      chart: forgejo
+      version: 17.3.2
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: forgejo
+        name: forgejo
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    strategy:
+      type: Recreate
+
+    deployment:
+      labels:
+        policy.gabe565.com/egress-namespace: "true"
+        policy.gabe565.com/egress-world: "true"
+        policy.gabe565.com/ingress-envoy-public: "true"
+        policy.gabe565.com/ingress-prometheus: "true"
+      annotations:
+        secret.reloader.stakater.com/reload: forgejo-env,forgejo-admin,forgejo-oidc,postgresql-app
+      env:
+        - name: TZ
+          value: America/Chicago
+
+    persistence:
+      claimName: forgejo
+      storageClass: longhorn-ssd
+
+    httpRoute:
+      enabled: true
+      parentRefs:
+        - group: gateway.networking.k8s.io
+          kind: Gateway
+          namespace: envoy-gateway-system
+          name: public
+      hostnames:
+        - ${app_url}
+
+    gitea:
+      admin:
+        existingSecret: forgejo-admin
+        email: gabe565@gmail.com
+        passwordMode: initialOnlyNoReset
+      oauth:
+        - name: pocket-id
+          provider: openidConnect
+          existingSecret: forgejo-oidc
+          autoDiscoverUrl: https://${oidc_host}/.well-known/openid-configuration
+          iconUrl: https://${oidc_host}/api/application-images/logo?light=true
+          skip-local-2fa: true
+      metrics:
+        enabled: true
+        serviceMonitor:
+          enabled: true
+      config:
+        server:
+          ROOT_URL: https://${app_url}
+          DISABLE_SSH: "true"
+          OFFLINE_MODE: "false"
+          START_SSH_SERVER: "false"
+        database:
+          DB_TYPE: postgres
+          HOST: postgresql-rw:5432
+          NAME: forgejo
+          USER: forgejo
+        mailer:
+          ENABLED: "true"
+          PROTOCOL: smtp+starttls
+          SMTP_PORT: "587"
+        oauth2_client:
+          OPENID_CONNECT_SCOPES: email profile
+          ENABLE_AUTO_REGISTRATION: "true"
+          ACCOUNT_LINKING: auto
+          USERNAME: nickname
+          UPDATE_AVATAR: "true"
+        ui:
+          SHOW_USER_EMAIL: "false"
+        security:
+          MIN_PASSWORD_LENGTH: "8"
+          PASSWORD_COMPLEXITY: lower,upper,digit,spec
+          PASSWORD_CHECK_PWN: "true"
+        session:
+          COOKIE_SECURE: "true"
+        cron:
+          ENABLED: "true"
+        service:
+          DISABLE_REGISTRATION: "true"
+        indexer:
+          REPO_INDEXER_ENABLED: "true"
+        actions:
+          ENABLED: "false"
+        other:
+          SHOW_FOOTER_VERSION: "false"
+          SHOW_FOOTER_TEMPLATE_LOAD_TIME: "false"
+
+      additionalConfigFromEnvs:
+        - name: FORGEJO__DATABASE__PASSWD
+          valueFrom:
+            secretKeyRef:
+              name: postgresql-app
+              key: password
+        - name: FORGEJO__SECURITY__SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: forgejo-env
+              key: SECRET_KEY
+        - name: FORGEJO__SECURITY__INTERNAL_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: forgejo-env
+              key: INTERNAL_TOKEN
+        - name: FORGEJO__SERVER__LFS_JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: forgejo-env
+              key: LFS_JWT_SECRET
+        - name: FORGEJO__OAUTH2__JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: forgejo-env
+              key: OAUTH2_JWT_SECRET
+        - name: FORGEJO__MAILER__SMTP_ADDR
+          valueFrom:
+            secretKeyRef:
+              name: forgejo-env
+              key: SMTP_ADDR
+        - name: FORGEJO__MAILER__USER
+          valueFrom:
+            secretKeyRef:
+              name: forgejo-env
+              key: SMTP_USER
+        - name: FORGEJO__MAILER__PASSWD
+          valueFrom:
+            secretKeyRef:
+              name: forgejo-env
+              key: SMTP_PASSWD
+        - name: FORGEJO__MAILER__FROM
+          valueFrom:
+            secretKeyRef:
+              name: forgejo-env
+              key: SMTP_USER
+
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities: {drop: [ALL]}
+    podSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+      fsGroupChangePolicy: OnRootMismatch
+      runAsNonRoot: true
+      seccompProfile: {type: RuntimeDefault}

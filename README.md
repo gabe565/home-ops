@@ -167,6 +167,12 @@ This Git repository contains the following directories under [Kubernetes](./kube
     <td><a href="https://github.com/gabe565/home-ops-private">home-ops-private</a></td>
   </tr>
   <tr>
+    <td>forgejo</td>
+    <td><code>HelmRelease</code></td>
+    <td><a href="kubernetes/gabernetes/apps/forgejo/resources/app/helmrelease.yaml">forgejo</a></td>
+    <td><a href="kubernetes/gabernetes/apps/forgejo/resources/postgres/cluster.yaml">postgresql</a>, <a href="kubernetes/gabernetes/apps/forgejo/resources/restic/helmrelease.yaml">restic</a></td>
+  </tr>
+  <tr>
     <td>generic-device-plugin</td>
     <td><code>HelmRelease</code></td>
     <td><a href="kubernetes/gabernetes/apps/generic-device-plugin/app/helmrelease.yaml">generic-device-plugin</a></td>
