@@ -79,6 +79,12 @@
     },
     {
       "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/nightscout/nocturne/**"],
+      "groupName": "nocturne",
+      "sourceUrl": "https://github.com/nightscout/nocturne"
+    },
+    {
+      "matchDatasources": ["docker"],
       "matchPackageNames": ["quay.io/minio/aistor/minio"],
       "versioning": "regex:(?i)^RELEASE\\.(?<major>\\d+)-(?<minor>\\d+)-(?<patch>\\d+)T.*Z$"
     },
