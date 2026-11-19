@@ -7,7 +7,7 @@ spec:
   chart:
     spec:
       chart: forgejo
-      version: 17.3.2
+      version: 17.3.3
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
