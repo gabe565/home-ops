@@ -5,7 +5,7 @@ metadata:
   namespace: nocturne
 spec:
   instances: 2
-  imageName: ghcr.io/cloudnative-pg/postgresql:17.11-minimal-trixie@sha256:7c680fc840a9ea6bd04399f1aeea06bb3180df3f0969f18833925b6df3d7dc87
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.12-minimal-trixie@sha256:adbca2b66065de28e2c74e17c337dd50480810ff425fbe1b00c33ad4622c092b
   enableSuperuserAccess: true
   bootstrap:
     initdb:
