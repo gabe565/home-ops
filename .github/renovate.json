@@ -85,7 +85,7 @@
     },
     {
       "matchDatasources": ["docker"],
-      "matchPackageNames": ["quay.io/minio/aistor/minio"],
+      "matchPackageNames": ["docker.io/pgsty/silo"],
       "versioning": "regex:(?i)^RELEASE\\.(?<major>\\d+)-(?<minor>\\d+)-(?<patch>\\d+)T.*Z$"
     },
     {
