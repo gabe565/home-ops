@@ -24,7 +24,7 @@ spec:
           app:
             image:
               repository: ghcr.io/home-operations/sonarr
-              tag: 5.0.0.2870@sha256:d90a762127d86cd3b7e27cc05b7acd2cf5cf33766cc8d5a5e23a0254e6a61f97
+              tag: 5.0.0.3041@sha256:ec7797f30e65cc411fba6768ed575337a5787de7d06c382173df610f2d23a317
               pullPolicy: IfNotPresent
             env:
               TZ: America/Chicago
