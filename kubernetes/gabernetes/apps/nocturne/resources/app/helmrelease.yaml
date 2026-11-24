@@ -47,6 +47,7 @@ spec:
               Logging__LogLevel__Nocturne: Warning
               Logging__LogLevel__Microsoft.Hosting.Lifetime: Warning
               Logging__LogLevel__Microsoft.Extensions.Hosting: Warning
+              ReleaseCheck__Enabled: "false"
               Oidc__Providers__0__Name: Pocket ID
               Oidc__Providers__0__IssuerUrl: https://${oidc_host}
               Oidc__Providers__0__Icon: https://${oidc_host}/api/application-images/logo?light=false
