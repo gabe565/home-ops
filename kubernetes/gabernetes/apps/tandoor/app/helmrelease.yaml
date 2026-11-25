@@ -25,7 +25,7 @@ spec:
           collectstatic: &container
             image:
               repository: ghcr.io/tandoorrecipes/recipes
-              tag: 2.7.4@sha256:2f4b16bc7032ba01c2f3e0dfcabf568d730a93cbc884f52d6c984eab3db2c18e
+              tag: 2.7.8@sha256:93dbc69a4a6843ea8637cb0e827835687a5b4b79b652074e8eb207efedc9c5a0
             command: [python, manage.py, collectstatic, --noinput]
             env:
               TZ: America/Chicago
