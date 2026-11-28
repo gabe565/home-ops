@@ -5,7 +5,7 @@ metadata:
   namespace: home-assistant
 spec:
   instances: 2
-  imageName: ghcr.io/cloudnative-pg/postgresql:17.12-minimal-trixie@sha256:c6fba114bd9901f65d4ccfc2e0c6fb252ab134b775d7cbad1393fa1775e3a497
+  imageName: ghcr.io/cloudnative-pg/postgresql:19.0-minimal-trixie@sha256:12688a494f25aa0b7e1e3cd1800abe85b427fd1a09c991668a48162e3431a2af
   enableSuperuserAccess: true
   bootstrap:
     initdb:
