@@ -42,7 +42,7 @@ spec:
           restic: &container
             image:
               repository: ghcr.io/gabe565/restic
-              tag: 0.19.1@sha256:ba933e1e1b2cee079fb3a96421c6e8553e161b636766eca1115d212d9d6445b3
+              tag: 0.20.0@sha256:82289d6f879832bd32a22ed4b62f06472b9372615b5168a7c29646235efb3cd8
             workingDir: /zwave-js-ui-config
             envFrom:
               - secretRef:
