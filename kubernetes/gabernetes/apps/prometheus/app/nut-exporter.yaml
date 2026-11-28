@@ -75,7 +75,7 @@ spec:
                 - ${ups_study_password}
             relabelings:
               - targetLabel: ups
-                replacement: Study
+                replacement: Master Bedroom
           - port: http
             scheme: http
             path: /ups_metrics
