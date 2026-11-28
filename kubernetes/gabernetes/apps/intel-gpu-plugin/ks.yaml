@@ -38,9 +38,8 @@ spec:
       # language=yaml
       patch: |
         - op: add
-          path: /spec/template/spec/containers/0/args
-          value:
-            - -shared-dev-num=5
+          path: /spec/template/spec/containers/0/args/-
+          value: -shared-dev-num=5
         - op: add
           path: /spec/template/metadata/labels/policy.gabe565.com~1egress-kubeapi
           value: "true"
